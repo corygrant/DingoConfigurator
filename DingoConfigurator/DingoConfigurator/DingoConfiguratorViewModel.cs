@@ -96,18 +96,25 @@ namespace DingoConfigurator
         #region Commands
         private void Connect(object parameter)
         {
+            string port = " ";
+            CanInterfaceBaudRate baud = CanInterfaceBaudRate.BAUD_500K;
+
             switch (SelectedCan.Name)
             {
                 case "USB2CAN":
                     _can = new CanInterfaces.USB2CAN();
+                    port = "COM10";
+                    baud = CanInterfaceBaudRate.BAUD_500K;
                     break;
 
                 case "PCAN":
                     _can = new CanInterfaces.PCAN();
+                    port = "USBBUS1";
+                    baud = CanInterfaceBaudRate.BAUD_500K;
                     break;
             }
 
-            _can.Init();
+            _can.Init(port, baud);
             _can.DataReceived += CanDataReceived;
             _can.Start();
             CanInterfaceConnected = true;

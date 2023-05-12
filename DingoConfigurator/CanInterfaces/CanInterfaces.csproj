@@ -42,7 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CanTypes.cs" />
+    <Compile Include="CanInterfaceTypes.cs" />
     <Compile Include="PCAN.cs" />
     <Compile Include="USB2CAN.cs" />
     <Compile Include="ICanInterface.cs" />

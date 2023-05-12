@@ -9,10 +9,10 @@ namespace CanInterfaces
     public delegate void DataReceivedHandler(object sender, CanDataEventArgs e);
     public interface ICanInterface
     {
-        bool Init();
+        bool Init(string port, CanInterfaceBaudRate baud);
         bool Start();
         bool Stop();
-        bool Write(CanData canData);
+        bool Write(CanInterfaceData canData);
         DataReceivedHandler DataReceived { get; set; }
     }
 }

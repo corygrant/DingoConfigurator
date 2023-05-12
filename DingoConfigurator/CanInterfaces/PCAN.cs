@@ -23,7 +23,7 @@ namespace CanInterfaces
         /// <summary>
         /// Sets the PCANHandle (Hardware Channel)
         /// </summary>
-        const TPCANHandle PcanHandle = PCANBasic.PCAN_USBBUS1;
+        TPCANHandle PcanHandle = PCANBasic.PCAN_USBBUS1;
         /// <summary>
         /// Sets the desired connection mode (CAN = false / CAN-FD = true)
         /// </summary>
@@ -31,7 +31,7 @@ namespace CanInterfaces
         /// <summary>
         /// Sets the bitrate for normal CAN devices
         /// </summary>
-        const TPCANBaudrate Bitrate = TPCANBaudrate.PCAN_BAUD_500K;
+        TPCANBaudrate Bitrate = TPCANBaudrate.PCAN_BAUD_500K;
         /// <summary>
         /// Sets the bitrate for CAN FD devices. 
         /// Example - Bitrate Nom: 1Mbit/s Data: 2Mbit/s:
@@ -65,7 +65,7 @@ namespace CanInterfaces
             }
         }
 
-        public bool Init()
+        public bool Init(string port, CanInterfaceBaudRate baud)
         {
             // Checks if PCANBasic.dll is available, if not, the program terminates
             m_DLLFound = CheckForLibrary();
@@ -76,6 +76,10 @@ namespace CanInterfaces
             }
 
             TPCANStatus stsResult;
+
+            PcanHandle = ConvertHandle(port);
+            Bitrate = ConvertBaudRate(baud);
+
             // Initialization of the selected channel
             stsResult = PCANBasic.Initialize(PcanHandle, Bitrate);
 
@@ -113,7 +117,7 @@ namespace CanInterfaces
                 PCANBasic.Uninitialize(PCANBasic.PCAN_NONEBUS);
         }
 
-        public bool Write(CanData canData)
+        public bool Write(CanInterfaceData canData)
         {
             if(!(PCANBasic.GetStatus(PcanHandle) == TPCANStatus.PCAN_ERROR_OK)) return false;
             if(!(canData.Payload.Length == 8)) return false;
@@ -176,7 +180,7 @@ namespace CanInterfaces
                 stsResult = PCANBasic.Read(PcanHandle, out TPCANMsg CANMsg, out TPCANTimestamp CANTimeStamp);
                 if (stsResult != TPCANStatus.PCAN_ERROR_QRCVEMPTY)
                 {
-                    CanData data = new CanData
+                    CanInterfaceData data = new CanInterfaceData
                     {
                         Id = Convert.ToInt16(CANMsg.ID),
                         Len = CANMsg.LEN,
@@ -225,6 +229,95 @@ namespace CanInterfaces
                 return string.Format("An error occurred. Error-code's text ({0:X}) couldn't be retrieved", error);
 
             return strTemp.ToString();
+        }
+
+        private TPCANHandle ConvertHandle(string name)
+        {
+            switch(name)
+            {
+                case "USBBUS1":
+                    return PCANBasic.PCAN_USBBUS1;
+
+                case "USBBUS2":
+                    return PCANBasic.PCAN_USBBUS2;
+
+                case "USBBUS3":
+                    return PCANBasic.PCAN_USBBUS3;
+
+                case "USBBUS4":
+                    return PCANBasic.PCAN_USBBUS4;
+
+                case "USBBUS5":
+                    return PCANBasic.PCAN_USBBUS5;
+
+                case "USBBUS6":
+                    return PCANBasic.PCAN_USBBUS6;
+
+                case "USBBUS7":
+                    return PCANBasic.PCAN_USBBUS7;
+
+                case "USBBUS8":
+                    return PCANBasic.PCAN_USBBUS8;
+
+                case "USBBUS9":
+                    return PCANBasic.PCAN_USBBUS9;
+
+                case "USBBUS10":
+                    return PCANBasic.PCAN_USBBUS10;
+
+                case "USBBUS11":
+                    return PCANBasic.PCAN_USBBUS11;
+
+                case "USBBUS12":
+                    return PCANBasic.PCAN_USBBUS12;
+
+                case "USBBUS13":
+                    return PCANBasic.PCAN_USBBUS13;
+
+                case "USBBUS14":
+                    return PCANBasic.PCAN_USBBUS14;
+
+                case "USBBUS15":
+                    return PCANBasic.PCAN_USBBUS15;
+
+                case "USBBUS16":
+                    return PCANBasic.PCAN_USBBUS16;
+
+                default:
+                    return PCANBasic.PCAN_USBBUS1;
+            }
+        }
+        private TPCANBaudrate ConvertBaudRate(CanInterfaceBaudRate baud)
+        {
+            switch (baud)
+            {
+                case CanInterfaceBaudRate.BAUD_1M:
+                    return TPCANBaudrate.PCAN_BAUD_1M;
+
+                case CanInterfaceBaudRate.BAUD_500K:
+                    return TPCANBaudrate.PCAN_BAUD_500K;
+
+                case CanInterfaceBaudRate.BAUD_250K:
+                    return TPCANBaudrate.PCAN_BAUD_250K;
+
+                case CanInterfaceBaudRate.BAUD_125K:
+                    return TPCANBaudrate.PCAN_BAUD_125K;
+
+                case CanInterfaceBaudRate.BAUD_100K:
+                    return TPCANBaudrate.PCAN_BAUD_100K;
+
+                case CanInterfaceBaudRate.BAUD_50K:
+                    return TPCANBaudrate.PCAN_BAUD_50K;
+
+                case CanInterfaceBaudRate.BAUD_20K:
+                    return TPCANBaudrate.PCAN_BAUD_20K;
+
+                case CanInterfaceBaudRate.BAUD_10K:
+                    return TPCANBaudrate.PCAN_BAUD_10K;
+
+                default:
+                    return TPCANBaudrate.PCAN_BAUD_500K;
+            }
         }
     }
 }

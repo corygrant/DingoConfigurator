@@ -8,9 +8,25 @@ using System.Threading.Tasks;
 
 namespace CanInterfaces
 {
+    public enum USB2CAN_Bitrate
+    {
+        BITRATE_10K = 0,
+        BITRATE_20K,
+        BITRATE_50K,
+        BITRATE_100K,
+        BITRATE_125K,
+        BITRATE_250K,
+        BITRATE_500K,
+        BITRATE_750K,
+        BITRATE_1000K,
+        BITRATE_INVALID
+    }
+
     public class USB2CAN : ICanInterface
     {
         private SerialPort _serial;
+
+        private USB2CAN_Bitrate bitrate = USB2CAN_Bitrate.BITRATE_500K;
 
         public DataReceivedHandler DataReceived { get; set; }
 
@@ -34,11 +50,13 @@ namespace CanInterfaces
             _serial.Dispose();
         }
 
-        public bool Init()
+        public bool Init(string port, CanInterfaceBaudRate baud)
         {
+            bitrate = ConvertBitrate(baud);
+
             try
             {
-                _serial = new SerialPort("COM10", 115200, Parity.None, 8, StopBits.One);
+                _serial = new SerialPort(port, 115200, Parity.None, 8, StopBits.One);
                 _serial.Handshake = Handshake.None;
                 _serial.NewLine = "\r";
                 _serial.DataReceived += _serial_DataReceived;
@@ -75,7 +93,7 @@ namespace CanInterfaces
                     payload[i] = (byte)(((highNibble & 0x0F) << 4) + (lowNibble & 0x0F));
                 }
                     
-                CanData data = new CanData
+                CanInterfaceData data = new CanInterfaceData
                 {
                     Id = int.Parse(raw.Substring(1, 3), System.Globalization.NumberStyles.HexNumber),
                     Len = int.Parse(raw.Substring(4, 1), System.Globalization.NumberStyles.HexNumber),
@@ -97,14 +115,10 @@ namespace CanInterfaces
                 data[0] = (byte)'O';
                 _serial.Write(data, 0, 1);
 
-                //Get version
-                //data[0] = (byte)'V';
-                //_serial.Write(data, 0 , 1);
-
                 //Set bitrate
-                //data[0] = (byte)'S';
-                //data[1] = 6;
-                //_serial.Write(data, 0 , 1);
+                data[0] = (byte)'S';
+                data[1] = Convert.ToByte(bitrate);
+                _serial.Write(data, 0 , 1);
 
             }
             catch(Exception e)
@@ -130,7 +144,7 @@ namespace CanInterfaces
             return true;
         }
 
-        public bool Write(CanData canData)
+        public bool Write(CanInterfaceData canData)
         {
             if (!_serial.IsOpen) 
                 return false;
@@ -171,6 +185,39 @@ namespace CanInterfaces
             }
 
             return true;
+        }
+
+        private USB2CAN_Bitrate ConvertBitrate(CanInterfaceBaudRate baud)
+        {
+            switch (baud)
+            {
+                case CanInterfaceBaudRate.BAUD_1M:
+                    return USB2CAN_Bitrate.BITRATE_1000K;
+
+                case CanInterfaceBaudRate.BAUD_500K:
+                    return USB2CAN_Bitrate.BITRATE_500K;
+
+                case CanInterfaceBaudRate.BAUD_250K:
+                    return USB2CAN_Bitrate.BITRATE_250K;
+
+                case CanInterfaceBaudRate.BAUD_125K:
+                    return USB2CAN_Bitrate.BITRATE_125K;
+
+                case CanInterfaceBaudRate.BAUD_100K:
+                    return USB2CAN_Bitrate.BITRATE_100K;
+
+                case CanInterfaceBaudRate.BAUD_50K:
+                    return USB2CAN_Bitrate.BITRATE_50K;
+
+                case CanInterfaceBaudRate.BAUD_20K:
+                    return USB2CAN_Bitrate.BITRATE_20K;
+
+                case CanInterfaceBaudRate.BAUD_10K:
+                    return USB2CAN_Bitrate.BITRATE_10K;
+
+                default:
+                    return USB2CAN_Bitrate.BITRATE_500K;
+            }
         }
     }
 }

@@ -8,18 +8,30 @@ namespace CanInterfaces
 {
     public class CanDataEventArgs : EventArgs
     {
-        public CanDataEventArgs(CanData CanData)
+        public CanDataEventArgs(CanInterfaceData CanData)
         {
             this.canData = CanData;
         }
 
-        public CanData canData { get; private set; }
+        public CanInterfaceData canData { get; private set; }
     }
 
-    public class CanData
+    public class CanInterfaceData
     {
         public int Id { get; set; }
         public int Len { get; set; }
         public byte[] Payload { get; set; }
+    }
+
+    public enum CanInterfaceBaudRate
+    {
+        BAUD_1M,
+        BAUD_500K,
+        BAUD_250K,
+        BAUD_125K,
+        BAUD_100K,
+        BAUD_50K,
+        BAUD_20K,
+        BAUD_10K
     }
 }
