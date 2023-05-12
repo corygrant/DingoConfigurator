@@ -13,16 +13,26 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DingoPDM
+namespace DingoConfigurator
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly DingoConfiguratorViewModel _vm;
         public MainWindow()
         {
             InitializeComponent();
+            _vm = new DingoConfiguratorViewModel();
+            DataContext = _vm;
+
+            Closing += MainWindow_Closing;
+        }
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _vm.WindowClosing();
         }
     }
 }

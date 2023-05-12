@@ -9,7 +9,19 @@ namespace CanDevices
 {
     public class DingoPdmCan : ICanDevice
     {
+        public string Name { get; set; }
         public int BaseId { get; private set; }
+        private DateTime _lastRxTime { get; set; }
+        public DateTime LastRxTime { get => _lastRxTime;}
+
+        public bool IsConnected {
+            get
+            {
+                TimeSpan timeSpan = DateTime.Now - _lastRxTime;
+                return (timeSpan.TotalMilliseconds < 500);
+            } 
+        }
+
         private List<bool> _digitalInputs { get; set; }
         public List<bool> DigitalInputs => _digitalInputs;
 
@@ -51,8 +63,9 @@ namespace CanDevices
         private List<int> _outputResetCount { get; set; }
         public List<int> OutputResetCount { get => _outputResetCount; }
 
-        public DingoPdmCan(int id)
+        public DingoPdmCan(string name, int id)
         {
+            Name = name;
             BaseId = id;
             _digitalInputs= new List<bool>(new bool[8]);
             DeviceState= new DevState();
@@ -80,6 +93,8 @@ namespace CanDevices
             if (id == BaseId + 8) ReadMessage8(data);
             if (id == BaseId + 9) ReadMessage9(data);
             if (id == BaseId + 10) ReadMessage10(data);
+
+            _lastRxTime = DateTime.Now;
 
             return true;
         }

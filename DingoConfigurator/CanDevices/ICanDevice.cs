@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace CanDevices
 {
-    internal interface ICanDevice
+    public interface ICanDevice
     {
+        string Name { get; }
         int BaseId { get;}
+        bool IsConnected { get;}
+        DateTime LastRxTime { get;}
+
         bool Read(int id, byte[] data);
     }
 }

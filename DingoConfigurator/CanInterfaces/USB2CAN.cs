@@ -38,8 +38,9 @@ namespace CanInterfaces
         {
             try
             {
-                _serial = new SerialPort("COM4", 115200, Parity.None, 8, StopBits.One);
+                _serial = new SerialPort("COM10", 115200, Parity.None, 8, StopBits.One);
                 _serial.Handshake = Handshake.None;
+                _serial.NewLine = "\r";
                 _serial.DataReceived += _serial_DataReceived;
                 _serial.Open();
             }
@@ -55,7 +56,34 @@ namespace CanInterfaces
         private void _serial_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             var ser = (SerialPort)sender;
-            Console.WriteLine(ser.ReadExisting());
+            string raw = ser.ReadLine(); //Use ReadLine to make sure each msg is read individually (must add NewLine="\r" before starting RX above)
+
+            if(raw.Length == 21) //'t' msg is always 21 chars long
+            {
+                if (raw.Substring(0,1) != "t") return;
+
+                //Msg comes in as a hex string
+                //For example, an ID of 2008(0x7D8) will be sent as "t7D8...."
+                //The string needs to be parsed into an int using int.Parse
+                //The payload bytes are split across 2 bytes (a nibble each)
+                //For example, a payload byte of 28 (0001 1100) would be split into "1C"
+                byte[] payload = new byte[8];
+                for (int i = 0; i < payload.Length; i++)
+                {
+                    int highNibble = int.Parse(raw.Substring(i*2+5, 1), System.Globalization.NumberStyles.HexNumber);
+                    int lowNibble = int.Parse(raw.Substring(i*2+6, 1), System.Globalization.NumberStyles.HexNumber);
+                    payload[i] = (byte)(((highNibble & 0x0F) << 4) + (lowNibble & 0x0F));
+                }
+                    
+                CanData data = new CanData
+                {
+                    Id = int.Parse(raw.Substring(1, 3), System.Globalization.NumberStyles.HexNumber),
+                    Len = int.Parse(raw.Substring(4, 1), System.Globalization.NumberStyles.HexNumber),
+                    Payload = payload
+                };
+
+                OnDataReceived(new CanDataEventArgs(data));
+            }
         }
 
         public bool Start()

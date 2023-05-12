@@ -20,10 +20,12 @@ namespace DingoPDMConsole
         private static  ICanInterface can;
 
         private static DingoPdmCan _pdm;
+        private static CanBoardCan _canBoard;
         
         static void Main(string[] args)
         {
             _pdm = new DingoPdmCan(2000);
+            _canBoard = new CanBoardCan(1600);
 
             switch (CAN_INTERFACE)
             {
@@ -52,7 +54,34 @@ namespace DingoPDMConsole
         static void CanDataReceived(object sender, CanDataEventArgs e)
         {
             _pdm.Read(e.canData.Id, e.canData.Payload);
+            if(_canBoard.Read(e.canData.Id, e.canData.Payload))
+            {
+                /*
+                Console.Write("Rotary: ");
+                for (int i = 0; i < _canBoard.RotarySwitchPos.Count; i++)
+                {
+                    Console.Write($"{_canBoard.RotarySwitchPos.ElementAt(i)} ");
+                }
+                Console.WriteLine();
 
+                Console.Write("Digital: ");
+                for (int i = 0; i < _canBoard.DigitalIn.Count; i++)
+                {
+                    Console.Write($"{_canBoard.DigitalIn.ElementAt(i)} ");
+                }
+                Console.WriteLine();
+
+                Console.Write("Analog: ");
+                for (int i = 0; i < _canBoard.AnalogInMV.Count; i++)
+                {
+                    Console.Write($"{_canBoard.AnalogInMV.ElementAt(i)} ");
+                }
+                Console.WriteLine();
+                */
+            }
+            Console.WriteLine($"HB: {_canBoard.Heartbeat} {_canBoard.IsConnected} {_canBoard.LastRxTime}");
+
+            /*
             Console.Write("Inputs: ");
             for (int i = 0; i < _pdm.DigitalInputs.Count; i++)
             {
@@ -89,6 +118,10 @@ namespace DingoPDMConsole
                 Console.Write($"{_pdm.OutputResetCount.ElementAt(i)} ");
             }
             Console.WriteLine();
+            */
+
+
+
         }
     }
 }
