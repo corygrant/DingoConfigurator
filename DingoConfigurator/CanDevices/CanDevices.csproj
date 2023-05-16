@@ -45,6 +45,7 @@
     <Compile Include="DingoDashCan.cs" />
     <Compile Include="DingoPdmCan.cs" />
     <Compile Include="ICanDevice.cs" />
+    <Compile Include="NotifyPropertyChangedBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

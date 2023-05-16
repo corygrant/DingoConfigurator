@@ -1,6 +1,7 @@
-﻿<Window x:Class="DingoConfigurator.MainWindow"
+﻿<mah:MetroWindow x:Class="DingoConfigurator.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DingoConfigurator"
@@ -100,60 +101,63 @@
                     <TreeView.Resources>
                         <HierarchicalDataTemplate DataType="{x:Type cd:DingoPdmCan}">
                             <StackPanel Orientation="Horizontal">
-                                <Ellipse Height="{StaticResource TypeEllipseSize}" Width="{StaticResource TypeEllipseSize}" Fill="{StaticResource PdmBrush}">
-                                    <Ellipse.Style>
-                                        <Style TargetType="{x:Type Ellipse}">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type cd:DingoPdmCan}}, Path=IsConnected}" Value="True">
-                                                    <Setter Property="Opacity" Value="1.0"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type cd:DingoPdmCan}}, Path=IsConnected}" Value="False">
-                                                    <Setter Property="Opacity" Value="0.2"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Ellipse.Style>
-                                </Ellipse>
-                                <TextBlock Text="{Binding Name}"/>
+                                <Image  x:Name="TypeImage"
+                                        Width="20"
+                                        Height="20"
+                                        Margin="2 2 5 2"/>
+                                <TextBlock Text="{Binding Name}" 
+                                           VerticalAlignment="Center"/>
                             </StackPanel>
+                            <HierarchicalDataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                    <Setter TargetName="TypeImage" Property="Opacity" Value="1.0"/>
+                                    <Setter TargetName="TypeImage" Property="Source" Value="Views\Icons\pdm_1.png"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="False">
+                                    <Setter TargetName="TypeImage" Property="Opacity" Value="0.5"/>
+                                    <Setter TargetName="TypeImage" Property="Source" Value="Views\Icons\pdm_0.png"/>
+                                </DataTrigger>
+                            </HierarchicalDataTemplate.Triggers>
                         </HierarchicalDataTemplate>
                         <HierarchicalDataTemplate DataType="{x:Type cd:CanBoardCan}">
                             <StackPanel Orientation="Horizontal">
-                                <Ellipse Height="{StaticResource TypeEllipseSize}" Width="{StaticResource TypeEllipseSize}" Fill="{StaticResource CanBoardBrush}">
-                                    <Ellipse.Style>
-                                        <Style TargetType="{x:Type Ellipse}">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type cd:CanBoardCan}}, Path=IsConnected}" Value="True">
-                                                    <Setter Property="Opacity" Value="1.0"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type cd:CanBoardCan}}, Path=IsConnected}" Value="False">
-                                                    <Setter Property="Opacity" Value="0.2"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Ellipse.Style>
-                                </Ellipse>
-                                <TextBlock Text="{Binding Name}"/>
+                                <Image  x:Name="TypeImage"
+                                        Width="20"
+                                        Height="20"
+                                        Margin="2 2 5 2"/>
+                                <TextBlock Text="{Binding Name}"
+                                           VerticalAlignment="Center"/>
                             </StackPanel>
+                            <HierarchicalDataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                    <Setter TargetName="TypeImage" Property="Opacity" Value="1.0"/>
+                                    <Setter TargetName="TypeImage" Property="Source" Value="Views\Icons\canboard_1.png"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="False">
+                                    <Setter TargetName="TypeImage" Property="Opacity" Value="0.5"/>
+                                    <Setter TargetName="TypeImage" Property="Source" Value="Views\Icons\canboard_0.png"/>
+                                </DataTrigger>
+                            </HierarchicalDataTemplate.Triggers>
                         </HierarchicalDataTemplate>
                         <HierarchicalDataTemplate DataType="{x:Type cd:DingoDashCan}">
                             <StackPanel Orientation="Horizontal">
-                                <Ellipse Height="{StaticResource TypeEllipseSize}" Width="{StaticResource TypeEllipseSize}" Fill="{StaticResource DashBrush}">
-                                    <Ellipse.Style>
-                                        <Style TargetType="{x:Type Ellipse}">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type cd:DingoDashCan}}, Path=IsConnected}" Value="True">
-                                                    <Setter Property="Opacity" Value="1.0"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type cd:DingoDashCan}}, Path=IsConnected}" Value="False">
-                                                    <Setter Property="Opacity" Value="0.2"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Ellipse.Style>
-                                </Ellipse>
-                                <TextBlock Text="{Binding Name}"/>
+                                <Image  x:Name="TypeImage"
+                                        Width="20"
+                                        Height="20"
+                                        Margin="2 2 5 2"/>
+                                <TextBlock Text="{Binding Name}"
+                                           VerticalAlignment="Center"/>
                             </StackPanel>
+                            <HierarchicalDataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                    <Setter TargetName="TypeImage" Property="Opacity" Value="1.0"/>
+                                    <Setter TargetName="TypeImage" Property="Source" Value="Views\Icons\dash_1.png"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="False">
+                                    <Setter TargetName="TypeImage" Property="Opacity" Value="0.5"/>
+                                    <Setter TargetName="TypeImage" Property="Source" Value="Views\Icons\dash_0.png"/>
+                                </DataTrigger>
+                            </HierarchicalDataTemplate.Triggers>
                         </HierarchicalDataTemplate>
                     </TreeView.Resources>
                 </TreeView>
@@ -167,4 +171,4 @@
             </Grid>
         </Border>
     </DockPanel>
-</Window>
+</mah:MetroWindow>

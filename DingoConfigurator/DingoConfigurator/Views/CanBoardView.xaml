@@ -6,7 +6,12 @@
              xmlns:local="clr-namespace:DingoConfigurator.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="Chartreuse">
-        <TextBlock Text="CanBoard"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="CanBoard" Grid.Row="0"/>
+        <TextBox Text="{Binding Cb.Heartbeat, Mode=OneWay}" Grid.Row="1"/>
     </Grid>
 </UserControl>

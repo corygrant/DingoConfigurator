@@ -12,7 +12,7 @@ namespace CanDevices
         int BaseId { get;}
         bool IsConnected { get;}
         DateTime LastRxTime { get;}
-
+        void UpdateIsConnected();
         bool Read(int id, byte[] data);
     }
 }

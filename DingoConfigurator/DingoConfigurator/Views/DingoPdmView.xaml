@@ -6,9 +6,9 @@
              xmlns:local="clr-namespace:DingoConfigurator.Views"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="400">
-    <StackPanel Background="White">
+    <StackPanel>
         <TextBlock Text="DingoPDM"/>
-        <CheckBox IsChecked="{Binding IsConnected, Mode=OneWay}"/>
-        <TextBox Text="{Binding BaseId, Mode=OneWay}"/>
+        <CheckBox IsChecked="{Binding Pdm.IsConnected, Mode=OneWay}" IsEnabled="False"/>
+        <TextBox Text="{Binding Pdm.BaseId, Mode=OneWay}"/>
     </StackPanel>
 </UserControl>

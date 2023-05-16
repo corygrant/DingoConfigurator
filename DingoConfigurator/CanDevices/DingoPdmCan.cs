@@ -7,23 +7,64 @@ using System.Threading.Tasks;
 
 namespace CanDevices
 {
-    public class DingoPdmCan : ICanDevice
+    public class DingoPdmCan : NotifyPropertyChangedBase, ICanDevice
     {
-        public string Name { get; set; }
-        public int BaseId { get; private set; }
+        private string _name;
+        public string Name { 
+            get => _name; 
+            set
+            {
+                if (_name != value)
+                {
+                    _name = value;
+                    OnPropertyChanged(nameof(Name));
+                }
+            }
+        }
+
+        private int _baseId;
+        public int BaseId
+        {
+            get => _baseId;
+            private set
+            {
+                if (_baseId != value)
+                {
+                    _baseId = value;
+                    OnPropertyChanged(nameof(BaseId));
+                }
+            }
+        }
+
         private DateTime _lastRxTime { get; set; }
         public DateTime LastRxTime { get => _lastRxTime;}
 
+        private bool _isConnected;
         public bool IsConnected {
-            get
+            get => _isConnected;
+            set
             {
-                TimeSpan timeSpan = DateTime.Now - _lastRxTime;
-                return (timeSpan.TotalMilliseconds < 500);
+                if (_isConnected != value)
+                {
+                    _isConnected = value;
+                    OnPropertyChanged(nameof(IsConnected));
+                }
             } 
         }
 
         private List<bool> _digitalInputs { get; set; }
-        public List<bool> DigitalInputs => _digitalInputs;
+        public List<bool> DigitalInputs
+        {
+            get => _digitalInputs;
+            set
+            {
+                if (_digitalInputs != value)
+                {
+                    _digitalInputs = value;
+                    OnPropertyChanged(nameof(DigitalInputs));
+                }
+            }
+        }
 
         public enum DevState
         {
@@ -32,13 +73,89 @@ namespace CanDevices
             Configure,
             Error
         }
-        public DevState DeviceState { get; private set; }
-        public double TotalCurrent { get; private set; }
-        public double BatteryVoltage { get; private set; }
-        public double BoardTempC { get; private set; }
-        public double BoardTempF { get; private set; }
+
+        private DevState _deviceState;
+        public DevState DeviceState { 
+            get => _deviceState;
+            private set
+            {
+                if (_deviceState != value)
+                {
+                    _deviceState = value;
+                    OnPropertyChanged(nameof(DevState));
+                }
+            }
+        }
+
+        private double _totalCurrent;
+        public double TotalCurrent { 
+            get => _totalCurrent; 
+            private set
+            {
+                if (_totalCurrent != value)
+                {
+                    _totalCurrent = value;
+                    OnPropertyChanged(nameof(TotalCurrent));
+                }
+            }
+        }
+
+        private double _batteryVoltage;
+        public double BatteryVoltage
+        {
+            get => _batteryVoltage;
+            private set
+            {
+                if (_batteryVoltage != value)
+                {
+                    _batteryVoltage = value;
+                    OnPropertyChanged(nameof(BatteryVoltage));
+                }
+            }
+        }
+
+        private double _boardTempC;
+        public double BoardTempC
+        {
+            get => _boardTempC;
+            private set
+            {
+                if (_boardTempC != value)
+                {
+                    _boardTempC = value;
+                    OnPropertyChanged(nameof(BoardTempC));
+                }
+            }
+        }
+
+        private double _boardTempF;
+        public double BoardTempF
+        {
+            get => _boardTempF;
+            private set
+            {
+                if (_boardTempF != value)
+                {
+                    _boardTempF = value;
+                    OnPropertyChanged(nameof(BoardTempF));
+                }
+            }
+        }
+
         private List<double> _outputCurrent { get; set; }
-        public List<double> OutputCurrent { get => _outputCurrent; }
+        public List<double> OutputCurrent
+        {
+            get => _outputCurrent;
+            private set
+            {
+                if (_outputCurrent != value)
+                {
+                    _outputCurrent = value;
+                    OnPropertyChanged(nameof(OutputCurrent));
+                }
+            }
+        }
+
         public enum OutState 
         { 
             Off,
@@ -57,11 +174,47 @@ namespace CanDevices
             Suspending
         }
         private List<OutState> _outputState { get; set; }
-        public List<OutState> OutputState { get => _outputState; }
+        public List<OutState> OutputState
+        {
+            get => _outputState;
+            private set
+            {
+                if (_outputState != value)
+                {
+                    _outputState = value;
+                    OnPropertyChanged(nameof(OutputState));
+                }
+            }
+        }
+
         private List<double> _outputCurrentLimit { get; set; }
-        public List<double> OutputCurrentLimit { get => _outputCurrentLimit; }
+        public List<double> OutputCurrentLimit
+        {
+            get => _outputCurrentLimit;
+            private set
+            {
+                if (_outputCurrentLimit != value)
+                {
+                    _outputCurrentLimit = value;
+                    OnPropertyChanged(nameof(OutputCurrentLimit));
+                }
+            }
+        }
+
         private List<int> _outputResetCount { get; set; }
-        public List<int> OutputResetCount { get => _outputResetCount; }
+        public List<int> OutputResetCount
+        {
+            get => _outputResetCount;
+            private set
+            {
+                if (_outputResetCount != value)
+                {
+                    _outputResetCount = value;
+                    OnPropertyChanged(nameof(OutputResetCount));
+                }
+            }
+        }
+
 
         public DingoPdmCan(string name, int id)
         {
@@ -76,6 +229,14 @@ namespace CanDevices
             _outputState = new List<OutState>(new OutState[12]);
             _outputCurrentLimit = new List<double>(new double[12]);
             _outputResetCount = new List<int>(new int[12]);
+        }
+
+        public void UpdateIsConnected()
+        {
+            //Have to use a property set to get OnPropertyChanged to fire
+            //Otherwise could be directly in the getter
+            TimeSpan timeSpan = DateTime.Now - _lastRxTime;
+            IsConnected = timeSpan.TotalMilliseconds < 500;
         }
 
         public bool Read(int id, byte[] data)
@@ -95,6 +256,8 @@ namespace CanDevices
             if (id == BaseId + 10) ReadMessage10(data);
 
             _lastRxTime = DateTime.Now;
+
+            UpdateIsConnected();
 
             return true;
         }

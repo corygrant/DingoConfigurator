@@ -6,18 +6,49 @@ using System.Threading.Tasks;
 
 namespace CanDevices
 {
-    public class DingoDashCan : ICanDevice
+    public class DingoDashCan : NotifyPropertyChangedBase, ICanDevice
     {
-        public string Name { get; set; }
-        public int BaseId { get; private set; }
+        private string _name;
+        public string Name { 
+            get => _name; 
+            set
+            {
+                if (_name != value)
+                {
+                    _name = value;
+                    OnPropertyChanged(nameof(Name));
+                }
+            }
+        }
+
+        private int _baseId;
+        public int BaseId
+        {
+            get => _baseId;
+            private set
+            {
+                if (_baseId != value)
+                {
+                    _baseId = value;
+                    OnPropertyChanged(nameof(BaseId));
+                }
+            }
+        }
+
         private DateTime _lastRxTime { get; set; }
         public DateTime LastRxTime { get => _lastRxTime; }
+
+        private bool _isConnected;
         public bool IsConnected
         {
-            get
+            get => _isConnected;
+            set
             {
-                TimeSpan timeSpan = DateTime.Now - _lastRxTime;
-                return (timeSpan.TotalMilliseconds < 500);
+                if (_isConnected != value)
+                {
+                    _isConnected = value;
+                    OnPropertyChanged(nameof(IsConnected));
+                }
             }
         }
 
@@ -27,9 +58,25 @@ namespace CanDevices
             BaseId = baseId;
         }
 
+        public void UpdateIsConnected()
+        {
+            //Have to use a property set to get OnPropertyChanged to fire
+            //Otherwise could be directly in the getter
+            TimeSpan timeSpan = DateTime.Now - _lastRxTime;
+            IsConnected = timeSpan.TotalMilliseconds < 500;
+        }
+
         public bool Read(int id, byte[] data)
         {
-            throw new NotImplementedException();
+            if ((id < BaseId) || (id > BaseId + 10)) return false;
+
+            //if (id == BaseId + 0) ReadMessage0(data);
+            
+            _lastRxTime = DateTime.Now;
+
+            UpdateIsConnected();
+
+            return true;
         }
     }
 }

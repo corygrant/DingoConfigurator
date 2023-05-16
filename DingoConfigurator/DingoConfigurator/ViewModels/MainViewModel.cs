@@ -36,7 +36,6 @@ namespace DingoConfigurator
         private System.Timers.Timer updateTimer;
 
         public delegate void DataUpdatedHandler(object sender);
-        public DataUpdatedHandler DataUpdated { get; set; }
 
         public MainViewModel()
         {
@@ -49,7 +48,7 @@ namespace DingoConfigurator
             };
 
             //TODO: Setting-Last selected interface
-            SelectedCan = Cans.First(x => x.Name == "PCAN");
+            SelectedCan = Cans.First(x => x.Name == "USB2CAN");
 
             ConnectBtnCmd = new RelayCommand(Connect, CanConnect);
             DisconnectBtnCmd = new RelayCommand(Disconnect, CanDisconnect);
@@ -58,7 +57,7 @@ namespace DingoConfigurator
             UpdateStatusBar();
 
             // Create a timer to update status bar
-            updateTimer = new System.Timers.Timer(1000);
+            updateTimer = new System.Timers.Timer(200);
             updateTimer.Elapsed += UpdateView;
             updateTimer.AutoReset = true;
             updateTimer.Enabled = true;
@@ -70,7 +69,8 @@ namespace DingoConfigurator
             _canDevices = new ObservableCollection<ICanDevice>
             {
                 new DingoPdmCan("Engine PDM", 2000),
-                new CanBoardCan("Steering Wheel", 1600)
+                new CanBoardCan("Steering Wheel", 1600),
+                new DingoDashCan("Dash", 2200)
             };
         }
 
@@ -95,16 +95,11 @@ namespace DingoConfigurator
             UpdateStatusBar();
         }
 
-        private void OnDataUpdated(CanDataEventArgs e)
-        {
-            if(DataUpdated!= null)
-                DataUpdated(this);
-        }
-
         private ViewModelBase _currentViewModel { get; set; }
         public ViewModelBase CurrentViewModel {
             get => _currentViewModel;
             set { 
+                _currentViewModel?.Dispose();
                 _currentViewModel= value;
                 OnPropertyChanged(nameof(CurrentViewModel));
             }
@@ -214,11 +209,14 @@ namespace DingoConfigurator
         #region StatusBar
         private void UpdateStatusBar()
         {
-            CanInterfaceStatusText = $"{SelectedCan.Name} Connected: {CanInterfaceConnected}";
+            CanInterfaceStatusText = $"{SelectedCan.Name} {(CanInterfaceConnected ? "Connected" : "Disconnected")}";
 
             int connectedCount = 0;
-            foreach(var cd in _canDevices)
-                if(cd.IsConnected) connectedCount++;
+            foreach (var cd in _canDevices)
+            {
+                cd.UpdateIsConnected();
+                if (cd.IsConnected) connectedCount++;
+            }
 
             DeviceCountText = $"{connectedCount}";
         }
@@ -260,7 +258,7 @@ namespace DingoConfigurator
         #region Brushes
         private void UpdateBrushes()
         {
-            CanInterfaceStatusFill = (CanInterfaceConnected ? Brushes.LightGreen : Brushes.LightGray);
+            CanInterfaceStatusFill = (CanInterfaceConnected ? Brushes.Lime : Brushes.DarkGray);
         }
         #endregion
     }

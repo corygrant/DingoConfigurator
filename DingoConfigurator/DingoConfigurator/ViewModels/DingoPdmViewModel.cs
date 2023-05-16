@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CanDevices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,31 +10,27 @@ namespace DingoConfigurator.ViewModels
     public class DingoPdmViewModel : ViewModelBase
     {
         private MainViewModel _vm;
+        private DingoPdmCan _pdm;
+        public DingoPdmCan Pdm { get { return _pdm; } }
 
         public DingoPdmViewModel(MainViewModel vm)
         {
             _vm = vm;
-            _vm.DataUpdated += VmDataUpdated;
+
+            _pdm = (DingoPdmCan)_vm.SelectedCanDevice;
+
+            _pdm.PropertyChanged += _pdm_PropertyChanged;
         }
 
-        private bool _isConnected { get; set; }
-        public bool IsConnected {
-            get => _isConnected;
-            set
-            {
-                _isConnected = value;
-                OnPropertyChanged(nameof(IsConnected));
-            }
-        }
-
-        public string BaseId
+        private void _pdm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            get => _vm.SelectedCanDevice?.BaseId.ToString();
+            OnPropertyChanged(e.PropertyName);
         }
 
-        private void VmDataUpdated(object sender)
+        public override void Dispose()
         {
-            IsConnected = _vm.SelectedCanDevice.IsConnected;
+            _pdm.PropertyChanged -= _pdm_PropertyChanged;
+            base.Dispose();
         }
     }
 }

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DingoConfigurator
+namespace CanDevices
 {
-    public class ViewModelBase : INotifyPropertyChanged
+    public class NotifyPropertyChangedBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -15,7 +15,5 @@ namespace DingoConfigurator
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propname));
         }
-
-        public virtual void Dispose(){ }
     }
 }

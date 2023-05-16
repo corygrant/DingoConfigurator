@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:DingoConfigurator.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="Azure">
+    <Grid>
         <TextBlock Text="DingoDash"/>
     </Grid>
 </UserControl>
