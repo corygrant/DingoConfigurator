@@ -44,6 +44,7 @@
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.19\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -150,14 +151,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Views\Icons\pdm_0.png" />
-    <Resource Include="Views\Icons\pdm_1.png" />
+    <Resource Include="Icons\canboard_0.png" />
+    <Resource Include="Icons\canboard_1.png" />
+    <Resource Include="Icons\dash_0.png" />
+    <Resource Include="Icons\dash_1.png" />
+    <Resource Include="Icons\dingoconfigurator.ico" />
+    <Resource Include="Icons\pdm_0.png" />
+    <Resource Include="Icons\pdm_1.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Views\Icons\canboard_0.png" />
-    <Resource Include="Views\Icons\canboard_1.png" />
-    <Resource Include="Views\Icons\dash_0.png" />
-    <Resource Include="Views\Icons\dash_1.png" />
+    <Resource Include="Icons\dingoconfigurator.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
