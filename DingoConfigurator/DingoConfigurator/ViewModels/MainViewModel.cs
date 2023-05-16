@@ -1,6 +1,7 @@
 ﻿using CanDevices;
 using CanInterfaces;
 using DingoConfigurator.Properties;
+using DingoConfigurator.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,12 +10,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
 namespace DingoConfigurator
 {
-    internal class DingoConfiguratorViewModel : ViewModelBase
+    public class MainViewModel : ViewModelBase
     {
         private ICanInterface _can;
 
@@ -33,13 +35,12 @@ namespace DingoConfigurator
 
         private System.Timers.Timer updateTimer;
 
-        public DingoConfiguratorViewModel()
+        public delegate void DataUpdatedHandler(object sender);
+        public DataUpdatedHandler DataUpdated { get; set; }
+
+        public MainViewModel()
         {
-            _canDevices = new ObservableCollection<ICanDevice>
-            {
-                new DingoPdmCan("Engine PDM", 2000),
-                new CanBoardCan("Steering Wheel", 1600)
-            };
+            UpdateCanDevices();
 
             Cans = new ObservableCollection<ComboBoxCanInterfaces>()
             {
@@ -49,7 +50,7 @@ namespace DingoConfigurator
 
             //TODO: Setting-Last selected interface
             SelectedCan = Cans.First(x => x.Name == "PCAN");
-            
+
             ConnectBtnCmd = new RelayCommand(Connect, CanConnect);
             DisconnectBtnCmd = new RelayCommand(Disconnect, CanDisconnect);
 
@@ -61,6 +62,16 @@ namespace DingoConfigurator
             updateTimer.Elapsed += UpdateView;
             updateTimer.AutoReset = true;
             updateTimer.Enabled = true;
+        }
+
+        private void UpdateCanDevices()
+        {
+            _canDevices?.Clear();
+            _canDevices = new ObservableCollection<ICanDevice>
+            {
+                new DingoPdmCan("Engine PDM", 2000),
+                new CanBoardCan("Steering Wheel", 1600)
+            };
         }
 
         private void UpdateView(object sender, ElapsedEventArgs e)
@@ -78,18 +89,56 @@ namespace DingoConfigurator
 
         private void CanDataReceived(object sender, CanDataEventArgs e)
         {
-            Console.WriteLine(e.canData.Id);
-
             foreach (var cd in _canDevices)
                 cd.Read(e.canData.Id, e.canData.Payload);
 
             UpdateStatusBar();
         }
 
+        private void OnDataUpdated(CanDataEventArgs e)
+        {
+            if(DataUpdated!= null)
+                DataUpdated(this);
+        }
+
+        private ViewModelBase _currentViewModel { get; set; }
+        public ViewModelBase CurrentViewModel {
+            get => _currentViewModel;
+            set { 
+                _currentViewModel= value;
+                OnPropertyChanged(nameof(CurrentViewModel));
+            }
+        }
+
+        public ICanDevice SelectedCanDevice { get; set; }
+
         #region TreeView
         public ObservableCollection<ICanDevice> CanDevices
         {
             get => _canDevices;
+        }
+
+        internal void TreeView_SelectionChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (e.NewValue == null) return;
+
+            if(e.NewValue.GetType() == typeof(DingoPdmCan))
+            {
+                SelectedCanDevice = (DingoPdmCan)e.NewValue;
+                CurrentViewModel= new DingoPdmViewModel(this);
+            }
+
+            if (e.NewValue.GetType() == typeof(CanBoardCan))
+            {
+                SelectedCanDevice = (CanBoardCan)e.NewValue;
+                CurrentViewModel = new CanBoardViewModel(this);
+            }
+
+            if (e.NewValue.GetType() == typeof(DingoDashCan))
+            {
+                SelectedCanDevice = (DingoDashCan)e.NewValue;
+                CurrentViewModel = new DingoDashViewModel(this);
+            }
         }
         #endregion
 

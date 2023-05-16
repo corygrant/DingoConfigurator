@@ -20,11 +20,11 @@ namespace DingoConfigurator
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly DingoConfiguratorViewModel _vm;
+        private readonly MainViewModel _vm;
         public MainWindow()
         {
             InitializeComponent();
-            _vm = new DingoConfiguratorViewModel();
+            _vm = new MainViewModel();
             DataContext = _vm;
 
             Closing += MainWindow_Closing;
@@ -33,6 +33,11 @@ namespace DingoConfigurator
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _vm.WindowClosing();
+        }
+
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            _vm.TreeView_SelectionChanged(sender, e);
         }
     }
 }

@@ -24,8 +24,8 @@ namespace DingoPDMConsole
         
         static void Main(string[] args)
         {
-            _pdm = new DingoPdmCan(2000);
-            _canBoard = new CanBoardCan(1600);
+            _pdm = new DingoPdmCan("EnginePDM", 2000);
+            _canBoard = new CanBoardCan("SteeringWheel", 1600);
 
             switch (CAN_INTERFACE)
             {
@@ -41,7 +41,7 @@ namespace DingoPDMConsole
                     return;
             }
 
-            can.Init();
+            can.Init("COM10", CanInterfaceBaudRate.BAUD_500K);
             can.DataReceived += CanDataReceived;
             can.Start();
 

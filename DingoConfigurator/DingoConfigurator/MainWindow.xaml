@@ -6,6 +6,8 @@
         xmlns:local="clr-namespace:DingoConfigurator"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:cd="clr-namespace:CanDevices;assembly=CanDevices"
+        xmlns:vm="clr-namespace:DingoConfigurator.ViewModels"
+        xmlns:vw="clr-namespace:DingoConfigurator.Views"
         mc:Ignorable="d"
         Title="DingoConfigurator" Height="800" Width="800">
     <Window.Resources>
@@ -13,7 +15,7 @@
             <SolidColorBrush x:Key="PdmBrush" Color="Crimson"/>
             <SolidColorBrush x:Key="CanBoardBrush" Color="LightGreen"/>
             <SolidColorBrush x:Key="DashBrush" Color="MediumOrchid"/>
-            
+
             <sys:Double x:Key="TypeEllipseSize">12</sys:Double>
         </ResourceDictionary>
     </Window.Resources>
@@ -76,13 +78,25 @@
         </StatusBar>
         <Border BorderBrush="Black" BorderThickness="1">
             <Grid>
+                <Grid.Resources>
+                    <DataTemplate DataType="{x:Type vm:DingoPdmViewModel}">
+                        <vw:DingoPdmView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:CanBoardViewModel}">
+                        <vw:CanBoardView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:DingoDashViewModel}">
+                        <vw:DingoDashView/>
+                    </DataTemplate>
+                </Grid.Resources>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
                 <TreeView Grid.Column="0"
-                      ItemsSource="{Binding CanDevices}">
+                          ItemsSource="{Binding CanDevices}"
+                          SelectedItemChanged="TreeView_SelectedItemChanged">
                     <TreeView.Resources>
                         <HierarchicalDataTemplate DataType="{x:Type cd:DingoPdmCan}">
                             <StackPanel Orientation="Horizontal">
@@ -149,6 +163,7 @@
                           Background="Black" 
                           ShowsPreview="True"
                           Width="1"/>
+                <ContentControl Content="{Binding CurrentViewModel}" Grid.Column="2"/>
             </Grid>
         </Border>
     </DockPanel>

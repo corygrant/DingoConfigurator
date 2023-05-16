@@ -55,9 +55,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DingoConfiguratorViewModel.cs" />
-    <Compile Include="RelayCommand.cs" />
-    <Compile Include="ViewModelBase.cs" />
+    <Compile Include="ViewModels\CanBoardViewModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="ViewModels\DingoDashViewModel.cs" />
+    <Compile Include="ViewModels\DingoPdmViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="Views\CanBoardView.xaml.cs">
+      <DependentUpon>CanBoardView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DingoDashView.xaml.cs">
+      <DependentUpon>DingoDashView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DingoPdmView.xaml.cs">
+      <DependentUpon>DingoPdmView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Views\CanBoardView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DingoDashView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -70,6 +90,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\DingoPdmView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

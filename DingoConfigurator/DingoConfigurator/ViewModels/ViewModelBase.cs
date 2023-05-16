@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace DingoConfigurator
 {
-    internal class ViewModelBase : INotifyPropertyChanged
+    public class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void OnPropertyChanged(string propname)
+        protected void OnPropertyChanged(string propname)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propname));
         }
