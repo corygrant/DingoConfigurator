@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncObservableCollection.cs" />
     <Compile Include="CanBoardCan.cs" />
     <Compile Include="DingoDashCan.cs" />
     <Compile Include="DingoPdmCan.cs" />

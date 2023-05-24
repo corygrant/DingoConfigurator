@@ -7,7 +7,138 @@ using System.Threading.Tasks;
 
 namespace CanDevices
 {
-    public class DingoPdmCan : NotifyPropertyChangedBase, ICanDevice
+    public enum OutState
+    {
+        Off,
+        On,
+        InRush,
+        ShortCircuit,
+        Overcurrent,
+        Fault,
+        Suspended,
+        TurningOff,
+        TurningOn,
+        InRushing,
+        ShortCircuiting,
+        Overcurrenting,
+        Faulting,
+        Suspending
+    }
+
+    public class DingoPdmOutput : NotifyPropertyChangedBase
+    {
+        private int _number { get; set; }
+        public int Number
+        {
+            get => _number;
+            set
+            {
+                if(_number != value)
+                {
+                    _number = value;
+                    OnPropertyChanged(nameof(Number));
+                }
+            }
+        }
+
+        private double _current { get; set; }
+        public double Current
+        {
+            get => _current;
+            set
+            {
+                if (_current != value)
+                {
+                    _current = value;
+                    OnPropertyChanged(nameof(Current));
+                }
+            }
+        }
+
+        private OutState _state { get; set; }
+        public OutState State
+        {
+            get => _state;
+            set
+            {
+                if (_state != value)
+                {
+                    _state = value;
+                    OnPropertyChanged(nameof(State));
+                }
+            }
+        }
+
+        private double _currentLimit { get; set; }
+        public double CurrentLimit
+        {
+            get => _currentLimit;
+            set
+            {
+                if (_currentLimit != value)
+                {
+                    _currentLimit = value;
+                    OnPropertyChanged(nameof(CurrentLimit));
+                }
+            }
+        }
+
+        private int _resetCount { get; set; }
+        public int ResetCount
+        {
+            get => _resetCount;
+            set
+            {
+                if (_resetCount != value)
+                {
+                    _resetCount = value;
+                    OnPropertyChanged(nameof(ResetCount));
+                }
+            }
+        }
+
+        public DingoPdmOutput()
+        {
+            _number = 0;
+            _state = OutState.Off;
+            _current = 0;
+            _currentLimit = 0;
+            _resetCount = 0;
+        }
+    }
+
+    public class DingoPdmInput : NotifyPropertyChangedBase
+    {
+        private int _number { get; set; }
+        public int Number
+        {
+            get => _number;
+            set
+            {
+                if (_number != value)
+                {
+                    _number = value;
+                    OnPropertyChanged(nameof(Number));
+                }
+            }
+        }
+
+        private bool _state;
+        public bool State
+        {
+            get => _state;
+            set
+            {
+                if( _state != value)
+                {
+                    _state = value;
+                    OnPropertyChanged(nameof(State));
+                }
+            }
+        }
+    }
+
+        public class DingoPdmCan : NotifyPropertyChangedBase, ICanDevice
     {
         private string _name;
         public string Name { 
@@ -52,8 +183,8 @@ namespace CanDevices
             } 
         }
 
-        private List<bool> _digitalInputs { get; set; }
-        public List<bool> DigitalInputs
+        private new ObservableCollection<DingoPdmInput> _digitalInputs { get; set; }
+        public new ObservableCollection<DingoPdmInput> DigitalInputs
         {
             get => _digitalInputs;
             set
@@ -142,93 +273,43 @@ namespace CanDevices
             }
         }
 
-        private List<double> _outputCurrent { get; set; }
-        public List<double> OutputCurrent
+        private ObservableCollection<DingoPdmOutput> _outputs;
+        public ObservableCollection<DingoPdmOutput> Outputs
         {
-            get => _outputCurrent;
+            get => _outputs;
             private set
             {
-                if (_outputCurrent != value)
+                if(_outputs != value)
                 {
-                    _outputCurrent = value;
-                    OnPropertyChanged(nameof(OutputCurrent));
+                    _outputs = value;
+                    OnPropertyChanged(nameof(Outputs));
                 }
             }
         }
-
-        public enum OutState 
-        { 
-            Off,
-            On,
-            InRush,
-            ShortCircuit,
-            Overcurrent,
-            Fault,
-            Suspended,
-            TurningOff,
-            TurningOn,
-            InRushing,
-            ShortCircuiting,
-            Overcurrenting,
-            Faulting,
-            Suspending
-        }
-        private List<OutState> _outputState { get; set; }
-        public List<OutState> OutputState
-        {
-            get => _outputState;
-            private set
-            {
-                if (_outputState != value)
-                {
-                    _outputState = value;
-                    OnPropertyChanged(nameof(OutputState));
-                }
-            }
-        }
-
-        private List<double> _outputCurrentLimit { get; set; }
-        public List<double> OutputCurrentLimit
-        {
-            get => _outputCurrentLimit;
-            private set
-            {
-                if (_outputCurrentLimit != value)
-                {
-                    _outputCurrentLimit = value;
-                    OnPropertyChanged(nameof(OutputCurrentLimit));
-                }
-            }
-        }
-
-        private List<int> _outputResetCount { get; set; }
-        public List<int> OutputResetCount
-        {
-            get => _outputResetCount;
-            private set
-            {
-                if (_outputResetCount != value)
-                {
-                    _outputResetCount = value;
-                    OnPropertyChanged(nameof(OutputResetCount));
-                }
-            }
-        }
+        
 
 
         public DingoPdmCan(string name, int id)
         {
             Name = name;
             BaseId = id;
-            _digitalInputs= new List<bool>(new bool[8]);
-            DeviceState= new DevState();
+            DigitalInputs= new ObservableCollection<DingoPdmInput>();
+            for (int i = 0; i < 8; i++)
+            {
+                DigitalInputs.Add(new DingoPdmInput());
+                DigitalInputs[i].Number = i + 1;
+            }
+
+            DeviceState = new DevState();
             TotalCurrent=0;
             BatteryVoltage=0;
             BoardTempC=0;
-            _outputCurrent= new List<double>(new double[12]);
-            _outputState = new List<OutState>(new OutState[12]);
-            _outputCurrentLimit = new List<double>(new double[12]);
-            _outputResetCount = new List<int>(new int[12]);
+            Outputs = new ObservableCollection<DingoPdmOutput>();
+            for(int i=0; i<12; i++)
+            {
+                Outputs.Add(new DingoPdmOutput());
+                Outputs[i].Number = i + 1;
+            }
         }
 
         public void UpdateIsConnected()
@@ -266,7 +347,7 @@ namespace CanDevices
         {
             for (int i = 0; i < data.Length; i++)
             {
-                _digitalInputs[i] = Convert.ToBoolean(data[i]);
+                DigitalInputs[i].State = Convert.ToBoolean(data[i]);
             }
         }
 
@@ -282,86 +363,86 @@ namespace CanDevices
 
         private void ReadMessage2(byte[] data)
         {
-            _outputCurrent[0] = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
-            _outputCurrent[1] = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
-            _outputCurrent[2] = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
-            _outputCurrent[3] = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
+            Outputs[0].Current = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
+            Outputs[1].Current = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
+            Outputs[2].Current = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
+            Outputs[3].Current = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
         }
 
         private void ReadMessage3(byte[] data)
         {
-            _outputCurrent[4] = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
-            _outputCurrent[5] = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
-            _outputCurrent[6] = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
-            _outputCurrent[7] = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
+            Outputs[4].Current = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
+            Outputs[5].Current = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
+            Outputs[6].Current = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
+            Outputs[7].Current = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
         }
 
         private void ReadMessage4(byte[] data)
         {
-            _outputCurrent[8] = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
-            _outputCurrent[9] = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
-            _outputCurrent[10] = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
-            _outputCurrent[11] = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
+            Outputs[8].Current  = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
+            Outputs[9].Current  = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
+            Outputs[10].Current = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
+            Outputs[11].Current = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
         }
 
         private void ReadMessage5(byte[] data)
         {
-            _outputState[0] = (OutState)((data[0] & 0xF0) >> 4);
-            _outputState[1] = (OutState)((data[0] & 0x0F));
-            _outputState[2] = (OutState)((data[1] & 0xF0) >> 4);
-            _outputState[3] = (OutState)((data[1] & 0x0F));
-            _outputState[4] = (OutState)((data[2] & 0xF0) >> 4);
-            _outputState[5] = (OutState)((data[2] & 0x0F));
-            _outputState[6] = (OutState)((data[3] & 0xF0) >> 4);
-            _outputState[7] = (OutState)((data[3] & 0x0F));
-            _outputState[8] = (OutState)((data[4] & 0xF0) >> 4);
-            _outputState[9] = (OutState)((data[4] & 0x0F));
-            _outputState[10] = (OutState)((data[5] & 0xF0) >> 4);
-            _outputState[11] = (OutState)((data[5] & 0x0F));
+            Outputs[0].State = (OutState)((data[0] & 0x0F));
+            Outputs[1].State = (OutState)((data[0] & 0xF0) >> 4);
+            Outputs[2].State = (OutState)((data[1] & 0x0F));
+            Outputs[3].State = (OutState)((data[1] & 0xF0) >> 4);
+            Outputs[4].State = (OutState)((data[2] & 0x0F));
+            Outputs[5].State = (OutState)((data[2] & 0xF0) >> 4);
+            Outputs[6].State = (OutState)((data[3] & 0x0F));
+            Outputs[7].State  = (OutState)((data[3] & 0xF0) >> 4);
+            Outputs[8].State = (OutState)((data[4] & 0x0F));
+            Outputs[9].State = (OutState)((data[4] & 0xF0) >> 4);
+            Outputs[10].State = (OutState)((data[5] & 0x0F));
+            Outputs[11].State = (OutState)((data[5] & 0xF0) >> 4);
         }
 
         private void ReadMessage6(byte[] data)
         {
-            _outputCurrentLimit[0] = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
-            _outputCurrentLimit[1] = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
-            _outputCurrentLimit[2] = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
-            _outputCurrentLimit[3] = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
+            Outputs[0].CurrentLimit = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
+            Outputs[1].CurrentLimit = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
+            Outputs[2].CurrentLimit = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
+            Outputs[3].CurrentLimit = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
         }
 
         private void ReadMessage7(byte[] data)
         {
-            _outputCurrentLimit[4] = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
-            _outputCurrentLimit[5] = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
-            _outputCurrentLimit[6] = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
-            _outputCurrentLimit[7] = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
+            Outputs[4].CurrentLimit = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
+            Outputs[5].CurrentLimit = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
+            Outputs[6].CurrentLimit = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
+            Outputs[7].CurrentLimit = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
         }
 
         private void ReadMessage8(byte[] data)
         {
-            _outputCurrentLimit[8] = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
-            _outputCurrentLimit[9] = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
-            _outputCurrentLimit[10] = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
-            _outputCurrentLimit[11] = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
+            Outputs[8].CurrentLimit  = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
+            Outputs[9].CurrentLimit  = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
+            Outputs[10].CurrentLimit = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
+            Outputs[11].CurrentLimit = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
         }
 
         private void ReadMessage9(byte[] data)
         {
-            _outputResetCount[0] = data[0];
-            _outputResetCount[1] = data[1];
-            _outputResetCount[2] = data[2];
-            _outputResetCount[3] = data[3];
-            _outputResetCount[4] = data[4];
-            _outputResetCount[5] = data[5];
-            _outputResetCount[6] = data[6];
-            _outputResetCount[7] = data[7];
+            Outputs[0].ResetCount = data[0];
+            Outputs[1].ResetCount = data[1];
+            Outputs[2].ResetCount = data[2];
+            Outputs[3].ResetCount = data[3];
+            Outputs[4].ResetCount = data[4];
+            Outputs[5].ResetCount = data[5];
+            Outputs[6].ResetCount = data[6];
+            Outputs[7].ResetCount = data[7];
         }
 
         private void ReadMessage10(byte[] data)
         {
-            _outputResetCount[8] = data[0];
-            _outputResetCount[9] = data[1];
-            _outputResetCount[10] = data[2];
-            _outputResetCount[11] = data[3];
+            Outputs[8].ResetCount = data[0];
+            Outputs[9].ResetCount = data[1];
+            Outputs[10].ResetCount = data[2];
+            Outputs[11].ResetCount = data[3];
         }
     }
 }
