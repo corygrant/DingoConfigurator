@@ -8,10 +8,197 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="CanBoard" Grid.Row="0"/>
-        <TextBox Text="{Binding Cb.Heartbeat, Mode=OneWay}" Grid.Row="1"/>
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0"
+                       Grid.Column="0"
+                       Text="CAN Base ID"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       Padding="5"/>
+            <TextBox Grid.Row="0"
+                     Grid.Column="1"
+                     Padding="5"
+                     Margin="5"
+                     Text="{Binding Cb.BaseId, Mode=OneWay}"/>
+
+            <TextBlock Grid.Row="0"
+                       Grid.Column="2"
+                       Text="Heartbeat"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       Padding="5"/>
+            <TextBox Grid.Row="0"
+                     Grid.Column="3"
+                     Padding="5"
+                     Margin="5"
+                     Text="{Binding Cb.Heartbeat, Mode=OneWay}"/>
+
+            <TextBlock Grid.Row="0"
+                       Grid.Column="4"
+                       Text="MCU Temperature"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       Padding="5"/>
+            <TextBox Grid.Row="0"
+                     Grid.Column="5"
+                     Padding="5"
+                     Margin="5"
+                     Text="{Binding Cb.BoardTempF, Mode=OneWay}"/>
+            <TextBlock Grid.Row="0"
+                       Grid.Column="6"
+                       Text="°F"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Left"
+                       Padding="5"/>
+        </Grid>
+
+        <Separator Grid.Row="1"
+                   Margin="0 5 0 0"/>
+
+        <DataGrid AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  ItemsSource="{Binding Cb.AnalogIn}"
+                  Grid.Row="2">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Input" Binding="{Binding Number}"  Width="60" MinWidth="60">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="mV" Binding="{Binding Millivolts}" Width="100" MinWidth="100">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Rotary Pos" Binding="{Binding RotarySwitchPos}" Width="100" MinWidth="100">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTemplateColumn Header="Digital" Width="80" MinWidth="80">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Ellipse Name="StatusEllipse" Height="15" Width="15" Fill="Green">
+                                <Ellipse.Style>
+                                    <Style TargetType="{x:Type Ellipse}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DigitalIn}" Value="True">
+                                                <Setter Property="Opacity" Value="1.0"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding DigitalIn}" Value="False">
+                                                <Setter Property="Opacity" Value="0.1"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        
+        <Separator Grid.Row="3"
+                   Margin="0 5 0 0"/>
+
+        <DataGrid AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  ItemsSource="{Binding Cb.DigitalIn}"
+                  Grid.Row="4">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Input" Binding="{Binding Number}"  Width="60" MinWidth="60">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTemplateColumn Header="State" Width="80" MinWidth="80">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Ellipse Name="StatusEllipse" Height="15" Width="15" Fill="Green">
+                                <Ellipse.Style>
+                                    <Style TargetType="{x:Type Ellipse}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding State}" Value="True">
+                                                <Setter Property="Opacity" Value="1.0"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding State}" Value="False">
+                                                <Setter Property="Opacity" Value="0.1"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        
+        <Separator Grid.Row="5"
+                   Margin="0 5 0 0"/>
+
+        <DataGrid AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  ItemsSource="{Binding Cb.DigitalOut}"
+                  Grid.Row="6">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Input" Binding="{Binding Number}"  Width="60" MinWidth="60">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTemplateColumn Header="State" Width="80" MinWidth="80">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Ellipse Name="StatusEllipse" Height="15" Width="15" Fill="Green">
+                                <Ellipse.Style>
+                                    <Style TargetType="{x:Type Ellipse}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding State}" Value="True">
+                                                <Setter Property="Opacity" Value="1.0"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding State}" Value="False">
+                                                <Setter Property="Opacity" Value="0.1"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        
     </Grid>
 </UserControl>

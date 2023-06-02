@@ -1,11 +1,133 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CanDevices
 {
+    public class CanBoardAnalogInput : NotifyPropertyChangedBase
+    {
+        private int _number { get; set; }
+        public int Number
+        {
+            get => _number;
+            set
+            {
+                if (_number != value)
+                {
+                    _number = value;
+                    OnPropertyChanged(nameof(Number));
+                }
+            }
+        }
+
+        private double _millivolts;
+        public double Millivolts
+        {
+            get => _millivolts;
+            set
+            {
+                if (_millivolts != value)
+                {
+                    _millivolts = value;
+                    OnPropertyChanged(nameof(Millivolts));
+                }
+            }
+        }
+
+        private int _rotarySwitchPos;
+        public int RotarySwitchPos
+        {
+            get => _rotarySwitchPos;
+            set
+            {
+                if (_rotarySwitchPos != value)
+                {
+                    _rotarySwitchPos = value;
+                    OnPropertyChanged(nameof(RotarySwitchPos));
+                }
+            }
+        }
+
+        private bool _digitalIn;
+        public bool DigitalIn
+        {
+            get => _digitalIn;
+            set
+            {
+                if (_digitalIn != value)
+                {
+                    _digitalIn = value;
+                    OnPropertyChanged(nameof(DigitalIn));
+                }
+            }
+        }
+    }
+
+    public class CanBoardDigitalInput : NotifyPropertyChangedBase
+    {
+        private int _number { get; set; }
+        public int Number
+        {
+            get => _number;
+            set
+            {
+                if (_number != value)
+                {
+                    _number = value;
+                    OnPropertyChanged(nameof(Number));
+                }
+            }
+        }
+
+        private bool _state;
+        public bool State
+        {
+            get => _state;
+            set
+            {
+                if (_state != value)
+                {
+                    _state = value;
+                    OnPropertyChanged(nameof(State));
+                }
+            }
+        }
+    }
+
+    public class CanBoardDigitalOutput : NotifyPropertyChangedBase
+    {
+        private int _number { get; set; }
+        public int Number
+        {
+            get => _number;
+            set
+            {
+                if (_number != value)
+                {
+                    _number = value;
+                    OnPropertyChanged(nameof(Number));
+                }
+            }
+        }
+
+        private bool _state;
+        public bool State
+        {
+            get => _state;
+            set
+            {
+                if (_state != value)
+                {
+                    _state = value;
+                    OnPropertyChanged(nameof(State));
+                }
+            }
+        }
+    }
+
     public class CanBoardCan : NotifyPropertyChangedBase, ICanDevice
     {
         private string _name;
@@ -52,19 +174,6 @@ namespace CanDevices
             }
         }
 
-        private List<double> _analogInMV = new List<double>(new double[5]);
-        public List<double> AnalogInMV { 
-            get => _analogInMV; 
-            private set
-            {
-                if(_analogInMV!= value)
-                {
-                    _analogInMV= value;
-                    OnPropertyChanged(nameof(AnalogInMV));
-                }
-            }
-        }
-
         private double _boardTempC;
         public double BoardTempC { 
             get => _boardTempC; 
@@ -78,21 +187,25 @@ namespace CanDevices
             }
         }
 
-        private List<int> _rotarySwitchPos = new List<int>(new int[5]);
-        public List<int> RotarySwitchPos { 
-            get => _rotarySwitchPos; 
-            private set
+        private double _boardTempF;
+        public double BoardTempF => _boardTempC * 1.8 + 32.0;
+
+        private ObservableCollection<CanBoardAnalogInput> _analogIn;
+        public ObservableCollection<CanBoardAnalogInput> AnalogIn
+        {
+            get => _analogIn;
+            set
             {
-                if (_rotarySwitchPos!= value)
+                if (_analogIn!= value)
                 {
-                    _rotarySwitchPos= value;
-                    OnPropertyChanged(nameof(RotarySwitchPos));
+                    _analogIn= value;
+                    OnPropertyChanged(nameof(AnalogIn));
                 }
             }
         }
 
-        private List<bool> _digitalIn = new List<bool>(new bool[8]);
-        public List<bool> DigitalIn { 
+        private ObservableCollection<CanBoardDigitalInput> _digitalIn;
+        public ObservableCollection<CanBoardDigitalInput> DigitalIn { 
             get => _digitalIn; 
             private set
             {
@@ -104,21 +217,8 @@ namespace CanDevices
             }
         }
 
-        private List<bool> _analogDigitalIn = new List<bool>(new bool[5]);   
-        public List<bool> AnalogDigitalIn { 
-            get => _analogDigitalIn;
-            private set
-            {
-                if(_analogDigitalIn != value)
-                {
-                    _analogDigitalIn= value;
-                    OnPropertyChanged(nameof(AnalogDigitalIn));
-                }
-            }
-        }
-
-        private List<bool> _digitalOut = new List<bool>(new bool[4]);
-        public List<bool> DigitalOut { 
+        private ObservableCollection<CanBoardDigitalOutput> _digitalOut;
+        public ObservableCollection<CanBoardDigitalOutput> DigitalOut { 
             get => _digitalOut; private set
             {
                 if (_digitalOut != value)
@@ -147,6 +247,27 @@ namespace CanDevices
         {
             Name = name;
             BaseId = baseId;
+
+            AnalogIn = new ObservableCollection<CanBoardAnalogInput>();
+            for (int i=0; i < 5; i++)
+            {
+                AnalogIn.Add(new CanBoardAnalogInput());
+                AnalogIn[i].Number = i + 1;
+            }
+
+            DigitalIn = new ObservableCollection<CanBoardDigitalInput>();
+            for (int i = 0; i < 8; i++)
+            {
+                DigitalIn.Add(new CanBoardDigitalInput());
+                DigitalIn[i].Number = i + 1;
+            }
+
+            DigitalOut = new ObservableCollection<CanBoardDigitalOutput>();
+            for (int i = 0; i < 4; i++)
+            {
+                DigitalOut.Add(new CanBoardDigitalOutput());
+                DigitalOut[i].Number = i + 1;
+            }
         }
 
         public void UpdateIsConnected()
@@ -172,15 +293,15 @@ namespace CanDevices
 
         private void ReadMessage0(byte[] data)
         {
-            AnalogInMV[0] = Convert.ToDouble((data[1] << 8) + data[0]);
-            AnalogInMV[1] = Convert.ToDouble((data[3] << 8) + data[2]);
-            AnalogInMV[2] = Convert.ToDouble((data[5] << 8) + data[4]);
-            AnalogInMV[3] = Convert.ToDouble((data[7] << 8) + data[6]);
+            AnalogIn[0].Millivolts = Convert.ToDouble((data[1] << 8) + data[0]);
+            AnalogIn[1].Millivolts = Convert.ToDouble((data[3] << 8) + data[2]);
+            AnalogIn[2].Millivolts = Convert.ToDouble((data[5] << 8) + data[4]);
+            AnalogIn[3].Millivolts = Convert.ToDouble((data[7] << 8) + data[6]);
         }
 
         private void ReadMessage1(byte[] data)
         {
-            AnalogInMV[4] = Convert.ToDouble((data[1] << 8) + data[0]);
+            AnalogIn[4].Millivolts = Convert.ToDouble((data[1] << 8) + data[0]);
             //Byte 2 empty
             //Byte 3 empty
             //Byte 4 empty
@@ -190,31 +311,31 @@ namespace CanDevices
 
         private void ReadMessage2(byte[] data)
         {
-            RotarySwitchPos[0] = Convert.ToInt16(data[0] & 0x0F);
-            RotarySwitchPos[1] = Convert.ToInt16(data[0] & 0xF0);
-            RotarySwitchPos[2] = Convert.ToInt16(data[1] & 0x0F);
-            RotarySwitchPos[3] = Convert.ToInt16(data[1] & 0xF0);
-            RotarySwitchPos[4] = Convert.ToInt16(data[2] & 0x0F);
+            AnalogIn[0].RotarySwitchPos = Convert.ToInt16(data[0] & 0x0F);
+            AnalogIn[1].RotarySwitchPos = Convert.ToInt16(data[0] & 0xF0);
+            AnalogIn[2].RotarySwitchPos = Convert.ToInt16(data[1] & 0x0F);
+            AnalogIn[3].RotarySwitchPos = Convert.ToInt16(data[1] & 0xF0);
+            AnalogIn[4].RotarySwitchPos = Convert.ToInt16(data[2] & 0x0F);
 
-            DigitalIn[0] = Convert.ToBoolean(data[4] & 0x1);
-            DigitalIn[1] = Convert.ToBoolean((data[4] & 0x2) >> 1);
-            DigitalIn[2] = Convert.ToBoolean((data[4] & 0x4) >> 2);
-            DigitalIn[3] = Convert.ToBoolean((data[4] & 0x8) >> 3);
-            DigitalIn[4] = Convert.ToBoolean((data[4] & 0x10) >> 4);
-            DigitalIn[5] = Convert.ToBoolean((data[4] & 0x20) >> 5);
-            DigitalIn[6] = Convert.ToBoolean((data[4] & 0x40) >> 6);
-            DigitalIn[7] = Convert.ToBoolean((data[4] & 0x80) >> 7);
+            DigitalIn[0].State = Convert.ToBoolean(data[4] & 0x1);
+            DigitalIn[1].State = Convert.ToBoolean((data[4] & 0x2) >> 1);
+            DigitalIn[2].State = Convert.ToBoolean((data[4] & 0x4) >> 2);
+            DigitalIn[3].State = Convert.ToBoolean((data[4] & 0x8) >> 3);
+            DigitalIn[4].State = Convert.ToBoolean((data[4] & 0x10) >> 4);
+            DigitalIn[5].State = Convert.ToBoolean((data[4] & 0x20) >> 5);
+            DigitalIn[6].State = Convert.ToBoolean((data[4] & 0x40) >> 6);
+            DigitalIn[7].State = Convert.ToBoolean((data[4] & 0x80) >> 7);
 
-            AnalogDigitalIn[0] = Convert.ToBoolean(data[5] & 0x1);
-            AnalogDigitalIn[1] = Convert.ToBoolean((data[5] & 0x2) >> 1);
-            AnalogDigitalIn[2] = Convert.ToBoolean((data[5] & 0x4) >> 2);
-            AnalogDigitalIn[3] = Convert.ToBoolean((data[5] & 0x8) >> 3);
-            AnalogDigitalIn[4] = Convert.ToBoolean((data[5] & 0x10) >> 4);
+            AnalogIn[0].DigitalIn = Convert.ToBoolean(data[5] & 0x1);
+            AnalogIn[1].DigitalIn = Convert.ToBoolean((data[5] & 0x2) >> 1);
+            AnalogIn[2].DigitalIn = Convert.ToBoolean((data[5] & 0x4) >> 2);
+            AnalogIn[3].DigitalIn = Convert.ToBoolean((data[5] & 0x8) >> 3);
+            AnalogIn[4].DigitalIn = Convert.ToBoolean((data[5] & 0x10) >> 4);
 
-            DigitalOut[0] = Convert.ToBoolean(data[6] & 0x1);
-            DigitalOut[1] = Convert.ToBoolean((data[6] & 0x2) >> 1);
-            DigitalOut[2] = Convert.ToBoolean((data[6] & 0x4) >> 2);
-            DigitalOut[3] = Convert.ToBoolean((data[6] & 0x8) >> 3);
+            DigitalOut[0].State = Convert.ToBoolean(data[6] & 0x1);
+            DigitalOut[1].State = Convert.ToBoolean((data[6] & 0x2) >> 1);
+            DigitalOut[2].State = Convert.ToBoolean((data[6] & 0x4) >> 2);
+            DigitalOut[3].State = Convert.ToBoolean((data[6] & 0x8) >> 3);
 
             Heartbeat = Convert.ToInt16(data[7]);
         }

@@ -134,8 +134,8 @@
                                 <ProgressBar.Template>
                                     <ControlTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Rectangle Name="PART_Indicator" Height="20" Fill="Blue" />
-                                            <Rectangle Name="PART_Track" Width="100" Height="20" Fill="Red" />
+                                            <Rectangle Name="PART_Indicator" Height="20" Fill="Lime" />
+                                            <Rectangle Name="PART_Track" Width="100" Height="20" Fill="Gray" />
                                         </StackPanel>
                                     </ControlTemplate>
                                 </ProgressBar.Template>
