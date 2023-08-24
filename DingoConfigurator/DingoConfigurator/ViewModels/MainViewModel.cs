@@ -1,5 +1,6 @@
 ﻿using CanDevices;
 using CanInterfaces;
+using DingoConfigurator.Config;
 using DingoConfigurator.Properties;
 using DingoConfigurator.ViewModels;
 using System;
@@ -61,6 +62,10 @@ namespace DingoConfigurator
             updateTimer.Elapsed += UpdateView;
             updateTimer.AutoReset = true;
             updateTimer.Enabled = true;
+
+            DevicesConfig config = new DevicesConfig();
+            DevicesConfigHandler.InitConfig(config);
+            DevicesConfigHandler.Serialize(config);
         }
 
         private void UpdateCanDevices()
@@ -121,6 +126,21 @@ namespace DingoConfigurator
             {
                 SelectedCanDevice = (DingoPdmCan)e.NewValue;
                 CurrentViewModel= new DingoPdmViewModel(this);
+            }
+
+            if(e.NewValue.GetType() == typeof(CanDeviceSub))
+            {
+                CanDeviceSub sub = (CanDeviceSub)e.NewValue;
+
+                if(sub.CanDevice.GetType() == typeof(DingoPdmCan))
+                {
+                    if (sub.Name.Equals("Settings"))
+                    {
+                        SelectedCanDevice = (DingoPdmCan)sub.CanDevice;
+                        CurrentViewModel = new DingoPdmSettingsViewModel(this);
+                    }
+                }
+
             }
 
             if (e.NewValue.GetType() == typeof(CanBoardCan))

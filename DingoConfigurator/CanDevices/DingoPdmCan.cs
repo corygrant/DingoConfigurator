@@ -11,18 +11,8 @@ namespace CanDevices
     {
         Off,
         On,
-        InRush,
-        ShortCircuit,
         Overcurrent,
-        Fault,
-        Suspended,
-        TurningOff,
-        TurningOn,
-        InRushing,
-        ShortCircuiting,
-        Overcurrenting,
-        Faulting,
-        Suspending
+        Fault
     }
 
     public class DingoPdmOutput : NotifyPropertyChangedBase
@@ -138,7 +128,7 @@ namespace CanDevices
         }
     }
 
-        public class DingoPdmCan : NotifyPropertyChangedBase, ICanDevice
+    public class DingoPdmCan : NotifyPropertyChangedBase, ICanDevice
     {
         private string _name;
         public string Name { 
@@ -167,6 +157,20 @@ namespace CanDevices
             }
         }
 
+        private List<CanDeviceSub> _subPages = new List<CanDeviceSub>();
+        public List<CanDeviceSub> SubPages
+        {
+            get => _subPages;
+            private set
+            {
+                if(_subPages != value)
+                {
+                    _subPages = value;
+                    OnPropertyChanged(nameof(SubPages));
+                }
+            }
+        }
+
         private DateTime _lastRxTime { get; set; }
         public DateTime LastRxTime { get => _lastRxTime;}
 
@@ -179,6 +183,10 @@ namespace CanDevices
                 {
                     _isConnected = value;
                     OnPropertyChanged(nameof(IsConnected));
+                    foreach(var subPage in _subPages)
+                    {
+                        subPage.UpdateProperty(nameof(IsConnected));
+                    }
                 }
             } 
         }
@@ -310,6 +318,8 @@ namespace CanDevices
                 Outputs.Add(new DingoPdmOutput());
                 Outputs[i].Number = i + 1;
             }
+
+            SubPages.Add(new CanDeviceSub("Settings", this));
         }
 
         public void UpdateIsConnected()

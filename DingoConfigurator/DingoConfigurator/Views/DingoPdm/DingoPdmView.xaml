@@ -26,61 +26,61 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0"
-                       Grid.Column="0"
-                       Text="CAN Base ID"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Right"
-                       Padding="5"/>
+                               Grid.Column="0"
+                               Text="CAN Base ID"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Right"
+                               Padding="5"/>
             <TextBox Grid.Row="0"
-                     Grid.Column="1"
-                     Padding="5"
-                     Margin="5"
-                     Text="{Binding Pdm.BaseId, Mode=OneWay}"/>
-            
+                             Grid.Column="1"
+                             Padding="5"
+                             Margin="5"
+                             Text="{Binding Pdm.BaseId, Mode=OneWay}"/>
+
             <TextBlock Grid.Row="0"
-                       Grid.Column="2"
-                       Text="Total Current (A)"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Right"
-                       Padding="5"/>
+                               Grid.Column="2"
+                               Text="Total Current (A)"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Right"
+                               Padding="5"/>
             <TextBox Grid.Row="0"
-                     Grid.Column="3"
-                     Padding="5"
-                     Margin="5"
-                     Text="{Binding Pdm.TotalCurrent, Mode=OneWay}"/>
-            
+                             Grid.Column="3"
+                             Padding="5"
+                             Margin="5"
+                             Text="{Binding Pdm.TotalCurrent, Mode=OneWay}"/>
+
             <TextBlock Grid.Row="1"
-                       Grid.Column="0"
-                       Text="Battery Voltage (V)"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Right"
-                       Padding="5"/>
+                               Grid.Column="0"
+                               Text="Battery Voltage (V)"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Right"
+                               Padding="5"/>
             <TextBox Grid.Row="1"
-                     Grid.Column="1"
-                     Padding="5"
-                     Margin="5"
-                     Text="{Binding Pdm.BatteryVoltage, Mode=OneWay}"/>
-            
+                             Grid.Column="1"
+                             Padding="5"
+                             Margin="5"
+                             Text="{Binding Pdm.BatteryVoltage, Mode=OneWay}"/>
+
             <TextBlock Grid.Row="1"
-                       Grid.Column="2"
-                       Text="Board Temperature (°F)"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Right"
-                       Padding="5"/>
+                               Grid.Column="2"
+                               Text="Board Temperature (°F)"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Right"
+                               Padding="5"/>
             <TextBox Grid.Row="1"
-                     Grid.Column="3"
-                     Padding="5"
-                     Margin="5"
-                     Text="{Binding Pdm.BoardTempF, Mode=OneWay}"/>
+                             Grid.Column="3"
+                             Padding="5"
+                             Margin="5"
+                             Text="{Binding Pdm.BoardTempF, Mode=OneWay}"/>
         </Grid>
 
         <Separator Grid.Row="1"
-                   Margin="0 5 0 0"/>
+                           Margin="0 5 0 0"/>
 
         <DataGrid AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  ItemsSource="{Binding Pdm.Outputs}"
-                  Grid.Row="2">
+                          IsReadOnly="True"
+                          ItemsSource="{Binding Pdm.Outputs}"
+                          Grid.Row="2">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Output" Binding="{Binding Number}"  Width="70" MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
@@ -100,25 +100,13 @@
                                                 <Setter Property="Fill" Value="Gray"/>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding State}" Value="On">
-                                                <Setter Property="Fill" Value="Green"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding State}" Value="InRush">
-                                                <Setter Property="Fill" Value="Yellow"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding State}" Value="TurningOn">
-                                                <Setter Property="Fill" Value="Yellow"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding State}" Value="TurningOff">
-                                                <Setter Property="Fill" Value="Yellow"/>
+                                                <Setter Property="Fill" Value="Lime"/>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding State}" Value="Fault">
                                                 <Setter Property="Fill" Value="Red"/>
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding State}" Value="Suspended">
-                                                <Setter Property="Fill" Value="Red"/>
-                                            </DataTrigger>
                                             <DataTrigger Binding="{Binding State}" Value="Overcurrent">
-                                                <Setter Property="Fill" Value="Red"/>
+                                                <Setter Property="Fill" Value="Yellow"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -127,15 +115,34 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="State" Width="60" MinWidth="60">
+                <DataGridTemplateColumn Header="Amps" Width="100" MinWidth="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ProgressBar Minimum="0" Maximum="{Binding CurrentLimit}" Value="{Binding Current}">
+                            <ProgressBar Width="80" MinWidth="80" Minimum="0" Maximum="{Binding CurrentLimit}" Value="{Binding Current}">
                                 <ProgressBar.Template>
                                     <ControlTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Rectangle Name="PART_Indicator" Height="20" Fill="Lime" />
-                                            <Rectangle Name="PART_Track" Width="100" Height="20" Fill="Gray" />
+                                            <Rectangle Name="PART_Indicator" Height="20">
+                                                <Rectangle.Style>
+                                                    <Style TargetType="{x:Type Rectangle}">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding State}" Value="Off">
+                                                                <Setter Property="Fill" Value="Gray"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding State}" Value="On">
+                                                                <Setter Property="Fill" Value="Lime"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding State}" Value="Fault">
+                                                                <Setter Property="Fill" Value="Red"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding State}" Value="Overcurrent">
+                                                                <Setter Property="Fill" Value="Yellow"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Rectangle.Style>
+                                            </Rectangle>
+                                            <Rectangle Name="PART_Track" Width="80" Height="20" Fill="Gray" />
                                         </StackPanel>
                                     </ControlTemplate>
                                 </ProgressBar.Template>
@@ -166,14 +173,14 @@
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
-        
+
         <Separator Grid.Row="3"
-                   Margin="0 5 0 0"/>
+                           Margin="0 5 0 0"/>
 
         <DataGrid AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  ItemsSource="{Binding Pdm.DigitalInputs}"
-                  Grid.Row="4">
+                          IsReadOnly="True"
+                          ItemsSource="{Binding Pdm.DigitalInputs}"
+                          Grid.Row="4">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Input" Binding="{Binding Number}"  Width="60" MinWidth="60">
                     <DataGridTextColumn.ElementStyle>
@@ -185,7 +192,7 @@
                 <DataGridTemplateColumn Header="State" Width="60" MinWidth="60">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Ellipse Name="StatusEllipse" Height="15" Width="15" Fill="Green">
+                            <Ellipse Name="StatusEllipse" Height="15" Width="15" Fill="Lime">
                                 <Ellipse.Style>
                                     <Style TargetType="{x:Type Ellipse}">
                                         <Style.Triggers>

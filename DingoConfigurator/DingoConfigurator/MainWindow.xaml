@@ -84,6 +84,9 @@
                     <DataTemplate DataType="{x:Type vm:DingoPdmViewModel}">
                         <vw:DingoPdmView/>
                     </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:DingoPdmSettingsViewModel}">
+                        <vw:DingoPdmSettingsView/>
+                    </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:CanBoardViewModel}">
                         <vw:CanBoardView/>
                     </DataTemplate>
@@ -100,7 +103,27 @@
                           ItemsSource="{Binding CanDevices}"
                           SelectedItemChanged="TreeView_SelectedItemChanged">
                     <TreeView.Resources>
-                        <HierarchicalDataTemplate DataType="{x:Type cd:DingoPdmCan}">
+                        <HierarchicalDataTemplate DataType="{x:Type cd:CanDeviceSub}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image x:Name="TypeImage"
+                                       Width="20"
+                                       Height="20"
+                                       Margin="2 2 5 2"/>
+                                <TextBlock Text="{Binding Name}"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <HierarchicalDataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                    <Setter TargetName="TypeImage" Property="Opacity" Value="1.0"/>
+                                    <Setter TargetName="TypeImage" Property="Source" Value="Icons\settings_1.png"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="False">
+                                    <Setter TargetName="TypeImage" Property="Opacity" Value="0.5"/>
+                                    <Setter TargetName="TypeImage" Property="Source" Value="Icons\settings_0.png"/>
+                                </DataTrigger>
+                            </HierarchicalDataTemplate.Triggers>
+                        </HierarchicalDataTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type cd:DingoPdmCan}" ItemsSource="{Binding SubPages}">
                             <StackPanel Orientation="Horizontal">
                                 <Image  x:Name="TypeImage"
                                         Width="20"
