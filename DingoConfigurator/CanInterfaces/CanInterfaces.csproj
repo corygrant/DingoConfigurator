@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="CanInterfaceTypes.cs" />
     <Compile Include="PCAN.cs" />
+    <Compile Include="USB.cs" />
     <Compile Include="USB2CAN.cs" />
     <Compile Include="ICanInterface.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

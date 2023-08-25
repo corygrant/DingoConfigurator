@@ -6,12 +6,15 @@ using DingoConfigurator.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -21,6 +24,8 @@ namespace DingoConfigurator
     {
         private ICanInterface _can;
 
+        private DevicesConfig _config;
+
         private ObservableCollection<ICanDevice> _canDevices { get; set; }
 
         private bool _canInterfaceConnected;
@@ -29,8 +34,8 @@ namespace DingoConfigurator
             get => _canInterfaceConnected;
             set {
                 _canInterfaceConnected = value;
-                UpdateBrushes();
                 UpdateStatusBar();
+                OnPropertyChanged(nameof(CanInterfaceConnected));
             }
         }
 
@@ -40,21 +45,43 @@ namespace DingoConfigurator
 
         public MainViewModel()
         {
+            _config = new DevicesConfig();
+            _config = DevicesConfigHandler.Deserialize("D:\\GitHub\\DingoConfigurator\\RallyCar.json");
+
             UpdateCanDevices();
+
+            RefreshComPorts(null);
 
             Cans = new ObservableCollection<ComboBoxCanInterfaces>()
             {
                 new ComboBoxCanInterfaces(){ Id=1, Name="USB2CAN"},
-                new ComboBoxCanInterfaces(){ Id=2, Name="PCAN"}
+                new ComboBoxCanInterfaces(){ Id=2, Name="PCAN"},
+                new ComboBoxCanInterfaces(){ Id=3, Name="USB"}
             };
 
-            //TODO: Setting-Last selected interface
-            SelectedCan = Cans.First(x => x.Name == "USB2CAN");
+            //Settings-Last selected values
+            //user.config file located in Users/AppData/Local/DingoConfigurator
+            SelectedBaudRate = Settings.Default.BaudRate;
+            string canName = Settings.Default.CanInterface;
+            if (!String.IsNullOrEmpty(canName))
+            {
+                SelectedCan = Cans.First(x => x.Name == canName);
+            }
+            else
+            {
+                SelectedCan = Cans.First(x => x.Name == "USB2CAN");
+            }
+            string comPort = Settings.Default.ComPort;
+            if(!String.IsNullOrEmpty(comPort))
+            {
+                SelectedComPort = ComPorts.First(x => x.Equals(comPort));
+            }
 
+            //Set Button Commands
             ConnectBtnCmd = new RelayCommand(Connect, CanConnect);
             DisconnectBtnCmd = new RelayCommand(Disconnect, CanDisconnect);
+            RefreshComPortsBtnCmd = new RelayCommand(RefreshComPorts, CanRefreshComPorts);
 
-            UpdateBrushes();
             UpdateStatusBar();
 
             // Create a timer to update status bar
@@ -62,26 +89,30 @@ namespace DingoConfigurator
             updateTimer.Elapsed += UpdateView;
             updateTimer.AutoReset = true;
             updateTimer.Enabled = true;
-
-            DevicesConfig config = new DevicesConfig();
-            DevicesConfigHandler.InitConfig(config);
-            DevicesConfigHandler.Serialize(config);
         }
 
         private void UpdateCanDevices()
         {
             _canDevices?.Clear();
-            _canDevices = new ObservableCollection<ICanDevice>
-            {
-                new DingoPdmCan("Engine PDM", 2000),
-                new CanBoardCan("Steering Wheel", 1600),
-                new DingoDashCan("Dash", 2200)
-            };
+            
+            _canDevices = new ObservableCollection<ICanDevice>();
+            //            {
+            //               new DingoPdmCan("Engine PDM", 2000),
+            //              new CanBoardCan("Steering Wheel", 1600),
+            //             new DingoDashCan("Dash", 2200)
+            //        };
+            foreach (var pdm in _config.pdm)
+                _canDevices.Add(new DingoPdmCan(pdm.label, 2000));
+
+            foreach (var cb in _config.canBoard)
+                _canDevices.Add(new CanBoardCan(cb.label, 1600));
+
+            foreach (var dash in _config.dash)
+                _canDevices.Add(new DingoDashCan(dash.label, 2200));
         }
 
         private void UpdateView(object sender, ElapsedEventArgs e)
         {
-            UpdateBrushes();
             UpdateStatusBar();
         }
 
@@ -90,6 +121,12 @@ namespace DingoConfigurator
             Disconnect(null);
             updateTimer.Stop();
             updateTimer.Dispose();
+
+            //Save user settings
+            Settings.Default.CanInterface = SelectedCan.Name;
+            Settings.Default.BaudRate = SelectedBaudRate;
+            Settings.Default.ComPort = SelectedComPort;
+            Settings.Default.Save();
         }
 
         private void CanDataReceived(object sender, CanDataEventArgs e)
@@ -116,6 +153,15 @@ namespace DingoConfigurator
         public ObservableCollection<ICanDevice> CanDevices
         {
             get => _canDevices;
+        }
+
+        internal void Cans_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender == null) return;
+
+            CanComPorts = !SelectedCan.Name.Equals("PCAN");
+
+            CanBaudRates = !SelectedCan.Name.Equals("USB");
         }
 
         internal void TreeView_SelectionChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -167,7 +213,7 @@ namespace DingoConfigurator
             {
                 case "USB2CAN":
                     _can = new CanInterfaces.USB2CAN();
-                    port = "COM10";
+                    port = SelectedComPort;
                     baud = CanInterfaceBaudRate.BAUD_500K;
                     break;
 
@@ -176,33 +222,50 @@ namespace DingoConfigurator
                     port = "USBBUS1";
                     baud = CanInterfaceBaudRate.BAUD_500K;
                     break;
+
+                case "USB":
+                    _can = new CanInterfaces.USB();
+                    port = SelectedComPort;
+                    baud = CanInterfaceBaudRate.BAUD_500K;//Not used
+                    break;
             }
 
-            _can.Init(port, baud);
+            if(!_can.Init(port, baud)) return;
             _can.DataReceived += CanDataReceived;
-            _can.Start();
+            if(!_can.Start()) return;
             CanInterfaceConnected = true;
-            UpdateBrushes();
             UpdateStatusBar();
         }
 
         
         private bool CanConnect(object parameter)
         {
-            return !CanInterfaceConnected;
+            return !CanInterfaceConnected && 
+                    ((CanComPorts && (SelectedComPort != null)) ||
+                    !CanComPorts);
         }
 
         private void Disconnect(object parameter)
         {
             if(_can != null) _can.Stop();
             CanInterfaceConnected = false;
-            UpdateBrushes();
             UpdateStatusBar();
         }
 
         private bool CanDisconnect(object parameter)
         {
             return CanInterfaceConnected;
+        }
+
+        private void RefreshComPorts(object parameter)
+        {
+            if(ComPorts != null) ComPorts.Clear();
+            ComPorts = new ObservableCollection<string>(SerialPort.GetPortNames());
+        }
+
+        private bool CanRefreshComPorts(object parameter)
+        {
+            return CanComPorts;
         }
         #endregion
 
@@ -219,11 +282,70 @@ namespace DingoConfigurator
             get { return _selectedCan; }
             set { _selectedCan = value; }
         }
+
+        private ObservableCollection<string> _comPorts;
+        public ObservableCollection<string> ComPorts
+        {
+            get { return _comPorts; }
+            set 
+            { 
+                _comPorts = value; 
+                OnPropertyChanged(nameof(ComPorts));
+            }
+        }
+
+        private string _selectedComPort;
+        public string SelectedComPort
+        {
+            get { return _selectedComPort; }
+            set { _selectedComPort = value; }
+        }
+
+        private bool _canComPorts;
+        public bool CanComPorts
+        {
+            get { return _canComPorts; }
+            set
+            {
+                _canComPorts = value;
+                OnPropertyChanged(nameof(CanComPorts));
+            }
+        }
+
+        private CanInterfaceBaudRate _selectedBaudRate;
+        public CanInterfaceBaudRate SelectedBaudRate
+        {
+            get { return _selectedBaudRate; }
+            set { 
+                _selectedBaudRate = value;
+                OnPropertyChanged(nameof(SelectedBaudRate));
+            }
+        }
+
+        public IEnumerable<CanInterfaceBaudRate> BaudRates
+        {
+            get
+            {
+                return (IEnumerable<CanInterfaceBaudRate>)System.Enum.GetValues(typeof(CanInterfaceBaudRate));
+            }
+        }
+
+        private bool _canBaudRates;
+        public bool CanBaudRates
+        {
+            get => _canBaudRates;
+            set
+            {
+                _canBaudRates = value;
+                OnPropertyChanged(nameof(CanBaudRates));
+            }
+        }
         #endregion
 
         #region Buttons
         public ICommand ConnectBtnCmd { get; set; }
         public ICommand DisconnectBtnCmd { get; set; }
+        public ICommand RefreshComPortsBtnCmd { get; set; }
         #endregion
 
         #region StatusBar
@@ -238,7 +360,7 @@ namespace DingoConfigurator
                 if (cd.IsConnected) connectedCount++;
             }
 
-            DeviceCountText = $"{connectedCount}";
+            DeviceCountText = $"Detected Devices: {connectedCount}";
         }
 
         private Brush _canInterfaceStatusFill;
@@ -275,12 +397,6 @@ namespace DingoConfigurator
         }
         #endregion
 
-        #region Brushes
-        private void UpdateBrushes()
-        {
-            CanInterfaceStatusFill = (CanInterfaceConnected ? Brushes.Lime : Brushes.DarkGray);
-        }
-        #endregion
     }
 
     #region ComboBox Types

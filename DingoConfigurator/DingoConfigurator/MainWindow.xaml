@@ -29,15 +29,24 @@
                 <Button Content="Save" />
             </ToolBar>
             <ToolBar>
-                <Label Content="CAN Interface" 
-                       VerticalAlignment="Center" 
-                       FontWeight="Bold"
-                       Margin="5 0 5 0"/>
-                <ComboBox Width="100" 
+                <ComboBox Width="90" 
                           Margin="5 0 5 0"
                           ItemsSource="{Binding Path=Cans}"
-                          SelectedItem="{Binding Path=SelectedCan}" 
+                          SelectedItem="{Binding Path=SelectedCan}"
+                          SelectionChanged="ComboBox_SelectionChanged"
                           DisplayMemberPath="Name"/>
+                <ComboBox Width="75"
+                          Margin="5 0 5 0"
+                          ItemsSource="{Binding Path=ComPorts}"
+                          SelectedItem="{Binding Path=SelectedComPort}"
+                          IsEnabled ="{Binding Path=CanComPorts}"/>
+                <Button Content="Refresh"
+                        Command="{Binding RefreshComPortsBtnCmd}"/>
+                <ComboBox Width="100"
+                          Margin="5 0 5 0"
+                          ItemsSource="{Binding Path=BaudRates}"
+                          SelectedItem="{Binding Path=SelectedBaudRate}"
+                          IsEnabled="{Binding Path=CanBaudRates}"/>
                 <Button Content="Connect"
                         Command="{Binding ConnectBtnCmd}"/>
                 <Button Content="Disconnect"
@@ -62,8 +71,20 @@
                            VerticalAlignment="Center"
                            HorizontalContentAlignment="Stretch">
                 <Rectangle Height="20" 
-                           Width="30"
-                           Fill="{Binding Path=CanInterfaceStatusFill}"/>
+                           Width="30">
+                    <Rectangle.Style>
+                        <Style TargetType="{x:Type Rectangle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CanInterfaceConnected}" Value="True">
+                                    <Setter Property="Fill" Value="Lime"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CanInterfaceConnected}" Value="False">
+                                    <Setter Property="Fill" Value="DarkGray"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Rectangle.Style>
+                </Rectangle>
             </StatusBarItem>
             <Separator Grid.Column="1" />
             <StatusBarItem Grid.Column="2"

@@ -11,6 +11,26 @@ namespace DingoConfigurator.Config
 {
     public class DevicesConfig
     {
+        public DevicesConfig()
+        {
+            pdm = new PdmConfig[]
+            {
+                new PdmConfig(),
+                new PdmConfig()
+            };
+
+            canBoard = new CanBoardConfig[]
+            {
+                new CanBoardConfig(),
+                new CanBoardConfig()
+            };
+
+            dash = new DashConfig[]
+            {
+                new DashConfig()
+            };
+        }
+
         public PdmConfig[] pdm { get; set; }
         public CanBoardConfig[] canBoard { get; set; }
         public DashConfig[] dash { get; set; }
@@ -24,29 +44,10 @@ namespace DingoConfigurator.Config
             File.WriteAllText("D:\\GitHub\\DingoConfigurator\\DingoPDM_v7_Config.json", jsonString);
         }
 
-        public static DevicesConfig Deserialize()
+        public static DevicesConfig Deserialize(string filename)
         {
-            var jsonString = File.ReadAllText("D:\\GitHub\\DingoConfigurator\\RallyCar.json");
+            var jsonString = File.ReadAllText(filename);
             return JsonSerializer.Deserialize<DevicesConfig>(jsonString);
-        }
-        public static void InitConfig(DevicesConfig config)
-        {
-            config.pdm = new PdmConfig[]
-            {
-                new PdmConfig(),
-                new PdmConfig()
-            };
-
-            config.canBoard = new CanBoardConfig[]
-            {
-                new CanBoardConfig(),
-                new CanBoardConfig()
-            };
-
-            config.dash = new DashConfig[]
-            {
-                new DashConfig()
-            };
         }
     }
 }

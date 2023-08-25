@@ -52,106 +52,98 @@ namespace CanDevices
         RESET_ENDLESS
     }
 
-    public static class PdmConfigHandler
-    {
-        public static void InitConfig(PdmConfig config)
-        {
-            config.deviceConfig = new DeviceConfig();
-
-            config.output = new Output[]
-            {
-                new Output(),
-                new Output(),
-                new Output(),
-                new Output(),
-                new Output(),
-                new Output(),
-                new Output(),
-                new Output()
-            };
-
-            config.input = new Input[]
-            {
-                new Input(),
-                new Input()
-            };
-
-            config.virtualInput = new VirtualInput[] 
-            {
-                new VirtualInput(),
-                new VirtualInput(),
-                new VirtualInput(),
-                new VirtualInput(),
-                new VirtualInput(),
-                new VirtualInput(),
-                new VirtualInput(),
-                new VirtualInput(),
-                new VirtualInput(),
-                new VirtualInput(),
-                new VirtualInput(),
-                new VirtualInput(),
-                new VirtualInput(),
-                new VirtualInput(),
-                new VirtualInput(),
-                new VirtualInput()
-            };
-
-            config.canInput = new CanInput[]
-            {
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput(),
-                new CanInput()
-            };
-
-            config.flasher = new Flasher[]
-            {
-                new Flasher(),
-                new Flasher(),
-                new Flasher(),
-                new Flasher()
-            };
-
-            config.canOutput = new CanOutput();            
-            config.starter = new Starter();
-            config.wiper = new Wiper();
-
-        }
-    }
-
     public class PdmConfig
     {
         public PdmConfig()
         {
-            PdmConfigHandler.InitConfig(this);
+            deviceConfig = new DeviceConfig();
+
+            output = new Output[]
+            {
+            new Output(),
+            new Output(),
+            new Output(),
+            new Output(),
+            new Output(),
+            new Output(),
+            new Output(),
+            new Output()
+            };
+
+            input = new Input[]
+            {
+            new Input(),
+            new Input()
+            };
+
+            virtualInput = new VirtualInput[]
+            {
+            new VirtualInput(),
+            new VirtualInput(),
+            new VirtualInput(),
+            new VirtualInput(),
+            new VirtualInput(),
+            new VirtualInput(),
+            new VirtualInput(),
+            new VirtualInput(),
+            new VirtualInput(),
+            new VirtualInput(),
+            new VirtualInput(),
+            new VirtualInput(),
+            new VirtualInput(),
+            new VirtualInput(),
+            new VirtualInput(),
+            new VirtualInput()
+            };
+
+            canInput = new CanInput[]
+            {
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput(),
+            new CanInput()
+            };
+
+            flasher = new Flasher[]
+            {
+            new Flasher(),
+            new Flasher(),
+            new Flasher(),
+            new Flasher()
+            };
+
+            canOutput = new CanOutput();
+            starter = new Starter();
+            wiper = new Wiper();
+
         }
 
         public string name { get; set; }

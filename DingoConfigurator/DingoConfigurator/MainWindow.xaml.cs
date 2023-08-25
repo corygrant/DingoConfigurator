@@ -40,5 +40,10 @@ namespace DingoConfigurator
         {
             _vm.TreeView_SelectionChanged(sender, e);
         }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _vm.Cans_SelectionChanged(sender, e);
+        }
     }
 }
