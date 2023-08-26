@@ -96,11 +96,7 @@ namespace DingoConfigurator
             _canDevices?.Clear();
             
             _canDevices = new ObservableCollection<ICanDevice>();
-            //            {
-            //               new DingoPdmCan("Engine PDM", 2000),
-            //              new CanBoardCan("Steering Wheel", 1600),
-            //             new DingoDashCan("Dash", 2200)
-            //        };
+
             foreach (var pdm in _config.pdm)
                 _canDevices.Add(new DingoPdmCan(pdm.label, 2000));
 
@@ -180,6 +176,12 @@ namespace DingoConfigurator
 
                 if(sub.CanDevice.GetType() == typeof(DingoPdmCan))
                 {
+                    if (sub.Name.Equals("States"))
+                    {
+                        SelectedCanDevice = (DingoPdmCan)sub.CanDevice;
+                        CurrentViewModel = new DingoPdmStatesViewModel(this);
+                    }
+
                     if (sub.Name.Equals("Settings"))
                     {
                         SelectedCanDevice = (DingoPdmCan)sub.CanDevice;
@@ -214,19 +216,19 @@ namespace DingoConfigurator
                 case "USB2CAN":
                     _can = new CanInterfaces.USB2CAN();
                     port = SelectedComPort;
-                    baud = CanInterfaceBaudRate.BAUD_500K;
+                    baud = SelectedBaudRate;
                     break;
 
                 case "PCAN":
                     _can = new CanInterfaces.PCAN();
                     port = "USBBUS1";
-                    baud = CanInterfaceBaudRate.BAUD_500K;
+                    baud = SelectedBaudRate;
                     break;
 
                 case "USB":
                     _can = new CanInterfaces.USB();
                     port = SelectedComPort;
-                    baud = CanInterfaceBaudRate.BAUD_500K;//Not used
+                    baud = SelectedBaudRate;//Not used
                     break;
             }
 

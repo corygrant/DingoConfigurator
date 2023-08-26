@@ -58,6 +58,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -82,6 +83,7 @@
     </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -103,6 +105,7 @@
     <Compile Include="Config\DevicesConfig.cs" />
     <Compile Include="ViewModels\CanBoard\CanBoardViewModel.cs" />
     <Compile Include="ViewModels\DingoPdm\DingoPdmSettingsViewModel.cs" />
+    <Compile Include="ViewModels\DingoPdm\DingoPdmStatesViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="ViewModels\DingoDash\DingoDashViewModel.cs" />
@@ -116,6 +119,9 @@
     </Compile>
     <Compile Include="Views\DingoPdm\DingoPdmSettingsView.xaml.cs">
       <DependentUpon>DingoPdmSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DingoPdm\DingoPdmStatesView.xaml.cs">
+      <DependentUpon>DingoPdmStatesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DingoPdm\DingoPdmView.xaml.cs">
       <DependentUpon>DingoPdmView.xaml</DependentUpon>
@@ -141,6 +147,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\DingoPdm\DingoPdmSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DingoPdm\DingoPdmStatesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

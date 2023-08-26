@@ -10,39 +10,38 @@ namespace CanDevices
 {
     public enum CanSpeed
     {
-        CAN_BITRATE_10K = 0,
-        CAN_BITRATE_20K = 1,
-        CAN_BITRATE_50K = 2,
-        CAN_BITRATE_100K = 3,
-        CAN_BITRATE_125K = 4,
-        CAN_BITRATE_250K = 5,
-        CAN_BITRATE_500K = 6,
-        CAN_BITRATE_750K = 7,
-        CAN_BITRATE_1000K = 8,
-        CAN_BITRATE_INVALID
+        Bitrate_10K = 0,
+        Bitrate_20K = 1,
+        Bitrate_50K = 2,
+        Bitrate_100K = 3,
+        Bitrate_125K = 4,
+        Bitrate_250K = 5,
+        Bitrate_500K = 6,
+        Bitrate_750K = 7,
+        Bitrate_1000K = 8
     }
 
     public enum InputMode
     {
-        MODE_NUM,
-        MODE_MOMENTARY,
-        MODE_LATCHING
+        Num,
+        Momentary,
+        Latching
     }
 
     public enum Conditional
     {
-        AND,
-        OR,
-        NOR
+        And,
+        Or,
+        Nor
     }
 
     public enum Operator
     {
-        EQUAL,
-        GREATER_THAN,
-        LESS_THAN,
-        BITWISE_AND,
-        BITWISE_NAND
+        Equal,
+        GreaterThan,
+        LessThan,
+        BitwiseAnd,
+        BitwiseNand
     }
 
     public enum ResetMode

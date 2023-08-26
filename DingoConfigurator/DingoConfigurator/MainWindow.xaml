@@ -62,7 +62,7 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="130" />
                         </Grid.ColumnDefinitions>
                     </Grid>
                 </ItemsPanelTemplate>
@@ -104,6 +104,9 @@
                 <Grid.Resources>
                     <DataTemplate DataType="{x:Type vm:DingoPdmViewModel}">
                         <vw:DingoPdmView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:DingoPdmStatesViewModel}">
+                        <vw:DingoPdmStatesView/>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:DingoPdmSettingsViewModel}">
                         <vw:DingoPdmSettingsView/>

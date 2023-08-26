@@ -75,8 +75,9 @@ namespace CanInterfaces
         {
             var ser = (SerialPort)sender;
             string raw = ser.ReadLine(); //Use ReadLine to make sure each msg is read individually (must add NewLine="\r" before starting RX above)
+            ser.DiscardInBuffer(); //Discard data sitting in buffer, otherwise buffer will keep growing
 
-            if(raw.Length == 21) //'t' msg is always 21 chars long
+            if (raw.Length == 21) //'t' msg is always 21 chars long
             {
                 if (raw.Substring(0,1) != "t") return;
 
