@@ -12,9 +12,11 @@ namespace CanDevices
         {
             name = String.Empty;
             label = String.Empty;
+            baseCanId = 0;
         }
 
         public string name {  get; set; }
         public string label { get; set; }
+        public int baseCanId { get; set; }
     }
 }

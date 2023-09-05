@@ -10,9 +10,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.RowDefinitions>
@@ -21,9 +21,9 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0"
                                Grid.Column="0"
@@ -35,6 +35,9 @@
                              Grid.Column="1"
                              Padding="5"
                              Margin="5"
+                             MinWidth="50"
+                             MaxWidth="100"
+                             HorizontalAlignment="Left"
                              Text="{Binding Pdm.BaseId, Mode=OneWay}"/>
 
             <TextBlock Grid.Row="0"
@@ -47,6 +50,9 @@
                              Grid.Column="3"
                              Padding="5"
                              Margin="5"
+                             MinWidth="50"
+                             MaxWidth="100"
+                             HorizontalAlignment="Left"
                              Text="{Binding Pdm.TotalCurrent, Mode=OneWay}"/>
 
             <TextBlock Grid.Row="1"
@@ -59,6 +65,9 @@
                              Grid.Column="1"
                              Padding="5"
                              Margin="5"
+                             MinWidth="50"
+                             MaxWidth="100"
+                             HorizontalAlignment="Left"
                              Text="{Binding Pdm.BatteryVoltage, Mode=OneWay}"/>
 
             <TextBlock Grid.Row="1"
@@ -71,6 +80,9 @@
                              Grid.Column="3"
                              Padding="5"
                              Margin="5"
+                             MinWidth="50"
+                             MaxWidth="100"
+                             HorizontalAlignment="Left"
                              Text="{Binding Pdm.BoardTempF, Mode=OneWay}"/>
         </Grid>
 
@@ -209,6 +221,13 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridCheckBoxColumn Header="Invert Input" Binding="{Binding InvertInput}"  Width="100" MinWidth="100">
+                    <DataGridCheckBoxColumn.ElementStyle>
+                        <Style TargetType="CheckBox">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.ElementStyle>
+                </DataGridCheckBoxColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

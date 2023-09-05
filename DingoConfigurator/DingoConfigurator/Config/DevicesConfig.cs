@@ -38,10 +38,10 @@ namespace DingoConfigurator.Config
 
     public static class DevicesConfigHandler
     {
-        public static void Serialize(DevicesConfig config)
+        public static void Serialize(DevicesConfig config, string filename)
         {
             var jsonString = JsonSerializer.Serialize<DevicesConfig>(config);
-            File.WriteAllText("D:\\GitHub\\DingoConfigurator\\DingoPDM_v7_Config.json", jsonString);
+            File.WriteAllText(filename, jsonString);
         }
 
         public static DevicesConfig Deserialize(string filename)

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
+using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -26,7 +28,7 @@ namespace DingoConfigurator
 
         private DevicesConfig _config;
 
-        private ObservableCollection<ICanDevice> _canDevices { get; set; }
+        
 
         private bool _canInterfaceConnected;
         public bool CanInterfaceConnected
@@ -39,17 +41,16 @@ namespace DingoConfigurator
             }
         }
 
+        private bool _configFileOpened;
+
+        private string _settingsPath;
+
         private System.Timers.Timer updateTimer;
 
         public delegate void DataUpdatedHandler(object sender);
 
         public MainViewModel()
         {
-            _config = new DevicesConfig();
-            _config = DevicesConfigHandler.Deserialize("D:\\GitHub\\DingoConfigurator\\RallyCar.json");
-
-            UpdateCanDevices();
-
             RefreshComPorts(null);
 
             Cans = new ObservableCollection<ComboBoxCanInterfaces>()
@@ -76,12 +77,47 @@ namespace DingoConfigurator
             {
                 SelectedComPort = ComPorts.First(x => x.Equals(comPort));
             }
+            _settingsPath = Settings.Default.SettingsPath;
 
             //Set Button Commands
+            NewBtnCmd = new RelayCommand(NewConfigFile, CanNewConfigFile);
+            OpenBtnCmd = new RelayCommand(OpenConfigFile, CanOpenConfigFile);
+            SaveBtnCmd = new RelayCommand(SaveConfigFile, CanSaveConfigFile);
+            SaveAsBtnCmd = new RelayCommand(SaveAsConfigFile, CanSaveAsConfigFile);
             ConnectBtnCmd = new RelayCommand(Connect, CanConnect);
             DisconnectBtnCmd = new RelayCommand(Disconnect, CanDisconnect);
             RefreshComPortsBtnCmd = new RelayCommand(RefreshComPorts, CanRefreshComPorts);
 
+            
+        }
+
+        private void NewConfigFile(object parameter)
+        {
+
+        }
+
+        private bool CanNewConfigFile(object parameter)
+        {
+            return false;
+        }
+
+        private void OpenConfigFile(object parameter)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Multiselect = false;
+            openFileDialog.Filter = "Config files (*.json)|*.json|All files (*.*)|*.*";
+            openFileDialog.InitialDirectory = _settingsPath;
+            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+
+            if (Path.GetExtension(openFileDialog.FileName).ToLower() != ".json") return;
+
+            _settingsPath = openFileDialog.FileName;
+
+            _config = new DevicesConfig();
+
+            _config = DevicesConfigHandler.Deserialize(openFileDialog.FileName);
+
+            UpdateCanDevices();
             UpdateStatusBar();
 
             // Create a timer to update status bar
@@ -89,6 +125,140 @@ namespace DingoConfigurator
             updateTimer.Elapsed += UpdateView;
             updateTimer.AutoReset = true;
             updateTimer.Enabled = true;
+
+            _configFileOpened = true;
+        }
+
+        private bool CanOpenConfigFile(object parameter)
+        {
+            return !CanInterfaceConnected;
+        }
+
+        private void SaveConfigFile(object parameter)
+        {
+            int pdmNum = 0;
+            int cbNum = 0;
+            int dashNum = 0;
+            foreach (var cd in CanDevices)
+            {
+
+                if(cd.GetType() == typeof(DingoPdmCan))
+                {
+                    var pdm = (DingoPdmCan) cd;
+
+                    _config.pdm[pdmNum].name = $"PDM{pdmNum}";
+                    _config.pdm[pdmNum].label = pdm.Name;
+
+                    for(int i = 0; i< _config.pdm[pdmNum].input.Length; i++)
+                    {
+                        _config.pdm[pdmNum].input[i].name = $"DigitalInput{i}";
+                        _config.pdm[pdmNum].input[i].label = pdm.DigitalInputs[i].Name;
+                        _config.pdm[pdmNum].input[i].enabled = true;
+                        _config.pdm[pdmNum].input[i].mode = 0;
+                        _config.pdm[pdmNum].input[i].invertInput = pdm.DigitalInputs[i].InvertInput;
+                        _config.pdm[pdmNum].input[i].debounceTime = 20;
+                    }
+
+                    for (int i = 0; i < _config.pdm[pdmNum].virtualInput.Length; i++)
+                    {
+                        _config.pdm[pdmNum].virtualInput[i].name = $"VirtualInput{i}";
+                        _config.pdm[pdmNum].virtualInput[i].label = pdm.VirtualInputs[i].Name;
+                        _config.pdm[pdmNum].virtualInput[i].enabled = pdm.VirtualInputs[i].Enabled;
+                        _config.pdm[pdmNum].virtualInput[i].not0 = pdm.VirtualInputs[i].Not0;
+                        _config.pdm[pdmNum].virtualInput[i].var0 = (int)pdm.VirtualInputs[i].Var0;
+                        _config.pdm[pdmNum].virtualInput[i].cond0 = pdm.VirtualInputs[i].Cond0;
+                        _config.pdm[pdmNum].virtualInput[i].not1 = pdm.VirtualInputs[i].Not1;
+                        _config.pdm[pdmNum].virtualInput[i].var1 = (int)pdm.VirtualInputs[i].Var1;
+                        _config.pdm[pdmNum].virtualInput[i].cond1 = pdm.VirtualInputs[i].Cond1;
+                        _config.pdm[pdmNum].virtualInput[i].not2 = pdm.VirtualInputs[i].Not2;
+                        _config.pdm[pdmNum].virtualInput[i].var2 = (int)pdm.VirtualInputs[i].Var2;
+                        _config.pdm[pdmNum].virtualInput[i].mode = pdm.VirtualInputs[i].Mode;
+                    }
+
+                    for (int i = 0; i < _config.pdm[pdmNum].output.Length; i++)
+                    {
+                        _config.pdm[pdmNum].output[i].name = $"Output{i}";
+                        _config.pdm[pdmNum].output[i].label = pdm.Outputs[i].Name;
+                        _config.pdm[pdmNum].output[i].enabled = true;
+                        _config.pdm[pdmNum].output[i].input = 0;
+                        _config.pdm[pdmNum].output[i].currentLimit = pdm.Outputs[i].CurrentLimit;
+                        _config.pdm[pdmNum].output[i].inrushLimit = 0;
+                        _config.pdm[pdmNum].output[i].inrushTime = 0;
+                        _config.pdm[pdmNum].output[i].resetMode = 0;
+                        _config.pdm[pdmNum].output[i].resetTime = 0;
+                        _config.pdm[pdmNum].output[i].resetLimit = 0;
+                    }
+
+                    //_config.pdm[pdmNum].wiper.label = ;
+                    _config.pdm[pdmNum].wiper.enabled = true;
+                    _config.pdm[pdmNum].wiper.lowSpeedInput = (int)pdm.Wipers[0].SlowInput;
+                    _config.pdm[pdmNum].wiper.highSpeedInput = (int)pdm.Wipers[0].FastInput;
+                    _config.pdm[pdmNum].wiper.parkInput = (int)pdm.Wipers[0].ParkInput;
+                    _config.pdm[pdmNum].wiper.parkStopLevel = pdm.Wipers[0].ParkStopLevel;
+                    _config.pdm[pdmNum].wiper.washInput = (int)pdm.Wipers[0].WashInput;
+                    _config.pdm[pdmNum].wiper.washTime = 0;
+                    _config.pdm[pdmNum].wiper.intermitInput = (int)pdm.Wipers[0].InterInput;
+                    _config.pdm[pdmNum].wiper.intermitSelect = (int)pdm.Wipers[0].SpeedInput;
+
+                    for (int i = 0; i < _config.pdm[pdmNum].flasher.Length; i++)
+                    {
+                        _config.pdm[pdmNum].flasher[i].name = $"Flasher{i}";
+                        _config.pdm[pdmNum].flasher[i].label = "Flasher";
+                        _config.pdm[pdmNum].flasher[i].enabled = true;
+                        _config.pdm[pdmNum].flasher[i].input = 0;
+                        _config.pdm[pdmNum].flasher[i].flashOnTime = 1000;
+                        _config.pdm[pdmNum].flasher[i].flashOffTime = 1000;
+                        _config.pdm[pdmNum].flasher[i].singleCycle = 0;
+                        _config.pdm[pdmNum].flasher[i].output = 0;
+                    }
+
+                    _config.pdm[pdmNum].starter.enabled = false;
+                    _config.pdm[pdmNum].starter.input = 0;
+                    _config.pdm[pdmNum].starter.disableOut[0] = false;
+                    _config.pdm[pdmNum].starter.disableOut[1] = false;
+                    _config.pdm[pdmNum].starter.disableOut[2] = false;
+                    _config.pdm[pdmNum].starter.disableOut[3] = false;
+                    _config.pdm[pdmNum].starter.disableOut[4] = false;
+                    _config.pdm[pdmNum].starter.disableOut[5] = false;
+                    _config.pdm[pdmNum].starter.disableOut[6] = false;
+                    _config.pdm[pdmNum].starter.disableOut[7] = false;
+
+                    for (int i = 0; i < _config.pdm[pdmNum].canInput.Length; i++)
+                    {
+                        _config.pdm[pdmNum].canInput[i].name = $"CanInput{i}";
+                        _config.pdm[pdmNum].canInput[i].label = pdm.CanInputs[i].Name;
+                        _config.pdm[pdmNum].canInput[i].enabled = pdm.CanInputs[i].Enabled;
+                        _config.pdm[pdmNum].canInput[i].id = pdm.CanInputs[i].Id;
+                        _config.pdm[pdmNum].canInput[i].lowByte = pdm.CanInputs[i].LowByte;
+                        _config.pdm[pdmNum].canInput[i].highByte = pdm.CanInputs[i].HighByte;
+                        _config.pdm[pdmNum].canInput[i].oper = pdm.CanInputs[i].Operator;
+                        _config.pdm[pdmNum].canInput[i].onValue = pdm.CanInputs[i].OnVal;
+                        _config.pdm[pdmNum].canInput[i].mode = pdm.CanInputs[i].Mode;
+                    }
+
+                    _config.pdm[pdmNum].canOutput.enable = true;
+                    _config.pdm[pdmNum].canOutput.baseId = pdm.BaseId;
+                    _config.pdm[pdmNum].canOutput.updateTime = 0;
+
+                    pdmNum++;
+                }
+            }
+            DevicesConfigHandler.Serialize(_config, _settingsPath);
+        }
+
+        private bool CanSaveConfigFile(object parameter)
+        {
+            return _configFileOpened;
+        }
+
+        private void SaveAsConfigFile(object parameter)
+        {
+
+        }
+
+        private bool CanSaveAsConfigFile(object parameter)
+        {
+            return _configFileOpened;
         }
 
         private void UpdateCanDevices()
@@ -98,13 +268,15 @@ namespace DingoConfigurator
             _canDevices = new ObservableCollection<ICanDevice>();
 
             foreach (var pdm in _config.pdm)
-                _canDevices.Add(new DingoPdmCan(pdm.label, 2000));
+                _canDevices.Add(new DingoPdmCan(pdm.label, pdm.canOutput.baseId));
 
             foreach (var cb in _config.canBoard)
-                _canDevices.Add(new CanBoardCan(cb.label, 1600));
+                _canDevices.Add(new CanBoardCan(cb.label, cb.baseCanId));
 
             foreach (var dash in _config.dash)
-                _canDevices.Add(new DingoDashCan(dash.label, 2200));
+                _canDevices.Add(new DingoDashCan(dash.label, dash.baseCanId));
+
+            OnPropertyChanged(nameof(CanDevices));
         }
 
         private void UpdateView(object sender, ElapsedEventArgs e)
@@ -122,6 +294,7 @@ namespace DingoConfigurator
             Settings.Default.CanInterface = SelectedCan.Name;
             Settings.Default.BaudRate = SelectedBaudRate;
             Settings.Default.ComPort = SelectedComPort;
+            Settings.Default.SettingsPath = Path.GetDirectoryName(_settingsPath);
             Settings.Default.Save();
         }
 
@@ -146,9 +319,15 @@ namespace DingoConfigurator
         public ICanDevice SelectedCanDevice { get; set; }
 
         #region TreeView
+        private ObservableCollection<ICanDevice> _canDevices;
         public ObservableCollection<ICanDevice> CanDevices
         {
             get => _canDevices;
+            set
+            {
+                _canDevices = value;
+                OnPropertyChanged(nameof(CanDevices));
+            }
         }
 
         internal void Cans_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -345,6 +524,10 @@ namespace DingoConfigurator
         #endregion
 
         #region Buttons
+        public ICommand NewBtnCmd { get; set; }
+        public ICommand OpenBtnCmd { get; set; }
+        public ICommand SaveBtnCmd { get; set; }
+        public ICommand SaveAsBtnCmd { get; set; }
         public ICommand ConnectBtnCmd { get; set; }
         public ICommand DisconnectBtnCmd { get; set; }
         public ICommand RefreshComPortsBtnCmd { get; set; }
@@ -353,9 +536,14 @@ namespace DingoConfigurator
         #region StatusBar
         private void UpdateStatusBar()
         {
+            
+
             CanInterfaceStatusText = $"{SelectedCan.Name} {(CanInterfaceConnected ? "Connected" : "Disconnected")}";
 
             int connectedCount = 0;
+
+            if (_canDevices == null) return;
+
             foreach (var cd in _canDevices)
             {
                 cd.UpdateIsConnected();

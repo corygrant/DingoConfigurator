@@ -579,6 +579,20 @@ namespace CanDevices
                 }
             }
         }
+
+        private InputMode _mode;
+        public InputMode Mode
+        {
+            get => _mode;
+            set
+            {
+                if (_mode != value)
+                {
+                    _mode = value;
+                    OnPropertyChanged(nameof(Mode));
+                }
+            }
+        }
     }
 
     public class DingoPdmWiper : NotifyPropertyChangedBase
@@ -653,6 +667,33 @@ namespace CanDevices
             }
         }
 
+        private WiperState _state;
+        public WiperState State
+        {
+            get => _state;
+            set
+            {
+                if(_state != value)
+                {
+                    _state = value;
+                    OnPropertyChanged(nameof(State));
+                }
+            }
+        }
+
+        private WiperSpeed _speed;
+        public WiperSpeed Speed
+        {
+            get => _speed;
+            set
+            {
+                if (value != _speed)
+                {
+                    _speed = value;
+                    OnPropertyChanged(nameof(Speed));
+                }
+            }
+        }
         private VarMap _slowInput;
         public VarMap SlowInput
         {
@@ -996,16 +1037,16 @@ namespace CanDevices
             }
         }
 
-        private DingoPdmWiper _wiper;
-        public DingoPdmWiper Wiper
+        private ObservableCollection<DingoPdmWiper> _wipers;
+        public ObservableCollection<DingoPdmWiper> Wipers
         {
-            get => _wiper;
+            get => _wipers;
             private set
             {
-                if (_wiper != value)
+                if (_wipers != value)
                 {
-                    _wiper = value;
-                    OnPropertyChanged(nameof(Wiper));
+                    _wipers = value;
+                    OnPropertyChanged(nameof(Wipers));
                 }
             }
         }
@@ -1046,7 +1087,8 @@ namespace CanDevices
                 VirtualInputs[i].Number = i + 1;
             }
 
-            Wiper = new DingoPdmWiper();
+            Wipers = new ObservableCollection<DingoPdmWiper>();
+            Wipers.Add(new DingoPdmWiper());
 
             SubPages.Add(new CanDeviceSub("States", this));
             SubPages.Add(new CanDeviceSub("Settings", this));
@@ -1252,8 +1294,8 @@ namespace CanDevices
 
         private void ReadMessage17(byte[] data)
         {
-            Wiper.SlowState = Convert.ToBoolean(data[0] & 0x01);
-            Wiper.FastState = Convert.ToBoolean((data[0] >> 1) & 0x01);
+            Wipers[0].SlowState = Convert.ToBoolean(data[0] & 0x01);
+            Wipers[0].FastState = Convert.ToBoolean((data[0] >> 1) & 0x01);
         }
     }
 }

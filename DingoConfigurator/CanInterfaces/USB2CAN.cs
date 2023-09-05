@@ -46,6 +46,7 @@ namespace CanInterfaces
             byte[] data = new byte[8];
             data[0] = (byte)'C';
             _serial.Write(data, 0, 1);
+            _serial.DataReceived -= _serial_DataReceived;
             _serial.Close();
             _serial.Dispose();
         }
@@ -64,6 +65,7 @@ namespace CanInterfaces
             }
             catch (Exception e)
             {
+                _serial.DataReceived -= _serial_DataReceived;
                 Console.WriteLine(e.ToString());
                 return false;
             }
@@ -140,6 +142,9 @@ namespace CanInterfaces
             byte[] data = new byte[8];
             data[0] = (byte)'C';
             _serial.Write(data, 0, 1);
+
+            _serial.DataReceived -= _serial_DataReceived;
+
             _serial.Close();
 
             return true;

@@ -141,6 +141,7 @@ namespace CanDevices
 
             canOutput = new CanOutput();
             starter = new Starter();
+            starter.disableOut = new bool[8];
             wiper = new Wiper();
 
         }

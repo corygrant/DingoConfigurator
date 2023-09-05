@@ -126,6 +126,7 @@
     <Compile Include="Views\DingoPdm\DingoPdmView.xaml.cs">
       <DependentUpon>DingoPdmView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\VarMap.cs" />
     <Page Include="Views\CanBoard\CanBoardView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
