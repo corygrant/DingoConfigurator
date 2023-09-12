@@ -20,6 +20,8 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 
+//Add another CanDevices list that holds the online value
+
 namespace DingoConfigurator
 {
     public class MainViewModel : ViewModelBase
@@ -75,7 +77,7 @@ namespace DingoConfigurator
             string comPort = Settings.Default.ComPort;
             if(!String.IsNullOrEmpty(comPort))
             {
-                SelectedComPort = ComPorts.First(x => x.Equals(comPort));
+                SelectedComPort = ComPorts.FirstOrDefault(x => x.Equals(comPort));
             }
             _settingsPath = Settings.Default.SettingsPath;
 
@@ -117,7 +119,7 @@ namespace DingoConfigurator
 
             _config = DevicesConfigHandler.Deserialize(openFileDialog.FileName);
 
-            UpdateCanDevices();
+            AddCanDevices();
             UpdateStatusBar();
 
             // Create a timer to update status bar
@@ -261,7 +263,7 @@ namespace DingoConfigurator
             return _configFileOpened;
         }
 
-        private void UpdateCanDevices()
+        private void AddCanDevices()
         {
             _canDevices?.Clear();
             

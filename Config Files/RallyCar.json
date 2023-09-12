@@ -28,7 +28,7 @@
             "virtualInput": [
                 {
                     "name": "VirtualInput0",
-                    "label": "BothDigIn",
+                    "label": null,
                     "enabled": false,
                     "not0": false,
                     "var0": 0,
@@ -254,7 +254,7 @@
             "output": [
                 {
                     "name": "Output0",
-                    "label": null,
+                    "label": "Fan",
                     "enabled": true,
                     "input": 0,
                     "currentLimit": 0,
@@ -266,7 +266,7 @@
                 },
                 {
                     "name": "Output1",
-                    "label": null,
+                    "label": "Fuel Pump",
                     "enabled": true,
                     "input": 0,
                     "currentLimit": 0,
@@ -278,7 +278,7 @@
                 },
                 {
                     "name": "Output2",
-                    "label": null,
+                    "label": "Headlights",
                     "enabled": true,
                     "input": 0,
                     "currentLimit": 0,
@@ -290,7 +290,7 @@
                 },
                 {
                     "name": "Output3",
-                    "label": null,
+                    "label": "Taillights",
                     "enabled": true,
                     "input": 0,
                     "currentLimit": 0,
@@ -302,7 +302,7 @@
                 },
                 {
                     "name": "Output4",
-                    "label": null,
+                    "label": "Turn R",
                     "enabled": true,
                     "input": 0,
                     "currentLimit": 0,
@@ -314,7 +314,7 @@
                 },
                 {
                     "name": "Output5",
-                    "label": null,
+                    "label": "Turn L",
                     "enabled": true,
                     "input": 0,
                     "currentLimit": 0,
@@ -326,7 +326,7 @@
                 },
                 {
                     "name": "Output6",
-                    "label": null,
+                    "label": "Injectors",
                     "enabled": true,
                     "input": 0,
                     "currentLimit": 0,
@@ -338,7 +338,7 @@
                 },
                 {
                     "name": "Output7",
-                    "label": null,
+                    "label": "Ignition Coil",
                     "enabled": true,
                     "input": 0,
                     "currentLimit": 0,
