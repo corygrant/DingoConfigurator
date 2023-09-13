@@ -51,44 +51,50 @@ namespace CanInterfaces
         private void _serial_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             var ser = (SerialPort)sender;
-            byte[] raw = new byte[12];
-            ser.Read(raw, 0, 12);
-            Console.WriteLine(raw);
-            /*
+            if (ser == null) return;
+            if (!ser.IsOpen) return;
+
             string raw = ser.ReadLine(); //Use ReadLine to make sure each msg is read individually (must add NewLine="\r" before starting RX above)
-            byte[] bytes = Encoding.UTF8.GetBytes(raw);
-            if (raw.Length == 12) //'t' msg is always 12 chars long
+            //ser.DiscardInBuffer(); //Discard data sitting in buffer, otherwise buffer will keep growing
+
+            if (raw.Length >= 5) //'t' msg is always at least 5 bytes long (t + ID ID ID + DLC)
             {
-                byte[] payload = new byte[8];
+                if (raw.Substring(0, 1) != "t") return;
 
-                payload[0] = (byte)int.Parse(raw.Substring(4, 1), System.Globalization.NumberStyles.HexNumber);
-                payload[1] = (byte)int.Parse(raw.Substring(5, 1), System.Globalization.NumberStyles.HexNumber);
-                payload[2] = (byte)int.Parse(raw.Substring(6, 1), System.Globalization.NumberStyles.HexNumber);
-                payload[3] = (byte)int.Parse(raw.Substring(7, 1), System.Globalization.NumberStyles.HexNumber);
-                payload[4] = (byte)int.Parse(raw.Substring(8, 1), System.Globalization.NumberStyles.HexNumber);
-                payload[5] = (byte)int.Parse(raw.Substring(9, 1), System.Globalization.NumberStyles.HexNumber);
-                payload[6] = (byte)int.Parse(raw.Substring(10, 1), System.Globalization.NumberStyles.HexNumber);
-                payload[7] = (byte)int.Parse(raw.Substring(11, 1), System.Globalization.NumberStyles.HexNumber);
+                var id = int.Parse(raw.Substring(1, 3), System.Globalization.NumberStyles.HexNumber);
+                var len = int.Parse(raw.Substring(4, 1), System.Globalization.NumberStyles.HexNumber);
 
-                //payload[0] = bytes[4];
-                //payload[1] = bytes[5];
-                //payload[2] = bytes[6];
-                //payload[3] = bytes[7];
-                //payload[4] = bytes[8];
-                //payload[5] = bytes[9];
-                //payload[6] = bytes[10];
-                //payload[7] = bytes[11];
+                //Msg comes in as a hex string
+                //For example, an ID of 2008(0x7D8) will be sent as "t7D8...."
+                //The string needs to be parsed into an int using int.Parse
+                //The payload bytes are split across 2 bytes (a nibble each)
+                //For example, a payload byte of 28 (0001 1100) would be split into "1C"
+                byte[] payload;
+                if (len > 0)
+                {
+                    payload = new byte[len];
+                    for (int i = 0; i < payload.Length; i++)
+                    {
+                        int highNibble = int.Parse(raw.Substring(i * 2 + 5, 1), System.Globalization.NumberStyles.HexNumber);
+                        int lowNibble = int.Parse(raw.Substring(i * 2 + 6, 1), System.Globalization.NumberStyles.HexNumber);
+                        payload[i] = (byte)(((highNibble & 0x0F) << 4) + (lowNibble & 0x0F));
+                    }
+                }
+                else
+                {
+                    //Length was 0, create empty data
+                    payload = new byte[8];
+                }
 
                 CanInterfaceData data = new CanInterfaceData
                 {
-                    Id = bytes[2] + (bytes[1] << 8),
-                    Len = bytes[3],
+                    Id = id,
+                    Len = len,
                     Payload = payload
                 };
 
                 OnDataReceived(new CanDataEventArgs(data));
             }
-            */
         }
 
         public bool Start()
@@ -122,14 +128,18 @@ namespace CanInterfaces
         {
             if (!_serial.IsOpen)
                 return false;
-            if (!(canData.Payload.Length == 8))
+            if (!(canData.Len > 0))
                 return false;
 
             try
             {
-                byte[] data = new byte[21];
+                byte[] data = new byte[canData.Len];
+                for(int i = 0; i < data.Length; i++)
+                {
+                    data[i] = canData.Payload[i];
+                }
 
-                _serial.Write(data, 0, 21);
+                _serial.Write(data, 0, canData.Len);
             }
             catch (Exception e)
             {

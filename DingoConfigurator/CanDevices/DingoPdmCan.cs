@@ -1104,7 +1104,8 @@ namespace CanDevices
 
         public bool Read(int id, byte[] data)
         {
-            if ((id < BaseId) || (id > BaseId + 17)) return false;
+            if ((id < BaseId) || (id > BaseId + 30)) 
+                return false;
 
             if (id == BaseId + 0) ReadMessage0(data);
             if (id == BaseId + 1) ReadMessage1(data);
@@ -1125,6 +1126,10 @@ namespace CanDevices
             if (id == BaseId + 16) ReadMessage16(data);
             if (id == BaseId + 17) ReadMessage17(data);
 
+            if (id > BaseId + 17)
+            {
+                ReadSettingsResponse(data);
+            }
             _lastRxTime = DateTime.Now;
 
             UpdateIsConnected();
@@ -1296,6 +1301,11 @@ namespace CanDevices
         {
             Wipers[0].SlowState = Convert.ToBoolean(data[0] & 0x01);
             Wipers[0].FastState = Convert.ToBoolean((data[0] >> 1) & 0x01);
+        }
+
+        private void ReadSettingsResponse(byte[] data)
+        {
+            Console.WriteLine($"Major:{data[1]} Minor:{data[2]} Build:{(data[3] << 8) + data[4]}");
         }
     }
 }

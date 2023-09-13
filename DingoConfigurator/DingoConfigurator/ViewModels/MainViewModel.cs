@@ -320,6 +320,16 @@ namespace DingoConfigurator
 
         public ICanDevice SelectedCanDevice { get; set; }
 
+        private void GetDeviceSetting()
+        {
+            _can.Write(new CanInterfaceData
+            {
+                Id = 100,
+                Len = 1,
+                Payload = new byte[] { Convert.ToByte('V'), 0, 0, 0, 0, 0, 0, 0 }
+            });
+        }
+
         #region TreeView
         private ObservableCollection<ICanDevice> _canDevices;
         public ObservableCollection<ICanDevice> CanDevices
@@ -418,6 +428,7 @@ namespace DingoConfigurator
             if(!_can.Start()) return;
             CanInterfaceConnected = true;
             UpdateStatusBar();
+            GetDeviceSetting();
         }
 
         
