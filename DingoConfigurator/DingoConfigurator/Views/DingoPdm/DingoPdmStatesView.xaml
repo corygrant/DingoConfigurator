@@ -66,6 +66,10 @@
             <RowDefinition Height="3*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
 
@@ -356,6 +360,167 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
 
+            </DataGrid.Columns>
+        </DataGrid>
+        
+        <GridSplitter     Grid.Row="5"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Center"
+                          Background="White" 
+                          ShowsPreview="True"
+                          Height="2"/>
+        
+        <DataGrid AutoGenerateColumns="False"
+                  ItemsSource="{Binding Pdm.Flashers}"
+                  CanUserAddRows="False"
+                  Grid.Row="6">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Flasher" Binding="{Binding Number}" IsReadOnly="True" Width="110" MinWidth="110">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay}" Width="100" MinWidth="100">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Result" Binding="{Binding Value}" IsReadOnly="True" Width="70" MinWidth="70">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridCheckBoxColumn Header="En" Binding="{Binding Enabled, Mode=TwoWay}" Width="40" MinWidth="40">
+                    <DataGridCheckBoxColumn.ElementStyle>
+                        <Style TargetType="CheckBox">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.ElementStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn Header="Single" Binding="{Binding Single, Mode=TwoWay}" Width="60" MinWidth="60">
+                    <DataGridCheckBoxColumn.ElementStyle>
+                        <Style TargetType="CheckBox">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.ElementStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridComboBoxColumn Header="Input" 
+                                        ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
+                                        SelectedItemBinding="{Binding Input, Mode=TwoWay}"
+                                        Width="100" MinWidth="100"/>
+                <DataGridComboBoxColumn Header="Output" 
+                                        ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
+                                        SelectedItemBinding="{Binding Output, Mode=TwoWay}"
+                                        Width="100" MinWidth="100"/>
+                <DataGridTextColumn Header="On Time" Binding="{Binding OnTime}" IsReadOnly="True" Width="70" MinWidth="70">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Off Time" Binding="{Binding OffTime}" IsReadOnly="True" Width="70" MinWidth="70">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <GridSplitter     Grid.Row="7"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Center"
+                          Background="White" 
+                          ShowsPreview="True"
+                          Height="2"/>
+
+        <DataGrid AutoGenerateColumns="False"
+                  ItemsSource="{Binding Pdm.StarterDisable}"
+                  CanUserAddRows="False"
+                  Grid.Row="8">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Starter Disable" IsReadOnly="True" Width="120" MinWidth="120">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridCheckBoxColumn Header="En" Binding="{Binding Enabled, Mode=TwoWay}" Width="40" MinWidth="40">
+                    <DataGridCheckBoxColumn.ElementStyle>
+                        <Style TargetType="CheckBox">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.ElementStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridComboBoxColumn Header="Input" 
+                                        ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
+                                        SelectedItemBinding="{Binding Input, Mode=TwoWay}"
+                                        Width="100" MinWidth="100"/>
+                <DataGridCheckBoxColumn Header="O1" Binding="{Binding Output1, Mode=TwoWay}" Width="40" MinWidth="40">
+                    <DataGridCheckBoxColumn.ElementStyle>
+                        <Style TargetType="CheckBox">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.ElementStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn Header="O2" Binding="{Binding Output2, Mode=TwoWay}" Width="40" MinWidth="40">
+                    <DataGridCheckBoxColumn.ElementStyle>
+                        <Style TargetType="CheckBox">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.ElementStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn Header="O3" Binding="{Binding Output3, Mode=TwoWay}" Width="40" MinWidth="40">
+                    <DataGridCheckBoxColumn.ElementStyle>
+                        <Style TargetType="CheckBox">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.ElementStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn Header="O4" Binding="{Binding Output4, Mode=TwoWay}" Width="40" MinWidth="40">
+                    <DataGridCheckBoxColumn.ElementStyle>
+                        <Style TargetType="CheckBox">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.ElementStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn Header="O5" Binding="{Binding Output5, Mode=TwoWay}" Width="40" MinWidth="40">
+                    <DataGridCheckBoxColumn.ElementStyle>
+                        <Style TargetType="CheckBox">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.ElementStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn Header="O6" Binding="{Binding Output6, Mode=TwoWay}" Width="40" MinWidth="40">
+                    <DataGridCheckBoxColumn.ElementStyle>
+                        <Style TargetType="CheckBox">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.ElementStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn Header="O7" Binding="{Binding Output7, Mode=TwoWay}" Width="40" MinWidth="40">
+                    <DataGridCheckBoxColumn.ElementStyle>
+                        <Style TargetType="CheckBox">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.ElementStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn Header="O8" Binding="{Binding Output8, Mode=TwoWay}" Width="40" MinWidth="40">
+                    <DataGridCheckBoxColumn.ElementStyle>
+                        <Style TargetType="CheckBox">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.ElementStyle>
+                </DataGridCheckBoxColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

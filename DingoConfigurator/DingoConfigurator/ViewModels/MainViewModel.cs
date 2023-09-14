@@ -3,6 +3,7 @@ using CanInterfaces;
 using DingoConfigurator.Config;
 using DingoConfigurator.Properties;
 using DingoConfigurator.ViewModels;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -95,17 +96,28 @@ namespace DingoConfigurator
 
         private void NewConfigFile(object parameter)
         {
+            System.Windows.Forms.SaveFileDialog newFileDialog = new System.Windows.Forms.SaveFileDialog();
+            newFileDialog.Filter = "Config files (*.json)|*.json|All files (*.*)|*.*";
+            newFileDialog.InitialDirectory = _settingsPath;
+            if (newFileDialog.ShowDialog() != DialogResult.OK) return;
 
+            if (Path.GetExtension(newFileDialog.FileName).ToLower() != ".json") return;
+
+            _settingsPath = newFileDialog.FileName;
+
+            _config = new DevicesConfig();
+
+            DevicesConfigHandler.Serialize(_config, _settingsPath);
         }
 
         private bool CanNewConfigFile(object parameter)
         {
-            return false;
+            return true;
         }
 
         private void OpenConfigFile(object parameter)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
             openFileDialog.Multiselect = false;
             openFileDialog.Filter = "Config files (*.json)|*.json|All files (*.*)|*.*";
             openFileDialog.InitialDirectory = _settingsPath;
@@ -167,13 +179,13 @@ namespace DingoConfigurator
                         _config.pdm[pdmNum].virtualInput[i].label = pdm.VirtualInputs[i].Name;
                         _config.pdm[pdmNum].virtualInput[i].enabled = pdm.VirtualInputs[i].Enabled;
                         _config.pdm[pdmNum].virtualInput[i].not0 = pdm.VirtualInputs[i].Not0;
-                        _config.pdm[pdmNum].virtualInput[i].var0 = (int)pdm.VirtualInputs[i].Var0;
+                        _config.pdm[pdmNum].virtualInput[i].var0 = pdm.VirtualInputs[i].Var0;
                         _config.pdm[pdmNum].virtualInput[i].cond0 = pdm.VirtualInputs[i].Cond0;
                         _config.pdm[pdmNum].virtualInput[i].not1 = pdm.VirtualInputs[i].Not1;
-                        _config.pdm[pdmNum].virtualInput[i].var1 = (int)pdm.VirtualInputs[i].Var1;
+                        _config.pdm[pdmNum].virtualInput[i].var1 = pdm.VirtualInputs[i].Var1;
                         _config.pdm[pdmNum].virtualInput[i].cond1 = pdm.VirtualInputs[i].Cond1;
                         _config.pdm[pdmNum].virtualInput[i].not2 = pdm.VirtualInputs[i].Not2;
-                        _config.pdm[pdmNum].virtualInput[i].var2 = (int)pdm.VirtualInputs[i].Var2;
+                        _config.pdm[pdmNum].virtualInput[i].var2 = pdm.VirtualInputs[i].Var2;
                         _config.pdm[pdmNum].virtualInput[i].mode = pdm.VirtualInputs[i].Mode;
                     }
 
@@ -191,39 +203,40 @@ namespace DingoConfigurator
                         _config.pdm[pdmNum].output[i].resetLimit = 0;
                     }
 
-                    //_config.pdm[pdmNum].wiper.label = ;
-                    _config.pdm[pdmNum].wiper.enabled = true;
-                    _config.pdm[pdmNum].wiper.lowSpeedInput = (int)pdm.Wipers[0].SlowInput;
-                    _config.pdm[pdmNum].wiper.highSpeedInput = (int)pdm.Wipers[0].FastInput;
-                    _config.pdm[pdmNum].wiper.parkInput = (int)pdm.Wipers[0].ParkInput;
+                    _config.pdm[pdmNum].wiper.enabled = pdm.Wipers[0].Enabled;
+                    _config.pdm[pdmNum].wiper.lowSpeedInput = pdm.Wipers[0].SlowInput;
+                    _config.pdm[pdmNum].wiper.highSpeedInput = pdm.Wipers[0].FastInput;
+                    _config.pdm[pdmNum].wiper.parkInput = pdm.Wipers[0].ParkInput;
                     _config.pdm[pdmNum].wiper.parkStopLevel = pdm.Wipers[0].ParkStopLevel;
-                    _config.pdm[pdmNum].wiper.washInput = (int)pdm.Wipers[0].WashInput;
-                    _config.pdm[pdmNum].wiper.washTime = 0;
-                    _config.pdm[pdmNum].wiper.intermitInput = (int)pdm.Wipers[0].InterInput;
-                    _config.pdm[pdmNum].wiper.intermitSelect = (int)pdm.Wipers[0].SpeedInput;
+                    _config.pdm[pdmNum].wiper.washInput = pdm.Wipers[0].WashInput;
+                    _config.pdm[pdmNum].wiper.washCycles = pdm.Wipers[0].WashWipeCycles;
+                    _config.pdm[pdmNum].wiper.intermitInput = pdm.Wipers[0].InterInput;
+                    _config.pdm[pdmNum].wiper.speedInput = pdm.Wipers[0].SpeedInput;
+                    _config.pdm[pdmNum].wiper.intermitTime = pdm.Wipers[0].IntermitTime;
+                    _config.pdm[pdmNum].wiper.speedMap = pdm.Wipers[0].SpeedMap;
 
                     for (int i = 0; i < _config.pdm[pdmNum].flasher.Length; i++)
                     {
                         _config.pdm[pdmNum].flasher[i].name = $"Flasher{i}";
-                        _config.pdm[pdmNum].flasher[i].label = "Flasher";
-                        _config.pdm[pdmNum].flasher[i].enabled = true;
-                        _config.pdm[pdmNum].flasher[i].input = 0;
-                        _config.pdm[pdmNum].flasher[i].flashOnTime = 1000;
-                        _config.pdm[pdmNum].flasher[i].flashOffTime = 1000;
-                        _config.pdm[pdmNum].flasher[i].singleCycle = 0;
-                        _config.pdm[pdmNum].flasher[i].output = 0;
+                        _config.pdm[pdmNum].flasher[i].label = pdm.Flashers[i].Name;
+                        _config.pdm[pdmNum].flasher[i].enabled = pdm.Flashers[i].Enabled;
+                        _config.pdm[pdmNum].flasher[i].input = pdm.Flashers[i].Input;
+                        _config.pdm[pdmNum].flasher[i].flashOnTime = pdm.Flashers[i].OnTime;
+                        _config.pdm[pdmNum].flasher[i].flashOffTime = pdm.Flashers[i].OffTime;
+                        _config.pdm[pdmNum].flasher[i].singleCycle = Convert.ToInt16(pdm.Flashers[i].Single);
+                        _config.pdm[pdmNum].flasher[i].output = pdm.Flashers[i].Output;
                     }
 
-                    _config.pdm[pdmNum].starter.enabled = false;
-                    _config.pdm[pdmNum].starter.input = 0;
-                    _config.pdm[pdmNum].starter.disableOut[0] = false;
-                    _config.pdm[pdmNum].starter.disableOut[1] = false;
-                    _config.pdm[pdmNum].starter.disableOut[2] = false;
-                    _config.pdm[pdmNum].starter.disableOut[3] = false;
-                    _config.pdm[pdmNum].starter.disableOut[4] = false;
-                    _config.pdm[pdmNum].starter.disableOut[5] = false;
-                    _config.pdm[pdmNum].starter.disableOut[6] = false;
-                    _config.pdm[pdmNum].starter.disableOut[7] = false;
+                    _config.pdm[pdmNum].starter.enabled = pdm.StarterDisable[0].Enabled;
+                    _config.pdm[pdmNum].starter.input = pdm.StarterDisable[0].Input;
+                    _config.pdm[pdmNum].starter.disableOut[0] = pdm.StarterDisable[0].Output1;
+                    _config.pdm[pdmNum].starter.disableOut[1] = pdm.StarterDisable[0].Output2;
+                    _config.pdm[pdmNum].starter.disableOut[2] = pdm.StarterDisable[0].Output3;
+                    _config.pdm[pdmNum].starter.disableOut[3] = pdm.StarterDisable[0].Output4;
+                    _config.pdm[pdmNum].starter.disableOut[4] = pdm.StarterDisable[0].Output5;
+                    _config.pdm[pdmNum].starter.disableOut[5] = pdm.StarterDisable[0].Output6;
+                    _config.pdm[pdmNum].starter.disableOut[6] = pdm.StarterDisable[0].Output7;
+                    _config.pdm[pdmNum].starter.disableOut[7] = pdm.StarterDisable[0].Output8;
 
                     for (int i = 0; i < _config.pdm[pdmNum].canInput.Length; i++)
                     {
@@ -289,8 +302,11 @@ namespace DingoConfigurator
         public void WindowClosing()
         {
             Disconnect(null);
-            updateTimer.Stop();
-            updateTimer.Dispose();
+            if (updateTimer != null)
+            {
+                updateTimer.Stop();
+                updateTimer.Dispose();
+            }
 
             //Save user settings
             Settings.Default.CanInterface = SelectedCan.Name;
@@ -328,6 +344,123 @@ namespace DingoConfigurator
                 Len = 1,
                 Payload = new byte[] { Convert.ToByte('V'), 0, 0, 0, 0, 0, 0, 0 }
             });
+
+            Thread.Sleep(10);
+
+            _can.Write(new CanInterfaceData
+            {
+                Id = 100,
+                Len = 1,
+                Payload = new byte[] { Convert.ToByte('C'), 0, 0, 0, 0, 0, 0, 0 }
+            });
+
+            Thread.Sleep(10);
+
+            for (int i = 0; i < 2; i++)
+            {
+                _can.Write(new CanInterfaceData
+                {
+                    Id = 100,
+                    Len = 2,
+                    Payload = new byte[] { Convert.ToByte('I'),
+                        Convert.ToByte((i & 0x0F) << 4),
+                        0, 0, 0, 0, 0, 0 }
+                });
+
+                Thread.Sleep(10);
+            }
+
+            for (int i = 0; i < 8; i++)
+            {
+                _can.Write(new CanInterfaceData
+                {
+                    Id = 100,
+                    Len = 2,
+                    Payload = new byte[] { Convert.ToByte('O'),
+                        Convert.ToByte((i & 0x0F) << 4),
+                        0, 0, 0, 0, 0, 0 }
+                });
+
+                Thread.Sleep(10);
+            }
+
+            for (int i = 0; i < 16; i++)
+            {
+                _can.Write(new CanInterfaceData
+                {
+                    Id = 100,
+                    Len = 2,
+                    Payload = new byte[] { Convert.ToByte('U'),
+                        Convert.ToByte(i),
+                        0, 0, 0, 0, 0, 0 }
+                });
+
+                Thread.Sleep(10);
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                _can.Write(new CanInterfaceData
+                {
+                    Id = 100,
+                    Len = 2,
+                    Payload = new byte[] { Convert.ToByte('H'),
+                        Convert.ToByte((i & 0x0F) << 4),
+                        0, 0, 0, 0, 0, 0 }
+                });
+
+                Thread.Sleep(10);
+            }
+
+            for (int i = 0; i < 32; i++)
+            {
+                _can.Write(new CanInterfaceData
+                {
+                    Id = 100,
+                    Len = 2,
+                    Payload = new byte[] { Convert.ToByte('N'),
+                        Convert.ToByte(i),
+                        0, 0, 0, 0, 0, 0 }
+                });
+
+                Thread.Sleep(10);
+            }
+
+            _can.Write(new CanInterfaceData
+            {
+                Id = 100,
+                Len = 1,
+                Payload = new byte[] { Convert.ToByte('W'), 0, 0, 0, 0, 0, 0, 0 }
+            });
+
+            Thread.Sleep(10);
+
+            _can.Write(new CanInterfaceData
+            {
+                Id = 100,
+                Len = 1,
+                Payload = new byte[] { Convert.ToByte('P'), 0, 0, 0, 0, 0, 0, 0 }
+            });
+
+            Thread.Sleep(10);
+
+            _can.Write(new CanInterfaceData
+            {
+                Id = 100,
+                Len = 1,
+                Payload = new byte[] { Convert.ToByte('Y'), 0, 0, 0, 0, 0, 0, 0 }
+            });
+
+            Thread.Sleep(10);
+
+            _can.Write(new CanInterfaceData
+            {
+                Id = 100,
+                Len = 1,
+                Payload = new byte[] { Convert.ToByte('D'), 0, 0, 0, 0, 0, 0, 0 }
+            });
+
+            Thread.Sleep(10);
         }
 
         #region TreeView

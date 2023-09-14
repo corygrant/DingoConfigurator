@@ -112,8 +112,39 @@ namespace CanDevices
         WiperFast
     }
 
+    public enum MessagePrefix
+    {
+        Burn = 'B',
+        Version = 'V',
+        CAN = 'C',
+        Input = 'I',
+        Output = 'O',
+        VirtualInput = 'U',
+        Flasher = 'H',
+        Wiper = 'W',
+        WiperSpeed = 'P',
+        WiperDelay = 'Y',
+        StarterDisable = 'D',
+        CANInput = 'N'
+    }
+
     public class DingoPdmOutput : NotifyPropertyChangedBase
     {
+
+        private bool _enabled;
+        public bool Enabled
+        {
+            get => _enabled;
+            set
+            {
+                if (_enabled != value)
+                {
+                    _enabled = value;
+                    OnPropertyChanged(nameof(Enabled));
+                }
+            }
+        }
+
         private string _name;
         public string Name
         {
@@ -198,8 +229,93 @@ namespace CanDevices
             }
         }
 
+        private int _resetCountLimit;
+        public int ResetCountLimit
+        {
+            get => _resetCountLimit;
+            set
+            {
+                if (_resetCountLimit != value)
+                {
+                    _resetCountLimit = value;
+                    OnPropertyChanged(nameof(ResetCountLimit));
+                }
+            }
+        }
+
+        private ResetMode _resetMode;
+        public ResetMode ResetMode
+        {
+            get => _resetMode;
+            set
+            {
+                if(value != _resetMode)
+                {
+                    _resetMode = value;
+                    OnPropertyChanged(nameof(ResetMode));
+                }
+            }
+        }
+
+        private int _resetTime;
+        public int ResetTime
+        {
+            get => _resetTime;
+            set
+            {
+                if (_resetTime != value)
+                {
+                    _resetTime = value;
+                    OnPropertyChanged(nameof(ResetTime));
+                }
+            }
+        }
+
+        private double _inrushCurrentLimit;
+        public double InrushCurrentLimit
+        {
+            get => _inrushCurrentLimit;
+            set
+            {
+                if(value != _inrushCurrentLimit)
+                {
+                    _inrushCurrentLimit = value;
+                    OnPropertyChanged(nameof(InrushCurrentLimit));
+                }
+            }
+        }
+
+        private int _inrushTime;
+        public int InrushTime
+        {
+            get => _inrushTime;
+            set
+            {
+                if(value != _inrushTime)
+                {
+                    _inrushTime = value;
+                    OnPropertyChanged(nameof(InrushTime));
+                }
+            }
+        }
+
+        private VarMap _input;
+        public VarMap Input
+        {
+            get => _input;
+            set
+            {
+                if(value != _input)
+                {
+                    _input = value;
+                    OnPropertyChanged(nameof(Input));
+                }
+            }
+        }
+
         public DingoPdmOutput()
         {
+            _enabled = false;
             _number = 0;
             _state = OutState.Off;
             _current = 0;
@@ -210,6 +326,20 @@ namespace CanDevices
 
     public class DingoPdmInput : NotifyPropertyChangedBase
     {
+        private bool _enabled;
+        public bool Enabled
+        {
+            get => _enabled;
+            set
+            {
+                if (_enabled != value)
+                {
+                    _enabled = value;
+                    OnPropertyChanged(nameof(Enabled));
+                }
+            }
+        }
+
         private string _name;
         public string Name
         {
@@ -262,6 +392,34 @@ namespace CanDevices
                 {
                     _invertInput = value;
                     OnPropertyChanged(nameof(InvertInput));
+                }
+            }
+        }
+
+        private InputMode _mode;
+        public InputMode Mode
+        {
+            get => _mode;
+            set
+            {
+                if ( _mode != value)
+                {
+                    _mode = value;
+                    OnPropertyChanged(nameof(Mode));
+                }
+            }
+        }
+
+        private int _debounceTime;
+        public int DebounceTime
+        {
+            get => _debounceTime;
+            set
+            {
+                if ( _debounceTime != value)
+                {
+                    _debounceTime = value;
+                    OnPropertyChanged(nameof(DebounceTime));
                 }
             }
         }
@@ -597,6 +755,27 @@ namespace CanDevices
 
     public class DingoPdmWiper : NotifyPropertyChangedBase
     {
+
+        public DingoPdmWiper()
+        {
+            SpeedMap = new int[8];
+            IntermitTime = new int[6];
+        }
+
+        private bool _enabled;
+        public bool Enabled
+        {
+            get => _enabled;
+            set
+            {
+                if (_enabled != value)
+                {
+                    _enabled = value;
+                    OnPropertyChanged(nameof(Enabled));
+                }
+            }
+        }
+
         private string _name;
         public string Name
         {
@@ -863,6 +1042,278 @@ namespace CanDevices
         }
     }
 
+    public class DingoPdmFlasher : NotifyPropertyChangedBase
+    {
+        private string _name;
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if (_name != value)
+                {
+                    _name = value;
+                    OnPropertyChanged(nameof(Name));
+                }
+            }
+        }
+
+        private int _number;
+        public int Number
+        {
+            get => _number;
+            set
+            {
+                if (_number != value)
+                {
+                    _number = value;
+                    OnPropertyChanged(nameof(Number));
+                }
+            }
+        }
+
+        private int _value;
+        public int Value
+        {
+            get => _value;
+            set
+            {
+                if (_value != value)
+                {
+                    _value = value;
+                    OnPropertyChanged(nameof(Value));
+                }
+            }
+        }
+
+        private bool _enabled;
+        public bool Enabled
+        {
+            get => _enabled;
+            set
+            {
+                if (_enabled != value)
+                {
+                    _enabled = value;
+                    OnPropertyChanged(nameof(Enabled));
+                }
+            }
+        }
+
+        private bool _single;
+        public bool Single
+        {
+            get => _single;
+            set
+            {
+                if (_single != value)
+                {
+                    _single = value;
+                    OnPropertyChanged(nameof(Single));
+                }
+            }
+        }
+
+        private VarMap _input;
+        public VarMap Input
+        {
+            get => _input;
+            set
+            {
+                if (_input != value)
+                {
+                    _input = value;
+                    OnPropertyChanged(nameof(Input));
+                }
+            }
+        }
+
+        private VarMap _output;
+        public VarMap Output
+        {
+            get => _output;
+            set
+            {
+                if (_output != value)
+                {
+                    _output = value;
+                    OnPropertyChanged(nameof(Output));
+                }
+            }
+        }
+
+        private int _onTime;
+        public int OnTime
+        {
+            get => _onTime;
+            set
+            {
+                if (_onTime != value)
+                {
+                    _onTime = value;
+                    OnPropertyChanged(nameof(OnTime));
+                }
+            }
+        }
+
+        private int _offTime;
+        public int OffTime
+        {
+            get => _offTime;
+            set
+            {
+                if (_offTime != value)
+                {
+                    _offTime = value;
+                    OnPropertyChanged(nameof(OffTime));
+                }
+            }
+        }
+    }
+
+    public class DingoPdmStarterDisable : NotifyPropertyChangedBase
+    {
+        private bool _enabled;
+        public bool Enabled
+        {
+            get => _enabled;
+            set
+            {
+                if (_enabled != value)
+                {
+                    _enabled = value;
+                    OnPropertyChanged(nameof(Enabled));
+                }
+            }
+        }
+        private VarMap _input;
+        public VarMap Input
+        {
+            get => _input;
+            set
+            {
+                if (_input != value)
+                {
+                    _input = value;
+                    OnPropertyChanged(nameof(Input));
+                }
+            }
+        }
+
+        private bool _output1;
+        public bool Output1
+        {
+            get => _output1;
+            set
+            {
+                if (_output1 != value)
+                {
+                    _output1 = value;
+                    OnPropertyChanged(nameof(Output1));
+                }
+            }
+        }
+
+        private bool _output2;
+        public bool Output2
+        {
+            get => _output2;
+            set
+            {
+                if (_output2 != value)
+                {
+                    _output2 = value;
+                    OnPropertyChanged(nameof(Output2));
+                }
+            }
+        }
+
+        private bool _output3;
+        public bool Output3
+        {
+            get => _output3;
+            set
+            {
+                if (_output3 != value)
+                {
+                    _output3 = value;
+                    OnPropertyChanged(nameof(Output3));
+                }
+            }
+        }
+
+        private bool _output4;
+        public bool Output4
+        {
+            get => _output4;
+            set
+            {
+                if (_output4 != value)
+                {
+                    _output4 = value;
+                    OnPropertyChanged(nameof(Output4));
+                }
+            }
+        }
+
+        private bool _output5;
+        public bool Output5
+        {
+            get => _output5;
+            set
+            {
+                if (_output5 != value)
+                {
+                    _output5 = value;
+                    OnPropertyChanged(nameof(Output5));
+                }
+            }
+        }
+
+        private bool _output6;
+        public bool Output6
+        {
+            get => _output6;
+            set
+            {
+                if (_output6 != value)
+                {
+                    _output6 = value;
+                    OnPropertyChanged(nameof(Output6));
+                }
+            }
+        }
+
+        private bool _output7;
+        public bool Output7
+        {
+            get => _output7;
+            set
+            {
+                if (_output7 != value)
+                {
+                    _output7 = value;
+                    OnPropertyChanged(nameof(Output7));
+                }
+            }
+        }
+
+        private bool _output8;
+        public bool Output8
+        {
+            get => _output8;
+            set
+            {
+                if (_output8 != value)
+                {
+                    _output8 = value;
+                    OnPropertyChanged(nameof(Output8));
+                }
+            }
+        }
+
+    }
+
     public class DingoPdmCan : NotifyPropertyChangedBase, ICanDevice
     {
         private string _name;
@@ -995,6 +1446,20 @@ namespace CanDevices
             }
         }
 
+        private string _version;
+        public string Version
+        {
+            get => _version;
+            private set
+            {
+                if (value != _version)
+                {
+                    _version = value;
+                    OnPropertyChanged(nameof(Version));
+                }
+            }
+        }
+
         private ObservableCollection<DingoPdmOutput> _outputs;
         public ObservableCollection<DingoPdmOutput> Outputs
         {
@@ -1051,6 +1516,34 @@ namespace CanDevices
             }
         }
 
+        private ObservableCollection<DingoPdmFlasher> _flashers;
+        public ObservableCollection<DingoPdmFlasher> Flashers
+        {
+            get => _flashers;
+            private set
+            {
+                if (_flashers != value)
+                {
+                    _flashers = value;
+                    OnPropertyChanged(nameof(Flashers));
+                }
+            }
+        }
+
+        private ObservableCollection<DingoPdmStarterDisable> _starterDisable;
+        public ObservableCollection<DingoPdmStarterDisable> StarterDisable
+        {
+            get => _starterDisable;
+            set
+            {
+                if(value != _starterDisable)
+                {
+                    _starterDisable = value;
+                    OnPropertyChanged(nameof(StarterDisable));
+                }
+            }
+        }
+
         public DingoPdmCan(string name, int id)
         {
             Name = name;
@@ -1087,8 +1580,22 @@ namespace CanDevices
                 VirtualInputs[i].Number = i + 1;
             }
 
-            Wipers = new ObservableCollection<DingoPdmWiper>();
-            Wipers.Add(new DingoPdmWiper());
+            Wipers = new ObservableCollection<DingoPdmWiper>
+            {
+                new DingoPdmWiper()
+            };
+
+            Flashers = new ObservableCollection<DingoPdmFlasher>();
+            for(int i=0; i<4; i++)
+            {
+                Flashers.Add(new DingoPdmFlasher());
+                Flashers[i].Number = i + 1;
+            }
+
+            StarterDisable = new ObservableCollection<DingoPdmStarterDisable>
+            {
+                new DingoPdmStarterDisable()
+            };
 
             SubPages.Add(new CanDeviceSub("States", this));
             SubPages.Add(new CanDeviceSub("Settings", this));
@@ -1126,10 +1633,8 @@ namespace CanDevices
             if (id == BaseId + 16) ReadMessage16(data);
             if (id == BaseId + 17) ReadMessage17(data);
 
-            if (id > BaseId + 17)
-            {
-                ReadSettingsResponse(data);
-            }
+            if (id == BaseId + 30) ReadSettingsResponse(data);
+
             _lastRxTime = DateTime.Now;
 
             UpdateIsConnected();
@@ -1305,7 +1810,228 @@ namespace CanDevices
 
         private void ReadSettingsResponse(byte[] data)
         {
-            Console.WriteLine($"Major:{data[1]} Minor:{data[2]} Build:{(data[3] << 8) + data[4]}");
+            //Response is lowercase version of set/get prefix
+            MessagePrefix prefix = (MessagePrefix)Char.ToUpper(Convert.ToChar(data[0]));
+
+            int index = 0;
+
+            switch (prefix)
+            {
+                case MessagePrefix.Version:
+                    Version = $"V{data[1]}.{data[2]}.{(data[3] << 8) + (data[4])}";
+                    break;
+
+                case MessagePrefix.CAN:
+                    BaseId = (data[2] << 8) + data[3];
+
+                    break;
+
+                case MessagePrefix.Input:
+                    index = (data[1] & 0xF0) >> 4;
+                    if (index >= 0 && index < 2)
+                    {
+                        DigitalInputs[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
+                        DigitalInputs[index].InvertInput = Convert.ToBoolean((data[1] & 0x08) >> 3);
+                        DigitalInputs[index].Mode = (InputMode)((data[1] & 0x06) >> 1);
+                        DigitalInputs[index].DebounceTime = data[2] * 10;
+                    }
+                    break;
+
+                case MessagePrefix.Output:
+                    index = (data[1] & 0xF0) >> 4;
+                    if (index >= 0 && index < 8)
+                    {
+                        Outputs[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
+                        Outputs[index].Input = (VarMap)(data[2]);
+                        Outputs[index].CurrentLimit = data[3] / 10;
+                        Outputs[index].ResetCountLimit = (data[4] & 0xF0) >> 4;
+                        Outputs[index].ResetMode = (ResetMode)(data[4] & 0x0F);
+                        Outputs[index].ResetTime = data[5] * 10;
+                        Outputs[index].InrushCurrentLimit = data[6] / 10;
+                        Outputs[index].InrushTime = data[7] * 10;
+                    }
+                    break;
+
+                case MessagePrefix.VirtualInput:
+                    index = data[2];
+                    if (index >= 0 && index < 16)
+                    {
+                        VirtualInputs[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
+                        VirtualInputs[index].Not0 = Convert.ToBoolean((data[1] & 0x02) >> 1);
+                        VirtualInputs[index].Not1 = Convert.ToBoolean((data[1] & 0x04) >> 2);
+                        VirtualInputs[index].Not2 = Convert.ToBoolean((data[1] & 0x08) >> 3);
+                        VirtualInputs[index].Var0 = (VarMap)data[3];
+                        VirtualInputs[index].Var1 = (VarMap)data[4];
+                        VirtualInputs[index].Var2 = (VarMap)data[5];
+                        VirtualInputs[index].Mode = (InputMode)((data[6] & 0xC0) >> 6);
+                        VirtualInputs[index].Cond0 = (Conditional)(data[6] & 0x03);
+                        VirtualInputs[index].Cond1 = (Conditional)((data[6] & 0x0C) >> 2);
+                    }
+                    break;
+
+                case MessagePrefix.Flasher:
+                    index = (data[1] & 0xF0) >> 4;
+                    if (index >= 0 && index < 16)
+                    {
+                        Flashers[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
+                        Flashers[index].Single = Convert.ToBoolean((data[1] & 0x02) >> 1);
+                        Flashers[index].Input = (VarMap)(data[2]);
+                        Flashers[index].Output = (VarMap)(data[3] + 50);
+                        Flashers[index].OnTime = data[4] * 10;
+                        Flashers[index].OffTime = data[5] * 10;
+                    }
+                    break;
+
+                case MessagePrefix.Wiper:
+                    //Wipers[0].Enabled = (data[1] & 0x01);
+                    Wipers[0].Mode = (WiperMode)((data[1] & 0x03) >> 1);
+                    Wipers[0].ParkStopLevel = Convert.ToBoolean((data[1] & 0x04) >> 3);
+                    Wipers[0].WashWipeCycles = (data[1] & 0xF0) >> 4;
+                    Wipers[0].SlowInput = (VarMap)data[2];
+                    Wipers[0].FastInput = (VarMap)data[3];
+                    Wipers[0].InterInput = (VarMap)data[4];
+                    Wipers[0].OnInput = (VarMap)data[5];
+                    Wipers[0].ParkInput = (VarMap)data[6];
+                    Wipers[0].WashInput = (VarMap)data[7];
+                    break;
+
+                case MessagePrefix.WiperSpeed:
+                    Wipers[0].SwipeInput = (VarMap)data[1];
+                    Wipers[0].SpeedInput = (VarMap)data[2];
+                    Wipers[0].SpeedMap[0] = (data[3] & 0x0F);
+                    Wipers[0].SpeedMap[1] = (data[3] & 0xF0) >> 4;
+                    Wipers[0].SpeedMap[2] = (data[4] & 0x0F);
+                    Wipers[0].SpeedMap[3] = (data[4] & 0xF0) >> 4;
+                    Wipers[0].SpeedMap[4] = (data[5] & 0x0F);
+                    Wipers[0].SpeedMap[5] = (data[5] & 0xF0) >> 4;
+                    Wipers[0].SpeedMap[6] = (data[6] & 0x0F);
+                    Wipers[0].SpeedMap[7] = (data[6] & 0xF0) >> 4;
+                    break;
+
+                case MessagePrefix.WiperDelay:
+                    Wipers[0].IntermitTime[0] = data[1] * 10;
+                    Wipers[0].IntermitTime[1] = data[2] * 10;
+                    Wipers[0].IntermitTime[2] = data[3] * 10;
+                    Wipers[0].IntermitTime[3] = data[4] * 10;
+                    Wipers[0].IntermitTime[4] = data[5] * 10;
+                    Wipers[0].IntermitTime[5] = data[6] * 10;
+                    break;
+
+                case MessagePrefix.StarterDisable:
+                    StarterDisable[0].Enabled = Convert.ToBoolean(data[1] & 0x01);
+                    StarterDisable[0].Input = (VarMap)(data[2]);
+                    StarterDisable[0].Output1 = Convert.ToBoolean(data[3] & 0x01);
+                    StarterDisable[0].Output2 = Convert.ToBoolean((data[3] & 0x02) >> 1);
+                    StarterDisable[0].Output3 = Convert.ToBoolean((data[3] & 0x04) >> 2);
+                    StarterDisable[0].Output4 = Convert.ToBoolean((data[3] & 0x08) >> 3);
+                    StarterDisable[0].Output5 = Convert.ToBoolean((data[3] & 0x10) >> 4);
+                    StarterDisable[0].Output6 = Convert.ToBoolean((data[3] & 0x20) >> 5);
+                    StarterDisable[0].Output7 = Convert.ToBoolean((data[3] & 0x40) >> 6);
+                    StarterDisable[0].Output8 = Convert.ToBoolean((data[3] & 0x80) >> 7);
+                    break;
+
+                case MessagePrefix.CANInput:
+                    index = data[2];
+                    if (index >= 0 && index < 32)
+                    {
+                        CanInputs[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
+                        CanInputs[index].Mode = (InputMode)((data[1] & 0x06) >> 1);
+                        CanInputs[index].Operator = (Operator)((data[1] & 0xF0) >> 4);
+                        CanInputs[index].Id = (data[3] << 8) + data[4];
+                        CanInputs[index].HighByte = (data[5] & 0xF0) >> 4;
+                        CanInputs[index].LowByte = (data[5] & 0x0F);
+                        CanInputs[index].OnVal = data[6];
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        public void SetConfigFile(PdmConfig config)
+        {
+            for (int i = 0; i < DigitalInputs.Count; i++)
+            {
+                DigitalInputs[i].Name = config.input[i].label;
+                DigitalInputs[i].Enabled = config.input[i].enabled;
+                DigitalInputs[i].Mode = config.input[i].mode;
+                DigitalInputs[i].InvertInput = config.input[i].invertInput;
+                DigitalInputs[i].DebounceTime = config.input[i].debounceTime;
+            }
+
+            for (int i = 0; i < Outputs.Count; i++)
+            {
+                Outputs[i].Name = config.output[i].label;
+                Outputs[i].Enabled = config.output[i].enabled;
+                Outputs[i].Input = config.output[i].input;
+                Outputs[i].CurrentLimit = config.output[i].currentLimit;
+                Outputs[i].InrushCurrentLimit = config.output[i].inrushLimit;
+                Outputs[i].InrushTime = config.output[i].inrushTime;
+                Outputs[i].ResetMode = config.output[i].resetMode;
+                Outputs[i].ResetCountLimit = config.output[i].resetLimit;
+            }
+
+            for (int i = 0; i < VirtualInputs.Count; i++)
+            {
+                VirtualInputs[i].Name = config.virtualInput[i].label;
+                VirtualInputs[i].Enabled = config.virtualInput[i].enabled;
+                VirtualInputs[i].Not0 = config.virtualInput[i].not0;
+                VirtualInputs[i].Var0 = config.virtualInput[i].var0;
+                VirtualInputs[i].Cond0 = config.virtualInput[i].cond0;
+                VirtualInputs[i].Not1 = config.virtualInput[i].not1;
+                VirtualInputs[i].Var1 = config.virtualInput[i].var1;
+                VirtualInputs[i].Cond1 = config.virtualInput[i].cond1;
+                VirtualInputs[i].Not2 = config.virtualInput[i].not2;
+                VirtualInputs[i].Var2 = config.virtualInput[i].var2;
+                VirtualInputs[i].Mode = config.virtualInput[i].mode;
+            }
+
+            for (int i = 0; i < CanInputs.Count; i++)
+            {
+                CanInputs[i].Name = config.canInput[i].label;
+                CanInputs[i].Enabled = config.canInput[i].enabled;
+                CanInputs[i].Id = config.canInput[i].id;
+                CanInputs[i].HighByte = config.canInput[i].highByte;
+                CanInputs[i].LowByte = config.canInput[i].lowByte;
+                CanInputs[i].Operator = config.canInput[i].oper;
+                CanInputs[i].OnVal = config.canInput[i].onValue;
+                CanInputs[i].Mode = config.canInput[i].mode;
+            }
+
+            for (int i = 0; i < Flashers.Count; i++)
+            {
+                Flashers[i].Name = config.flasher[i].label;
+                Flashers[i].Enabled = config.flasher[i].enabled;
+                Flashers[i].Input = config.flasher[i].input;
+                Flashers[i].OnTime = config.flasher[i].flashOnTime;
+                Flashers[i].OffTime = config.flasher[i].flashOffTime;
+                Flashers[i].Single = Convert.ToBoolean(config.flasher[i].singleCycle);
+                Flashers[i].Output = config.flasher[i].output;
+            }
+
+            StarterDisable[0].Enabled = config.starter.enabled;
+            StarterDisable[0].Input = config.starter.input;
+            StarterDisable[0].Output1 = config.starter.disableOut[0];
+            StarterDisable[0].Output2 = config.starter.disableOut[1];
+            StarterDisable[0].Output3 = config.starter.disableOut[2];
+            StarterDisable[0].Output4 = config.starter.disableOut[3];
+            StarterDisable[0].Output5 = config.starter.disableOut[4];
+            StarterDisable[0].Output6 = config.starter.disableOut[5];
+            StarterDisable[0].Output7 = config.starter.disableOut[6];
+            StarterDisable[0].Output8 = config.starter.disableOut[7];
+
+            Wipers[0].Enabled = config.wiper.enabled;
+            Wipers[0].SlowInput = config.wiper.lowSpeedInput;
+            Wipers[0].FastInput = config.wiper.highSpeedInput;
+            Wipers[0].ParkInput = config.wiper.parkInput;
+            Wipers[0].ParkStopLevel = config.wiper.parkStopLevel;
+            Wipers[0].WashInput = config.wiper.washInput;
+            Wipers[0].WashWipeCycles = config.wiper.washCycles;
+            Wipers[0].InterInput = config.wiper.intermitInput;
+            Wipers[0].SpeedInput = config.wiper.speedInput;
+            Wipers[0].IntermitTime = config.wiper.intermitTime;
+            Wipers[0].SpeedMap = config.wiper.speedMap;
         }
     }
 }

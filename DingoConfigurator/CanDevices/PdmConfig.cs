@@ -46,9 +46,9 @@ namespace CanDevices
 
     public enum ResetMode
     {
-        RESET_NONE,
-        RESET_COUNT,
-        RESET_ENDLESS
+        None,
+        Count,
+        Endless
     }
 
     public class PdmConfig
@@ -168,28 +168,22 @@ namespace CanDevices
     public class Wiper
     {
         public bool enabled { get; set; }
-        public int lowSpeedInput { get; set; }
-        public int highSpeedInput { get; set; }
-        public int parkInput { get; set; }
+        public VarMap lowSpeedInput { get; set; }
+        public VarMap highSpeedInput { get; set; }
+        public VarMap parkInput { get; set; }
         public bool parkStopLevel { get; set; }
-        public int washInput { get; set; }
-        public int washTime { get; set; }
-        public int intermitInput { get; set; }
-        public int intermitSelect { get; set; }
-        public int intermitTime1 { get; set; }
-        public int intermitTime2 { get; set; }
-        public int intermitTime3 { get; set; }
-        public int intermitTime4 { get; set; }
-        public int intermitTime5 { get; set; }
-        public int intermitTime6 { get; set; }
-        public int intermitTime7 { get; set; }
-        public int intermitTime8 { get; set; }
+        public VarMap washInput { get; set; }
+        public int washCycles { get; set; }
+        public VarMap intermitInput { get; set; }
+        public VarMap speedInput { get; set; }
+        public int[] intermitTime { get; set; }
+        public int[] speedMap { get; set; }
     }
 
     public class Starter
     {
         public bool enabled { get; set; }
-        public int input { get; set; }
+        public VarMap input { get; set; }
         public bool[] disableOut { get; set; }
     }
 
@@ -216,13 +210,13 @@ namespace CanDevices
         public string label { get; set; }
         public bool enabled { get; set; }
         public bool not0 { get; set; }
-        public int var0 { get; set; }
+        public VarMap var0 { get; set; }
         public Conditional cond0 { get; set; }
         public bool not1 { get; set; }
-        public int var1 { get; set; }
+        public VarMap var1 { get; set; }
         public Conditional cond1 { get; set; }
         public bool not2 { get; set; }
-        public int var2 { get; set; }
+        public VarMap var2 { get; set; }
         public InputMode mode { get; set; }
     }
 
@@ -231,7 +225,7 @@ namespace CanDevices
         public string name { get; set; }
         public string label { get; set; }
         public bool enabled { get; set; }
-        public int input { get; set; }
+        public VarMap input { get; set; }
         public double currentLimit { get; set; }
         public double inrushLimit { get; set; }
         public int inrushTime { get; set; }
@@ -245,11 +239,11 @@ namespace CanDevices
         public string name { get; set; }
         public string label { get; set; }
         public bool enabled { get; set; }
-        public int input { get; set; }
+        public VarMap input { get; set; }
         public int flashOnTime { get; set; }
         public int flashOffTime { get; set; }
         public int singleCycle { get; set; }
-        public int output { get; set; }
+        public VarMap output { get; set; }
     }
 
     public class CanInput

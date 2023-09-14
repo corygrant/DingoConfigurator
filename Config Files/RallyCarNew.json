@@ -350,72 +350,82 @@
                 }
             ],
             "wiper": {
-                "enabled": true,
+                "enabled": false,
                 "lowSpeedInput": 0,
                 "highSpeedInput": 0,
                 "parkInput": 1,
                 "parkStopLevel": false,
                 "washInput": 14,
-                "washTime": 0,
+                "washCycles": 2,
                 "intermitInput": 0,
-                "intermitSelect": 7,
-                "intermitTime1": 0,
-                "intermitTime2": 0,
-                "intermitTime3": 0,
-                "intermitTime4": 0,
-                "intermitTime5": 0,
-                "intermitTime6": 0,
-                "intermitTime7": 0,
-                "intermitTime8": 0
+                "speedInput": 7,
+                "intermitTime": [
+                    1000,
+                    2000,
+                    440,
+                    1440,
+                    2440,
+                    880
+                ],
+                "speedMap": [
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    1,
+                    2
+                ]
             },
             "flasher": [
                 {
                     "name": "Flasher0",
-                    "label": "Flasher",
+                    "label": null,
                     "enabled": true,
-                    "input": 0,
-                    "flashOnTime": 1000,
-                    "flashOffTime": 1000,
+                    "input": 2,
+                    "flashOnTime": 500,
+                    "flashOffTime": 500,
                     "singleCycle": 0,
-                    "output": 0
+                    "output": 51
                 },
                 {
                     "name": "Flasher1",
-                    "label": "Flasher",
-                    "enabled": true,
+                    "label": null,
+                    "enabled": false,
                     "input": 0,
-                    "flashOnTime": 1000,
-                    "flashOffTime": 1000,
+                    "flashOnTime": 0,
+                    "flashOffTime": 0,
                     "singleCycle": 0,
-                    "output": 0
+                    "output": 50
                 },
                 {
                     "name": "Flasher2",
-                    "label": "Flasher",
-                    "enabled": true,
+                    "label": null,
+                    "enabled": false,
                     "input": 0,
-                    "flashOnTime": 1000,
-                    "flashOffTime": 1000,
+                    "flashOnTime": 0,
+                    "flashOffTime": 0,
                     "singleCycle": 0,
-                    "output": 0
+                    "output": 50
                 },
                 {
                     "name": "Flasher3",
-                    "label": "Flasher",
-                    "enabled": true,
+                    "label": null,
+                    "enabled": false,
                     "input": 0,
-                    "flashOnTime": 1000,
-                    "flashOffTime": 1000,
+                    "flashOnTime": 0,
+                    "flashOffTime": 0,
                     "singleCycle": 0,
-                    "output": 0
+                    "output": 50
                 }
             ],
             "starter": {
                 "enabled": false,
-                "input": 0,
+                "input": 8,
                 "disableOut": [
                     false,
-                    false,
+                    true,
                     false,
                     false,
                     false,
@@ -1134,62 +1144,72 @@
                 }
             ],
             "wiper": {
-                "enabled": true,
+                "enabled": false,
                 "lowSpeedInput": 0,
                 "highSpeedInput": 0,
                 "parkInput": 0,
                 "parkStopLevel": false,
                 "washInput": 0,
-                "washTime": 0,
+                "washCycles": 0,
                 "intermitInput": 0,
-                "intermitSelect": 0,
-                "intermitTime1": 0,
-                "intermitTime2": 0,
-                "intermitTime3": 0,
-                "intermitTime4": 0,
-                "intermitTime5": 0,
-                "intermitTime6": 0,
-                "intermitTime7": 0,
-                "intermitTime8": 0
+                "speedInput": 0,
+                "intermitTime": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "speedMap": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
             },
             "flasher": [
                 {
                     "name": "Flasher0",
-                    "label": "Flasher",
-                    "enabled": true,
+                    "label": null,
+                    "enabled": false,
                     "input": 0,
-                    "flashOnTime": 1000,
-                    "flashOffTime": 1000,
+                    "flashOnTime": 0,
+                    "flashOffTime": 0,
                     "singleCycle": 0,
                     "output": 0
                 },
                 {
                     "name": "Flasher1",
-                    "label": "Flasher",
-                    "enabled": true,
+                    "label": null,
+                    "enabled": false,
                     "input": 0,
-                    "flashOnTime": 1000,
-                    "flashOffTime": 1000,
+                    "flashOnTime": 0,
+                    "flashOffTime": 0,
                     "singleCycle": 0,
                     "output": 0
                 },
                 {
                     "name": "Flasher2",
-                    "label": "Flasher",
-                    "enabled": true,
+                    "label": null,
+                    "enabled": false,
                     "input": 0,
-                    "flashOnTime": 1000,
-                    "flashOffTime": 1000,
+                    "flashOnTime": 0,
+                    "flashOffTime": 0,
                     "singleCycle": 0,
                     "output": 0
                 },
                 {
                     "name": "Flasher3",
-                    "label": "Flasher",
-                    "enabled": true,
+                    "label": null,
+                    "enabled": false,
                     "input": 0,
-                    "flashOnTime": 1000,
-                    "flashOffTime": 1000,
+                    "flashOnTime": 0,
+                    "flashOffTime": 0,
                     "singleCycle": 0,
                     "output": 0
                 }
