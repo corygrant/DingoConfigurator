@@ -1,5 +1,7 @@
 ﻿using CanDevices;
 using CanDevices.DingoPdm;
+using CanDevices.CanBoard;
+using CanDevices.DingoDash;
 using System;
 using System.Collections.Generic;
 using System.IO;

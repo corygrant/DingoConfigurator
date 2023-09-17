@@ -1,4 +1,4 @@
-﻿using CanDevices;
+﻿using CanDevices.DingoDash;
 using System;
 using System.Collections.Generic;
 using System.Linq;

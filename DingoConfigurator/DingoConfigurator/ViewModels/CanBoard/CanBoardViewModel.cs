@@ -1,4 +1,4 @@
-﻿using CanDevices;
+﻿using CanDevices.CanBoard;
 using System;
 using System.Collections.Generic;
 using System.Linq;

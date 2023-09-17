@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CanDevices
+namespace CanDevices.DingoDash
 {
     public class DingoDashCan : NotifyPropertyChangedBase, ICanDevice
     {

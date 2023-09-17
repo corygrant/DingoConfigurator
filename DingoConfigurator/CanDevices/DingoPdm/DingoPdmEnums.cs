@@ -6,6 +6,22 @@ using System.Threading.Tasks;
 
 namespace CanDevices.DingoPdm
 {
+    public enum MessagePrefix
+    {
+        Burn = 'B',
+        Version = 'V',
+        CAN = 'C',
+        Input = 'I',
+        Output = 'O',
+        VirtualInput = 'U',
+        Flasher = 'H',
+        Wiper = 'W',
+        WiperSpeed = 'P',
+        WiperDelay = 'Y',
+        StarterDisable = 'D',
+        CANInput = 'N'
+    }
+
     public enum OutState
     {
         Off,
@@ -111,21 +127,6 @@ namespace CanDevices.DingoPdm
         WiperFast
     }
 
-    public enum MessagePrefix
-    {
-        Burn = 'B',
-        Version = 'V',
-        CAN = 'C',
-        Input = 'I',
-        Output = 'O',
-        VirtualInput = 'U',
-        Flasher = 'H',
-        Wiper = 'W',
-        WiperSpeed = 'P',
-        WiperDelay = 'Y',
-        StarterDisable = 'D',
-        CANInput = 'N'
-    }
 
     public enum CanSpeed
     {

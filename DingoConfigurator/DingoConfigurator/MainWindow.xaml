@@ -8,6 +8,8 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:cd="clr-namespace:CanDevices;assembly=CanDevices"
         xmlns:pdm="clr-namespace:CanDevices.DingoPdm;assembly=CanDevices"
+		xmlns:cb="clr-namespace:CanDevices.CanBoard;assembly=CanDevices"
+	    xmlns:dash="clr-namespace:CanDevices.DingoDash;assembly=CanDevices"
         xmlns:vm="clr-namespace:DingoConfigurator.ViewModels"
         xmlns:vw="clr-namespace:DingoConfigurator.Views"
         mc:Ignorable="d"
@@ -169,7 +171,7 @@
                                 </DataTrigger>
                             </HierarchicalDataTemplate.Triggers>
                         </HierarchicalDataTemplate>
-                        <HierarchicalDataTemplate DataType="{x:Type cd:CanBoardCan}">
+                        <HierarchicalDataTemplate DataType="{x:Type cb:CanBoardCan}">
                             <StackPanel Orientation="Horizontal">
                                 <Image  x:Name="TypeImage"
                                         Width="20"
@@ -189,7 +191,7 @@
                                 </DataTrigger>
                             </HierarchicalDataTemplate.Triggers>
                         </HierarchicalDataTemplate>
-                        <HierarchicalDataTemplate DataType="{x:Type cd:DingoDashCan}">
+                        <HierarchicalDataTemplate DataType="{x:Type dash:DingoDashCan}">
                             <StackPanel Orientation="Horizontal">
                                 <Image  x:Name="TypeImage"
                                         Width="20"

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CanDevices
+namespace CanDevices.CanBoard
 {
     public class CanBoardAnalogInput : NotifyPropertyChangedBase
     {

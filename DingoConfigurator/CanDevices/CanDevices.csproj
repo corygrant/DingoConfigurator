@@ -71,11 +71,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncObservableCollection.cs" />
-    <Compile Include="CanBoardCan.cs" />
-    <Compile Include="CanBoardConfig.cs" />
+    <Compile Include="CanBoard\CanBoardCan.cs" />
+    <Compile Include="CanBoard\CanBoardConfig.cs" />
     <Compile Include="CanDeviceSub.cs" />
-    <Compile Include="DashConfig.cs" />
-    <Compile Include="DingoDashCan.cs" />
+    <Compile Include="DingoDash\DashConfig.cs" />
+    <Compile Include="DingoDash\DingoDashCan.cs" />
     <Compile Include="DingoPdm\DingoPdmCan.cs" />
     <Compile Include="DingoPdm\DingoPdmCanInput.cs" />
     <Compile Include="DingoPdm\DingoPdmEnums.cs" />
