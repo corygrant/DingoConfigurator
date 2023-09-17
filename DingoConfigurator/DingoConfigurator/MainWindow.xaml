@@ -7,6 +7,7 @@
         xmlns:local="clr-namespace:DingoConfigurator"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:cd="clr-namespace:CanDevices;assembly=CanDevices"
+        xmlns:pdm="clr-namespace:CanDevices.DingoPdm;assembly=CanDevices"
         xmlns:vm="clr-namespace:DingoConfigurator.ViewModels"
         xmlns:vw="clr-namespace:DingoConfigurator.Views"
         mc:Ignorable="d"
@@ -148,7 +149,7 @@
                                 </DataTrigger>
                             </HierarchicalDataTemplate.Triggers>
                         </HierarchicalDataTemplate>
-                        <HierarchicalDataTemplate DataType="{x:Type cd:DingoPdmCan}" ItemsSource="{Binding SubPages}">
+                        <HierarchicalDataTemplate DataType="{x:Type pdm:DingoPdmCan}" ItemsSource="{Binding SubPages}">
                             <StackPanel Orientation="Horizontal">
                                 <Image  x:Name="TypeImage"
                                         Width="20"

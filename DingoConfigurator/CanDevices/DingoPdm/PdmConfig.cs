@@ -6,51 +6,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace CanDevices
+namespace CanDevices.DingoPdm
 {
-    public enum CanSpeed
-    {
-        Bitrate_10K = 0,
-        Bitrate_20K = 1,
-        Bitrate_50K = 2,
-        Bitrate_100K = 3,
-        Bitrate_125K = 4,
-        Bitrate_250K = 5,
-        Bitrate_500K = 6,
-        Bitrate_750K = 7,
-        Bitrate_1000K = 8
-    }
-
-    public enum InputMode
-    {
-        Num,
-        Momentary,
-        Latching
-    }
-
-    public enum Conditional
-    {
-        And,
-        Or,
-        Nor
-    }
-
-    public enum Operator
-    {
-        Equal,
-        GreaterThan,
-        LessThan,
-        BitwiseAnd,
-        BitwiseNand
-    }
-
-    public enum ResetMode
-    {
-        None,
-        Count,
-        Endless
-    }
-
     public class PdmConfig
     {
         public PdmConfig()

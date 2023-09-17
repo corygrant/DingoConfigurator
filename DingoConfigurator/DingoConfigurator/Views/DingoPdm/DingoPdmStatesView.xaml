@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:cd="clr-namespace:CanDevices;assembly=CanDevices"
+             xmlns:cd="clr-namespace:CanDevices.DingoPdm;assembly=CanDevices"
              xmlns:local="clr-namespace:DingoConfigurator.Views"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="400">
@@ -245,14 +245,7 @@
                   CanUserAddRows="False"
                   Grid.Row="4">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Wiper" Binding="{Binding Number}" IsReadOnly="True" Width="110" MinWidth="110">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay}" Width="100" MinWidth="100">
+                <DataGridTextColumn Header="Wiper" IsReadOnly="True" Width="110" MinWidth="110">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -269,7 +262,7 @@
                                         ItemsSource="{Binding Source={StaticResource WiperSpeedEnumDataSource}, Mode=OneWay}" 
                                         SelectedItemBinding="{Binding Speed, Mode=TwoWay}"
                                         Width="100" MinWidth="100"/>
-                <DataGridTemplateColumn Header="Slow Out" IsReadOnly="True" Width="60" MinWidth="60">
+                <DataGridTemplateColumn Header="Slow" IsReadOnly="True" Width="60" MinWidth="60">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Ellipse Name="StatusEllipse" Height="15" Width="15" Fill="Lime">
@@ -289,7 +282,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Fast Out" IsReadOnly="True" Width="60" MinWidth="60">
+                <DataGridTemplateColumn Header="Fast" IsReadOnly="True" Width="60" MinWidth="60">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Ellipse Name="StatusEllipse" Height="15" Width="15" Fill="Lime">
@@ -389,13 +382,26 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Result" Binding="{Binding Value}" IsReadOnly="True" Width="70" MinWidth="70">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
+                <DataGridTemplateColumn Header="Result" IsReadOnly="True" Width="90" MinWidth="90">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Ellipse Name="StatusEllipse" Height="15" Width="15" Fill="Lime">
+                                <Ellipse.Style>
+                                    <Style TargetType="{x:Type Ellipse}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Value}" Value="True">
+                                                <Setter Property="Opacity" Value="1.0"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Value}" Value="False">
+                                                <Setter Property="Opacity" Value="0.1"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridCheckBoxColumn Header="En" Binding="{Binding Enabled, Mode=TwoWay}" Width="40" MinWidth="40">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">

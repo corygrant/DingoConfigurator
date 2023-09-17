@@ -1,4 +1,5 @@
 ﻿using CanDevices;
+using CanDevices.DingoPdm;
 using CanInterfaces;
 using DingoConfigurator.Config;
 using DingoConfigurator.Properties;
@@ -131,7 +132,7 @@ namespace DingoConfigurator
 
             _config = DevicesConfigHandler.Deserialize(openFileDialog.FileName);
 
-            AddCanDevices();
+            AddCanDevices(_config);
             UpdateStatusBar();
 
             // Create a timer to update status bar
@@ -276,20 +277,28 @@ namespace DingoConfigurator
             return _configFileOpened;
         }
 
-        private void AddCanDevices()
+        private void AddCanDevices(DevicesConfig config)
         {
             _canDevices?.Clear();
             
             _canDevices = new ObservableCollection<ICanDevice>();
 
             foreach (var pdm in _config.pdm)
-                _canDevices.Add(new DingoPdmCan(pdm.label, pdm.canOutput.baseId));
+            {
+                var newPdm = new DingoPdmCan(pdm.label, pdm.canOutput.baseId);
+                newPdm.SetVars(pdm);
+                _canDevices.Add(newPdm);
+            }
 
             foreach (var cb in _config.canBoard)
+            {
                 _canDevices.Add(new CanBoardCan(cb.label, cb.baseCanId));
+            }
 
             foreach (var dash in _config.dash)
+            {
                 _canDevices.Add(new DingoDashCan(dash.label, dash.baseCanId));
+            }
 
             OnPropertyChanged(nameof(CanDevices));
         }

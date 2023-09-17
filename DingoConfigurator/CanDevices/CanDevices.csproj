@@ -76,10 +76,18 @@
     <Compile Include="CanDeviceSub.cs" />
     <Compile Include="DashConfig.cs" />
     <Compile Include="DingoDashCan.cs" />
-    <Compile Include="DingoPdmCan.cs" />
+    <Compile Include="DingoPdm\DingoPdmCan.cs" />
+    <Compile Include="DingoPdm\DingoPdmCanInput.cs" />
+    <Compile Include="DingoPdm\DingoPdmEnums.cs" />
+    <Compile Include="DingoPdm\DingoPdmFlasher.cs" />
+    <Compile Include="DingoPdm\DingoPdmInput.cs" />
+    <Compile Include="DingoPdm\DingoPdmOutput.cs" />
+    <Compile Include="DingoPdm\DingoPdmStarterDisable.cs" />
+    <Compile Include="DingoPdm\DingoPdmVirtualInput.cs" />
+    <Compile Include="DingoPdm\DingoPdmWiper.cs" />
     <Compile Include="ICanDevice.cs" />
     <Compile Include="NotifyPropertyChangedBase.cs" />
-    <Compile Include="PdmConfig.cs" />
+    <Compile Include="DingoPdm\PdmConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
