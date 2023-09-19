@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CanDevices.DingoPdm;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -64,6 +65,20 @@ namespace CanDevices.DingoDash
             //Otherwise could be directly in the getter
             TimeSpan timeSpan = DateTime.Now - _lastRxTime;
             IsConnected = timeSpan.TotalMilliseconds < 500;
+        }
+
+        public bool IsPriorityMsg(int id)
+        {
+            return false;
+        }
+        public bool InIdRange(int id)
+        {
+            return (id >= BaseId) && (id <= BaseId + 10);
+        }
+
+        public void UpdateView()
+        {
+         
         }
 
         public bool Read(int id, byte[] data)

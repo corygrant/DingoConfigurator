@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CanDevices.DingoPdm;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -7,126 +8,6 @@ using System.Threading.Tasks;
 
 namespace CanDevices.CanBoard
 {
-    public class CanBoardAnalogInput : NotifyPropertyChangedBase
-    {
-        private int _number { get; set; }
-        public int Number
-        {
-            get => _number;
-            set
-            {
-                if (_number != value)
-                {
-                    _number = value;
-                    OnPropertyChanged(nameof(Number));
-                }
-            }
-        }
-
-        private double _millivolts;
-        public double Millivolts
-        {
-            get => _millivolts;
-            set
-            {
-                if (_millivolts != value)
-                {
-                    _millivolts = value;
-                    OnPropertyChanged(nameof(Millivolts));
-                }
-            }
-        }
-
-        private int _rotarySwitchPos;
-        public int RotarySwitchPos
-        {
-            get => _rotarySwitchPos;
-            set
-            {
-                if (_rotarySwitchPos != value)
-                {
-                    _rotarySwitchPos = value;
-                    OnPropertyChanged(nameof(RotarySwitchPos));
-                }
-            }
-        }
-
-        private bool _digitalIn;
-        public bool DigitalIn
-        {
-            get => _digitalIn;
-            set
-            {
-                if (_digitalIn != value)
-                {
-                    _digitalIn = value;
-                    OnPropertyChanged(nameof(DigitalIn));
-                }
-            }
-        }
-    }
-
-    public class CanBoardDigitalInput : NotifyPropertyChangedBase
-    {
-        private int _number { get; set; }
-        public int Number
-        {
-            get => _number;
-            set
-            {
-                if (_number != value)
-                {
-                    _number = value;
-                    OnPropertyChanged(nameof(Number));
-                }
-            }
-        }
-
-        private bool _state;
-        public bool State
-        {
-            get => _state;
-            set
-            {
-                if (_state != value)
-                {
-                    _state = value;
-                    OnPropertyChanged(nameof(State));
-                }
-            }
-        }
-    }
-
-    public class CanBoardDigitalOutput : NotifyPropertyChangedBase
-    {
-        private int _number { get; set; }
-        public int Number
-        {
-            get => _number;
-            set
-            {
-                if (_number != value)
-                {
-                    _number = value;
-                    OnPropertyChanged(nameof(Number));
-                }
-            }
-        }
-
-        private bool _state;
-        public bool State
-        {
-            get => _state;
-            set
-            {
-                if (_state != value)
-                {
-                    _state = value;
-                    OnPropertyChanged(nameof(State));
-                }
-            }
-        }
-    }
 
     public class CanBoardCan : NotifyPropertyChangedBase, ICanDevice
     {
@@ -274,6 +155,22 @@ namespace CanDevices.CanBoard
         {
             TimeSpan timeSpan = DateTime.Now - _lastRxTime;
             IsConnected = timeSpan.TotalMilliseconds < 500;
+        }
+
+
+        public bool IsPriorityMsg(int id)
+        {
+            return false;
+        }
+
+        public bool InIdRange(int id)
+        {
+            return (id >= BaseId) && (id <= BaseId + 2);
+        }
+
+        public void UpdateView()
+        {
+         
         }
 
         public bool Read(int id, byte[] data)

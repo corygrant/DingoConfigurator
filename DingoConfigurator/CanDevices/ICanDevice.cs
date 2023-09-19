@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,8 @@ namespace CanDevices
         DateTime LastRxTime { get;}
         void UpdateIsConnected();
         bool Read(int id, byte[] data);
+        bool IsPriorityMsg(int id);
+        bool InIdRange(int id);
+        void UpdateView();
     }
 }

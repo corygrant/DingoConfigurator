@@ -23,6 +23,7 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Collections.Concurrent;
 
 //Add another CanDevices list that holds the online value
 
@@ -34,7 +35,6 @@ namespace DingoConfigurator
 
         private DevicesConfig _config;
 
-        
 
         private bool _canInterfaceConnected;
         public bool CanInterfaceConnected
@@ -42,7 +42,6 @@ namespace DingoConfigurator
             get => _canInterfaceConnected;
             set {
                 _canInterfaceConnected = value;
-                UpdateStatusBar();
                 OnPropertyChanged(nameof(CanInterfaceConnected));
             }
         }
@@ -52,6 +51,8 @@ namespace DingoConfigurator
         private string _settingsPath;
 
         private System.Timers.Timer updateTimer;
+
+        private System.Timers.Timer statusBarTimer;
 
         public delegate void DataUpdatedHandler(object sender);
 
@@ -97,6 +98,25 @@ namespace DingoConfigurator
             
         }
 
+        private void UpdateView(object sender, ElapsedEventArgs e)
+        {
+            //Only update view vars of the selected device for better performance
+            if (SelectedCanDevice != null)
+            {
+                SelectedCanDevice.UpdateView();
+            }
+                //foreach (var cd in _canDevices)
+                //{
+                 //   cd.UpdateView();
+                    //if (cd.InIdRange(canData.Id))
+                    //{
+                    //    cd.Read(canData.Id, canData.Payload);
+                    //}
+                //}
+            
+
+        }
+
         private void NewConfigFile(object parameter)
         {
             System.Windows.Forms.SaveFileDialog newFileDialog = new System.Windows.Forms.SaveFileDialog();
@@ -135,10 +155,14 @@ namespace DingoConfigurator
             _config = DevicesConfigHandler.Deserialize(openFileDialog.FileName);
 
             AddCanDevices(_config);
-            UpdateStatusBar();
 
             // Create a timer to update status bar
-            updateTimer = new System.Timers.Timer(200);
+            statusBarTimer = new System.Timers.Timer(200);
+            statusBarTimer.Elapsed += UpdateStatusBar;
+            statusBarTimer.AutoReset = true;
+            statusBarTimer.Enabled = true;
+
+            updateTimer = new System.Timers.Timer(30);
             updateTimer.Elapsed += UpdateView;
             updateTimer.AutoReset = true;
             updateTimer.Enabled = true;
@@ -294,20 +318,17 @@ namespace DingoConfigurator
 
             foreach (var cb in _config.canBoard)
             {
-                _canDevices.Add(new CanBoardCan(cb.label, cb.baseCanId));
+                var newCb = new CanBoardCan(cb.label, cb.baseCanId);
+                _canDevices.Add(newCb);
             }
 
             foreach (var dash in _config.dash)
             {
-                _canDevices.Add(new DingoDashCan(dash.label, dash.baseCanId));
+                var newDash = new DingoDashCan(dash.label, dash.baseCanId);
+                _canDevices.Add(newDash);
             }
 
             OnPropertyChanged(nameof(CanDevices));
-        }
-
-        private void UpdateView(object sender, ElapsedEventArgs e)
-        {
-            UpdateStatusBar();
         }
 
         public void WindowClosing()
@@ -317,6 +338,12 @@ namespace DingoConfigurator
             {
                 updateTimer.Stop();
                 updateTimer.Dispose();
+            }
+
+            if (statusBarTimer != null)
+            {
+                statusBarTimer.Stop();
+                statusBarTimer.Dispose();
             }
 
             //Save user settings
@@ -329,10 +356,14 @@ namespace DingoConfigurator
 
         private void CanDataReceived(object sender, CanDataEventArgs e)
         {
+            
             foreach (var cd in _canDevices)
-                cd.Read(e.canData.Id, e.canData.Payload);
-
-            UpdateStatusBar();
+            {
+                if (cd.InIdRange(e.canData.Id))
+                {
+                    cd.Read(e.canData.Id, e.canData.Payload);
+                }
+            }
         }
 
         private ViewModelBase _currentViewModel { get; set; }
@@ -571,7 +602,6 @@ namespace DingoConfigurator
             _can.DataReceived += CanDataReceived;
             if(!_can.Start()) return;
             CanInterfaceConnected = true;
-            UpdateStatusBar();
             GetDeviceSetting();
         }
 
@@ -579,6 +609,7 @@ namespace DingoConfigurator
         private bool CanConnect(object parameter)
         {
             return !CanInterfaceConnected && 
+                    _configFileOpened &&
                     ((CanComPorts && (SelectedComPort != null)) ||
                     !CanComPorts);
         }
@@ -587,7 +618,6 @@ namespace DingoConfigurator
         {
             if(_can != null) _can.Stop();
             CanInterfaceConnected = false;
-            UpdateStatusBar();
         }
 
         private bool CanDisconnect(object parameter)
@@ -691,10 +721,8 @@ namespace DingoConfigurator
         #endregion
 
         #region StatusBar
-        private void UpdateStatusBar()
+        private void UpdateStatusBar(object sender, ElapsedEventArgs e)
         {
-            
-
             CanInterfaceStatusText = $"{SelectedCan.Name} {(CanInterfaceConnected ? "Connected" : "Disconnected")}";
 
             int connectedCount = 0;

@@ -71,8 +71,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncObservableCollection.cs" />
+    <Compile Include="CanBoard\CanBoardAnalogInput.cs" />
     <Compile Include="CanBoard\CanBoardCan.cs" />
     <Compile Include="CanBoard\CanBoardConfig.cs" />
+    <Compile Include="CanBoard\CanBoardDigitalInput.cs" />
+    <Compile Include="CanBoard\CanBoardDigitalOutput.cs" />
     <Compile Include="CanDeviceSub.cs" />
     <Compile Include="DingoDash\DashConfig.cs" />
     <Compile Include="DingoDash\DingoDashCan.cs" />

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CanDevices.DingoPdm;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,6 +40,20 @@ namespace CanDevices
 
         public void UpdateIsConnected()
         {
+        }
+
+        public bool IsPriorityMsg(int id)
+        {
+            return false;
+        }
+        public bool InIdRange(int id)
+        {
+            return false;
+        }
+
+        public void UpdateView()
+        {
+        
         }
 
         public bool Read(int id, byte[] data)

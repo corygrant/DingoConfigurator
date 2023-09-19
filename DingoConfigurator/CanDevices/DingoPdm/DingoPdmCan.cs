@@ -8,36 +8,13 @@ using System.Xml.Linq;
 
 namespace CanDevices.DingoPdm
 {
-   
+
 
     public class DingoPdmCan : NotifyPropertyChangedBase, ICanDevice
     {
-        private string _name;
-        public string Name { 
-            get => _name; 
-            set
-            {
-                if (_name != value)
-                {
-                    _name = value;
-                    OnPropertyChanged(nameof(Name));
-                }
-            }
-        }
+        public string Name { get; set; }
 
-        private int _baseId;
-        public int BaseId
-        {
-            get => _baseId;
-            private set
-            {
-                if (_baseId != value)
-                {
-                    _baseId = value;
-                    OnPropertyChanged(nameof(BaseId));
-                }
-            }
-        }
+        public int BaseId { get; set; }
 
         private List<CanDeviceSub> _subPages = new List<CanDeviceSub>();
         public List<CanDeviceSub> SubPages
@@ -45,7 +22,7 @@ namespace CanDevices.DingoPdm
             get => _subPages;
             private set
             {
-                if(_subPages != value)
+                if (_subPages != value)
                 {
                     _subPages = value;
                     OnPropertyChanged(nameof(SubPages));
@@ -53,8 +30,7 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private DateTime _lastRxTime { get; set; }
-        public DateTime LastRxTime { get => _lastRxTime;}
+        public DateTime LastRxTime { get; private set; }
 
         private bool _isConnected;
         public bool IsConnected {
@@ -65,212 +41,59 @@ namespace CanDevices.DingoPdm
                 {
                     _isConnected = value;
                     OnPropertyChanged(nameof(IsConnected));
-                    foreach(var subPage in _subPages)
+                    foreach (var subPage in _subPages)
                     {
                         subPage.UpdateProperty(nameof(IsConnected));
                     }
                 }
-            } 
-        }
-
-        private ObservableCollection<DingoPdmInput> _digitalInputs { get; set; }
-        public ObservableCollection<DingoPdmInput> DigitalInputs
-        {
-            get => _digitalInputs;
-            set
-            {
-                if (_digitalInputs != value)
-                {
-                    _digitalInputs = value;
-                    OnPropertyChanged(nameof(DigitalInputs));
-                }
             }
         }
 
-        private double _totalCurrent;
-        public double TotalCurrent { 
-            get => _totalCurrent; 
-            private set
-            {
-                if (_totalCurrent != value)
-                {
-                    _totalCurrent = value;
-                    OnPropertyChanged(nameof(TotalCurrent));
-                }
-            }
-        }
+        public double TotalCurrent { get; private set; }
+        public double BatteryVoltage { get; private set; }
+        public double BoardTempC { get; private set; }
+        public double BoardTempF { get; private set; }
+        public string Version { get; private set; }
+        public ObservableCollection<DingoPdmInput> DigitalInputs { get; private set; }
+        public ObservableCollection<DingoPdmOutput> Outputs { get; private set; }
+        public ObservableCollection<DingoPdmCanInput> CanInputs { get; private set; }
+        public ObservableCollection<DingoPdmVirtualInput> VirtualInputs { get; private set; }
+        public ObservableCollection<DingoPdmWiper> Wipers { get; private set; }
+        public ObservableCollection<DingoPdmFlasher> Flashers { get; private set; }
+        public ObservableCollection<DingoPdmStarterDisable> StarterDisable { get; private set; }
 
-        private double _batteryVoltage;
-        public double BatteryVoltage
-        {
-            get => _batteryVoltage;
-            private set
-            {
-                if (_batteryVoltage != value)
-                {
-                    _batteryVoltage = value;
-                    OnPropertyChanged(nameof(BatteryVoltage));
-                }
-            }
-        }
-
-        private double _boardTempC;
-        public double BoardTempC
-        {
-            get => _boardTempC;
-            private set
-            {
-                if (_boardTempC != value)
-                {
-                    _boardTempC = value;
-                    OnPropertyChanged(nameof(BoardTempC));
-                }
-            }
-        }
-
-        private double _boardTempF;
-        public double BoardTempF
-        {
-            get => _boardTempF;
-            private set
-            {
-                if (_boardTempF != value)
-                {
-                    _boardTempF = value;
-                    OnPropertyChanged(nameof(BoardTempF));
-                }
-            }
-        }
-
-        private string _version;
-        public string Version
-        {
-            get => _version;
-            private set
-            {
-                if (value != _version)
-                {
-                    _version = value;
-                    OnPropertyChanged(nameof(Version));
-                }
-            }
-        }
-
-        private ObservableCollection<DingoPdmOutput> _outputs;
-        public ObservableCollection<DingoPdmOutput> Outputs
-        {
-            get => _outputs;
-            private set
-            {
-                if(_outputs != value)
-                {
-                    _outputs = value;
-                    OnPropertyChanged(nameof(Outputs));
-                }
-            }
-        }
-
-        private ObservableCollection<DingoPdmCanInput> _canInputs;
-        public ObservableCollection<DingoPdmCanInput> CanInputs
-        {
-            get => _canInputs;
-            private set
-            {
-                if (_canInputs != value)
-                {
-                    _canInputs = value;
-                    OnPropertyChanged(nameof(CanInputs));
-                }
-            }
-        }
-
-        private ObservableCollection<DingoPdmVirtualInput> _virtualInputs;
-        public ObservableCollection<DingoPdmVirtualInput> VirtualInputs
-        {
-            get => _virtualInputs;
-            private set
-            {
-                if (_virtualInputs != value)
-                {
-                    _virtualInputs = value;
-                    OnPropertyChanged(nameof(VirtualInputs));
-                }
-            }
-        }
-
-        private ObservableCollection<DingoPdmWiper> _wipers;
-        public ObservableCollection<DingoPdmWiper> Wipers
-        {
-            get => _wipers;
-            private set
-            {
-                if (_wipers != value)
-                {
-                    _wipers = value;
-                    OnPropertyChanged(nameof(Wipers));
-                }
-            }
-        }
-
-        private ObservableCollection<DingoPdmFlasher> _flashers;
-        public ObservableCollection<DingoPdmFlasher> Flashers
-        {
-            get => _flashers;
-            private set
-            {
-                if (_flashers != value)
-                {
-                    _flashers = value;
-                    OnPropertyChanged(nameof(Flashers));
-                }
-            }
-        }
-
-        private ObservableCollection<DingoPdmStarterDisable> _starterDisable;
-        public ObservableCollection<DingoPdmStarterDisable> StarterDisable
-        {
-            get => _starterDisable;
-            set
-            {
-                if(value != _starterDisable)
-                {
-                    _starterDisable = value;
-                    OnPropertyChanged(nameof(StarterDisable));
-                }
-            }
-        }
 
         public DingoPdmCan(string name, int id)
         {
             Name = name;
             BaseId = id;
-            DigitalInputs= new ObservableCollection<DingoPdmInput>();
+            DigitalInputs = new ObservableCollection<DingoPdmInput>();
             for (int i = 0; i < 2; i++)
             {
                 DigitalInputs.Add(new DingoPdmInput());
                 DigitalInputs[i].Number = i + 1;
             }
 
-            TotalCurrent=0;
-            BatteryVoltage=0;
-            BoardTempC=0;
+            TotalCurrent = 0;
+            BatteryVoltage = 0;
+            BoardTempC = 0;
 
             Outputs = new ObservableCollection<DingoPdmOutput>();
-            for(int i=0; i<8; i++)
+            for (int i = 0; i < 8; i++)
             {
                 Outputs.Add(new DingoPdmOutput());
                 Outputs[i].Number = i + 1;
             }
 
             CanInputs = new ObservableCollection<DingoPdmCanInput>();
-            for(int i=0; i<32; i++)
+            for (int i = 0; i < 32; i++)
             {
                 CanInputs.Add(new DingoPdmCanInput());
                 CanInputs[i].Number = i + 1;
             }
 
             VirtualInputs = new ObservableCollection<DingoPdmVirtualInput>();
-            for(int i=0; i<16; i++)
+            for (int i = 0; i < 16; i++)
             {
                 VirtualInputs.Add(new DingoPdmVirtualInput());
                 VirtualInputs[i].Number = i + 1;
@@ -282,7 +105,7 @@ namespace CanDevices.DingoPdm
             };
 
             Flashers = new ObservableCollection<DingoPdmFlasher>();
-            for(int i=0; i<4; i++)
+            for (int i = 0; i < 4; i++)
             {
                 Flashers.Add(new DingoPdmFlasher());
                 Flashers[i].Number = i + 1;
@@ -304,7 +127,7 @@ namespace CanDevices.DingoPdm
 
             int index = 0;
 
-            foreach(var di in DigitalInputs)
+            foreach (var di in DigitalInputs)
             {
                 di.Name = config.input[index].label;
                 di.Enabled = config.input[index].enabled;
@@ -317,7 +140,7 @@ namespace CanDevices.DingoPdm
 
             index = 0;
 
-            foreach(var output in Outputs)
+            foreach (var output in Outputs)
             {
                 output.Name = config.output[index].label;
                 output.Enabled = config.output[index].enabled;
@@ -334,7 +157,7 @@ namespace CanDevices.DingoPdm
 
             index = 0;
 
-            foreach(var canIn in CanInputs)
+            foreach (var canIn in CanInputs)
             {
                 canIn.Name = config.canInput[index].label;
                 canIn.Enabled = config.canInput[index].enabled;
@@ -350,7 +173,7 @@ namespace CanDevices.DingoPdm
 
             index = 0;
 
-            foreach(var virtIn in VirtualInputs)
+            foreach (var virtIn in VirtualInputs)
             {
                 virtIn.Name = config.virtualInput[index].label;
                 virtIn.Enabled = config.virtualInput[index].enabled;
@@ -380,7 +203,7 @@ namespace CanDevices.DingoPdm
             Wipers[0].IntermitTime = config.wiper.intermitTime;
             Wipers[0].SpeedMap = config.wiper.speedMap;
 
-            foreach(var flash in Flashers)
+            foreach (var flash in Flashers)
             {
                 flash.Name = config.flasher[index].label;
                 flash.Enabled = config.flasher[index].enabled;
@@ -409,8 +232,49 @@ namespace CanDevices.DingoPdm
         {
             //Have to use a property set to get OnPropertyChanged to fire
             //Otherwise could be directly in the getter
-            TimeSpan timeSpan = DateTime.Now - _lastRxTime;
+            TimeSpan timeSpan = DateTime.Now - LastRxTime;
             IsConnected = timeSpan.TotalMilliseconds < 500;
+        }
+
+        public bool IsPriorityMsg(int id)
+        {
+            return (id == BaseId + 30);
+        }
+
+        public bool InIdRange(int id)
+        {
+            return (id >= BaseId) && (id <= BaseId + 30) ;
+        }
+
+        public void UpdateView()
+        {
+            OnPropertyChanged(nameof(BaseId));
+            OnPropertyChanged(nameof(TotalCurrent));
+            OnPropertyChanged(nameof(BoardTempC));
+            OnPropertyChanged(nameof(BoardTempF));
+            OnPropertyChanged(nameof(Version));
+            OnPropertyChanged(nameof(BatteryVoltage));
+
+            foreach(var input in DigitalInputs)
+                input.UpdateView();
+
+            foreach(var output in Outputs)
+                output.UpdateView();
+
+            foreach(var canInput in CanInputs)
+                canInput.UpdateView();
+
+            foreach(var virtInput in VirtualInputs)
+                virtInput.UpdateView();
+
+            foreach(var flasher in Flashers)
+                flasher.UpdateView();
+
+            foreach(var starter in StarterDisable)
+                starter.UpdateView();
+
+            foreach(var wiper in Wipers)
+                wiper.UpdateView();
         }
 
         public bool Read(int id, byte[] data)
@@ -439,7 +303,7 @@ namespace CanDevices.DingoPdm
 
             if (id == BaseId + 30) ReadSettingsResponse(data);
 
-            _lastRxTime = DateTime.Now;
+            LastRxTime = DateTime.Now;
 
             UpdateIsConnected();
 
