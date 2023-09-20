@@ -1,8 +1,10 @@
-﻿using System;
+﻿using CanInterfaces;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -12,9 +14,33 @@ namespace CanDevices.DingoPdm
 
     public class DingoPdmCan : NotifyPropertyChangedBase, ICanDevice
     {
-        public string Name { get; set; }
+        private string _name;
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if (_name != value)
+                {
+                    _name = value;
+                    OnPropertyChanged(nameof(Name));
+                }
+            }
+        }
 
-        public int BaseId { get; set; }
+        private int _baseId;
+        public int BaseId
+        {
+            get => _baseId;
+            private set
+            {
+                if (_baseId != value)
+                {
+                    _baseId = value;
+                    OnPropertyChanged(nameof(BaseId));
+                }
+            }
+        }
 
         private List<CanDeviceSub> _subPages = new List<CanDeviceSub>();
         public List<CanDeviceSub> SubPages
@@ -30,10 +56,12 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        public DateTime LastRxTime { get; private set; }
+        private DateTime _lastRxTime { get; set; }
+        public DateTime LastRxTime { get => _lastRxTime; }
 
         private bool _isConnected;
-        public bool IsConnected {
+        public bool IsConnected
+        {
             get => _isConnected;
             set
             {
@@ -49,18 +77,173 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        public double TotalCurrent { get; private set; }
-        public double BatteryVoltage { get; private set; }
-        public double BoardTempC { get; private set; }
-        public double BoardTempF { get; private set; }
-        public string Version { get; private set; }
-        public ObservableCollection<DingoPdmInput> DigitalInputs { get; private set; }
-        public ObservableCollection<DingoPdmOutput> Outputs { get; private set; }
-        public ObservableCollection<DingoPdmCanInput> CanInputs { get; private set; }
-        public ObservableCollection<DingoPdmVirtualInput> VirtualInputs { get; private set; }
-        public ObservableCollection<DingoPdmWiper> Wipers { get; private set; }
-        public ObservableCollection<DingoPdmFlasher> Flashers { get; private set; }
-        public ObservableCollection<DingoPdmStarterDisable> StarterDisable { get; private set; }
+        private ObservableCollection<DingoPdmInput> _digitalInputs { get; set; }
+        public ObservableCollection<DingoPdmInput> DigitalInputs
+        {
+            get => _digitalInputs;
+            set
+            {
+                if (_digitalInputs != value)
+                {
+                    _digitalInputs = value;
+                    OnPropertyChanged(nameof(DigitalInputs));
+                }
+            }
+        }
+
+        private double _totalCurrent;
+        public double TotalCurrent
+        {
+            get => _totalCurrent;
+            private set
+            {
+                if (_totalCurrent != value)
+                {
+                    _totalCurrent = value;
+                    OnPropertyChanged(nameof(TotalCurrent));
+                }
+            }
+        }
+
+        private double _batteryVoltage;
+        public double BatteryVoltage
+        {
+            get => _batteryVoltage;
+            private set
+            {
+                if (_batteryVoltage != value)
+                {
+                    _batteryVoltage = value;
+                    OnPropertyChanged(nameof(BatteryVoltage));
+                }
+            }
+        }
+
+        private double _boardTempC;
+        public double BoardTempC
+        {
+            get => _boardTempC;
+            private set
+            {
+                if (_boardTempC != value)
+                {
+                    _boardTempC = value;
+                    OnPropertyChanged(nameof(BoardTempC));
+                }
+            }
+        }
+
+        private double _boardTempF;
+        public double BoardTempF
+        {
+            get => _boardTempF;
+            private set
+            {
+                if (_boardTempF != value)
+                {
+                    _boardTempF = value;
+                    OnPropertyChanged(nameof(BoardTempF));
+                }
+            }
+        }
+
+        private string _version;
+        public string Version
+        {
+            get => _version;
+            private set
+            {
+                if (value != _version)
+                {
+                    _version = value;
+                    OnPropertyChanged(nameof(Version));
+                }
+            }
+        }
+
+        private ObservableCollection<DingoPdmOutput> _outputs;
+        public ObservableCollection<DingoPdmOutput> Outputs
+        {
+            get => _outputs;
+            private set
+            {
+                if (_outputs != value)
+                {
+                    _outputs = value;
+                    OnPropertyChanged(nameof(Outputs));
+                }
+            }
+        }
+
+        private ObservableCollection<DingoPdmCanInput> _canInputs;
+        public ObservableCollection<DingoPdmCanInput> CanInputs
+        {
+            get => _canInputs;
+            private set
+            {
+                if (_canInputs != value)
+                {
+                    _canInputs = value;
+                    OnPropertyChanged(nameof(CanInputs));
+                }
+            }
+        }
+
+        private ObservableCollection<DingoPdmVirtualInput> _virtualInputs;
+        public ObservableCollection<DingoPdmVirtualInput> VirtualInputs
+        {
+            get => _virtualInputs;
+            private set
+            {
+                if (_virtualInputs != value)
+                {
+                    _virtualInputs = value;
+                    OnPropertyChanged(nameof(VirtualInputs));
+                }
+            }
+        }
+
+        private ObservableCollection<DingoPdmWiper> _wipers;
+        public ObservableCollection<DingoPdmWiper> Wipers
+        {
+            get => _wipers;
+            private set
+            {
+                if (_wipers != value)
+                {
+                    _wipers = value;
+                    OnPropertyChanged(nameof(Wipers));
+                }
+            }
+        }
+
+        private ObservableCollection<DingoPdmFlasher> _flashers;
+        public ObservableCollection<DingoPdmFlasher> Flashers
+        {
+            get => _flashers;
+            private set
+            {
+                if (_flashers != value)
+                {
+                    _flashers = value;
+                    OnPropertyChanged(nameof(Flashers));
+                }
+            }
+        }
+
+        private ObservableCollection<DingoPdmStarterDisable> _starterDisable;
+        public ObservableCollection<DingoPdmStarterDisable> StarterDisable
+        {
+            get => _starterDisable;
+            set
+            {
+                if (value != _starterDisable)
+                {
+                    _starterDisable = value;
+                    OnPropertyChanged(nameof(StarterDisable));
+                }
+            }
+        }
 
 
         public DingoPdmCan(string name, int id)
@@ -246,37 +429,6 @@ namespace CanDevices.DingoPdm
             return (id >= BaseId) && (id <= BaseId + 30) ;
         }
 
-        public void UpdateView()
-        {
-            OnPropertyChanged(nameof(BaseId));
-            OnPropertyChanged(nameof(TotalCurrent));
-            OnPropertyChanged(nameof(BoardTempC));
-            OnPropertyChanged(nameof(BoardTempF));
-            OnPropertyChanged(nameof(Version));
-            OnPropertyChanged(nameof(BatteryVoltage));
-
-            foreach(var input in DigitalInputs)
-                input.UpdateView();
-
-            foreach(var output in Outputs)
-                output.UpdateView();
-
-            foreach(var canInput in CanInputs)
-                canInput.UpdateView();
-
-            foreach(var virtInput in VirtualInputs)
-                virtInput.UpdateView();
-
-            foreach(var flasher in Flashers)
-                flasher.UpdateView();
-
-            foreach(var starter in StarterDisable)
-                starter.UpdateView();
-
-            foreach(var wiper in Wipers)
-                wiper.UpdateView();
-        }
-
         public bool Read(int id, byte[] data)
         {
             if ((id < BaseId) || (id > BaseId + 30)) 
@@ -303,7 +455,7 @@ namespace CanDevices.DingoPdm
 
             if (id == BaseId + 30) ReadSettingsResponse(data);
 
-            LastRxTime = DateTime.Now;
+            _lastRxTime = DateTime.Now;
 
             UpdateIsConnected();
 
@@ -544,7 +696,7 @@ namespace CanDevices.DingoPdm
                         Flashers[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
                         Flashers[index].Single = Convert.ToBoolean((data[1] & 0x02) >> 1);
                         Flashers[index].Input = (VarMap)(data[2]);
-                        Flashers[index].Output = (VarMap)(data[3] + 50);
+                        Flashers[index].Output = (VarMap)(data[3] + Convert.ToInt16(VarMap.Output1));
                         Flashers[index].OnTime = data[4] * 10;
                         Flashers[index].OffTime = data[5] * 10;
                     }
@@ -615,6 +767,352 @@ namespace CanDevices.DingoPdm
                 default:
                     break;
             }
+        }
+
+        public List<CanInterfaceData> GetUploadMessages()
+        {
+            List<CanInterfaceData> msgs = new List<CanInterfaceData>();
+
+            //Request settings messages
+
+            //Version
+            msgs.Add(new CanInterfaceData
+            {
+                Id = 100,
+                Len = 1,
+                Payload = new byte[] { Convert.ToByte('V'), 0, 0, 0, 0, 0, 0, 0 }
+            });
+
+            //CAN settings
+            msgs.Add(new CanInterfaceData
+            {
+                Id = 100,
+                Len = 1,
+                Payload = new byte[] { Convert.ToByte('C'), 0, 0, 0, 0, 0, 0, 0 }
+            });
+
+            //Inputs
+            for (int i = 0; i < 2; i++)
+            {
+                msgs.Add(new CanInterfaceData
+                {
+                    Id = 100,
+                    Len = 2,
+                    Payload = new byte[] { Convert.ToByte('I'),
+                        Convert.ToByte((i & 0x0F) << 4),
+                        0, 0, 0, 0, 0, 0 }
+                });
+            }
+
+            //Outputs
+            for (int i = 0; i < 8; i++)
+            {
+                msgs.Add(new CanInterfaceData
+                {
+                    Id = 100,
+                    Len = 2,
+                    Payload = new byte[] { Convert.ToByte('O'),
+                        Convert.ToByte((i & 0x0F) << 4),
+                        0, 0, 0, 0, 0, 0 }
+                });
+            }
+
+            //Virtual inputs
+            for (int i = 0; i < 16; i++)
+            {
+                msgs.Add(new CanInterfaceData
+                {
+                    Id = 100,
+                    Len = 2,
+                    Payload = new byte[] { Convert.ToByte('U'),
+                        Convert.ToByte(i),
+                        0, 0, 0, 0, 0, 0 }
+                });
+            }
+
+            //Flashers
+            for (int i = 0; i < 4; i++)
+            {
+                msgs.Add(new CanInterfaceData
+                {
+                    Id = 100,
+                    Len = 2,
+                    Payload = new byte[] { Convert.ToByte('H'),
+                        Convert.ToByte((i & 0x0F) << 4),
+                        0, 0, 0, 0, 0, 0 }
+                });
+            }
+
+            //CAN inputs
+            for (int i = 0; i < 32; i++)
+            {
+                msgs.Add(new CanInterfaceData
+                {
+                    Id = 100,
+                    Len = 2,
+                    Payload = new byte[] { Convert.ToByte('N'),
+                        Convert.ToByte(i),
+                        0, 0, 0, 0, 0, 0 }
+                });
+            }
+
+            //Wiper
+            msgs.Add(new CanInterfaceData
+            {
+                Id = 100,
+                Len = 1,
+                Payload = new byte[] { Convert.ToByte('W'), 0, 0, 0, 0, 0, 0, 0 }
+            });
+
+            //Wiper speeds
+            msgs.Add(new CanInterfaceData
+            {
+                Id = 100,
+                Len = 1,
+                Payload = new byte[] { Convert.ToByte('P'), 0, 0, 0, 0, 0, 0, 0 }
+            });
+
+            //Wiper delays
+            msgs.Add(new CanInterfaceData
+            {
+                Id = 100,
+                Len = 1,
+                Payload = new byte[] { Convert.ToByte('Y'), 0, 0, 0, 0, 0, 0, 0 }
+            });
+
+            //Starter disable
+            msgs.Add(new CanInterfaceData
+            {
+                Id = 100,
+                Len = 1,
+                Payload = new byte[] { Convert.ToByte('D'), 0, 0, 0, 0, 0, 0, 0 }
+            });
+
+            return msgs;
+        }
+
+        public List<CanInterfaceData> GetDownloadMessages()
+        {
+            List<CanInterfaceData> msgs = new List<CanInterfaceData>();
+
+            //Send settings messages
+
+            //CAN settings
+            msgs.Add(new CanInterfaceData
+            {
+                Id = 100,
+                Len = 5,
+                Payload = new byte[] { 
+                    Convert.ToByte('C'), //Byte 0
+                    Convert.ToByte((Convert.ToByte(CanSpeed.Bitrate_500K) << 4) + 
+                    (0x03)), //Byte 1
+                    Convert.ToByte((BaseId & 0xFF00) >> 8), //Byte 2
+                    Convert.ToByte(BaseId & 0x00FF), //Byte 3
+                    Convert.ToByte(5), //Byte 4
+                    0, 0, 0 }
+            });
+
+            //Inputs
+            foreach(var input in DigitalInputs)
+            {
+                msgs.Add(new CanInterfaceData
+                {
+                    Id = 100,
+                    Len = 3,
+                    Payload = new byte[] { 
+                        Convert.ToByte('I'), //Byte 0
+                        Convert.ToByte((((input.Number - 1) & 0x0F) << 4) + 
+                        ((Convert.ToByte(input.InvertInput) & 0x01) << 3) + 
+                        ((Convert.ToByte(input.Mode) & 0x03) << 1) + 
+                        (Convert.ToByte(input.Enabled) & 0x01)), //Byte 1
+                        (Convert.ToByte(input.DebounceTime / 10)), //Byte 2
+                        0, 0, 0, 0, 0 }
+                });
+            }
+
+            //Outputs
+            foreach(var output in Outputs)
+            {
+                msgs.Add(new CanInterfaceData
+                {
+                    Id = 100,
+                    Len = 8,
+                    Payload = new byte[] { 
+                        Convert.ToByte('O'), //Byte 0
+                        Convert.ToByte((((output.Number - 1) & 0x0F) << 4) +
+                        (Convert.ToByte(output.Enabled) & 0x01)), //Byte 1
+                        Convert.ToByte(output.Input), //Byte 2
+                        Convert.ToByte(output.CurrentLimit * 10), //Byte 3 
+                        Convert.ToByte(((Convert.ToByte(output.ResetCountLimit) & 0x0F) << 4) +
+                        Convert.ToByte(output.ResetMode) & 0x0F), //Byte 4
+                        Convert.ToByte(output.ResetTime / 10), //Byte 5
+                        Convert.ToByte(output.InrushCurrentLimit * 10), //Byte 6 
+                        Convert.ToByte(output.InrushTime / 10) } //Byte 7
+                });
+            }
+
+            //Virtual inputs
+            foreach(var virtInput in VirtualInputs)
+            {
+                msgs.Add(new CanInterfaceData
+                {
+                    Id = 100,
+                    Len = 7,
+                    Payload = new byte[] { 
+                        Convert.ToByte('U'), //Byte 0
+                        Convert.ToByte((Convert.ToByte(virtInput.Not2) << 3) + 
+                        (Convert.ToByte(virtInput.Not1) << 2) +
+                        (Convert.ToByte(virtInput.Not0) << 1) +
+                        Convert.ToByte(virtInput.Enabled)), //Byte 1
+                        Convert.ToByte(virtInput.Number - 1), //Byte 2 
+                        Convert.ToByte(virtInput.Var0), //Byte 3
+                        Convert.ToByte(virtInput.Var1), //Byte 4
+                        Convert.ToByte(virtInput.Var2), //Byte 5
+                        Convert.ToByte(((Convert.ToByte(virtInput.Mode) & 0x03) << 0x06) +
+                        ((Convert.ToByte(virtInput.Cond1) & 0x03) << 2) + 
+                        (Convert.ToByte(virtInput.Cond0) & 0x03)), //Byte 6
+                        0 }
+                });
+            }
+
+            //Flashers
+            foreach(var flash in Flashers)
+            {
+                int flashOut = 0;
+                if ((flash.Output == VarMap.Output1) ||
+                    (flash.Output == VarMap.Output2) ||
+                    (flash.Output == VarMap.Output3) ||
+                    (flash.Output == VarMap.Output4) ||
+                    (flash.Output == VarMap.Output5) ||
+                    (flash.Output == VarMap.Output6) ||
+                    (flash.Output == VarMap.Output7) ||
+                    (flash.Output == VarMap.Output8))
+                    flashOut = flash.Output - VarMap.Output1;
+                msgs.Add(new CanInterfaceData
+                {
+                    Id = 100,
+                    Len = 6,
+                    Payload = new byte[] { 
+                        Convert.ToByte('H'), //Byte 0
+                        Convert.ToByte((((flash.Number - 1) & 0x0F) << 4) +
+                        (Convert.ToByte(flash.Single) << 1) +
+                        (Convert.ToByte(flash.Enabled))), //Byte 1
+                        Convert.ToByte(flash.Input), //Byte 2
+                        Convert.ToByte(flashOut), //Byte 3
+                        Convert.ToByte(flash.OnTime / 10), //Byte 4
+                        Convert.ToByte(flash.OffTime / 10), //Byte 5
+                        0, 0 }
+                });
+            }
+
+            //CAN inputs
+            foreach(var canInput in CanInputs)
+            {
+                msgs.Add(new CanInterfaceData
+                {
+                    Id = 100,
+                    Len = 7,
+                    Payload = new byte[] { 
+                        Convert.ToByte('N'), //Byte 0
+                        Convert.ToByte(((Convert.ToByte(canInput.Operator) & 0x0F) << 4) + 
+                        ((Convert.ToByte(canInput.Mode) & 0x03) << 1) + 
+                        (Convert.ToByte(canInput.Enabled) & 0x01)), //Byte 1
+                        Convert.ToByte(canInput.Number - 1), //Byte 2
+                        Convert.ToByte((canInput.Id & 0xFF00) >> 8), //Byte 3
+                        Convert.ToByte(canInput.Id & 0x00FF), //Byte 4
+                        Convert.ToByte(((canInput.HighByte & 0x0F) << 4) + 
+                        (canInput.LowByte & 0x0F)), //Byte 5
+                        Convert.ToByte(canInput.OnVal), //Byte 6 
+                        0 }
+                });
+            }
+
+            //Wiper
+            msgs.Add(new CanInterfaceData
+            {
+                Id = 100,
+                Len = 8,
+                Payload = new byte[] { 
+                    Convert.ToByte('W'), //Byte 0 
+                    Convert.ToByte(((Convert.ToByte(Wipers[0].WashWipeCycles) & 0x0F) << 4) +
+                    ((Convert.ToByte(Wipers[0].ParkStopLevel) & 0x01) << 3) +
+                    ((Convert.ToByte(Wipers[0].Mode) & 0x03) << 1) +
+                    (Convert.ToByte(Wipers[0].Enabled) & 0x01)), //Byte 1
+                    Convert.ToByte(Wipers[0].SlowInput), //Byte 2
+                    Convert.ToByte(Wipers[0].FastInput), //Byte 3
+                    Convert.ToByte(Wipers[0].InterInput), //Byte 4
+                    Convert.ToByte(Wipers[0].OnInput), //Byte 5
+                    Convert.ToByte(Wipers[0].ParkInput), //Byte 6
+                    Convert.ToByte(Wipers[0].WashInput) } //Byte 7
+            });
+
+            //Wiper speeds
+            msgs.Add(new CanInterfaceData
+            {
+                Id = 100,
+                Len = 7,
+                Payload = new byte[] { 
+                    Convert.ToByte('P'), //Byte 0 
+                    Convert.ToByte(Wipers[0].SwipeInput), //Byte 1
+                    Convert.ToByte(Wipers[0].SpeedInput), //Byte 2
+                    Convert.ToByte(((Convert.ToByte(Wipers[0].SpeedMap[1]) & 0x0F) << 4) +
+                    (Convert.ToByte(Wipers[0].SpeedMap[0]) & 0x0F)), //Byte 3
+                    Convert.ToByte(((Convert.ToByte(Wipers[0].SpeedMap[3]) & 0x0F) << 4) +
+                    (Convert.ToByte(Wipers[0].SpeedMap[2]) & 0x0F)), //Byte 4
+                    Convert.ToByte(((Convert.ToByte(Wipers[0].SpeedMap[4]) & 0x0F) << 4) +
+                    (Convert.ToByte(Wipers[0].SpeedMap[5]) & 0x0F)), //Byte 5
+                    Convert.ToByte(((Convert.ToByte(Wipers[0].SpeedMap[7]) & 0x0F) << 4) +
+                    (Convert.ToByte(Wipers[0].SpeedMap[6]) & 0x0F)), //Byte 6
+                    0 }
+            });
+
+            //Wiper delays
+            msgs.Add(new CanInterfaceData
+            {
+                Id = 100,
+                Len = 7,
+                Payload = new byte[] { 
+                    Convert.ToByte('Y'), //Byte 0 
+                    Convert.ToByte(Wipers[0].IntermitTime[0] / 10), //Byte 1
+                    Convert.ToByte(Wipers[0].IntermitTime[1] / 10), //Byte 2
+                    Convert.ToByte(Wipers[0].IntermitTime[2] / 10), //Byte 3
+                    Convert.ToByte(Wipers[0].IntermitTime[3] / 10), //Byte 4
+                    Convert.ToByte(Wipers[0].IntermitTime[4] / 10), //Byte 5
+                    Convert.ToByte(Wipers[0].IntermitTime[5] / 10), //Byte 6
+                    0 }
+            });
+
+            //Starter disable
+            msgs.Add(new CanInterfaceData
+            {
+                Id = 100,
+                Len = 4,
+                Payload = new byte[] { 
+                    Convert.ToByte('D'), //Byte 0 
+                    Convert.ToByte(Convert.ToByte(StarterDisable[0].Enabled) & 0x01), //Byte 1
+                    Convert.ToByte(StarterDisable[0].Input), //Byte 2
+                    Convert.ToByte(((Convert.ToByte(StarterDisable[0].Output1) & 0x01) << 7) +
+                    ((Convert.ToByte(StarterDisable[0].Output2) & 0x01) << 6) +
+                    ((Convert.ToByte(StarterDisable[0].Output3) & 0x01) << 5) +
+                    ((Convert.ToByte(StarterDisable[0].Output4) & 0x01) << 4) +
+                    ((Convert.ToByte(StarterDisable[0].Output5) & 0x01) << 3) +
+                    ((Convert.ToByte(StarterDisable[0].Output6) & 0x01) << 2) +
+                    ((Convert.ToByte(StarterDisable[0].Output7) & 0x01) << 1) +
+                    (Convert.ToByte(StarterDisable[0].Output8) & 0x01)), //Byte 3
+                    0, 0, 0, 0 }
+            });
+
+            return msgs;
+        }
+
+        public CanInterfaceData GetBurnMessage()
+        {
+            return new CanInterfaceData
+            {
+                Id = 100,
+                Len = 4,
+                Payload = new byte[] { Convert.ToByte('B'), 1, 3, 8, 0, 0, 0, 0 }
+            };
         }
     }
 }

@@ -24,6 +24,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Collections.Concurrent;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 //Add another CanDevices list that holds the online value
 
@@ -49,8 +50,6 @@ namespace DingoConfigurator
         private bool _configFileOpened;
 
         private string _settingsPath;
-
-        private System.Timers.Timer updateTimer;
 
         private System.Timers.Timer statusBarTimer;
 
@@ -94,27 +93,9 @@ namespace DingoConfigurator
             ConnectBtnCmd = new RelayCommand(Connect, CanConnect);
             DisconnectBtnCmd = new RelayCommand(Disconnect, CanDisconnect);
             RefreshComPortsBtnCmd = new RelayCommand(RefreshComPorts, CanRefreshComPorts);
-
-            
-        }
-
-        private void UpdateView(object sender, ElapsedEventArgs e)
-        {
-            //Only update view vars of the selected device for better performance
-            if (SelectedCanDevice != null)
-            {
-                SelectedCanDevice.UpdateView();
-            }
-                //foreach (var cd in _canDevices)
-                //{
-                 //   cd.UpdateView();
-                    //if (cd.InIdRange(canData.Id))
-                    //{
-                    //    cd.Read(canData.Id, canData.Payload);
-                    //}
-                //}
-            
-
+            UploadBtnCmd = new RelayCommand(Upload, CanUpload);
+            DownloadBtnCmd = new RelayCommand(Download, CanDownload);
+            BurnBtnCmd = new RelayCommand(Burn, CanBurn);
         }
 
         private void NewConfigFile(object parameter)
@@ -161,11 +142,6 @@ namespace DingoConfigurator
             statusBarTimer.Elapsed += UpdateStatusBar;
             statusBarTimer.AutoReset = true;
             statusBarTimer.Enabled = true;
-
-            updateTimer = new System.Timers.Timer(30);
-            updateTimer.Elapsed += UpdateView;
-            updateTimer.AutoReset = true;
-            updateTimer.Enabled = true;
 
             _configFileOpened = true;
         }
@@ -334,11 +310,6 @@ namespace DingoConfigurator
         public void WindowClosing()
         {
             Disconnect(null);
-            if (updateTimer != null)
-            {
-                updateTimer.Stop();
-                updateTimer.Dispose();
-            }
 
             if (statusBarTimer != null)
             {
@@ -378,131 +349,57 @@ namespace DingoConfigurator
 
         public ICanDevice SelectedCanDevice { get; set; }
 
-        private void GetDeviceSetting()
+        private void GetDeviceSettings(bool getAll)
         {
-            _can.Write(new CanInterfaceData
+            foreach (var cd in _canDevices)
             {
-                Id = 100,
-                Len = 1,
-                Payload = new byte[] { Convert.ToByte('V'), 0, 0, 0, 0, 0, 0, 0 }
-            });
-
-            Thread.Sleep(10);
-
-            _can.Write(new CanInterfaceData
-            {
-                Id = 100,
-                Len = 1,
-                Payload = new byte[] { Convert.ToByte('C'), 0, 0, 0, 0, 0, 0, 0 }
-            });
-
-            Thread.Sleep(10);
-
-            for (int i = 0; i < 2; i++)
-            {
-                _can.Write(new CanInterfaceData
+                if ((!getAll && SelectedCanDevice.Equals(cd)) ||
+                    getAll)
                 {
-                    Id = 100,
-                    Len = 2,
-                    Payload = new byte[] { Convert.ToByte('I'),
-                        Convert.ToByte((i & 0x0F) << 4),
-                        0, 0, 0, 0, 0, 0 }
-                });
+                    var msgs = cd.GetUploadMessages();
+                    if (msgs == null) return;
 
-                Thread.Sleep(10);
+                    foreach (var msg in msgs)
+                    {
+                        _can.Write(msg);
+                        Thread.Sleep(10);
+                    }
+                }
             }
+        }
 
-            for (int i = 0; i < 8; i++)
+        private void SendDeviceSettings(bool sendAll)
+        {
+            foreach (var cd in _canDevices)
             {
-                _can.Write(new CanInterfaceData
+                if ((!sendAll && SelectedCanDevice.Equals(cd)) ||
+                        sendAll)
                 {
-                    Id = 100,
-                    Len = 2,
-                    Payload = new byte[] { Convert.ToByte('O'),
-                        Convert.ToByte((i & 0x0F) << 4),
-                        0, 0, 0, 0, 0, 0 }
-                });
+                    var msgs = cd.GetDownloadMessages();
+                    if (msgs == null) return;
 
-                Thread.Sleep(10);
+                    foreach (var msg in msgs)
+                    {
+                        _can.Write(msg);
+                        Thread.Sleep(10);
+                    }
+                }
             }
+        }
 
-            for (int i = 0; i < 16; i++)
+        private void BurnDeviceSettings(bool burnAll)
+        {
+            foreach (var cd in _canDevices)
             {
-                _can.Write(new CanInterfaceData
+                if ((!burnAll && SelectedCanDevice.Equals(cd)) ||
+                        burnAll)
                 {
-                    Id = 100,
-                    Len = 2,
-                    Payload = new byte[] { Convert.ToByte('U'),
-                        Convert.ToByte(i),
-                        0, 0, 0, 0, 0, 0 }
-                });
+                    var msg = cd.GetBurnMessage();
+                    if (msg == null) return;
 
-                Thread.Sleep(10);
+                    _can.Write(msg);
+                }
             }
-
-            for (int i = 0; i < 4; i++)
-            {
-                _can.Write(new CanInterfaceData
-                {
-                    Id = 100,
-                    Len = 2,
-                    Payload = new byte[] { Convert.ToByte('H'),
-                        Convert.ToByte((i & 0x0F) << 4),
-                        0, 0, 0, 0, 0, 0 }
-                });
-
-                Thread.Sleep(10);
-            }
-
-            for (int i = 0; i < 32; i++)
-            {
-                _can.Write(new CanInterfaceData
-                {
-                    Id = 100,
-                    Len = 2,
-                    Payload = new byte[] { Convert.ToByte('N'),
-                        Convert.ToByte(i),
-                        0, 0, 0, 0, 0, 0 }
-                });
-
-                Thread.Sleep(10);
-            }
-
-            _can.Write(new CanInterfaceData
-            {
-                Id = 100,
-                Len = 1,
-                Payload = new byte[] { Convert.ToByte('W'), 0, 0, 0, 0, 0, 0, 0 }
-            });
-
-            Thread.Sleep(10);
-
-            _can.Write(new CanInterfaceData
-            {
-                Id = 100,
-                Len = 1,
-                Payload = new byte[] { Convert.ToByte('P'), 0, 0, 0, 0, 0, 0, 0 }
-            });
-
-            Thread.Sleep(10);
-
-            _can.Write(new CanInterfaceData
-            {
-                Id = 100,
-                Len = 1,
-                Payload = new byte[] { Convert.ToByte('Y'), 0, 0, 0, 0, 0, 0, 0 }
-            });
-
-            Thread.Sleep(10);
-
-            _can.Write(new CanInterfaceData
-            {
-                Id = 100,
-                Len = 1,
-                Payload = new byte[] { Convert.ToByte('D'), 0, 0, 0, 0, 0, 0, 0 }
-            });
-
-            Thread.Sleep(10);
         }
 
         #region TreeView
@@ -602,7 +499,7 @@ namespace DingoConfigurator
             _can.DataReceived += CanDataReceived;
             if(!_can.Start()) return;
             CanInterfaceConnected = true;
-            GetDeviceSetting();
+            GetDeviceSettings(true);
         }
 
         
@@ -634,6 +531,36 @@ namespace DingoConfigurator
         private bool CanRefreshComPorts(object parameter)
         {
             return CanComPorts;
+        }
+
+        private void Upload(object parameter)
+        {
+            GetDeviceSettings(false);
+        }
+
+        private bool CanUpload(object parameter)
+        {
+            return CanInterfaceConnected && (SelectedCanDevice != null);
+        }
+
+        private void Download(object parameter)
+        {
+            SendDeviceSettings(false);
+        }
+
+        private bool CanDownload(object parameter)
+        {
+            return CanInterfaceConnected && (SelectedCanDevice != null);
+        }
+
+        private void Burn(object parameter)
+        {
+            BurnDeviceSettings(false);
+        }
+
+        private bool CanBurn(object parameter)
+        {
+            return CanInterfaceConnected && (SelectedCanDevice != null);
         }
         #endregion
 
@@ -718,6 +645,9 @@ namespace DingoConfigurator
         public ICommand ConnectBtnCmd { get; set; }
         public ICommand DisconnectBtnCmd { get; set; }
         public ICommand RefreshComPortsBtnCmd { get; set; }
+        public ICommand UploadBtnCmd { get; set; }
+        public ICommand DownloadBtnCmd { get; set; }
+        public ICommand BurnBtnCmd { get; set; }
         #endregion
 
         #region StatusBar

@@ -1,4 +1,5 @@
 ﻿using CanDevices.DingoPdm;
+using CanInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -235,6 +236,21 @@ namespace CanDevices.CanBoard
             DigitalOut[3].State = Convert.ToBoolean((data[6] & 0x8) >> 3);
 
             Heartbeat = Convert.ToInt16(data[7]);
+        }
+
+        public List<CanInterfaceData> GetUploadMessages()
+        {
+            return null;
+        }
+
+        public List<CanInterfaceData> GetDownloadMessages()
+        {
+            return null;
+        }
+
+        public CanInterfaceData GetBurnMessage()
+        {
+            return null;
         }
     }
 }

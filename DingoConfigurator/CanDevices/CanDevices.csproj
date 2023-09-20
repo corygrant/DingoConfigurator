@@ -97,5 +97,11 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CanInterfaces\CanInterfaces.csproj">
+      <Project>{2179EBC6-1AA3-4DA3-96F1-50FCEB1FFFA7}</Project>
+      <Name>CanInterfaces</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

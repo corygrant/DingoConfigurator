@@ -1,4 +1,5 @@
 ﻿using CanDevices.DingoPdm;
+using CanInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,6 +65,21 @@ namespace CanDevices
         public void UpdateProperty(string property)
         {
             OnPropertyChanged(property);
+        }
+
+        public List<CanInterfaceData> GetUploadMessages()
+        {
+            return null;
+        }
+
+        public List<CanInterfaceData> GetDownloadMessages()
+        {
+            return null;
+        }
+
+        public CanInterfaceData GetBurnMessage()
+        {
+            return null;
         }
     }
 }

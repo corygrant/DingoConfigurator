@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CanInterfaces;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,8 @@ namespace CanDevices
         bool Read(int id, byte[] data);
         bool IsPriorityMsg(int id);
         bool InIdRange(int id);
-        void UpdateView();
+        List<CanInterfaceData> GetUploadMessages();
+        List<CanInterfaceData> GetDownloadMessages();
+        CanInterfaceData GetBurnMessage();
     }
 }

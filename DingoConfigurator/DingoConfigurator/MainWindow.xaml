@@ -15,6 +15,17 @@
         mc:Ignorable="d"
         Title="DingoConfigurator" Height="1000" Width="1500"
         Icon="Icons\dingoconfigurator.png">
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding Path=NewBtnCmd}" Key="N" Modifiers="Control"/>
+        <KeyBinding Command="{Binding Path=OpenBtnCmd}" Key="O" Modifiers="Control"/>
+        <KeyBinding Command="{Binding Path=SaveBtnCmd}" Key="S" Modifiers="Control"/>
+        <KeyBinding Command="{Binding Path=RefreshBtnCmd}" Key="R" Modifiers="Control"/>
+        <KeyBinding Command="{Binding Path=ConnectBtnCmd}" Key="C" Modifiers="Control"/>
+        <KeyBinding Command="{Binding Path=DisconnectBtnCmd}" Key="D" Modifiers="Control"/>
+        <KeyBinding Command="{Binding Path=UploadBtnCmd}" Key="U" Modifiers="Control"/>
+        <KeyBinding Command="{Binding Path=DownloadBtnCmd}" Key="W" Modifiers="Control"/>
+        <KeyBinding Command="{Binding Path=BurnBtnCmd}" Key="B" Modifiers="Control"/>
+    </Window.InputBindings>
     <Window.Resources>
         <ResourceDictionary>
             <SolidColorBrush x:Key="PdmBrush" Color="Crimson"/>
@@ -26,13 +37,13 @@
     </Window.Resources>
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top">
-            <ToolBar>
+            <ToolBar Band="1" BandIndex="1">
                 <Button Content="New"  Command="{Binding NewBtnCmd}"/>
                 <Button Content="Open" Command="{Binding OpenBtnCmd}"/>
                 <Button Content="Save" Command="{Binding SaveBtnCmd}"/>
                 <Button Content="Save As" Command="{Binding SaveAsBtnCmd}"/>
             </ToolBar>
-            <ToolBar>
+            <ToolBar Band="1" BandIndex="2">
                 <ComboBox Width="90" 
                           Margin="5 0 5 0"
                           ItemsSource="{Binding Path=Cans}"
@@ -55,6 +66,14 @@
                         Command="{Binding ConnectBtnCmd}"/>
                 <Button Content="Disconnect"
                         Command="{Binding DisconnectBtnCmd}"/>
+            </ToolBar>
+            <ToolBar Band="1" BandIndex="3">
+                <Button Content="Upload"
+                        Command="{Binding UploadBtnCmd}"/>
+                <Button Content="Download"
+                        Command="{Binding DownloadBtnCmd}"/>
+                <Button Content="Burn"
+                        Command="{Binding BurnBtnCmd}"/>
             </ToolBar>
         </ToolBarTray>
         <StatusBar DockPanel.Dock="Bottom">
