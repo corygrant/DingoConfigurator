@@ -85,7 +85,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay}" Width="100" MinWidth="100">
+                <DataGridTextColumn Header="Name" Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Width="100" MinWidth="100">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -99,28 +99,28 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridCheckBoxColumn Header="En" Binding="{Binding Enabled, Mode=TwoWay}"  Width="40" MinWidth="40">
+                <DataGridCheckBoxColumn Header="En" Binding="{Binding Enabled, UpdateSourceTrigger=PropertyChanged}"  Width="40" MinWidth="40">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Center" />
                         </Style>
                     </DataGridCheckBoxColumn.ElementStyle>
                 </DataGridCheckBoxColumn>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id, Mode=TwoWay}"  Width="70" MinWidth="70">
+                <DataGridTextColumn Header="ID" Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged}"  Width="70" MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="L Byte" Binding="{Binding LowByte, Mode=TwoWay}"  Width="70" MinWidth="70">
+                <DataGridTextColumn Header="L Byte" Binding="{Binding LowByte, UpdateSourceTrigger=PropertyChanged}"  Width="70" MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="H Byte" Binding="{Binding HighByte, Mode=TwoWay}"  Width="70" MinWidth="70">
+                <DataGridTextColumn Header="H Byte" Binding="{Binding HighByte, UpdateSourceTrigger=PropertyChanged}"  Width="70" MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -129,7 +129,7 @@
                 </DataGridTextColumn>
                 <DataGridComboBoxColumn Header="Operator" 
                                         ItemsSource="{Binding Source={StaticResource OperatorEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding Operator, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding Operator, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
                 <DataGridTextColumn Header="Mask" Binding="{Binding OnVal}"  Width="60" MinWidth="60">
                     <DataGridTextColumn.ElementStyle>
@@ -140,7 +140,7 @@
                 </DataGridTextColumn>
                 <DataGridComboBoxColumn Header="Mode" 
                                         ItemsSource="{Binding Source={StaticResource InputModeEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding Mode, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding Mode, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
             </DataGrid.Columns>
         </DataGrid>
@@ -164,7 +164,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay}" Width="100" MinWidth="100">
+                <DataGridTextColumn Header="Name" Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Width="100" MinWidth="100">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -178,14 +178,14 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridCheckBoxColumn Header="En" Binding="{Binding Enabled, Mode=TwoWay}" Width="40" MinWidth="40">
+                <DataGridCheckBoxColumn Header="En" Binding="{Binding Enabled, UpdateSourceTrigger=PropertyChanged}" Width="40" MinWidth="40">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Center" />
                         </Style>
                     </DataGridCheckBoxColumn.ElementStyle>
                 </DataGridCheckBoxColumn>
-                <DataGridCheckBoxColumn Header="Not" Binding="{Binding Not0, Mode=TwoWay}"  Width="50" MinWidth="50">
+                <DataGridCheckBoxColumn Header="Not" Binding="{Binding Not0, UpdateSourceTrigger=PropertyChanged}"  Width="50" MinWidth="50">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -194,13 +194,13 @@
                 </DataGridCheckBoxColumn>
                 <DataGridComboBoxColumn Header="Variable" 
                                         ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding Var0, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding Var0, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
                 <DataGridComboBoxColumn Header="Condition" 
                                         ItemsSource="{Binding Source={StaticResource ConditionalEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding Cond0, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding Cond0, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
-                <DataGridCheckBoxColumn Header="Not" Binding="{Binding Not1, Mode=TwoWay}"  Width="50" MinWidth="50">
+                <DataGridCheckBoxColumn Header="Not" Binding="{Binding Not1, UpdateSourceTrigger=PropertyChanged}"  Width="50" MinWidth="50">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -209,13 +209,13 @@
                 </DataGridCheckBoxColumn>
                 <DataGridComboBoxColumn Header="Variable" 
                                         ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding Var1, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding Var1, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
                 <DataGridComboBoxColumn Header="Condition" 
                                         ItemsSource="{Binding Source={StaticResource ConditionalEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding Cond1, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding Cond1, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
-                <DataGridCheckBoxColumn Header="Not" Binding="{Binding Not2, Mode=TwoWay}"  Width="50" MinWidth="50">
+                <DataGridCheckBoxColumn Header="Not" Binding="{Binding Not2, UpdateSourceTrigger=PropertyChanged}"  Width="50" MinWidth="50">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -224,11 +224,11 @@
                 </DataGridCheckBoxColumn>
                 <DataGridComboBoxColumn Header="Variable" 
                                         ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding Var2, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding Var2, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
                 <DataGridComboBoxColumn Header="Mode" 
                                         ItemsSource="{Binding Source={StaticResource InputModeEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding Mode, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding Mode, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
             </DataGrid.Columns>
         </DataGrid>
@@ -305,32 +305,33 @@
                 <DataGridComboBoxColumn Header="Mode" 
                                         ItemsSource="{Binding Source={StaticResource WiperModeEnumDataSource}, Mode=OneWay}" 
                                         SelectedItemBinding="{Binding Mode, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding Mode, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
                 <DataGridComboBoxColumn Header="Slow In" 
                                         ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding SlowInput, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding SlowInput, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
                 <DataGridComboBoxColumn Header="Fast In" 
                                         ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding FastInput, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding FastInput, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
                 <DataGridComboBoxColumn Header="Inter In" 
                                         ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding InterInput, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding InterInput, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
                 <DataGridComboBoxColumn Header="On In" 
                                         ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding OnInput, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding OnInput, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
                 <DataGridComboBoxColumn Header="Speed In" 
                                         ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding SpeedInput, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding SpeedInput, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
                 <DataGridComboBoxColumn Header="Park In" 
                                         ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding ParkInput, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding ParkInput, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
-                <DataGridCheckBoxColumn Header="Park Stop Level" Binding="{Binding ParkStopLevel, Mode=TwoWay}"  Width="50" MinWidth="50">
+                <DataGridCheckBoxColumn Header="Park Stop Level" Binding="{Binding ParkStopLevel, UpdateSourceTrigger=PropertyChanged}"  Width="50" MinWidth="50">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -339,13 +340,13 @@
                 </DataGridCheckBoxColumn>
                 <DataGridComboBoxColumn Header="Swipe In" 
                                         ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding SwipeInput, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding SwipeInput, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
                 <DataGridComboBoxColumn Header="Wash In" 
                                         ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding WashInput, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding WashInput, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
-                <DataGridTextColumn Header="Wash/Wipe Cycles" Binding="{Binding WashWipeCycles, Mode=TwoWay}" Width="100" MinWidth="100">
+                <DataGridTextColumn Header="Wash/Wipe Cycles" Binding="{Binding WashWipeCycles, UpdateSourceTrigger=PropertyChanged}" Width="100" MinWidth="100">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -375,7 +376,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay}" Width="100" MinWidth="100">
+                <DataGridTextColumn Header="Name" Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Width="100" MinWidth="100">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -402,14 +403,14 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridCheckBoxColumn Header="En" Binding="{Binding Enabled, Mode=TwoWay}" Width="40" MinWidth="40">
+                <DataGridCheckBoxColumn Header="En" Binding="{Binding Enabled, UpdateSourceTrigger=PropertyChanged}" Width="40" MinWidth="40">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Center" />
                         </Style>
                     </DataGridCheckBoxColumn.ElementStyle>
                 </DataGridCheckBoxColumn>
-                <DataGridCheckBoxColumn Header="Single" Binding="{Binding Single, Mode=TwoWay}" Width="60" MinWidth="60">
+                <DataGridCheckBoxColumn Header="Single" Binding="{Binding Single, UpdateSourceTrigger=PropertyChanged}" Width="60" MinWidth="60">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -418,20 +419,20 @@
                 </DataGridCheckBoxColumn>
                 <DataGridComboBoxColumn Header="Input" 
                                         ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding Input, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding Input, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
                 <DataGridComboBoxColumn Header="Output" 
                                         ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding Output, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding Output, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
-                <DataGridTextColumn Header="On Time" Binding="{Binding OnTime}" IsReadOnly="True" Width="70" MinWidth="70">
+                <DataGridTextColumn Header="On Time" Binding="{Binding OnTime, UpdateSourceTrigger=PropertyChanged}" Width="70" MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Off Time" Binding="{Binding OffTime}" IsReadOnly="True" Width="70" MinWidth="70">
+                <DataGridTextColumn Header="Off Time" Binding="{Binding OffTime, UpdateSourceTrigger=PropertyChanged}" Width="70" MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -460,7 +461,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridCheckBoxColumn Header="En" Binding="{Binding Enabled, Mode=TwoWay}" Width="40" MinWidth="40">
+                <DataGridCheckBoxColumn Header="En" Binding="{Binding Enabled, UpdateSourceTrigger=PropertyChanged}" Width="40" MinWidth="40">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -469,58 +470,58 @@
                 </DataGridCheckBoxColumn>
                 <DataGridComboBoxColumn Header="Input" 
                                         ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding Input, Mode=TwoWay}"
+                                        SelectedItemBinding="{Binding Input, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
-                <DataGridCheckBoxColumn Header="O1" Binding="{Binding Output1, Mode=TwoWay}" Width="40" MinWidth="40">
+                <DataGridCheckBoxColumn Header="O1" Binding="{Binding Output1, UpdateSourceTrigger=PropertyChanged}" Width="40" MinWidth="40">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Center" />
                         </Style>
                     </DataGridCheckBoxColumn.ElementStyle>
                 </DataGridCheckBoxColumn>
-                <DataGridCheckBoxColumn Header="O2" Binding="{Binding Output2, Mode=TwoWay}" Width="40" MinWidth="40">
+                <DataGridCheckBoxColumn Header="O2" Binding="{Binding Output2, UpdateSourceTrigger=PropertyChanged}" Width="40" MinWidth="40">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Center" />
                         </Style>
                     </DataGridCheckBoxColumn.ElementStyle>
                 </DataGridCheckBoxColumn>
-                <DataGridCheckBoxColumn Header="O3" Binding="{Binding Output3, Mode=TwoWay}" Width="40" MinWidth="40">
+                <DataGridCheckBoxColumn Header="O3" Binding="{Binding Output3, UpdateSourceTrigger=PropertyChanged}" Width="40" MinWidth="40">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Center" />
                         </Style>
                     </DataGridCheckBoxColumn.ElementStyle>
                 </DataGridCheckBoxColumn>
-                <DataGridCheckBoxColumn Header="O4" Binding="{Binding Output4, Mode=TwoWay}" Width="40" MinWidth="40">
+                <DataGridCheckBoxColumn Header="O4" Binding="{Binding Output4, UpdateSourceTrigger=PropertyChanged}" Width="40" MinWidth="40">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Center" />
                         </Style>
                     </DataGridCheckBoxColumn.ElementStyle>
                 </DataGridCheckBoxColumn>
-                <DataGridCheckBoxColumn Header="O5" Binding="{Binding Output5, Mode=TwoWay}" Width="40" MinWidth="40">
+                <DataGridCheckBoxColumn Header="O5" Binding="{Binding Output5, UpdateSourceTrigger=PropertyChanged}" Width="40" MinWidth="40">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Center" />
                         </Style>
                     </DataGridCheckBoxColumn.ElementStyle>
                 </DataGridCheckBoxColumn>
-                <DataGridCheckBoxColumn Header="O6" Binding="{Binding Output6, Mode=TwoWay}" Width="40" MinWidth="40">
+                <DataGridCheckBoxColumn Header="O6" Binding="{Binding Output6, UpdateSourceTrigger=PropertyChanged}" Width="40" MinWidth="40">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Center" />
                         </Style>
                     </DataGridCheckBoxColumn.ElementStyle>
                 </DataGridCheckBoxColumn>
-                <DataGridCheckBoxColumn Header="O7" Binding="{Binding Output7, Mode=TwoWay}" Width="40" MinWidth="40">
+                <DataGridCheckBoxColumn Header="O7" Binding="{Binding Output7, UpdateSourceTrigger=PropertyChanged}" Width="40" MinWidth="40">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Center" />
                         </Style>
                     </DataGridCheckBoxColumn.ElementStyle>
                 </DataGridCheckBoxColumn>
-                <DataGridCheckBoxColumn Header="O8" Binding="{Binding Output8, Mode=TwoWay}" Width="40" MinWidth="40">
+                <DataGridCheckBoxColumn Header="O8" Binding="{Binding Output8, UpdateSourceTrigger=PropertyChanged}" Width="40" MinWidth="40">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Center" />

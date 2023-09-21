@@ -381,7 +381,7 @@ namespace DingoConfigurator
                     foreach (var msg in msgs)
                     {
                         _can.Write(msg);
-                        Thread.Sleep(10);
+                        Thread.Sleep(20);
                     }
                 }
             }

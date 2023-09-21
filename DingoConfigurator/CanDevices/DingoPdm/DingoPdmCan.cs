@@ -703,7 +703,7 @@ namespace CanDevices.DingoPdm
                     break;
 
                 case MessagePrefix.Wiper:
-                    //Wipers[0].Enabled = (data[1] & 0x01);
+                    Wipers[0].Enabled = true;
                     Wipers[0].Mode = (WiperMode)((data[1] & 0x03) >> 1);
                     Wipers[0].ParkStopLevel = Convert.ToBoolean((data[1] & 0x04) >> 3);
                     Wipers[0].WashWipeCycles = (data[1] & 0xF0) >> 4;
@@ -893,6 +893,8 @@ namespace CanDevices.DingoPdm
 
         public List<CanInterfaceData> GetDownloadMessages()
         {
+            int Id = 1900;
+
             List<CanInterfaceData> msgs = new List<CanInterfaceData>();
 
             //Send settings messages
@@ -900,7 +902,7 @@ namespace CanDevices.DingoPdm
             //CAN settings
             msgs.Add(new CanInterfaceData
             {
-                Id = 100,
+                Id = Id,
                 Len = 5,
                 Payload = new byte[] { 
                     Convert.ToByte('C'), //Byte 0
@@ -917,7 +919,7 @@ namespace CanDevices.DingoPdm
             {
                 msgs.Add(new CanInterfaceData
                 {
-                    Id = 100,
+                    Id = Id,
                     Len = 3,
                     Payload = new byte[] { 
                         Convert.ToByte('I'), //Byte 0
@@ -935,7 +937,7 @@ namespace CanDevices.DingoPdm
             {
                 msgs.Add(new CanInterfaceData
                 {
-                    Id = 100,
+                    Id = Id,
                     Len = 8,
                     Payload = new byte[] { 
                         Convert.ToByte('O'), //Byte 0
@@ -956,7 +958,7 @@ namespace CanDevices.DingoPdm
             {
                 msgs.Add(new CanInterfaceData
                 {
-                    Id = 100,
+                    Id = Id,
                     Len = 7,
                     Payload = new byte[] { 
                         Convert.ToByte('U'), //Byte 0
@@ -990,7 +992,7 @@ namespace CanDevices.DingoPdm
                     flashOut = flash.Output - VarMap.Output1;
                 msgs.Add(new CanInterfaceData
                 {
-                    Id = 100,
+                    Id = Id,
                     Len = 6,
                     Payload = new byte[] { 
                         Convert.ToByte('H'), //Byte 0
@@ -1010,7 +1012,7 @@ namespace CanDevices.DingoPdm
             {
                 msgs.Add(new CanInterfaceData
                 {
-                    Id = 100,
+                    Id = Id,
                     Len = 7,
                     Payload = new byte[] { 
                         Convert.ToByte('N'), //Byte 0
@@ -1030,7 +1032,7 @@ namespace CanDevices.DingoPdm
             //Wiper
             msgs.Add(new CanInterfaceData
             {
-                Id = 100,
+                Id = Id,
                 Len = 8,
                 Payload = new byte[] { 
                     Convert.ToByte('W'), //Byte 0 
@@ -1049,7 +1051,7 @@ namespace CanDevices.DingoPdm
             //Wiper speeds
             msgs.Add(new CanInterfaceData
             {
-                Id = 100,
+                Id = Id,
                 Len = 7,
                 Payload = new byte[] { 
                     Convert.ToByte('P'), //Byte 0 
@@ -1069,7 +1071,7 @@ namespace CanDevices.DingoPdm
             //Wiper delays
             msgs.Add(new CanInterfaceData
             {
-                Id = 100,
+                Id = Id,
                 Len = 7,
                 Payload = new byte[] { 
                     Convert.ToByte('Y'), //Byte 0 
@@ -1085,20 +1087,20 @@ namespace CanDevices.DingoPdm
             //Starter disable
             msgs.Add(new CanInterfaceData
             {
-                Id = 100,
+                Id = Id,
                 Len = 4,
                 Payload = new byte[] { 
                     Convert.ToByte('D'), //Byte 0 
                     Convert.ToByte(Convert.ToByte(StarterDisable[0].Enabled) & 0x01), //Byte 1
                     Convert.ToByte(StarterDisable[0].Input), //Byte 2
-                    Convert.ToByte(((Convert.ToByte(StarterDisable[0].Output1) & 0x01) << 7) +
-                    ((Convert.ToByte(StarterDisable[0].Output2) & 0x01) << 6) +
-                    ((Convert.ToByte(StarterDisable[0].Output3) & 0x01) << 5) +
-                    ((Convert.ToByte(StarterDisable[0].Output4) & 0x01) << 4) +
-                    ((Convert.ToByte(StarterDisable[0].Output5) & 0x01) << 3) +
-                    ((Convert.ToByte(StarterDisable[0].Output6) & 0x01) << 2) +
-                    ((Convert.ToByte(StarterDisable[0].Output7) & 0x01) << 1) +
-                    (Convert.ToByte(StarterDisable[0].Output8) & 0x01)), //Byte 3
+                    Convert.ToByte(((Convert.ToByte(StarterDisable[0].Output8) & 0x01) << 7) +
+                    ((Convert.ToByte(StarterDisable[0].Output7) & 0x01) << 6) +
+                    ((Convert.ToByte(StarterDisable[0].Output6) & 0x01) << 5) +
+                    ((Convert.ToByte(StarterDisable[0].Output5) & 0x01) << 4) +
+                    ((Convert.ToByte(StarterDisable[0].Output4) & 0x01) << 3) +
+                    ((Convert.ToByte(StarterDisable[0].Output3) & 0x01) << 2) +
+                    ((Convert.ToByte(StarterDisable[0].Output2) & 0x01) << 1) +
+                    (Convert.ToByte(StarterDisable[0].Output1) & 0x01)), //Byte 3
                     0, 0, 0, 0 }
             });
 
