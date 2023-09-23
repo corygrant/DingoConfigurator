@@ -110,7 +110,7 @@ namespace CanInterfaces
                     //Length was 0, create empty data
                     payload = new byte[8];
                 }
-                    
+
                 CanInterfaceData data = new CanInterfaceData
                 {
                     Id = id,

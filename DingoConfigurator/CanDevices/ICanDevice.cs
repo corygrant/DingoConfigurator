@@ -1,4 +1,5 @@
-﻿using CanInterfaces;
+﻿using CanDevices.DingoPdm;
+using CanInterfaces;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,11 +16,11 @@ namespace CanDevices
         bool IsConnected { get;}
         DateTime LastRxTime { get;}
         void UpdateIsConnected();
-        bool Read(int id, byte[] data);
+        bool Read(int id, byte[] data, ref CanDeviceResponse dequeuedMsg);
         bool IsPriorityMsg(int id);
         bool InIdRange(int id);
-        List<CanInterfaceData> GetUploadMessages();
-        List<CanInterfaceData> GetDownloadMessages();
-        CanInterfaceData GetBurnMessage();
+        List<CanDeviceResponse> GetUploadMessages();
+        List<CanDeviceResponse> GetDownloadMessages();
+        CanDeviceResponse GetBurnMessage();
     }
 }

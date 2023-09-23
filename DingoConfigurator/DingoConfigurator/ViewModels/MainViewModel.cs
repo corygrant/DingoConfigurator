@@ -25,6 +25,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Collections.Concurrent;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
+using System.Buffers.Text;
+using System.Reflection;
 
 //Add another CanDevices list that holds the online value
 
@@ -51,7 +53,14 @@ namespace DingoConfigurator
 
         private string _settingsPath;
 
-        private System.Timers.Timer statusBarTimer;
+        private System.Timers.Timer _statusBarTimer;
+        private System.Timers.Timer _processQueueTimer;
+
+        private ConcurrentQueue<CanDeviceResponse> _queue;
+        private CanDeviceResponse _dequeuedMsg;
+        private CanDeviceResponse _emptyMsg;
+
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public delegate void DataUpdatedHandler(object sender);
 
@@ -96,6 +105,18 @@ namespace DingoConfigurator
             UploadBtnCmd = new RelayCommand(Upload, CanUpload);
             DownloadBtnCmd = new RelayCommand(Download, CanDownload);
             BurnBtnCmd = new RelayCommand(Burn, CanBurn);
+
+            _emptyMsg = new CanDeviceResponse
+            {
+                Data = new CanInterfaceData
+                {
+                    Id = 0,
+                    Len = 0,
+                    Payload = new byte[8]
+                }
+            };
+
+            _dequeuedMsg = _emptyMsg;
         }
 
         private void NewConfigFile(object parameter)
@@ -137,11 +158,18 @@ namespace DingoConfigurator
 
             AddCanDevices(_config);
 
+            _queue = new ConcurrentQueue<CanDevices.DingoPdm.CanDeviceResponse>();
+
             // Create a timer to update status bar
-            statusBarTimer = new System.Timers.Timer(200);
-            statusBarTimer.Elapsed += UpdateStatusBar;
-            statusBarTimer.AutoReset = true;
-            statusBarTimer.Enabled = true;
+            _statusBarTimer = new System.Timers.Timer(200);
+            _statusBarTimer.Elapsed += UpdateStatusBar;
+            _statusBarTimer.AutoReset = true;
+            _statusBarTimer.Enabled = true;
+
+            _processQueueTimer = new System.Timers.Timer(5);
+            _processQueueTimer.Elapsed += ProcessQueue;
+            _processQueueTimer.AutoReset = true;
+            _processQueueTimer.Enabled = true;
 
             _configFileOpened = true;
         }
@@ -311,10 +339,10 @@ namespace DingoConfigurator
         {
             Disconnect(null);
 
-            if (statusBarTimer != null)
+            if (_statusBarTimer != null)
             {
-                statusBarTimer.Stop();
-                statusBarTimer.Dispose();
+                _statusBarTimer.Stop();
+                _statusBarTimer.Dispose();
             }
 
             //Save user settings
@@ -323,16 +351,24 @@ namespace DingoConfigurator
             Settings.Default.ComPort = SelectedComPort;
             Settings.Default.SettingsPath = Path.GetDirectoryName(_settingsPath);
             Settings.Default.Save();
+
+            NLog.LogManager.Shutdown(); // Flush and close down internal threads and timers
         }
 
         private void CanDataReceived(object sender, CanDataEventArgs e)
-        {
-            
+        {   
             foreach (var cd in _canDevices)
             {
                 if (cd.InIdRange(e.canData.Id))
                 {
-                    cd.Read(e.canData.Id, e.canData.Payload);
+                    if (_dequeuedMsg.Data.Id == 0)
+                    {
+                        cd.Read(e.canData.Id, e.canData.Payload, ref _emptyMsg);
+                    }
+                    else
+                    {
+                        cd.Read(e.canData.Id, e.canData.Payload, ref _dequeuedMsg);
+                    }
                 }
             }
         }
@@ -351,18 +387,22 @@ namespace DingoConfigurator
 
         private void GetDeviceSettings(bool getAll)
         {
+
             foreach (var cd in _canDevices)
             {
                 if ((!getAll && SelectedCanDevice.Equals(cd)) ||
                     getAll)
                 {
-                    var msgs = cd.GetUploadMessages();
-                    if (msgs == null) return;
-
-                    foreach (var msg in msgs)
+                    if (cd.IsConnected)
                     {
-                        _can.Write(msg);
-                        Thread.Sleep(10);
+                        var msgs = cd.GetUploadMessages();
+                        if (msgs == null) return;
+
+                        foreach (var msg in msgs)
+                        {
+                            _queue.Enqueue(msg);
+                        }
+                        msgs.Clear();
                     }
                 }
             }
@@ -375,13 +415,16 @@ namespace DingoConfigurator
                 if ((!sendAll && SelectedCanDevice.Equals(cd)) ||
                         sendAll)
                 {
-                    var msgs = cd.GetDownloadMessages();
-                    if (msgs == null) return;
-
-                    foreach (var msg in msgs)
+                    if (cd.IsConnected)
                     {
-                        _can.Write(msg);
-                        Thread.Sleep(20);
+                        var msgs = cd.GetDownloadMessages();
+                        if (msgs == null) return;
+
+                        foreach (var msg in msgs)
+                        {
+                            _queue.Enqueue(msg);
+                        }
+                        msgs.Clear();
                     }
                 }
             }
@@ -394,12 +437,62 @@ namespace DingoConfigurator
                 if ((!burnAll && SelectedCanDevice.Equals(cd)) ||
                         burnAll)
                 {
-                    var msg = cd.GetBurnMessage();
-                    if (msg == null) return;
+                    if (cd.IsConnected)
+                    {
+                        var msg = cd.GetBurnMessage();
+                        if (msg == null) return;
 
-                    _can.Write(msg);
+                        _queue.Enqueue(msg);
+                    }
                 }
             }
+        }
+
+        private void ProcessQueue(object sender, ElapsedEventArgs e)
+        {
+            //No message dequeued
+            if (_dequeuedMsg.Data.Id == 0)
+            {
+                //Check for messages in queue
+                if (!_queue.TryDequeue(out _dequeuedMsg))
+                {
+                    //No messages to send
+                    _dequeuedMsg = _emptyMsg;
+                    return; 
+                }
+            }
+
+            if (!_dequeuedMsg.Sent)
+            {
+                _can.Write(_dequeuedMsg.Data);
+                _dequeuedMsg.TimeSent = DateTime.Now;
+                _dequeuedMsg.Sent = true;
+            }
+
+            TimeSpan timeSpan = DateTime.Now - _dequeuedMsg.TimeSent;
+
+            if (_dequeuedMsg.Sent && 
+                ((!_dequeuedMsg.Received && (timeSpan.TotalMilliseconds > 500)) ||
+                _dequeuedMsg.Received))
+            {
+                if (!_dequeuedMsg.Received && _dequeuedMsg.Data.Id != 0)
+                {
+                    Logger.Info("No response {0} {1} {2} {3} {4} {5} {6} {7}", _dequeuedMsg.Data.Payload[0], _dequeuedMsg.Data.Payload[1], 
+                        _dequeuedMsg.Data.Payload[2], _dequeuedMsg.Data.Payload[3],_dequeuedMsg.Data.Payload[4],
+                        _dequeuedMsg.Data.Payload[5], _dequeuedMsg.Data.Payload[6], _dequeuedMsg.Data.Payload[7]);
+                }
+
+                //Message response timed out, move on
+                //Or message received, next message
+                //Check for messages in queue
+                if (!_queue.TryDequeue(out _dequeuedMsg))
+                {
+                    //No messages to send
+                    _dequeuedMsg = _emptyMsg;
+                    return;
+                }
+            }
+
         }
 
         #region TreeView
@@ -665,6 +758,8 @@ namespace DingoConfigurator
                 if (cd.IsConnected) connectedCount++;
             }
 
+            QueueCount = _queue.Count;
+
             DeviceCountText = $"Detected Devices: {connectedCount}";
         }
 
@@ -698,6 +793,17 @@ namespace DingoConfigurator
             {
                 _deviceCountText = value;
                 OnPropertyChanged(nameof(DeviceCountText));
+            }
+        }
+
+        private int _queueCount;
+        public int QueueCount
+        {
+            get => _queueCount;
+            set
+            {
+                _queueCount = value;
+                OnPropertyChanged(nameof(QueueCount));
             }
         }
         #endregion

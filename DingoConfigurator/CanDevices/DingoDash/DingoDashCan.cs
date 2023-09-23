@@ -82,7 +82,7 @@ namespace CanDevices.DingoDash
          
         }
 
-        public bool Read(int id, byte[] data)
+        public bool Read(int id, byte[] data, ref CanDeviceResponse dequeuedMsg)
         {
             if ((id < BaseId) || (id > BaseId + 10)) return false;
 
@@ -95,17 +95,17 @@ namespace CanDevices.DingoDash
             return true;
         }
 
-        public List<CanInterfaceData> GetUploadMessages()
+        public List<CanDeviceResponse> GetUploadMessages()
         {
             return null;
         }
 
-        public List<CanInterfaceData> GetDownloadMessages()
+        public List<CanDeviceResponse> GetDownloadMessages()
         {
             return null;
         }
 
-        public CanInterfaceData GetBurnMessage()
+        public CanDeviceResponse GetBurnMessage()
         {
             return null;
         }

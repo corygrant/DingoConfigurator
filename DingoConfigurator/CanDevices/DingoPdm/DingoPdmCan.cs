@@ -245,7 +245,6 @@ namespace CanDevices.DingoPdm
             }
         }
 
-
         public DingoPdmCan(string name, int id)
         {
             Name = name;
@@ -429,7 +428,7 @@ namespace CanDevices.DingoPdm
             return (id >= BaseId) && (id <= BaseId + 30) ;
         }
 
-        public bool Read(int id, byte[] data)
+        public bool Read(int id, byte[] data, ref CanDeviceResponse dequeuedMsg)
         {
             if ((id < BaseId) || (id > BaseId + 30)) 
                 return false;
@@ -453,7 +452,10 @@ namespace CanDevices.DingoPdm
             if (id == BaseId + 16) ReadMessage16(data);
             if (id == BaseId + 17) ReadMessage17(data);
 
-            if (id == BaseId + 30) ReadSettingsResponse(data);
+            if (id == BaseId + 30)
+            {
+                ReadSettingsResponse(data, dequeuedMsg);
+            }
 
             _lastRxTime = DateTime.Now;
 
@@ -628,32 +630,38 @@ namespace CanDevices.DingoPdm
             Wipers[0].FastState = Convert.ToBoolean((data[0] >> 1) & 0x01);
         }
 
-        private void ReadSettingsResponse(byte[] data)
+        private void ReadSettingsResponse(byte[] data, CanDeviceResponse dequeuedMsg)
         {
             //Response is lowercase version of set/get prefix
             MessagePrefix prefix = (MessagePrefix)Char.ToUpper(Convert.ToChar(data[0]));
+            MessagePrefix dequeuedPrefix = (MessagePrefix)Char.ToUpper(Convert.ToChar(dequeuedMsg.Data.Payload[0]));
 
             int index = 0;
+            int dequeuedIndex = 0;
 
             switch (prefix)
             {
                 case MessagePrefix.Version:
                     Version = $"V{data[1]}.{data[2]}.{(data[3] << 8) + (data[4])}";
+                    dequeuedMsg.Received = prefix.Equals(dequeuedPrefix);
                     break;
 
                 case MessagePrefix.CAN:
                     BaseId = (data[2] << 8) + data[3];
-
+                    dequeuedMsg.Received = prefix.Equals(dequeuedPrefix);
                     break;
 
                 case MessagePrefix.Input:
                     index = (data[1] & 0xF0) >> 4;
+                    dequeuedIndex = (dequeuedMsg.Data.Payload[1] & 0xF0) >> 4;
                     if (index >= 0 && index < 2)
                     {
                         DigitalInputs[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
                         DigitalInputs[index].InvertInput = Convert.ToBoolean((data[1] & 0x08) >> 3);
                         DigitalInputs[index].Mode = (InputMode)((data[1] & 0x06) >> 1);
                         DigitalInputs[index].DebounceTime = data[2] * 10;
+
+                        dequeuedMsg.Received = prefix.Equals(dequeuedPrefix) && (index == dequeuedIndex);
                     }
                     break;
 
@@ -669,6 +677,8 @@ namespace CanDevices.DingoPdm
                         Outputs[index].ResetTime = data[5] * 10;
                         Outputs[index].InrushCurrentLimit = data[6] / 10;
                         Outputs[index].InrushTime = data[7] * 10;
+
+                        dequeuedMsg.Received = prefix.Equals(dequeuedPrefix) && (index == dequeuedIndex);
                     }
                     break;
 
@@ -686,6 +696,8 @@ namespace CanDevices.DingoPdm
                         VirtualInputs[index].Mode = (InputMode)((data[6] & 0xC0) >> 6);
                         VirtualInputs[index].Cond0 = (Conditional)(data[6] & 0x03);
                         VirtualInputs[index].Cond1 = (Conditional)((data[6] & 0x0C) >> 2);
+
+                        dequeuedMsg.Received = prefix.Equals(dequeuedPrefix) && (index == dequeuedIndex);
                     }
                     break;
 
@@ -699,6 +711,8 @@ namespace CanDevices.DingoPdm
                         Flashers[index].Output = (VarMap)(data[3] + Convert.ToInt16(VarMap.Output1));
                         Flashers[index].OnTime = data[4] * 10;
                         Flashers[index].OffTime = data[5] * 10;
+
+                        dequeuedMsg.Received = prefix.Equals(dequeuedPrefix) && (index == dequeuedIndex);
                     }
                     break;
 
@@ -713,6 +727,8 @@ namespace CanDevices.DingoPdm
                     Wipers[0].OnInput = (VarMap)data[5];
                     Wipers[0].ParkInput = (VarMap)data[6];
                     Wipers[0].WashInput = (VarMap)data[7];
+
+                    dequeuedMsg.Received = prefix.Equals(dequeuedPrefix);
                     break;
 
                 case MessagePrefix.WiperSpeed:
@@ -726,6 +742,8 @@ namespace CanDevices.DingoPdm
                     Wipers[0].SpeedMap[5] = (data[5] & 0xF0) >> 4;
                     Wipers[0].SpeedMap[6] = (data[6] & 0x0F);
                     Wipers[0].SpeedMap[7] = (data[6] & 0xF0) >> 4;
+
+                    dequeuedMsg.Received = prefix.Equals(dequeuedPrefix);
                     break;
 
                 case MessagePrefix.WiperDelay:
@@ -735,6 +753,8 @@ namespace CanDevices.DingoPdm
                     Wipers[0].IntermitTime[3] = data[4] * 10;
                     Wipers[0].IntermitTime[4] = data[5] * 10;
                     Wipers[0].IntermitTime[5] = data[6] * 10;
+
+                    dequeuedMsg.Received = prefix.Equals(dequeuedPrefix);
                     break;
 
                 case MessagePrefix.StarterDisable:
@@ -748,6 +768,8 @@ namespace CanDevices.DingoPdm
                     StarterDisable[0].Output6 = Convert.ToBoolean((data[3] & 0x20) >> 5);
                     StarterDisable[0].Output7 = Convert.ToBoolean((data[3] & 0x40) >> 6);
                     StarterDisable[0].Output8 = Convert.ToBoolean((data[3] & 0x80) >> 7);
+
+                    dequeuedMsg.Received = prefix.Equals(dequeuedPrefix);
                     break;
 
                 case MessagePrefix.CANInput:
@@ -761,6 +783,8 @@ namespace CanDevices.DingoPdm
                         CanInputs[index].HighByte = (data[5] & 0xF0) >> 4;
                         CanInputs[index].LowByte = (data[5] & 0x0F);
                         CanInputs[index].OnVal = data[6];
+
+                        dequeuedMsg.Received = prefix.Equals(dequeuedPrefix) && (index == dequeuedIndex);
                     }
                     break;
 
@@ -769,177 +793,248 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        public List<CanInterfaceData> GetUploadMessages()
+        public List<CanDeviceResponse> GetUploadMessages()
         {
-            List<CanInterfaceData> msgs = new List<CanInterfaceData>();
+            int id = BaseId - 1;
+
+            List<CanDeviceResponse> msgs = new List<CanDeviceResponse>();
 
             //Request settings messages
 
             //Version
-            msgs.Add(new CanInterfaceData
+            msgs.Add(new CanDeviceResponse
             {
-                Id = 100,
-                Len = 1,
-                Payload = new byte[] { Convert.ToByte('V'), 0, 0, 0, 0, 0, 0, 0 }
+                Sent = false,
+                Received = false,
+                Data = new CanInterfaceData
+                {
+                    Id = id,
+                    Len = 1,
+                    Payload = new byte[] { Convert.ToByte('V'), 0, 0, 0, 0, 0, 0, 0 }
+                }
             });
 
             //CAN settings
-            msgs.Add(new CanInterfaceData
+            msgs.Add(new CanDeviceResponse
             {
-                Id = 100,
-                Len = 1,
-                Payload = new byte[] { Convert.ToByte('C'), 0, 0, 0, 0, 0, 0, 0 }
+                Sent = false,
+                Received = false,
+                Data = new CanInterfaceData
+                {
+                    Id = id,
+                    Len = 1,
+                    Payload = new byte[] { Convert.ToByte('C'), 0, 0, 0, 0, 0, 0, 0 }
+                }
             });
 
             //Inputs
             for (int i = 0; i < 2; i++)
             {
-                msgs.Add(new CanInterfaceData
+                msgs.Add(new CanDeviceResponse
                 {
-                    Id = 100,
-                    Len = 2,
-                    Payload = new byte[] { Convert.ToByte('I'),
+                    Sent = false,
+                    Received = false,
+                    Data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = 2,
+                        Payload = new byte[] { Convert.ToByte('I'),
                         Convert.ToByte((i & 0x0F) << 4),
                         0, 0, 0, 0, 0, 0 }
+                    }
                 });
             }
 
             //Outputs
             for (int i = 0; i < 8; i++)
             {
-                msgs.Add(new CanInterfaceData
+                msgs.Add(new CanDeviceResponse
                 {
-                    Id = 100,
-                    Len = 2,
-                    Payload = new byte[] { Convert.ToByte('O'),
+                    Sent = false,
+                    Received = false,
+                    Data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = 2,
+                        Payload = new byte[] { Convert.ToByte('O'),
                         Convert.ToByte((i & 0x0F) << 4),
                         0, 0, 0, 0, 0, 0 }
+                    }
                 });
             }
 
             //Virtual inputs
             for (int i = 0; i < 16; i++)
             {
-                msgs.Add(new CanInterfaceData
+                msgs.Add(new CanDeviceResponse
                 {
-                    Id = 100,
-                    Len = 2,
-                    Payload = new byte[] { Convert.ToByte('U'),
+                    Sent = false,
+                    Received = false,
+                    Data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = 2,
+                        Payload = new byte[] { Convert.ToByte('U'),
                         Convert.ToByte(i),
                         0, 0, 0, 0, 0, 0 }
+                    }
                 });
             }
 
             //Flashers
             for (int i = 0; i < 4; i++)
             {
-                msgs.Add(new CanInterfaceData
+                msgs.Add(new CanDeviceResponse
                 {
-                    Id = 100,
-                    Len = 2,
-                    Payload = new byte[] { Convert.ToByte('H'),
+                    Sent = false,
+                    Received = false,
+                    Data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = 2,
+                        Payload = new byte[] { Convert.ToByte('H'),
                         Convert.ToByte((i & 0x0F) << 4),
                         0, 0, 0, 0, 0, 0 }
+                    }
                 });
             }
 
             //CAN inputs
             for (int i = 0; i < 32; i++)
             {
-                msgs.Add(new CanInterfaceData
+                msgs.Add(new CanDeviceResponse
                 {
-                    Id = 100,
-                    Len = 2,
-                    Payload = new byte[] { Convert.ToByte('N'),
+                    Sent = false,
+                    Received = false,
+                    Data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = 2,
+                        Payload = new byte[] { Convert.ToByte('N'),
                         Convert.ToByte(i),
                         0, 0, 0, 0, 0, 0 }
+                    }
                 });
             }
 
             //Wiper
-            msgs.Add(new CanInterfaceData
+            msgs.Add(new CanDeviceResponse
             {
-                Id = 100,
-                Len = 1,
-                Payload = new byte[] { Convert.ToByte('W'), 0, 0, 0, 0, 0, 0, 0 }
+                Sent = false,
+                Received = false,
+                Data = new CanInterfaceData
+                {
+                    Id = id,
+                    Len = 1,
+                    Payload = new byte[] { Convert.ToByte('W'), 0, 0, 0, 0, 0, 0, 0 }
+                }
             });
 
             //Wiper speeds
-            msgs.Add(new CanInterfaceData
+            msgs.Add(new CanDeviceResponse
             {
-                Id = 100,
-                Len = 1,
-                Payload = new byte[] { Convert.ToByte('P'), 0, 0, 0, 0, 0, 0, 0 }
+                Sent = false,
+                Received = false,
+                Data = new CanInterfaceData
+                {
+                    Id = id,
+                    Len = 1,
+                    Payload = new byte[] { Convert.ToByte('P'), 0, 0, 0, 0, 0, 0, 0 }
+                }
             });
 
             //Wiper delays
-            msgs.Add(new CanInterfaceData
+            msgs.Add(new CanDeviceResponse
             {
-                Id = 100,
-                Len = 1,
-                Payload = new byte[] { Convert.ToByte('Y'), 0, 0, 0, 0, 0, 0, 0 }
+                Sent = false,
+                Received = false,
+                Data = new CanInterfaceData
+                {
+                    Id = id,
+                    Len = 1,
+                    Payload = new byte[] { Convert.ToByte('Y'), 0, 0, 0, 0, 0, 0, 0 }
+                }
             });
 
             //Starter disable
-            msgs.Add(new CanInterfaceData
+            msgs.Add(new CanDeviceResponse
             {
-                Id = 100,
-                Len = 1,
-                Payload = new byte[] { Convert.ToByte('D'), 0, 0, 0, 0, 0, 0, 0 }
+                Sent = false,
+                Received = false,
+                Data = new CanInterfaceData
+                {
+                    Id = id,
+                    Len = 1,
+                    Payload = new byte[] { Convert.ToByte('D'), 0, 0, 0, 0, 0, 0, 0 }
+                }
             });
 
             return msgs;
         }
 
-        public List<CanInterfaceData> GetDownloadMessages()
+        public List<CanDeviceResponse> GetDownloadMessages()
         {
-            int Id = 1900;
+            int id = BaseId - 1;
 
-            List<CanInterfaceData> msgs = new List<CanInterfaceData>();
+            List<CanDeviceResponse> msgs = new List<CanDeviceResponse>();
 
             //Send settings messages
 
             //CAN settings
-            msgs.Add(new CanInterfaceData
+            msgs.Add(new CanDeviceResponse
             {
-                Id = Id,
-                Len = 5,
-                Payload = new byte[] { 
+                Sent = false,
+                Received = false,
+                Data = new CanInterfaceData
+                {
+                    Id = id,
+                    Len = 5,
+                    Payload = new byte[] {
                     Convert.ToByte('C'), //Byte 0
-                    Convert.ToByte((Convert.ToByte(CanSpeed.Bitrate_500K) << 4) + 
+                    Convert.ToByte((Convert.ToByte(CanSpeed.Bitrate_500K) << 4) +
                     (0x03)), //Byte 1
                     Convert.ToByte((BaseId & 0xFF00) >> 8), //Byte 2
                     Convert.ToByte(BaseId & 0x00FF), //Byte 3
                     Convert.ToByte(5), //Byte 4
                     0, 0, 0 }
+                }
             });
 
             //Inputs
             foreach(var input in DigitalInputs)
             {
-                msgs.Add(new CanInterfaceData
+                msgs.Add(new CanDeviceResponse
                 {
-                    Id = Id,
-                    Len = 3,
-                    Payload = new byte[] { 
+                    Sent = false,
+                    Received = false,
+                    Data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = 3,
+                        Payload = new byte[] {
                         Convert.ToByte('I'), //Byte 0
-                        Convert.ToByte((((input.Number - 1) & 0x0F) << 4) + 
-                        ((Convert.ToByte(input.InvertInput) & 0x01) << 3) + 
-                        ((Convert.ToByte(input.Mode) & 0x03) << 1) + 
+                        Convert.ToByte((((input.Number - 1) & 0x0F) << 4) +
+                        ((Convert.ToByte(input.InvertInput) & 0x01) << 3) +
+                        ((Convert.ToByte(input.Mode) & 0x03) << 1) +
                         (Convert.ToByte(input.Enabled) & 0x01)), //Byte 1
                         (Convert.ToByte(input.DebounceTime / 10)), //Byte 2
                         0, 0, 0, 0, 0 }
+                    }
                 });
             }
 
             //Outputs
             foreach(var output in Outputs)
             {
-                msgs.Add(new CanInterfaceData
+                msgs.Add(new CanDeviceResponse
                 {
-                    Id = Id,
-                    Len = 8,
-                    Payload = new byte[] { 
+                    Sent = false,
+                    Received = false,
+                    Data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = 8,
+                        Payload = new byte[] {
                         Convert.ToByte('O'), //Byte 0
                         Convert.ToByte((((output.Number - 1) & 0x0F) << 4) +
                         (Convert.ToByte(output.Enabled) & 0x01)), //Byte 1
@@ -950,19 +1045,24 @@ namespace CanDevices.DingoPdm
                         Convert.ToByte(output.ResetTime / 10), //Byte 5
                         Convert.ToByte(output.InrushCurrentLimit * 10), //Byte 6 
                         Convert.ToByte(output.InrushTime / 10) } //Byte 7
+                    }
                 });
             }
 
             //Virtual inputs
             foreach(var virtInput in VirtualInputs)
             {
-                msgs.Add(new CanInterfaceData
+                msgs.Add(new CanDeviceResponse
                 {
-                    Id = Id,
-                    Len = 7,
-                    Payload = new byte[] { 
+                    Sent = false,
+                    Received = false,
+                    Data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = 7,
+                        Payload = new byte[] {
                         Convert.ToByte('U'), //Byte 0
-                        Convert.ToByte((Convert.ToByte(virtInput.Not2) << 3) + 
+                        Convert.ToByte((Convert.ToByte(virtInput.Not2) << 3) +
                         (Convert.ToByte(virtInput.Not1) << 2) +
                         (Convert.ToByte(virtInput.Not0) << 1) +
                         Convert.ToByte(virtInput.Enabled)), //Byte 1
@@ -971,9 +1071,10 @@ namespace CanDevices.DingoPdm
                         Convert.ToByte(virtInput.Var1), //Byte 4
                         Convert.ToByte(virtInput.Var2), //Byte 5
                         Convert.ToByte(((Convert.ToByte(virtInput.Mode) & 0x03) << 0x06) +
-                        ((Convert.ToByte(virtInput.Cond1) & 0x03) << 2) + 
+                        ((Convert.ToByte(virtInput.Cond1) & 0x03) << 2) +
                         (Convert.ToByte(virtInput.Cond0) & 0x03)), //Byte 6
                         0 }
+                    }
                 });
             }
 
@@ -990,11 +1091,15 @@ namespace CanDevices.DingoPdm
                     (flash.Output == VarMap.Output7) ||
                     (flash.Output == VarMap.Output8))
                     flashOut = flash.Output - VarMap.Output1;
-                msgs.Add(new CanInterfaceData
+                msgs.Add(new CanDeviceResponse
                 {
-                    Id = Id,
-                    Len = 6,
-                    Payload = new byte[] { 
+                    Sent = false,
+                    Received = false,
+                    Data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = 6,
+                        Payload = new byte[] {
                         Convert.ToByte('H'), //Byte 0
                         Convert.ToByte((((flash.Number - 1) & 0x0F) << 4) +
                         (Convert.ToByte(flash.Single) << 1) +
@@ -1004,37 +1109,47 @@ namespace CanDevices.DingoPdm
                         Convert.ToByte(flash.OnTime / 10), //Byte 4
                         Convert.ToByte(flash.OffTime / 10), //Byte 5
                         0, 0 }
+                    }
                 });
             }
 
             //CAN inputs
             foreach(var canInput in CanInputs)
             {
-                msgs.Add(new CanInterfaceData
+                msgs.Add(new CanDeviceResponse
                 {
-                    Id = Id,
-                    Len = 7,
-                    Payload = new byte[] { 
+                    Sent = false,
+                    Received = false,
+                    Data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = 7,
+                        Payload = new byte[] {
                         Convert.ToByte('N'), //Byte 0
-                        Convert.ToByte(((Convert.ToByte(canInput.Operator) & 0x0F) << 4) + 
-                        ((Convert.ToByte(canInput.Mode) & 0x03) << 1) + 
+                        Convert.ToByte(((Convert.ToByte(canInput.Operator) & 0x0F) << 4) +
+                        ((Convert.ToByte(canInput.Mode) & 0x03) << 1) +
                         (Convert.ToByte(canInput.Enabled) & 0x01)), //Byte 1
                         Convert.ToByte(canInput.Number - 1), //Byte 2
                         Convert.ToByte((canInput.Id & 0xFF00) >> 8), //Byte 3
                         Convert.ToByte(canInput.Id & 0x00FF), //Byte 4
-                        Convert.ToByte(((canInput.HighByte & 0x0F) << 4) + 
+                        Convert.ToByte(((canInput.HighByte & 0x0F) << 4) +
                         (canInput.LowByte & 0x0F)), //Byte 5
                         Convert.ToByte(canInput.OnVal), //Byte 6 
                         0 }
+                    }
                 });
             }
 
             //Wiper
-            msgs.Add(new CanInterfaceData
+            msgs.Add(new CanDeviceResponse
             {
-                Id = Id,
-                Len = 8,
-                Payload = new byte[] { 
+                Sent = false,
+                Received = false,
+                Data = new CanInterfaceData
+                {
+                    Id = id,
+                    Len = 8,
+                    Payload = new byte[] {
                     Convert.ToByte('W'), //Byte 0 
                     Convert.ToByte(((Convert.ToByte(Wipers[0].WashWipeCycles) & 0x0F) << 4) +
                     ((Convert.ToByte(Wipers[0].ParkStopLevel) & 0x01) << 3) +
@@ -1046,14 +1161,19 @@ namespace CanDevices.DingoPdm
                     Convert.ToByte(Wipers[0].OnInput), //Byte 5
                     Convert.ToByte(Wipers[0].ParkInput), //Byte 6
                     Convert.ToByte(Wipers[0].WashInput) } //Byte 7
+                }
             });
 
             //Wiper speeds
-            msgs.Add(new CanInterfaceData
+            msgs.Add(new CanDeviceResponse
             {
-                Id = Id,
-                Len = 7,
-                Payload = new byte[] { 
+                Sent = false,
+                Received = false,
+                Data = new CanInterfaceData
+                {
+                    Id = id,
+                    Len = 7,
+                    Payload = new byte[] {
                     Convert.ToByte('P'), //Byte 0 
                     Convert.ToByte(Wipers[0].SwipeInput), //Byte 1
                     Convert.ToByte(Wipers[0].SpeedInput), //Byte 2
@@ -1066,14 +1186,19 @@ namespace CanDevices.DingoPdm
                     Convert.ToByte(((Convert.ToByte(Wipers[0].SpeedMap[7]) & 0x0F) << 4) +
                     (Convert.ToByte(Wipers[0].SpeedMap[6]) & 0x0F)), //Byte 6
                     0 }
+                }
             });
 
             //Wiper delays
-            msgs.Add(new CanInterfaceData
+            msgs.Add(new CanDeviceResponse
             {
-                Id = Id,
-                Len = 7,
-                Payload = new byte[] { 
+                Sent = false,
+                Received = false,
+                Data = new CanInterfaceData
+                {
+                    Id = id,
+                    Len = 7,
+                    Payload = new byte[] {
                     Convert.ToByte('Y'), //Byte 0 
                     Convert.ToByte(Wipers[0].IntermitTime[0] / 10), //Byte 1
                     Convert.ToByte(Wipers[0].IntermitTime[1] / 10), //Byte 2
@@ -1082,14 +1207,19 @@ namespace CanDevices.DingoPdm
                     Convert.ToByte(Wipers[0].IntermitTime[4] / 10), //Byte 5
                     Convert.ToByte(Wipers[0].IntermitTime[5] / 10), //Byte 6
                     0 }
+                }
             });
 
             //Starter disable
-            msgs.Add(new CanInterfaceData
+            msgs.Add(new CanDeviceResponse
             {
-                Id = Id,
-                Len = 4,
-                Payload = new byte[] { 
+                Sent = false,
+                Received = false,
+                Data = new CanInterfaceData
+                {
+                    Id = id,
+                    Len = 4,
+                    Payload = new byte[] {
                     Convert.ToByte('D'), //Byte 0 
                     Convert.ToByte(Convert.ToByte(StarterDisable[0].Enabled) & 0x01), //Byte 1
                     Convert.ToByte(StarterDisable[0].Input), //Byte 2
@@ -1102,18 +1232,24 @@ namespace CanDevices.DingoPdm
                     ((Convert.ToByte(StarterDisable[0].Output2) & 0x01) << 1) +
                     (Convert.ToByte(StarterDisable[0].Output1) & 0x01)), //Byte 3
                     0, 0, 0, 0 }
+                }
             });
 
             return msgs;
         }
 
-        public CanInterfaceData GetBurnMessage()
+        public CanDeviceResponse GetBurnMessage()
         {
-            return new CanInterfaceData
+            return new CanDeviceResponse
             {
-                Id = 100,
-                Len = 4,
-                Payload = new byte[] { Convert.ToByte('B'), 1, 3, 8, 0, 0, 0, 0 }
+                Sent = false,
+                Received = false,
+                Data = new CanInterfaceData
+                {
+                    Id = BaseId - 1,
+                    Len = 4,
+                    Payload = new byte[] { Convert.ToByte('B'), 1, 3, 8, 0, 0, 0, 0 }
+                }
             };
         }
     }

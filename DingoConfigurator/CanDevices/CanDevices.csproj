@@ -85,6 +85,7 @@
     <Compile Include="DingoPdm\DingoPdmFlasher.cs" />
     <Compile Include="DingoPdm\DingoPdmInput.cs" />
     <Compile Include="DingoPdm\DingoPdmOutput.cs" />
+    <Compile Include="CanDeviceResponse.cs" />
     <Compile Include="DingoPdm\DingoPdmStarterDisable.cs" />
     <Compile Include="DingoPdm\DingoPdmVirtualInput.cs" />
     <Compile Include="DingoPdm\DingoPdmWiper.cs" />
