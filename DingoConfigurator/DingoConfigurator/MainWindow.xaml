@@ -19,7 +19,7 @@
         <KeyBinding Command="{Binding Path=NewBtnCmd}" Key="N" Modifiers="Control"/>
         <KeyBinding Command="{Binding Path=OpenBtnCmd}" Key="O" Modifiers="Control"/>
         <KeyBinding Command="{Binding Path=SaveBtnCmd}" Key="S" Modifiers="Control"/>
-        <KeyBinding Command="{Binding Path=RefreshBtnCmd}" Key="R" Modifiers="Control"/>
+        <KeyBinding Command="{Binding Path=RefreshComPortsBtnCmd}" Key="R" Modifiers="Control"/>
         <KeyBinding Command="{Binding Path=ConnectBtnCmd}" Key="C" Modifiers="Control"/>
         <KeyBinding Command="{Binding Path=DisconnectBtnCmd}" Key="D" Modifiers="Control"/>
         <KeyBinding Command="{Binding Path=UploadBtnCmd}" Key="U" Modifiers="Control"/>

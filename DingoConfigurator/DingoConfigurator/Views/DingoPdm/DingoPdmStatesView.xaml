@@ -304,7 +304,6 @@
                 </DataGridTemplateColumn>
                 <DataGridComboBoxColumn Header="Mode" 
                                         ItemsSource="{Binding Source={StaticResource WiperModeEnumDataSource}, Mode=OneWay}" 
-                                        SelectedItemBinding="{Binding Mode, Mode=TwoWay}"
                                         SelectedItemBinding="{Binding Mode, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
                 <DataGridComboBoxColumn Header="Slow In" 
