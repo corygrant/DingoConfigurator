@@ -64,6 +64,8 @@ namespace DingoConfigurator
 
         public delegate void DataUpdatedHandler(object sender);
 
+        private CancellationTokenSource _cts;
+
         public MainViewModel()
         {
             RefreshComPorts(null);
@@ -106,7 +108,7 @@ namespace DingoConfigurator
             DownloadBtnCmd = new RelayCommand(Download, CanDownload);
             BurnBtnCmd = new RelayCommand(Burn, CanBurn);
 
-            _emptyMsg = new CanDeviceResponse
+            _dequeuedMsg = new CanDeviceResponse
             {
                 Data = new CanInterfaceData
                 {
@@ -116,7 +118,7 @@ namespace DingoConfigurator
                 }
             };
 
-            _dequeuedMsg = _emptyMsg;
+            _cts = new CancellationTokenSource();
         }
 
         private void NewConfigFile(object parameter)
@@ -166,10 +168,7 @@ namespace DingoConfigurator
             _statusBarTimer.AutoReset = true;
             _statusBarTimer.Enabled = true;
 
-            _processQueueTimer = new System.Timers.Timer(5);
-            _processQueueTimer.Elapsed += ProcessQueue;
-            _processQueueTimer.AutoReset = true;
-            _processQueueTimer.Enabled = true;
+            Task.Factory.StartNew(ProcessQueue, _cts.Token);
 
             _configFileOpened = true;
         }
@@ -337,6 +336,8 @@ namespace DingoConfigurator
 
         public void WindowClosing()
         {
+            _cts.Cancel();
+
             Disconnect(null);
 
             if (_statusBarTimer != null)
@@ -361,7 +362,7 @@ namespace DingoConfigurator
             {
                 if (cd.InIdRange(e.canData.Id))
                 {
-                    if (_dequeuedMsg.Data.Id == 0)
+                    if (_dequeuedMsg == null)
                     {
                         cd.Read(e.canData.Id, e.canData.Payload, ref _emptyMsg);
                     }
@@ -448,51 +449,52 @@ namespace DingoConfigurator
             }
         }
 
-        private void ProcessQueue(object sender, ElapsedEventArgs e)
+        private void ProcessQueue(object taskState)
         {
-            //No message dequeued
-            if (_dequeuedMsg.Data.Id == 0)
+            var token = (CancellationToken)taskState;
+
+            while (!token.IsCancellationRequested)
             {
-                //Check for messages in queue
-                if (!_queue.TryDequeue(out _dequeuedMsg))
+                //No message dequeued
+                if (_dequeuedMsg == null)
                 {
-                    //No messages to send
-                    _dequeuedMsg = _emptyMsg;
-                    return; 
+                    //Check for messages in queue
+                    _queue.TryDequeue(out _dequeuedMsg);
+
+                }
+                else
+                {
+                    if (!_dequeuedMsg.Sent && CanInterfaceConnected)
+                    {
+                        _can.Write(_dequeuedMsg.Data);
+                        _dequeuedMsg.TimeSent = DateTime.Now;
+                        _dequeuedMsg.Sent = true;
+                    }
+
+                    TimeSpan timeSpan = DateTime.Now - _dequeuedMsg.TimeSent;
+
+                    if (_dequeuedMsg.Sent &&
+                        ((!_dequeuedMsg.Received && (timeSpan.TotalMilliseconds > 50)) ||
+                        _dequeuedMsg.Received))
+                    {
+                        if (!_dequeuedMsg.Received && _dequeuedMsg.Data.Id != 0)
+                        {
+                            Logger.Info("No response {0} {1} {2} {3} {4} {5} {6} {7}", _dequeuedMsg.Data.Payload[0], _dequeuedMsg.Data.Payload[1],
+                                _dequeuedMsg.Data.Payload[2], _dequeuedMsg.Data.Payload[3], _dequeuedMsg.Data.Payload[4],
+                                _dequeuedMsg.Data.Payload[5], _dequeuedMsg.Data.Payload[6], _dequeuedMsg.Data.Payload[7]);
+                        }
+
+                        //Message response timed out, move on
+                        //Or message received, next message
+                        //Check for messages in queue
+                        if (!_queue.TryDequeue(out _dequeuedMsg))
+                        {
+                            //No messages to send
+                            _dequeuedMsg = null;
+                        }
+                    }
                 }
             }
-
-            if (!_dequeuedMsg.Sent)
-            {
-                _can.Write(_dequeuedMsg.Data);
-                _dequeuedMsg.TimeSent = DateTime.Now;
-                _dequeuedMsg.Sent = true;
-            }
-
-            TimeSpan timeSpan = DateTime.Now - _dequeuedMsg.TimeSent;
-
-            if (_dequeuedMsg.Sent && 
-                ((!_dequeuedMsg.Received && (timeSpan.TotalMilliseconds > 500)) ||
-                _dequeuedMsg.Received))
-            {
-                if (!_dequeuedMsg.Received && _dequeuedMsg.Data.Id != 0)
-                {
-                    Logger.Info("No response {0} {1} {2} {3} {4} {5} {6} {7}", _dequeuedMsg.Data.Payload[0], _dequeuedMsg.Data.Payload[1], 
-                        _dequeuedMsg.Data.Payload[2], _dequeuedMsg.Data.Payload[3],_dequeuedMsg.Data.Payload[4],
-                        _dequeuedMsg.Data.Payload[5], _dequeuedMsg.Data.Payload[6], _dequeuedMsg.Data.Payload[7]);
-                }
-
-                //Message response timed out, move on
-                //Or message received, next message
-                //Check for messages in queue
-                if (!_queue.TryDequeue(out _dequeuedMsg))
-                {
-                    //No messages to send
-                    _dequeuedMsg = _emptyMsg;
-                    return;
-                }
-            }
-
         }
 
         #region TreeView
