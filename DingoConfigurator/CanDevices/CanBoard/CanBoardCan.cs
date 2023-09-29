@@ -1,6 +1,7 @@
 ﻿using CanDevices.DingoPdm;
 using CanInterfaces;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -174,7 +175,7 @@ namespace CanDevices.CanBoard
          
         }
 
-        public bool Read(int id, byte[] data, ref CanDeviceResponse dequeuedMsg)
+        public bool Read(int id, byte[] data, ref ConcurrentQueue<CanDeviceResponse> queue)
         {
             if ((id < BaseId) || (id > BaseId + 2)) return false;
 

@@ -13,6 +13,7 @@ namespace CanDevices.DingoPdm
         public bool Sent { get; set; }
         public bool Received { get; set; }
         public DateTime TimeSent { get; set; }
+        public int DeviceBaseId { get; set; }
 
         public CanDeviceResponse()
         {

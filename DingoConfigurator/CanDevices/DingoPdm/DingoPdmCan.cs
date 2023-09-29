@@ -1,5 +1,6 @@
 ﻿using CanInterfaces;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -10,8 +11,6 @@ using System.Xml.Linq;
 
 namespace CanDevices.DingoPdm
 {
-
-
     public class DingoPdmCan : NotifyPropertyChangedBase, ICanDevice
     {
         private string _name;
@@ -428,7 +427,7 @@ namespace CanDevices.DingoPdm
             return (id >= BaseId) && (id <= BaseId + 30) ;
         }
 
-        public bool Read(int id, byte[] data, ref CanDeviceResponse dequeuedMsg)
+        public bool Read(int id, byte[] data, ref ConcurrentQueue<CanDeviceResponse> queue)
         {
             if ((id < BaseId) || (id > BaseId + 30)) 
                 return false;
@@ -454,7 +453,7 @@ namespace CanDevices.DingoPdm
 
             if (id == BaseId + 30)
             {
-                ReadSettingsResponse(data, dequeuedMsg);
+                ReadSettingsResponse(data, queue);
             }
 
             _lastRxTime = DateTime.Now;
@@ -630,43 +629,67 @@ namespace CanDevices.DingoPdm
             Wipers[0].FastState = Convert.ToBoolean((data[0] >> 1) & 0x01);
         }
 
-        private void ReadSettingsResponse(byte[] data, CanDeviceResponse dequeuedMsg)
+        private void ReadSettingsResponse(byte[] data, ConcurrentQueue<CanDeviceResponse> queue)
         {
             //Response is lowercase version of set/get prefix
             MessagePrefix prefix = (MessagePrefix)Char.ToUpper(Convert.ToChar(data[0]));
-            MessagePrefix dequeuedPrefix = (MessagePrefix)Char.ToUpper(Convert.ToChar(dequeuedMsg.Data.Payload[0]));
 
             int index = 0;
             int dequeuedIndex = 0;
+
+            CanDeviceResponse rsp;
 
             switch (prefix)
             {
                 case MessagePrefix.Version:
                     Version = $"V{data[1]}.{data[2]}.{(data[3] << 8) + (data[4])}";
-                    dequeuedMsg.Received = prefix.Equals(dequeuedPrefix);
+                    foreach(var msg in queue)
+                    {
+                        if((msg.DeviceBaseId == BaseId) &&
+                                        ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.Version))
+                        {
+                            msg.Received = true;
+                        }
+                    }
                     break;
 
                 case MessagePrefix.CAN:
                     BaseId = (data[2] << 8) + data[3];
-                    dequeuedMsg.Received = prefix.Equals(dequeuedPrefix);
+                    foreach (var msg in queue)
+                    {
+                        if ((msg.DeviceBaseId == BaseId) &&
+                                        ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.CAN))
+                        {
+                            msg.Received = true;
+                        }
+                    }
                     break;
 
                 case MessagePrefix.Input:
                     index = (data[1] & 0xF0) >> 4;
-                    dequeuedIndex = (dequeuedMsg.Data.Payload[1] & 0xF0) >> 4;
+                    
                     if (index >= 0 && index < 2)
                     {
                         DigitalInputs[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
                         DigitalInputs[index].InvertInput = Convert.ToBoolean((data[1] & 0x08) >> 3);
                         DigitalInputs[index].Mode = (InputMode)((data[1] & 0x06) >> 1);
                         DigitalInputs[index].DebounceTime = data[2] * 10;
+                    }
 
-                        dequeuedMsg.Received = prefix.Equals(dequeuedPrefix) && (index == dequeuedIndex);
+                    foreach (var msg in queue)
+                    {
+                        if((msg.DeviceBaseId == BaseId) &&
+                                        ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.Input) &&
+                                        ((msg.Data.Payload[1] & 0xF0) >> 4) == index)
+                        {
+                            msg.Received = true;
+                        }
                     }
                     break;
 
                 case MessagePrefix.Output:
                     index = (data[1] & 0xF0) >> 4;
+                    
                     if (index >= 0 && index < 8)
                     {
                         Outputs[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
@@ -677,13 +700,22 @@ namespace CanDevices.DingoPdm
                         Outputs[index].ResetTime = data[5] * 10;
                         Outputs[index].InrushCurrentLimit = data[6] / 10;
                         Outputs[index].InrushTime = data[7] * 10;
+                    }
 
-                        dequeuedMsg.Received = prefix.Equals(dequeuedPrefix) && (index == dequeuedIndex);
+                    foreach (var msg in queue)
+                    {
+                        if ((msg.DeviceBaseId == BaseId) &&
+                                        ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.Output) &&
+                                        ((msg.Data.Payload[1] & 0xF0) >> 4) == index)
+                        {
+                            msg.Received = true;
+                        }
                     }
                     break;
 
                 case MessagePrefix.VirtualInput:
                     index = data[2];
+                    
                     if (index >= 0 && index < 16)
                     {
                         VirtualInputs[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
@@ -696,13 +728,22 @@ namespace CanDevices.DingoPdm
                         VirtualInputs[index].Mode = (InputMode)((data[6] & 0xC0) >> 6);
                         VirtualInputs[index].Cond0 = (Conditional)(data[6] & 0x03);
                         VirtualInputs[index].Cond1 = (Conditional)((data[6] & 0x0C) >> 2);
+                    }
 
-                        dequeuedMsg.Received = prefix.Equals(dequeuedPrefix) && (index == dequeuedIndex);
+                    foreach (var msg in queue)
+                    {
+                        if ((msg.DeviceBaseId == BaseId) &&
+                                        ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.VirtualInput) &&
+                                        msg.Data.Payload[2] == index)
+                        {
+                            msg.Received = true;
+                        }
                     }
                     break;
 
                 case MessagePrefix.Flasher:
                     index = (data[1] & 0xF0) >> 4;
+                    
                     if (index >= 0 && index < 16)
                     {
                         Flashers[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
@@ -711,8 +752,16 @@ namespace CanDevices.DingoPdm
                         Flashers[index].Output = (VarMap)(data[3] + Convert.ToInt16(VarMap.Output1));
                         Flashers[index].OnTime = data[4] * 10;
                         Flashers[index].OffTime = data[5] * 10;
+                    }
 
-                        dequeuedMsg.Received = prefix.Equals(dequeuedPrefix) && (index == dequeuedIndex);
+                    foreach (var msg in queue)
+                    {
+                        if ((msg.DeviceBaseId == BaseId) &&
+                                        ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.Flasher) &&
+                                        ((msg.Data.Payload[1] & 0xF0) >> 4) == index)
+                        {
+                            msg.Received = true;
+                        }
                     }
                     break;
 
@@ -728,7 +777,14 @@ namespace CanDevices.DingoPdm
                     Wipers[0].ParkInput = (VarMap)data[6];
                     Wipers[0].WashInput = (VarMap)data[7];
 
-                    dequeuedMsg.Received = prefix.Equals(dequeuedPrefix);
+                    foreach (var msg in queue)
+                    {
+                        if ((msg.DeviceBaseId == BaseId) &&
+                                        ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.Wiper))
+                        {
+                            msg.Received = true;
+                        }
+                    }
                     break;
 
                 case MessagePrefix.WiperSpeed:
@@ -743,7 +799,14 @@ namespace CanDevices.DingoPdm
                     Wipers[0].SpeedMap[6] = (data[6] & 0x0F);
                     Wipers[0].SpeedMap[7] = (data[6] & 0xF0) >> 4;
 
-                    dequeuedMsg.Received = prefix.Equals(dequeuedPrefix);
+                    foreach (var msg in queue)
+                    {
+                        if ((msg.DeviceBaseId == BaseId) &&
+                                        ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.WiperSpeed))
+                        {
+                            msg.Received = true;
+                        }
+                    }
                     break;
 
                 case MessagePrefix.WiperDelay:
@@ -754,7 +817,14 @@ namespace CanDevices.DingoPdm
                     Wipers[0].IntermitTime[4] = data[5] * 10;
                     Wipers[0].IntermitTime[5] = data[6] * 10;
 
-                    dequeuedMsg.Received = prefix.Equals(dequeuedPrefix);
+                    foreach (var msg in queue)
+                    {
+                        if ((msg.DeviceBaseId == BaseId) &&
+                                        ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.WiperDelay))
+                        {
+                            msg.Received = true;
+                        }
+                    }
                     break;
 
                 case MessagePrefix.StarterDisable:
@@ -769,7 +839,14 @@ namespace CanDevices.DingoPdm
                     StarterDisable[0].Output7 = Convert.ToBoolean((data[3] & 0x40) >> 6);
                     StarterDisable[0].Output8 = Convert.ToBoolean((data[3] & 0x80) >> 7);
 
-                    dequeuedMsg.Received = prefix.Equals(dequeuedPrefix);
+                    foreach (var msg in queue)
+                    {
+                        if ((msg.DeviceBaseId == BaseId) &&
+                                        ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.StarterDisable))
+                        {
+                            msg.Received = true;
+                        }
+                    }
                     break;
 
                 case MessagePrefix.CANInput:
@@ -784,7 +861,15 @@ namespace CanDevices.DingoPdm
                         CanInputs[index].LowByte = (data[5] & 0x0F);
                         CanInputs[index].OnVal = data[6];
 
-                        dequeuedMsg.Received = prefix.Equals(dequeuedPrefix) && (index == dequeuedIndex);
+                        foreach (var msg in queue)
+                        {
+                            if ((msg.DeviceBaseId == BaseId) &&
+                                            ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.CANInput) &&
+                                            msg.Data.Payload[2] == index)
+                            {
+                                msg.Received = true;
+                            }
+                        }
                     }
                     break;
 

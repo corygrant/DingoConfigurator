@@ -1,6 +1,7 @@
 ﻿using CanDevices.DingoPdm;
 using CanInterfaces;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -57,7 +58,7 @@ namespace CanDevices
         
         }
 
-        public bool Read(int id, byte[] data, ref CanDeviceResponse dequeuedMsg)
+        public bool Read(int id, byte[] data, ref ConcurrentQueue<CanDeviceResponse> queue)
         {
             return true;
         }

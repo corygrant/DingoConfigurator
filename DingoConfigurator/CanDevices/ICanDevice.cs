@@ -16,7 +16,7 @@ namespace CanDevices
         bool IsConnected { get;}
         DateTime LastRxTime { get;}
         void UpdateIsConnected();
-        bool Read(int id, byte[] data, ref CanDeviceResponse dequeuedMsg);
+        bool Read(int id, byte[] data, ref ConcurrentQueue<CanDeviceResponse> queue);
         bool IsPriorityMsg(int id);
         bool InIdRange(int id);
         List<CanDeviceResponse> GetUploadMessages();

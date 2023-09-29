@@ -27,6 +27,7 @@ using System.Collections.Concurrent;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using System.Buffers.Text;
 using System.Reflection;
+using System.Windows.Interop;
 
 //Add another CanDevices list that holds the online value
 
@@ -38,6 +39,7 @@ namespace DingoConfigurator
 
         private DevicesConfig _config;
 
+        private int _countSinceLast;
 
         private bool _canInterfaceConnected;
         public bool CanInterfaceConnected
@@ -57,8 +59,6 @@ namespace DingoConfigurator
         private System.Timers.Timer _processQueueTimer;
 
         private ConcurrentQueue<CanDeviceResponse> _queue;
-        private CanDeviceResponse _dequeuedMsg;
-        private CanDeviceResponse _emptyMsg;
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -108,16 +108,6 @@ namespace DingoConfigurator
             DownloadBtnCmd = new RelayCommand(Download, CanDownload);
             BurnBtnCmd = new RelayCommand(Burn, CanBurn);
 
-            _dequeuedMsg = new CanDeviceResponse
-            {
-                Data = new CanInterfaceData
-                {
-                    Id = 0,
-                    Len = 0,
-                    Payload = new byte[8]
-                }
-            };
-
             _cts = new CancellationTokenSource();
         }
 
@@ -160,7 +150,7 @@ namespace DingoConfigurator
 
             AddCanDevices(_config);
 
-            _queue = new ConcurrentQueue<CanDevices.DingoPdm.CanDeviceResponse>();
+            _queue = new ConcurrentQueue<CanDeviceResponse>();
 
             // Create a timer to update status bar
             _statusBarTimer = new System.Timers.Timer(200);
@@ -362,14 +352,7 @@ namespace DingoConfigurator
             {
                 if (cd.InIdRange(e.canData.Id))
                 {
-                    if (_dequeuedMsg == null)
-                    {
-                        cd.Read(e.canData.Id, e.canData.Payload, ref _emptyMsg);
-                    }
-                    else
-                    {
-                        cd.Read(e.canData.Id, e.canData.Payload, ref _dequeuedMsg);
-                    }
+                    cd.Read(e.canData.Id, e.canData.Payload, ref _queue);
                 }
             }
         }
@@ -388,7 +371,7 @@ namespace DingoConfigurator
 
         private void GetDeviceSettings(bool getAll)
         {
-
+            _countSinceLast = 0;
             foreach (var cd in _canDevices)
             {
                 if ((!getAll && SelectedCanDevice.Equals(cd)) ||
@@ -401,6 +384,7 @@ namespace DingoConfigurator
 
                         foreach (var msg in msgs)
                         {
+                            msg.DeviceBaseId = cd.BaseId;
                             _queue.Enqueue(msg);
                         }
                         msgs.Clear();
@@ -411,6 +395,7 @@ namespace DingoConfigurator
 
         private void SendDeviceSettings(bool sendAll)
         {
+            _countSinceLast = 0;
             foreach (var cd in _canDevices)
             {
                 if ((!sendAll && SelectedCanDevice.Equals(cd)) ||
@@ -423,6 +408,7 @@ namespace DingoConfigurator
 
                         foreach (var msg in msgs)
                         {
+                            msg.DeviceBaseId = cd.BaseId;
                             _queue.Enqueue(msg);
                         }
                         msgs.Clear();
@@ -433,6 +419,7 @@ namespace DingoConfigurator
 
         private void BurnDeviceSettings(bool burnAll)
         {
+            _countSinceLast = 0;
             foreach (var cd in _canDevices)
             {
                 if ((!burnAll && SelectedCanDevice.Equals(cd)) ||
@@ -443,6 +430,7 @@ namespace DingoConfigurator
                         var msg = cd.GetBurnMessage();
                         if (msg == null) return;
 
+                        msg.DeviceBaseId = cd.BaseId;
                         _queue.Enqueue(msg);
                     }
                 }
@@ -452,48 +440,47 @@ namespace DingoConfigurator
         private void ProcessQueue(object taskState)
         {
             var token = (CancellationToken)taskState;
+            CanDeviceResponse msg;
 
             while (!token.IsCancellationRequested)
             {
-                //No message dequeued
-                if (_dequeuedMsg == null)
+                if(_queue.TryDequeue(out msg))
                 {
-                    //Check for messages in queue
-                    _queue.TryDequeue(out _dequeuedMsg);
-
-                }
-                else
-                {
-                    if (!_dequeuedMsg.Sent && CanInterfaceConnected)
+                    //Send message
+                    if (!msg.Sent && CanInterfaceConnected)
                     {
-                        _can.Write(_dequeuedMsg.Data);
-                        _dequeuedMsg.TimeSent = DateTime.Now;
-                        _dequeuedMsg.Sent = true;
+                        _can.Write(msg.Data);
+                        msg.TimeSent = DateTime.Now;
+                        msg.Sent = true;
+                        _queue.Enqueue(msg); //Sent, but not received
+                        Thread.Sleep(10); //Wait a bit to ensure the device can respond
                     }
 
-                    TimeSpan timeSpan = DateTime.Now - _dequeuedMsg.TimeSent;
-
-                    if (_dequeuedMsg.Sent &&
-                        ((!_dequeuedMsg.Received && (timeSpan.TotalMilliseconds > 50)) ||
-                        _dequeuedMsg.Received))
+                    //Response received
+                    if (msg.Sent && msg.Received)
                     {
-                        if (!_dequeuedMsg.Received && _dequeuedMsg.Data.Id != 0)
-                        {
-                            Logger.Info("No response {0} {1} {2} {3} {4} {5} {6} {7}", _dequeuedMsg.Data.Payload[0], _dequeuedMsg.Data.Payload[1],
-                                _dequeuedMsg.Data.Payload[2], _dequeuedMsg.Data.Payload[3], _dequeuedMsg.Data.Payload[4],
-                                _dequeuedMsg.Data.Payload[5], _dequeuedMsg.Data.Payload[6], _dequeuedMsg.Data.Payload[7]);
-                        }
+                        _countSinceLast++;
+                        //Received, don't add back to queue
+                        //Logger.Info("Received {0} {1} {2} {3} {4} {5} {6} {7} {8}", msg.Data.Payload[0], msg.Data.Payload[1],
+                        //Console.WriteLine("Received {0} {1} {2} {3} {4} {5} {6} {7} {8}", msg.Data.Payload[0], msg.Data.Payload[1],
+                        //    msg.Data.Payload[2], msg.Data.Payload[3], msg.Data.Payload[4],
+                        //    msg.Data.Payload[5], msg.Data.Payload[6], msg.Data.Payload[7], _countSinceLast);
+                        Console.WriteLine(_countSinceLast);
+                    }
 
-                        //Message response timed out, move on
-                        //Or message received, next message
-                        //Check for messages in queue
-                        if (!_queue.TryDequeue(out _dequeuedMsg))
-                        {
-                            //No messages to send
-                            _dequeuedMsg = null;
-                        }
+                    TimeSpan timeSpan = DateTime.Now - msg.TimeSent;
+
+                    if (msg.Sent && !msg.Received && (timeSpan.TotalSeconds > 2))
+                    {
+                        Logger.Info("No response {0} {1} {2} {3} {4} {5} {6} {7} {8}", msg.Data.Payload[0], msg.Data.Payload[1],
+                            msg.Data.Payload[2], msg.Data.Payload[3], msg.Data.Payload[4],
+                            msg.Data.Payload[5], msg.Data.Payload[6], msg.Data.Payload[7], _countSinceLast);
+                        msg.Sent = false;
+                        _queue.Enqueue(msg); //Sent, but not received. Resend
                     }
                 }
+
+                
             }
         }
 
@@ -594,6 +581,7 @@ namespace DingoConfigurator
             _can.DataReceived += CanDataReceived;
             if(!_can.Start()) return;
             CanInterfaceConnected = true;
+            Thread.Sleep(100); //Wait for devices to connect
             GetDeviceSettings(true);
         }
 
