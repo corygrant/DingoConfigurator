@@ -39,8 +39,6 @@ namespace DingoConfigurator
 
         private DevicesConfig _config;
 
-        private int _countSinceLast;
-
         private bool _canInterfaceConnected;
         public bool CanInterfaceConnected
         {
@@ -371,7 +369,6 @@ namespace DingoConfigurator
 
         private void GetDeviceSettings(bool getAll)
         {
-            _countSinceLast = 0;
             foreach (var cd in _canDevices)
             {
                 if ((!getAll && SelectedCanDevice.Equals(cd)) ||
@@ -395,7 +392,6 @@ namespace DingoConfigurator
 
         private void SendDeviceSettings(bool sendAll)
         {
-            _countSinceLast = 0;
             foreach (var cd in _canDevices)
             {
                 if ((!sendAll && SelectedCanDevice.Equals(cd)) ||
@@ -419,7 +415,6 @@ namespace DingoConfigurator
 
         private void BurnDeviceSettings(bool burnAll)
         {
-            _countSinceLast = 0;
             foreach (var cd in _canDevices)
             {
                 if ((!burnAll && SelectedCanDevice.Equals(cd)) ||
@@ -452,6 +447,7 @@ namespace DingoConfigurator
                         _can.Write(msg.Data);
                         msg.TimeSent = DateTime.Now;
                         msg.Sent = true;
+                        msg.Received = false;
                         _queue.Enqueue(msg); //Sent, but not received
                         Thread.Sleep(10); //Wait a bit to ensure the device can respond
                     }
@@ -459,28 +455,20 @@ namespace DingoConfigurator
                     //Response received
                     if (msg.Sent && msg.Received)
                     {
-                        _countSinceLast++;
                         //Received, don't add back to queue
-                        //Logger.Info("Received {0} {1} {2} {3} {4} {5} {6} {7} {8}", msg.Data.Payload[0], msg.Data.Payload[1],
-                        //Console.WriteLine("Received {0} {1} {2} {3} {4} {5} {6} {7} {8}", msg.Data.Payload[0], msg.Data.Payload[1],
-                        //    msg.Data.Payload[2], msg.Data.Payload[3], msg.Data.Payload[4],
-                        //    msg.Data.Payload[5], msg.Data.Payload[6], msg.Data.Payload[7], _countSinceLast);
-                        Console.WriteLine(_countSinceLast);
                     }
 
                     TimeSpan timeSpan = DateTime.Now - msg.TimeSent;
 
                     if (msg.Sent && !msg.Received && (timeSpan.TotalSeconds > 2))
                     {
-                        Logger.Info("No response {0} {1} {2} {3} {4} {5} {6} {7} {8}", msg.Data.Payload[0], msg.Data.Payload[1],
+                        Logger.Warn("No response {0} {1} {2} {3} {4} {5} {6} {7}", msg.Data.Payload[0], msg.Data.Payload[1],
                             msg.Data.Payload[2], msg.Data.Payload[3], msg.Data.Payload[4],
-                            msg.Data.Payload[5], msg.Data.Payload[6], msg.Data.Payload[7], _countSinceLast);
+                            msg.Data.Payload[5], msg.Data.Payload[6], msg.Data.Payload[7]);
                         msg.Sent = false;
                         _queue.Enqueue(msg); //Sent, but not received. Resend
                     }
                 }
-
-                
             }
         }
 

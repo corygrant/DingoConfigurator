@@ -649,6 +649,7 @@ namespace CanDevices.DingoPdm
                                         ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.Version))
                         {
                             msg.Received = true;
+                            break;
                         }
                     }
                     break;
@@ -661,6 +662,7 @@ namespace CanDevices.DingoPdm
                                         ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.CAN))
                         {
                             msg.Received = true;
+                            break;
                         }
                     }
                     break;
@@ -683,6 +685,7 @@ namespace CanDevices.DingoPdm
                                         ((msg.Data.Payload[1] & 0xF0) >> 4) == index)
                         {
                             msg.Received = true;
+                            break;
                         }
                     }
                     break;
@@ -709,6 +712,7 @@ namespace CanDevices.DingoPdm
                                         ((msg.Data.Payload[1] & 0xF0) >> 4) == index)
                         {
                             msg.Received = true;
+                            break;
                         }
                     }
                     break;
@@ -737,6 +741,7 @@ namespace CanDevices.DingoPdm
                                         msg.Data.Payload[2] == index)
                         {
                             msg.Received = true;
+                            break;
                         }
                     }
                     break;
@@ -761,6 +766,7 @@ namespace CanDevices.DingoPdm
                                         ((msg.Data.Payload[1] & 0xF0) >> 4) == index)
                         {
                             msg.Received = true;
+                            break;
                         }
                     }
                     break;
@@ -783,6 +789,7 @@ namespace CanDevices.DingoPdm
                                         ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.Wiper))
                         {
                             msg.Received = true;
+                            break;
                         }
                     }
                     break;
@@ -805,6 +812,7 @@ namespace CanDevices.DingoPdm
                                         ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.WiperSpeed))
                         {
                             msg.Received = true;
+                            break;
                         }
                     }
                     break;
@@ -823,6 +831,7 @@ namespace CanDevices.DingoPdm
                                         ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.WiperDelay))
                         {
                             msg.Received = true;
+                            break;
                         }
                     }
                     break;
@@ -845,6 +854,7 @@ namespace CanDevices.DingoPdm
                                         ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.StarterDisable))
                         {
                             msg.Received = true;
+                            break;
                         }
                     }
                     break;
@@ -868,6 +878,7 @@ namespace CanDevices.DingoPdm
                                             msg.Data.Payload[2] == index)
                             {
                                 msg.Received = true;
+                                break;
                             }
                         }
                     }
