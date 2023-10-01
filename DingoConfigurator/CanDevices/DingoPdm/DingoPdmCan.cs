@@ -515,18 +515,26 @@ namespace CanDevices.DingoPdm
 
         private void ReadMessage6(byte[] data)
         {
+            //This overwrites values that are entered
+            //Get the current limit from the settings response instead
+            /*
             Outputs[0].CurrentLimit = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
             Outputs[1].CurrentLimit = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
             Outputs[2].CurrentLimit = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
             Outputs[3].CurrentLimit = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
+            */
         }
 
         private void ReadMessage7(byte[] data)
         {
+            //This overwrites values that are entered
+            //Get the current limit from the settings response instead
+            /*
             Outputs[4].CurrentLimit = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
             Outputs[5].CurrentLimit = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
             Outputs[6].CurrentLimit = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
             Outputs[7].CurrentLimit = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
+            */
         }
 
         private void ReadMessage8(byte[] data)
@@ -697,11 +705,11 @@ namespace CanDevices.DingoPdm
                     {
                         Outputs[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
                         Outputs[index].Input = (VarMap)(data[2]);
-                        Outputs[index].CurrentLimit = data[3] / 10;
+                        Outputs[index].CurrentLimit = data[3];
                         Outputs[index].ResetCountLimit = (data[4] & 0xF0) >> 4;
                         Outputs[index].ResetMode = (ResetMode)(data[4] & 0x0F);
                         Outputs[index].ResetTime = data[5] * 10;
-                        Outputs[index].InrushCurrentLimit = data[6] / 10;
+                        Outputs[index].InrushCurrentLimit = data[6];
                         Outputs[index].InrushTime = data[7] * 10;
                     }
 
@@ -1135,11 +1143,11 @@ namespace CanDevices.DingoPdm
                         Convert.ToByte((((output.Number - 1) & 0x0F) << 4) +
                         (Convert.ToByte(output.Enabled) & 0x01)), //Byte 1
                         Convert.ToByte(output.Input), //Byte 2
-                        Convert.ToByte(output.CurrentLimit * 10), //Byte 3 
-                        Convert.ToByte(((Convert.ToByte(output.ResetCountLimit) & 0x0F) << 4) +
-                        Convert.ToByte(output.ResetMode) & 0x0F), //Byte 4
+                        Convert.ToByte(output.CurrentLimit), //Byte 3 
+                        Convert.ToByte((Convert.ToByte(output.ResetCountLimit) << 4) +
+                        (Convert.ToByte(output.ResetMode) & 0x0F)), //Byte 4
                         Convert.ToByte(output.ResetTime / 10), //Byte 5
-                        Convert.ToByte(output.InrushCurrentLimit * 10), //Byte 6 
+                        Convert.ToByte(output.InrushCurrentLimit), //Byte 6 
                         Convert.ToByte(output.InrushTime / 10) } //Byte 7
                     }
                 });

@@ -95,7 +95,8 @@ namespace CanInterfaces
                 //The payload bytes are split across 2 bytes (a nibble each)
                 //For example, a payload byte of 28 (0001 1100) would be split into "1C"
                 byte[] payload;
-                if (len > 0)
+                if ((len > 0) &&
+                    (raw.Length > ((len - 1) * 2 + 6)))
                 {
                     payload = new byte[len];
                     for (int i = 0; i < payload.Length; i++)
