@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -915,7 +916,8 @@ namespace CanDevices.DingoPdm
                     Id = id,
                     Len = 1,
                     Payload = new byte[] { Convert.ToByte('V'), 0, 0, 0, 0, 0, 0, 0 }
-                }
+                },
+                MsgDescription="Version"
             });
 
             //CAN settings
@@ -928,7 +930,8 @@ namespace CanDevices.DingoPdm
                     Id = id,
                     Len = 1,
                     Payload = new byte[] { Convert.ToByte('C'), 0, 0, 0, 0, 0, 0, 0 }
-                }
+                },
+                MsgDescription="CANSettings"
             });
 
             //Inputs
@@ -945,7 +948,8 @@ namespace CanDevices.DingoPdm
                         Payload = new byte[] { Convert.ToByte('I'),
                         Convert.ToByte((i & 0x0F) << 4),
                         0, 0, 0, 0, 0, 0 }
-                    }
+                    },
+                    MsgDescription=$"Input{i + 1}"
                 });
             }
 
@@ -963,7 +967,8 @@ namespace CanDevices.DingoPdm
                         Payload = new byte[] { Convert.ToByte('O'),
                         Convert.ToByte((i & 0x0F) << 4),
                         0, 0, 0, 0, 0, 0 }
-                    }
+                    },
+                    MsgDescription = $"Output{i + 1}"
                 });
             }
 
@@ -981,7 +986,8 @@ namespace CanDevices.DingoPdm
                         Payload = new byte[] { Convert.ToByte('U'),
                         Convert.ToByte(i),
                         0, 0, 0, 0, 0, 0 }
-                    }
+                    },
+                    MsgDescription = $"VirtualInput{i + 1}"
                 });
             }
 
@@ -999,7 +1005,8 @@ namespace CanDevices.DingoPdm
                         Payload = new byte[] { Convert.ToByte('H'),
                         Convert.ToByte((i & 0x0F) << 4),
                         0, 0, 0, 0, 0, 0 }
-                    }
+                    },
+                    MsgDescription = $"Flasher{i + 1}"
                 });
             }
 
@@ -1017,7 +1024,8 @@ namespace CanDevices.DingoPdm
                         Payload = new byte[] { Convert.ToByte('N'),
                         Convert.ToByte(i),
                         0, 0, 0, 0, 0, 0 }
-                    }
+                    },
+                    MsgDescription = $"CANInput{i + 1}"
                 });
             }
 
@@ -1031,7 +1039,8 @@ namespace CanDevices.DingoPdm
                     Id = id,
                     Len = 1,
                     Payload = new byte[] { Convert.ToByte('W'), 0, 0, 0, 0, 0, 0, 0 }
-                }
+                },
+                MsgDescription = "Wiper"
             });
 
             //Wiper speeds
@@ -1044,7 +1053,8 @@ namespace CanDevices.DingoPdm
                     Id = id,
                     Len = 1,
                     Payload = new byte[] { Convert.ToByte('P'), 0, 0, 0, 0, 0, 0, 0 }
-                }
+                },
+                MsgDescription = "WiperSpeed"
             });
 
             //Wiper delays
@@ -1057,7 +1067,8 @@ namespace CanDevices.DingoPdm
                     Id = id,
                     Len = 1,
                     Payload = new byte[] { Convert.ToByte('Y'), 0, 0, 0, 0, 0, 0, 0 }
-                }
+                },
+                MsgDescription = "WiperDelay"
             });
 
             //Starter disable
@@ -1070,7 +1081,8 @@ namespace CanDevices.DingoPdm
                     Id = id,
                     Len = 1,
                     Payload = new byte[] { Convert.ToByte('D'), 0, 0, 0, 0, 0, 0, 0 }
-                }
+                },
+                MsgDescription = "StarterDisable"
             });
 
             return msgs;
@@ -1101,7 +1113,8 @@ namespace CanDevices.DingoPdm
                     Convert.ToByte(BaseId & 0x00FF), //Byte 3
                     Convert.ToByte(5), //Byte 4
                     0, 0, 0 }
-                }
+                },
+                MsgDescription = "CANSettings"
             });
 
             //Inputs
@@ -1123,7 +1136,8 @@ namespace CanDevices.DingoPdm
                         (Convert.ToByte(input.Enabled) & 0x01)), //Byte 1
                         (Convert.ToByte(input.DebounceTime / 10)), //Byte 2
                         0, 0, 0, 0, 0 }
-                    }
+                    },
+                    MsgDescription = $"Input{input.Number}"
                 });
             }
 
@@ -1149,7 +1163,8 @@ namespace CanDevices.DingoPdm
                         Convert.ToByte(output.ResetTime / 10), //Byte 5
                         Convert.ToByte(output.InrushCurrentLimit), //Byte 6 
                         Convert.ToByte(output.InrushTime / 10) } //Byte 7
-                    }
+                    },
+                    MsgDescription = $"Output{output.Number}"
                 });
             }
 
@@ -1178,7 +1193,8 @@ namespace CanDevices.DingoPdm
                         ((Convert.ToByte(virtInput.Cond1) & 0x03) << 2) +
                         (Convert.ToByte(virtInput.Cond0) & 0x03)), //Byte 6
                         0 }
-                    }
+                    },
+                    MsgDescription = $"VirtualInput{virtInput.Number}"
                 });
             }
 
@@ -1213,7 +1229,8 @@ namespace CanDevices.DingoPdm
                         Convert.ToByte(flash.OnTime / 10), //Byte 4
                         Convert.ToByte(flash.OffTime / 10), //Byte 5
                         0, 0 }
-                    }
+                    },
+                    MsgDescription = $"Flasher{flash.Number}"
                 });
             }
 
@@ -1240,7 +1257,8 @@ namespace CanDevices.DingoPdm
                         (canInput.LowByte & 0x0F)), //Byte 5
                         Convert.ToByte(canInput.OnVal), //Byte 6 
                         0 }
-                    }
+                    },
+                    MsgDescription = $"CANInput{canInput.Number}"
                 });
             }
 
@@ -1265,7 +1283,8 @@ namespace CanDevices.DingoPdm
                     Convert.ToByte(Wipers[0].OnInput), //Byte 5
                     Convert.ToByte(Wipers[0].ParkInput), //Byte 6
                     Convert.ToByte(Wipers[0].WashInput) } //Byte 7
-                }
+                },
+                MsgDescription = "Wiper"
             });
 
             //Wiper speeds
@@ -1290,7 +1309,8 @@ namespace CanDevices.DingoPdm
                     Convert.ToByte(((Convert.ToByte(Wipers[0].SpeedMap[7]) & 0x0F) << 4) +
                     (Convert.ToByte(Wipers[0].SpeedMap[6]) & 0x0F)), //Byte 6
                     0 }
-                }
+                },
+                MsgDescription = "WiperSpeed"
             });
 
             //Wiper delays
@@ -1311,7 +1331,8 @@ namespace CanDevices.DingoPdm
                     Convert.ToByte(Wipers[0].IntermitTime[4] / 10), //Byte 5
                     Convert.ToByte(Wipers[0].IntermitTime[5] / 10), //Byte 6
                     0 }
-                }
+                },
+                MsgDescription = "WiperDelay"
             });
 
             //Starter disable
@@ -1336,7 +1357,8 @@ namespace CanDevices.DingoPdm
                     ((Convert.ToByte(StarterDisable[0].Output2) & 0x01) << 1) +
                     (Convert.ToByte(StarterDisable[0].Output1) & 0x01)), //Byte 3
                     0, 0, 0, 0 }
-                }
+                },
+                MsgDescription = "StarterDisable"
             });
 
             return msgs;

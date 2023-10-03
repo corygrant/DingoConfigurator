@@ -80,7 +80,6 @@ namespace CanInterfaces
             if (!ser.IsOpen) return;
 
             string raw = ser.ReadLine(); //Use ReadLine to make sure each msg is read individually (must add NewLine="\r" before starting RX above)
-            //ser.DiscardInBuffer(); //Discard data sitting in buffer, otherwise buffer will keep growing
 
             if (raw.Length >= 5) //'t' msg is always at least 5 bytes long (t + ID ID ID + DLC)
             {

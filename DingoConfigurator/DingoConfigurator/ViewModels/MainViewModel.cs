@@ -28,6 +28,8 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using System.Buffers.Text;
 using System.Reflection;
 using System.Windows.Interop;
+using System.Runtime.ConstrainedExecution;
+using System.Diagnostics;
 
 //Add another CanDevices list that holds the online value
 
@@ -155,8 +157,6 @@ namespace DingoConfigurator
             _statusBarTimer.Elapsed += UpdateStatusBar;
             _statusBarTimer.AutoReset = true;
             _statusBarTimer.Enabled = true;
-
-            Task.Factory.StartNew(ProcessQueue, _cts.Token);
 
             _configFileOpened = true;
         }
@@ -434,42 +434,63 @@ namespace DingoConfigurator
 
         private void ProcessQueue(object taskState)
         {
-            var token = (CancellationToken)taskState;
             CanDeviceResponse msg;
+            bool reQueue;
 
-            while (!token.IsCancellationRequested)
+            while (!_cts.Token.IsCancellationRequested)
             {
+                //Always have to Enqueue again, unless it was received
                 if(_queue.TryDequeue(out msg))
                 {
+                    reQueue = true;
+
                     //Send message
                     if (!msg.Sent && CanInterfaceConnected)
                     {
                         _can.Write(msg.Data);
-                        msg.TimeSent = DateTime.Now;
+                        msg.TimeSentStopwatch = Stopwatch.StartNew();
                         msg.Sent = true;
                         msg.Received = false;
-                        _queue.Enqueue(msg); //Sent, but not received
-                        Thread.Sleep(10); //Wait a bit to ensure the device can respond
+                        Task.Delay(100); //Wait a bit to ensure the device can respond
+                        //CANTx task runs every 50ms, so must be longer than that
+                    }
+                    else
+                    {
+                        if (msg.Sent && !msg.Received)
+                        {
+                            if (msg.TimeSentStopwatch.ElapsedMilliseconds > 500)
+                            {
+                                if (msg.ReceiveAttempts <= 4)
+                                {
+                                    Logger.Warn($"No response {msg.MsgDescription}");
+                                    msg.Sent = false; //Resend request
+                                    msg.ReceiveAttempts++;
+                                }
+                                else
+                                {
+                                    Logger.Error($"No response after 4 attempts {msg.MsgDescription}");
+                                    //Dont put back on queue
+                                    reQueue = false;
+                                }
+                            }
+                        }
                     }
 
-                    //Response received
-                    if (msg.Sent && msg.Received)
+                    if(msg.Sent && msg.Received)
                     {
-                        //Received, don't add back to queue
+                        reQueue = false;
                     }
 
-                    TimeSpan timeSpan = DateTime.Now - msg.TimeSent;
-
-                    if (msg.Sent && !msg.Received && (timeSpan.TotalSeconds > 2))
+                    if (reQueue)
                     {
-                        Logger.Warn("No response {0} {1} {2} {3} {4} {5} {6} {7}", msg.Data.Payload[0], msg.Data.Payload[1],
-                            msg.Data.Payload[2], msg.Data.Payload[3], msg.Data.Payload[4],
-                            msg.Data.Payload[5], msg.Data.Payload[6], msg.Data.Payload[7]);
-                        msg.Sent = false;
-                        _queue.Enqueue(msg); //Sent, but not received. Resend
+                        _queue.Enqueue(msg); //Add back to queue, at the end
                     }
                 }
+                Task.Delay(10);
             }
+            //Dump queue
+            while (_queue.TryDequeue(out msg)) ;
+
         }
 
         #region TreeView
@@ -569,6 +590,7 @@ namespace DingoConfigurator
             _can.DataReceived += CanDataReceived;
             if(!_can.Start()) return;
             CanInterfaceConnected = true;
+            Task.Factory.StartNew(ProcessQueue, TaskCreationOptions.LongRunning, _cts.Token);
             Thread.Sleep(100); //Wait for devices to connect
             GetDeviceSettings(true);
         }
@@ -585,6 +607,7 @@ namespace DingoConfigurator
         private void Disconnect(object parameter)
         {
             if(_can != null) _can.Stop();
+            _cts.Cancel();
             CanInterfaceConnected = false;
         }
 
