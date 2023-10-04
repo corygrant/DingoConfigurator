@@ -151,6 +151,8 @@ namespace DingoConfigurator
             _statusBarTimer.Enabled = true;
 
             _configFileOpened = true;
+
+            Task.Factory.StartNew(ProcessQueue, TaskCreationOptions.LongRunning, _cts.Token);
         }
 
         private bool CanOpenConfigFile(object parameter)
@@ -525,7 +527,7 @@ namespace DingoConfigurator
                     if (sub.Name.Equals("States"))
                     {
                         SelectedCanDevice = (DingoPdmCan)sub.CanDevice;
-                        CurrentViewModel = new DingoPdmStatesViewModel(this);
+                        CurrentViewModel = new DingoPdmSettingsViewModel(this);
                     }
 
                     if (sub.Name.Equals("Settings"))
@@ -582,7 +584,6 @@ namespace DingoConfigurator
             _can.DataReceived += CanDataReceived;
             if(!_can.Start()) return;
             CanInterfaceConnected = true;
-            Task.Factory.StartNew(ProcessQueue, TaskCreationOptions.LongRunning, _cts.Token);
             Thread.Sleep(100); //Wait for devices to connect
             GetDeviceSettings(true);
         }
@@ -599,7 +600,6 @@ namespace DingoConfigurator
         private void Disconnect(object parameter)
         {
             if(_can != null) _can.Stop();
-            _cts.Cancel();
             CanInterfaceConnected = false;
         }
 

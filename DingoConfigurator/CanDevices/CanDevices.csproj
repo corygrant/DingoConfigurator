@@ -70,25 +70,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncObservableCollection.cs" />
-    <Compile Include="CanBoard\CanBoardAnalogInput.cs" />
+    <Compile Include="CanBoard\AnalogInput.cs" />
     <Compile Include="CanBoard\CanBoardCan.cs" />
     <Compile Include="CanBoard\CanBoardConfig.cs" />
-    <Compile Include="CanBoard\CanBoardDigitalInput.cs" />
-    <Compile Include="CanBoard\CanBoardDigitalOutput.cs" />
+    <Compile Include="CanBoard\DigitalInput.cs" />
+    <Compile Include="CanBoard\Output.cs" />
     <Compile Include="CanDeviceSub.cs" />
     <Compile Include="DingoDash\DashConfig.cs" />
     <Compile Include="DingoDash\DingoDashCan.cs" />
     <Compile Include="DingoPdm\DingoPdmCan.cs" />
-    <Compile Include="DingoPdm\DingoPdmCanInput.cs" />
-    <Compile Include="DingoPdm\DingoPdmEnums.cs" />
-    <Compile Include="DingoPdm\DingoPdmFlasher.cs" />
-    <Compile Include="DingoPdm\DingoPdmInput.cs" />
-    <Compile Include="DingoPdm\DingoPdmOutput.cs" />
+    <Compile Include="DingoPdm\CanInput.cs" />
+    <Compile Include="DingoPdm\Enums.cs" />
+    <Compile Include="DingoPdm\Flasher.cs" />
+    <Compile Include="DingoPdm\Input.cs" />
+    <Compile Include="DingoPdm\Output.cs" />
     <Compile Include="CanDeviceResponse.cs" />
-    <Compile Include="DingoPdm\DingoPdmStarterDisable.cs" />
-    <Compile Include="DingoPdm\DingoPdmVirtualInput.cs" />
-    <Compile Include="DingoPdm\DingoPdmWiper.cs" />
+    <Compile Include="DingoPdm\StarterDisable.cs" />
+    <Compile Include="DingoPdm\VirtualInput.cs" />
+    <Compile Include="DingoPdm\Wiper.cs" />
     <Compile Include="ICanDevice.cs" />
     <Compile Include="NotifyPropertyChangedBase.cs" />
     <Compile Include="DingoPdm\PdmConfig.cs" />
@@ -104,5 +103,6 @@
       <Name>CanInterfaces</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

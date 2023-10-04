@@ -73,8 +73,8 @@ namespace CanDevices.CanBoard
         private double _boardTempF;
         public double BoardTempF => _boardTempC * 1.8 + 32.0;
 
-        private ObservableCollection<CanBoardAnalogInput> _analogIn;
-        public ObservableCollection<CanBoardAnalogInput> AnalogIn
+        private ObservableCollection<AnalogInput> _analogIn;
+        public ObservableCollection<AnalogInput> AnalogIn
         {
             get => _analogIn;
             set
@@ -87,8 +87,8 @@ namespace CanDevices.CanBoard
             }
         }
 
-        private ObservableCollection<CanBoardDigitalInput> _digitalIn;
-        public ObservableCollection<CanBoardDigitalInput> DigitalIn { 
+        private ObservableCollection<DigitalInput> _digitalIn;
+        public ObservableCollection<DigitalInput> DigitalIn { 
             get => _digitalIn; 
             private set
             {
@@ -100,8 +100,8 @@ namespace CanDevices.CanBoard
             }
         }
 
-        private ObservableCollection<CanBoardDigitalOutput> _digitalOut;
-        public ObservableCollection<CanBoardDigitalOutput> DigitalOut { 
+        private ObservableCollection<Output> _digitalOut;
+        public ObservableCollection<Output> DigitalOut { 
             get => _digitalOut; private set
             {
                 if (_digitalOut != value)
@@ -131,24 +131,24 @@ namespace CanDevices.CanBoard
             Name = name;
             BaseId = baseId;
 
-            AnalogIn = new ObservableCollection<CanBoardAnalogInput>();
+            AnalogIn = new ObservableCollection<AnalogInput>();
             for (int i=0; i < 5; i++)
             {
-                AnalogIn.Add(new CanBoardAnalogInput());
+                AnalogIn.Add(new AnalogInput());
                 AnalogIn[i].Number = i + 1;
             }
 
-            DigitalIn = new ObservableCollection<CanBoardDigitalInput>();
+            DigitalIn = new ObservableCollection<DigitalInput>();
             for (int i = 0; i < 8; i++)
             {
-                DigitalIn.Add(new CanBoardDigitalInput());
+                DigitalIn.Add(new DigitalInput());
                 DigitalIn[i].Number = i + 1;
             }
 
-            DigitalOut = new ObservableCollection<CanBoardDigitalOutput>();
+            DigitalOut = new ObservableCollection<Output>();
             for (int i = 0; i < 4; i++)
             {
-                DigitalOut.Add(new CanBoardDigitalOutput());
+                DigitalOut.Add(new Output());
                 DigitalOut[i].Number = i + 1;
             }
         }

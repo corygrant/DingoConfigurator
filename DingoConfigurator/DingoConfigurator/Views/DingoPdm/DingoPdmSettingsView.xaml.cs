@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace DingoConfigurator.Views
 {
     /// <summary>
-    /// Interaction logic for DingoPdmSettingsView.xaml
+    /// Interaction logic for DingoPdmStates.xaml
     /// </summary>
     public partial class DingoPdmSettingsView : UserControl
     {

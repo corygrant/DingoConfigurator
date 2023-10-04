@@ -1,6 +1,6 @@
 ﻿namespace CanDevices.DingoPdm
 {
-    public class DingoPdmOutput : NotifyPropertyChangedBase
+    public class Output : NotifyPropertyChangedBase
     {
         private bool _enabled;
         public bool Enabled
@@ -184,14 +184,5 @@
             }
         }
 
-        public DingoPdmOutput()
-        {
-            _enabled = false;
-            _number = 0;
-            _state = OutState.Off;
-            _current = 0;
-            _currentLimit = 0;
-            _resetCount = 0;
-        }
     }
 }

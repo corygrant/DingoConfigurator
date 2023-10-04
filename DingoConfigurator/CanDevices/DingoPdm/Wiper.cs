@@ -1,8 +1,8 @@
 ﻿namespace CanDevices.DingoPdm
 {
-    public class DingoPdmWiper : NotifyPropertyChangedBase
+    public class Wiper : NotifyPropertyChangedBase
     {
-        public DingoPdmWiper()
+        public Wiper()
         {
             SpeedMap = new int[8];
             IntermitTime = new int[6];

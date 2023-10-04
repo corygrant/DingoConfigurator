@@ -110,7 +110,6 @@
     <Compile Include="Config\DevicesConfig.cs" />
     <Compile Include="ViewModels\CanBoard\CanBoardViewModel.cs" />
     <Compile Include="ViewModels\DingoPdm\DingoPdmSettingsViewModel.cs" />
-    <Compile Include="ViewModels\DingoPdm\DingoPdmStatesViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="ViewModels\DingoDash\DingoDashViewModel.cs" />
@@ -124,9 +123,6 @@
     </Compile>
     <Compile Include="Views\DingoPdm\DingoPdmSettingsView.xaml.cs">
       <DependentUpon>DingoPdmSettingsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DingoPdm\DingoPdmStatesView.xaml.cs">
-      <DependentUpon>DingoPdmStatesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DingoPdm\DingoPdmView.xaml.cs">
       <DependentUpon>DingoPdmView.xaml</DependentUpon>
@@ -152,10 +148,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\DingoPdm\DingoPdmSettingsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DingoPdm\DingoPdmStatesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

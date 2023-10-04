@@ -1,6 +1,6 @@
 ﻿namespace CanDevices.DingoPdm
 {
-    public class DingoPdmStarterDisable : NotifyPropertyChangedBase
+    public class StarterDisable : NotifyPropertyChangedBase
     {
         private bool _enabled;
         public bool Enabled

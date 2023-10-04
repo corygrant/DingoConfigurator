@@ -1,6 +1,6 @@
 ﻿namespace CanDevices.CanBoard
 {
-    public class CanBoardDigitalOutput : NotifyPropertyChangedBase
+    public class DigitalInput : NotifyPropertyChangedBase
     {
         private int _number { get; set; }
         public int Number

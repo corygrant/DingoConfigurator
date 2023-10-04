@@ -1,6 +1,6 @@
 ﻿namespace CanDevices.CanBoard
 {
-    public class CanBoardAnalogInput : NotifyPropertyChangedBase
+    public class AnalogInput : NotifyPropertyChangedBase
     {
         private int _number { get; set; }
         public int Number

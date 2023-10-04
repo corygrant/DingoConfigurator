@@ -143,9 +143,6 @@
                 <DataTemplate DataType="{x:Type vm:DingoPdmViewModel}">
                     <vw:DingoPdmView/>
                 </DataTemplate>
-                <DataTemplate DataType="{x:Type vm:DingoPdmStatesViewModel}">
-                    <vw:DingoPdmStatesView/>
-                </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:DingoPdmSettingsViewModel}">
                     <vw:DingoPdmSettingsView/>
                 </DataTemplate>

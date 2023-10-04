@@ -1,6 +1,6 @@
 ﻿namespace CanDevices.DingoPdm
 {
-    public class DingoPdmCanInput : NotifyPropertyChangedBase
+    public class VirtualInput : NotifyPropertyChangedBase
     {
         private string _name;
         public string Name
@@ -58,72 +58,114 @@
             }
         }
 
-        private int _id;
-        public int Id
+        private bool _not0;
+        public bool Not0
         {
-            get => _id;
+            get => _not0;
             set
             {
-                if (_id != value)
+                if (_not0 != value)
                 {
-                    _id = value;
-                    OnPropertyChanged(nameof(Id));
+                    _not0 = value;
+                    OnPropertyChanged(nameof(Not0));
                 }
             }
         }
 
-        private int _lowByte;
-        public int LowByte
+        private VarMap _var0;
+        public VarMap Var0
         {
-            get => _lowByte;
+            get => _var0;
             set
             {
-                if (_lowByte != value)
+                if (_var0 != value)
                 {
-                    _lowByte = value;
-                    OnPropertyChanged(nameof(LowByte));
+                    _var0 = value;
+                    OnPropertyChanged(nameof(Var0));
                 }
             }
         }
 
-        private int _highByte;
-        public int HighByte
+        private Conditional _cond0;
+        public Conditional Cond0
         {
-            get => _highByte;
+            get => _cond0;
             set
             {
-                if (_highByte != value)
+                if (_cond0 != value)
                 {
-                    _highByte = value;
-                    OnPropertyChanged(nameof(HighByte));
+                    _cond0 = value;
+                    OnPropertyChanged(nameof(Cond0));
                 }
             }
         }
 
-        private Operator _operator;
-        public Operator Operator
+        private bool _not1;
+        public bool Not1
         {
-            get => _operator;
+            get => _not1;
             set
             {
-                if (_operator != value)
+                if (_not1 != value)
                 {
-                    _operator = value;
-                    OnPropertyChanged(nameof(Operator));
+                    _not1 = value;
+                    OnPropertyChanged(nameof(Not1));
                 }
             }
         }
 
-        private int _onVal;
-        public int OnVal
+        private VarMap _var1;
+        public VarMap Var1
         {
-            get => _onVal;
+            get => _var1;
             set
             {
-                if (_onVal != value)
+                if (_var1 != value)
                 {
-                    _onVal = value;
-                    OnPropertyChanged(nameof(OnVal));
+                    _var1 = value;
+                    OnPropertyChanged(nameof(Var1));
+                }
+            }
+        }
+
+        private Conditional _cond1;
+        public Conditional Cond1
+        {
+            get => _cond1;
+            set
+            {
+                if (_cond1 != value)
+                {
+                    _cond1 = value;
+                    OnPropertyChanged(nameof(Cond1));
+                }
+            }
+        }
+
+        private bool _not2;
+        public bool Not2
+        {
+            get => _not2;
+            set
+            {
+                if (_not2 != value)
+                {
+                    _not2 = value;
+                    OnPropertyChanged(nameof(Not2));
+                }
+            }
+        }
+
+        private VarMap _var2;
+        public VarMap Var2
+        {
+            get => _var2;
+            set
+            {
+                if (_var2 != value)
+                {
+                    _var2 = value;
+                    OnPropertyChanged(nameof(Var2));
                 }
             }
         }

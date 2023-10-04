@@ -65,6 +65,7 @@
                              MinWidth="50"
                              MaxWidth="100"
                              HorizontalAlignment="Left"
+                             HorizontalContentAlignment="Center"
                              Text="{Binding Pdm.BaseId, Mode=OneWay}"/>
 
             <TextBlock Grid.Row="0"
@@ -80,6 +81,7 @@
                              MinWidth="50"
                              MaxWidth="100"
                              HorizontalAlignment="Left"
+                             HorizontalContentAlignment="Center"
                              Text="{Binding Pdm.TotalCurrent, Mode=OneWay}"/>
 
             <TextBlock Grid.Row="1"
@@ -95,6 +97,7 @@
                              MinWidth="50"
                              MaxWidth="100"
                              HorizontalAlignment="Left"
+                             HorizontalContentAlignment="Center"
                              Text="{Binding Pdm.BatteryVoltage, Mode=OneWay}"/>
 
             <TextBlock Grid.Row="1"
@@ -110,6 +113,7 @@
                              MinWidth="50"
                              MaxWidth="100"
                              HorizontalAlignment="Left"
+                             HorizontalContentAlignment="Center"
                              Text="{Binding Pdm.BoardTempF, Mode=OneWay}"/>
             <TextBlock Grid.Row="0"
                                Grid.Column="4"
@@ -124,6 +128,7 @@
                              MinWidth="100"
                              MaxWidth="100"
                              HorizontalAlignment="Left"
+                             HorizontalContentAlignment="Center"
                              Text="{Binding Pdm.Version, Mode=OneWay}"/>
         </Grid>
 

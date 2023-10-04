@@ -14,106 +14,106 @@ namespace CanDevices.DingoPdm
         {
             deviceConfig = new DeviceConfig();
 
-            output = new Output[]
+            output = new OutputConfig[]
             {
-            new Output(),
-            new Output(),
-            new Output(),
-            new Output(),
-            new Output(),
-            new Output(),
-            new Output(),
-            new Output()
+            new OutputConfig(),
+            new OutputConfig(),
+            new OutputConfig(),
+            new OutputConfig(),
+            new OutputConfig(),
+            new OutputConfig(),
+            new OutputConfig(),
+            new OutputConfig()
             };
 
-            input = new Input[]
+            input = new InputConfig[]
             {
-            new Input(),
-            new Input()
+            new InputConfig(),
+            new InputConfig()
             };
 
-            virtualInput = new VirtualInput[]
+            virtualInput = new VirtualInputConfig[]
             {
-            new VirtualInput(),
-            new VirtualInput(),
-            new VirtualInput(),
-            new VirtualInput(),
-            new VirtualInput(),
-            new VirtualInput(),
-            new VirtualInput(),
-            new VirtualInput(),
-            new VirtualInput(),
-            new VirtualInput(),
-            new VirtualInput(),
-            new VirtualInput(),
-            new VirtualInput(),
-            new VirtualInput(),
-            new VirtualInput(),
-            new VirtualInput()
+            new VirtualInputConfig(),
+            new VirtualInputConfig(),
+            new VirtualInputConfig(),
+            new VirtualInputConfig(),
+            new VirtualInputConfig(),
+            new VirtualInputConfig(),
+            new VirtualInputConfig(),
+            new VirtualInputConfig(),
+            new VirtualInputConfig(),
+            new VirtualInputConfig(),
+            new VirtualInputConfig(),
+            new VirtualInputConfig(),
+            new VirtualInputConfig(),
+            new VirtualInputConfig(),
+            new VirtualInputConfig(),
+            new VirtualInputConfig()
             };
 
-            canInput = new CanInput[]
+            canInput = new CanInputConfig[]
             {
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput(),
-            new CanInput()
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig(),
+            new CanInputConfig()
             };
 
-            flasher = new Flasher[]
+            flasher = new FlasherConfig[]
             {
-            new Flasher(),
-            new Flasher(),
-            new Flasher(),
-            new Flasher()
+            new FlasherConfig(),
+            new FlasherConfig(),
+            new FlasherConfig(),
+            new FlasherConfig()
             };
 
-            canOutput = new CanOutput();
-            starter = new Starter();
+            canOutput = new CanOutputConfig();
+            starter = new StarterDisableConfig();
             starter.disableOut = new bool[8];
-            wiper = new Wiper();
+            wiper = new WiperConfig();
 
         }
 
         public string name { get; set; }
         public string label { get; set; }
         public DeviceConfig deviceConfig { get; set; }
-        public Input[] input { get; set; }
-        public VirtualInput[] virtualInput { get; set; }
-        public Output[] output { get; set; }
-        public Wiper wiper { get; set; }
-        public Flasher[] flasher { get; set; }
-        public Starter starter { get; set; }
-        public CanInput[] canInput { get; set; }
-        public CanOutput canOutput { get; set; }
+        public InputConfig[] input { get; set; }
+        public VirtualInputConfig[] virtualInput { get; set; }
+        public OutputConfig[] output { get; set; }
+        public WiperConfig wiper { get; set; }
+        public FlasherConfig[] flasher { get; set; }
+        public StarterDisableConfig starter { get; set; }
+        public CanInputConfig[] canInput { get; set; }
+        public CanOutputConfig canOutput { get; set; }
     }
 
     public class DeviceConfig
@@ -122,7 +122,7 @@ namespace CanDevices.DingoPdm
         public CanSpeed canSpeed { get; set; }
     }
 
-    public class Wiper
+    public class WiperConfig
     {
         public bool enabled { get; set; }
         public VarMap lowSpeedInput { get; set; }
@@ -137,21 +137,21 @@ namespace CanDevices.DingoPdm
         public int[] speedMap { get; set; }
     }
 
-    public class Starter
+    public class StarterDisableConfig
     {
         public bool enabled { get; set; }
         public VarMap input { get; set; }
         public bool[] disableOut { get; set; }
     }
 
-    public class CanOutput
+    public class CanOutputConfig
     {
         public bool enable { get; set; }
         public int baseId { get; set; }
         public int updateTime { get; set; }
     }
 
-    public class Input
+    public class InputConfig
     {
         public string name { get; set; }
         public string label { get; set; }
@@ -161,7 +161,7 @@ namespace CanDevices.DingoPdm
         public int debounceTime { get; set; }
     }
 
-    public class VirtualInput
+    public class VirtualInputConfig
     {
         public string name { get; set; }
         public string label { get; set; }
@@ -177,7 +177,7 @@ namespace CanDevices.DingoPdm
         public InputMode mode { get; set; }
     }
 
-    public class Output
+    public class OutputConfig
     {
         public string name { get; set; }
         public string label { get; set; }
@@ -191,7 +191,7 @@ namespace CanDevices.DingoPdm
         public int resetLimit { get; set; }
     }
 
-    public class Flasher
+    public class FlasherConfig
     {
         public string name { get; set; }
         public string label { get; set; }
@@ -203,7 +203,7 @@ namespace CanDevices.DingoPdm
         public VarMap output { get; set; }
     }
 
-    public class CanInput
+    public class CanInputConfig
     {
         public string name { get; set; }
         public string label { get; set; }

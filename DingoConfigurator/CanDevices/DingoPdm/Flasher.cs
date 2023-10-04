@@ -1,6 +1,6 @@
 ﻿namespace CanDevices.DingoPdm
 {
-    public class DingoPdmFlasher : NotifyPropertyChangedBase
+    public class Flasher : NotifyPropertyChangedBase
     {
         private string _name;
         public string Name

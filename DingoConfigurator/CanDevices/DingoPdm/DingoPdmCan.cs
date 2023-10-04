@@ -77,8 +77,8 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private ObservableCollection<DingoPdmInput> _digitalInputs { get; set; }
-        public ObservableCollection<DingoPdmInput> DigitalInputs
+        private ObservableCollection<Input> _digitalInputs { get; set; }
+        public ObservableCollection<Input> DigitalInputs
         {
             get => _digitalInputs;
             set
@@ -161,8 +161,8 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private ObservableCollection<DingoPdmOutput> _outputs;
-        public ObservableCollection<DingoPdmOutput> Outputs
+        private ObservableCollection<Output> _outputs;
+        public ObservableCollection<Output> Outputs
         {
             get => _outputs;
             private set
@@ -175,8 +175,8 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private ObservableCollection<DingoPdmCanInput> _canInputs;
-        public ObservableCollection<DingoPdmCanInput> CanInputs
+        private ObservableCollection<CanInput> _canInputs;
+        public ObservableCollection<CanInput> CanInputs
         {
             get => _canInputs;
             private set
@@ -189,8 +189,8 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private ObservableCollection<DingoPdmVirtualInput> _virtualInputs;
-        public ObservableCollection<DingoPdmVirtualInput> VirtualInputs
+        private ObservableCollection<VirtualInput> _virtualInputs;
+        public ObservableCollection<VirtualInput> VirtualInputs
         {
             get => _virtualInputs;
             private set
@@ -203,8 +203,8 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private ObservableCollection<DingoPdmWiper> _wipers;
-        public ObservableCollection<DingoPdmWiper> Wipers
+        private ObservableCollection<Wiper> _wipers;
+        public ObservableCollection<Wiper> Wipers
         {
             get => _wipers;
             private set
@@ -217,8 +217,8 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private ObservableCollection<DingoPdmFlasher> _flashers;
-        public ObservableCollection<DingoPdmFlasher> Flashers
+        private ObservableCollection<Flasher> _flashers;
+        public ObservableCollection<Flasher> Flashers
         {
             get => _flashers;
             private set
@@ -231,8 +231,8 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private ObservableCollection<DingoPdmStarterDisable> _starterDisable;
-        public ObservableCollection<DingoPdmStarterDisable> StarterDisable
+        private ObservableCollection<StarterDisable> _starterDisable;
+        public ObservableCollection<StarterDisable> StarterDisable
         {
             get => _starterDisable;
             set
@@ -249,10 +249,10 @@ namespace CanDevices.DingoPdm
         {
             Name = name;
             BaseId = id;
-            DigitalInputs = new ObservableCollection<DingoPdmInput>();
+            DigitalInputs = new ObservableCollection<Input>();
             for (int i = 0; i < 2; i++)
             {
-                DigitalInputs.Add(new DingoPdmInput());
+                DigitalInputs.Add(new Input());
                 DigitalInputs[i].Number = i + 1;
             }
 
@@ -260,45 +260,44 @@ namespace CanDevices.DingoPdm
             BatteryVoltage = 0;
             BoardTempC = 0;
 
-            Outputs = new ObservableCollection<DingoPdmOutput>();
+            Outputs = new ObservableCollection<Output>();
             for (int i = 0; i < 8; i++)
             {
-                Outputs.Add(new DingoPdmOutput());
+                Outputs.Add(new Output());
                 Outputs[i].Number = i + 1;
             }
 
-            CanInputs = new ObservableCollection<DingoPdmCanInput>();
+            CanInputs = new ObservableCollection<CanInput>();
             for (int i = 0; i < 32; i++)
             {
-                CanInputs.Add(new DingoPdmCanInput());
+                CanInputs.Add(new CanInput());
                 CanInputs[i].Number = i + 1;
             }
 
-            VirtualInputs = new ObservableCollection<DingoPdmVirtualInput>();
+            VirtualInputs = new ObservableCollection<VirtualInput>();
             for (int i = 0; i < 16; i++)
             {
-                VirtualInputs.Add(new DingoPdmVirtualInput());
+                VirtualInputs.Add(new VirtualInput());
                 VirtualInputs[i].Number = i + 1;
             }
 
-            Wipers = new ObservableCollection<DingoPdmWiper>
+            Wipers = new ObservableCollection<Wiper>
             {
-                new DingoPdmWiper()
+                new Wiper()
             };
 
-            Flashers = new ObservableCollection<DingoPdmFlasher>();
+            Flashers = new ObservableCollection<Flasher>();
             for (int i = 0; i < 4; i++)
             {
-                Flashers.Add(new DingoPdmFlasher());
+                Flashers.Add(new Flasher());
                 Flashers[i].Number = i + 1;
             }
 
-            StarterDisable = new ObservableCollection<DingoPdmStarterDisable>
+            StarterDisable = new ObservableCollection<StarterDisable>
             {
-                new DingoPdmStarterDisable()
+                new StarterDisable()
             };
 
-            SubPages.Add(new CanDeviceSub("States", this));
             SubPages.Add(new CanDeviceSub("Settings", this));
         }
 
@@ -471,8 +470,8 @@ namespace CanDevices.DingoPdm
 
             TotalCurrent = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
             BatteryVoltage = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
-            BoardTempC = Convert.ToDouble((data[6] << 8) + data[7]);
-            BoardTempF = BoardTempC * 1.8 + 32;
+            BoardTempC = Math.Round(Convert.ToDouble((data[6] << 8) + data[7]));
+            BoardTempF = Math.Round(BoardTempC * 1.8 + 32);
 
         }
 
@@ -644,9 +643,6 @@ namespace CanDevices.DingoPdm
             MessagePrefix prefix = (MessagePrefix)Char.ToUpper(Convert.ToChar(data[0]));
 
             int index = 0;
-            int dequeuedIndex = 0;
-
-            CanDeviceResponse rsp;
 
             switch (prefix)
             {
