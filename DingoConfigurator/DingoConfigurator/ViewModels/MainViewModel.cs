@@ -6,15 +6,12 @@ using CanInterfaces;
 using DingoConfigurator.Config;
 using DingoConfigurator.Properties;
 using DingoConfigurator.ViewModels;
-using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Configuration;
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -24,11 +21,6 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Collections.Concurrent;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
-using System.Buffers.Text;
-using System.Reflection;
-using System.Windows.Interop;
-using System.Runtime.ConstrainedExecution;
 using System.Diagnostics;
 
 //Add another CanDevices list that holds the online value
@@ -148,7 +140,7 @@ namespace DingoConfigurator
 
             _config = DevicesConfigHandler.Deserialize(openFileDialog.FileName);
 
-            AddCanDevices(_config);
+            AddCanDevicesToTree(_config);
 
             _queue = new ConcurrentQueue<CanDeviceResponse>();
 
@@ -294,7 +286,7 @@ namespace DingoConfigurator
             return _configFileOpened;
         }
 
-        private void AddCanDevices(DevicesConfig config)
+        private void AddCanDevicesToTree(DevicesConfig config)
         {
             _canDevices?.Clear();
             
@@ -458,7 +450,7 @@ namespace DingoConfigurator
                     {
                         if (msg.Sent && !msg.Received)
                         {
-                            if (msg.TimeSentStopwatch.ElapsedMilliseconds > 500)
+                            if (msg.TimeSentStopwatch.ElapsedMilliseconds > 1000)
                             {
                                 if (msg.ReceiveAttempts <= 4)
                                 {
