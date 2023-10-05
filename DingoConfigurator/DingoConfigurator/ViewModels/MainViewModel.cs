@@ -32,9 +32,7 @@ namespace DingoConfigurator
     {
         private CanCommsHandler _canComms;
 
-        private DevicesConfig _config;
-
-        private bool _configFileOpened;
+        private DevicesConfigHandler _configHandler;
 
         private string _settingsPath;
 
@@ -97,9 +95,9 @@ namespace DingoConfigurator
 
             _settingsPath = newFileDialog.FileName;
 
-            _config = new DevicesConfig();
+            _configHandler = new DevicesConfigHandler();
 
-            DevicesConfigHandler.Serialize(_config, _settingsPath);
+            _configHandler.Serialize(_settingsPath);
         }
 
         private bool CanNewConfigFile(object parameter)
@@ -119,11 +117,11 @@ namespace DingoConfigurator
 
             _settingsPath = openFileDialog.FileName;
 
-            _config = new DevicesConfig();
+            _configHandler = new DevicesConfigHandler();
 
-            _config = DevicesConfigHandler.Deserialize(openFileDialog.FileName);
+            _configHandler.Deserialize(openFileDialog.FileName);
 
-            AddCanDevicesToTree(_config);
+            AddCanDevicesToTree(_configHandler.Config);
 
             
 
@@ -132,9 +130,6 @@ namespace DingoConfigurator
             _statusBarTimer.Elapsed += UpdateStatusBar;
             _statusBarTimer.AutoReset = true;
             _statusBarTimer.Enabled = true;
-
-            _configFileOpened = true;
-
             
         }
 
@@ -145,120 +140,12 @@ namespace DingoConfigurator
 
         private void SaveConfigFile(object parameter)
         {
-            int pdmNum = 0;
-            int cbNum = 0;
-            int dashNum = 0;
-            foreach (var cd in _canComms.CanDevices)
-            {
-
-                if(cd.GetType() == typeof(DingoPdmCan))
-                {
-                    var pdm = (DingoPdmCan) cd;
-
-                    _config.pdm[pdmNum].name = $"PDM{pdmNum}";
-                    _config.pdm[pdmNum].label = pdm.Name;
-
-                    for(int i = 0; i< _config.pdm[pdmNum].input.Length; i++)
-                    {
-                        _config.pdm[pdmNum].input[i].name = $"DigitalInput{i}";
-                        _config.pdm[pdmNum].input[i].label = pdm.DigitalInputs[i].Name;
-                        _config.pdm[pdmNum].input[i].enabled = true;
-                        _config.pdm[pdmNum].input[i].mode = 0;
-                        _config.pdm[pdmNum].input[i].invertInput = pdm.DigitalInputs[i].InvertInput;
-                        _config.pdm[pdmNum].input[i].debounceTime = 20;
-                    }
-
-                    for (int i = 0; i < _config.pdm[pdmNum].virtualInput.Length; i++)
-                    {
-                        _config.pdm[pdmNum].virtualInput[i].name = $"VirtualInput{i}";
-                        _config.pdm[pdmNum].virtualInput[i].label = pdm.VirtualInputs[i].Name;
-                        _config.pdm[pdmNum].virtualInput[i].enabled = pdm.VirtualInputs[i].Enabled;
-                        _config.pdm[pdmNum].virtualInput[i].not0 = pdm.VirtualInputs[i].Not0;
-                        _config.pdm[pdmNum].virtualInput[i].var0 = pdm.VirtualInputs[i].Var0;
-                        _config.pdm[pdmNum].virtualInput[i].cond0 = pdm.VirtualInputs[i].Cond0;
-                        _config.pdm[pdmNum].virtualInput[i].not1 = pdm.VirtualInputs[i].Not1;
-                        _config.pdm[pdmNum].virtualInput[i].var1 = pdm.VirtualInputs[i].Var1;
-                        _config.pdm[pdmNum].virtualInput[i].cond1 = pdm.VirtualInputs[i].Cond1;
-                        _config.pdm[pdmNum].virtualInput[i].not2 = pdm.VirtualInputs[i].Not2;
-                        _config.pdm[pdmNum].virtualInput[i].var2 = pdm.VirtualInputs[i].Var2;
-                        _config.pdm[pdmNum].virtualInput[i].mode = pdm.VirtualInputs[i].Mode;
-                    }
-
-                    for (int i = 0; i < _config.pdm[pdmNum].output.Length; i++)
-                    {
-                        _config.pdm[pdmNum].output[i].name = $"Output{i}";
-                        _config.pdm[pdmNum].output[i].label = pdm.Outputs[i].Name;
-                        _config.pdm[pdmNum].output[i].enabled = true;
-                        _config.pdm[pdmNum].output[i].input = 0;
-                        _config.pdm[pdmNum].output[i].currentLimit = pdm.Outputs[i].CurrentLimit;
-                        _config.pdm[pdmNum].output[i].inrushLimit = 0;
-                        _config.pdm[pdmNum].output[i].inrushTime = 0;
-                        _config.pdm[pdmNum].output[i].resetMode = 0;
-                        _config.pdm[pdmNum].output[i].resetTime = 0;
-                        _config.pdm[pdmNum].output[i].resetLimit = 0;
-                    }
-
-                    _config.pdm[pdmNum].wiper.enabled = pdm.Wipers[0].Enabled;
-                    _config.pdm[pdmNum].wiper.lowSpeedInput = pdm.Wipers[0].SlowInput;
-                    _config.pdm[pdmNum].wiper.highSpeedInput = pdm.Wipers[0].FastInput;
-                    _config.pdm[pdmNum].wiper.parkInput = pdm.Wipers[0].ParkInput;
-                    _config.pdm[pdmNum].wiper.parkStopLevel = pdm.Wipers[0].ParkStopLevel;
-                    _config.pdm[pdmNum].wiper.washInput = pdm.Wipers[0].WashInput;
-                    _config.pdm[pdmNum].wiper.washCycles = pdm.Wipers[0].WashWipeCycles;
-                    _config.pdm[pdmNum].wiper.intermitInput = pdm.Wipers[0].InterInput;
-                    _config.pdm[pdmNum].wiper.speedInput = pdm.Wipers[0].SpeedInput;
-                    _config.pdm[pdmNum].wiper.intermitTime = pdm.Wipers[0].IntermitTime;
-                    _config.pdm[pdmNum].wiper.speedMap = pdm.Wipers[0].SpeedMap;
-
-                    for (int i = 0; i < _config.pdm[pdmNum].flasher.Length; i++)
-                    {
-                        _config.pdm[pdmNum].flasher[i].name = $"Flasher{i}";
-                        _config.pdm[pdmNum].flasher[i].label = pdm.Flashers[i].Name;
-                        _config.pdm[pdmNum].flasher[i].enabled = pdm.Flashers[i].Enabled;
-                        _config.pdm[pdmNum].flasher[i].input = pdm.Flashers[i].Input;
-                        _config.pdm[pdmNum].flasher[i].flashOnTime = pdm.Flashers[i].OnTime;
-                        _config.pdm[pdmNum].flasher[i].flashOffTime = pdm.Flashers[i].OffTime;
-                        _config.pdm[pdmNum].flasher[i].singleCycle = Convert.ToInt16(pdm.Flashers[i].Single);
-                        _config.pdm[pdmNum].flasher[i].output = pdm.Flashers[i].Output;
-                    }
-
-                    _config.pdm[pdmNum].starter.enabled = pdm.StarterDisable[0].Enabled;
-                    _config.pdm[pdmNum].starter.input = pdm.StarterDisable[0].Input;
-                    _config.pdm[pdmNum].starter.disableOut[0] = pdm.StarterDisable[0].Output1;
-                    _config.pdm[pdmNum].starter.disableOut[1] = pdm.StarterDisable[0].Output2;
-                    _config.pdm[pdmNum].starter.disableOut[2] = pdm.StarterDisable[0].Output3;
-                    _config.pdm[pdmNum].starter.disableOut[3] = pdm.StarterDisable[0].Output4;
-                    _config.pdm[pdmNum].starter.disableOut[4] = pdm.StarterDisable[0].Output5;
-                    _config.pdm[pdmNum].starter.disableOut[5] = pdm.StarterDisable[0].Output6;
-                    _config.pdm[pdmNum].starter.disableOut[6] = pdm.StarterDisable[0].Output7;
-                    _config.pdm[pdmNum].starter.disableOut[7] = pdm.StarterDisable[0].Output8;
-
-                    for (int i = 0; i < _config.pdm[pdmNum].canInput.Length; i++)
-                    {
-                        _config.pdm[pdmNum].canInput[i].name = $"CanInput{i}";
-                        _config.pdm[pdmNum].canInput[i].label = pdm.CanInputs[i].Name;
-                        _config.pdm[pdmNum].canInput[i].enabled = pdm.CanInputs[i].Enabled;
-                        _config.pdm[pdmNum].canInput[i].id = pdm.CanInputs[i].Id;
-                        _config.pdm[pdmNum].canInput[i].lowByte = pdm.CanInputs[i].LowByte;
-                        _config.pdm[pdmNum].canInput[i].highByte = pdm.CanInputs[i].HighByte;
-                        _config.pdm[pdmNum].canInput[i].oper = pdm.CanInputs[i].Operator;
-                        _config.pdm[pdmNum].canInput[i].onValue = pdm.CanInputs[i].OnVal;
-                        _config.pdm[pdmNum].canInput[i].mode = pdm.CanInputs[i].Mode;
-                    }
-
-                    _config.pdm[pdmNum].canOutput.enable = true;
-                    _config.pdm[pdmNum].canOutput.baseId = pdm.BaseId;
-                    _config.pdm[pdmNum].canOutput.updateTime = 0;
-
-                    pdmNum++;
-                }
-            }
-            DevicesConfigHandler.Serialize(_config, _settingsPath);
+            _configHandler.Save(_settingsPath, _canComms.CanDevices.ToArray());
         }
 
         private bool CanSaveConfigFile(object parameter)
         {
-            return _configFileOpened;
+            return _configHandler.Opened;
         }
 
         private void SaveAsConfigFile(object parameter)
@@ -268,24 +155,24 @@ namespace DingoConfigurator
 
         private bool CanSaveAsConfigFile(object parameter)
         {
-            return _configFileOpened;
+            return _configHandler.Opened;
         }
 
         private void AddCanDevicesToTree(DevicesConfig config)
         {
             _canComms.ResetCanDevices();
             
-            foreach (var pdm in _config.pdm)
+            foreach (var pdm in _configHandler.Config.pdm)
             {
                 _canComms.AddCanDevice(typeof(DingoPdmCan), pdm.label, pdm.canOutput.baseId);
             }
 
-            foreach (var cb in _config.canBoard)
+            foreach (var cb in _configHandler.Config.canBoard)
             {
                 _canComms.AddCanDevice(typeof(CanBoardCan), cb.label, cb.baseCanId);
             }
 
-            foreach (var dash in _config.dash)
+            foreach (var dash in _configHandler.Config.dash)
             {
                 _canComms.AddCanDevice(typeof(DingoDashCan), dash.label, dash.baseCanId);
             }
@@ -395,7 +282,7 @@ namespace DingoConfigurator
         private bool CanConnect(object parameter)
         {
             return !_canComms.Connected && 
-                    _configFileOpened &&
+                    _configHandler.Opened &&
                     ((CanComPorts && (SelectedComPort != null)) ||
                     !CanComPorts);
         }

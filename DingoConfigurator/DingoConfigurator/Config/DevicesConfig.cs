@@ -4,10 +4,8 @@ using CanDevices.CanBoard;
 using CanDevices.DingoDash;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DingoConfigurator.Config
@@ -37,20 +35,5 @@ namespace DingoConfigurator.Config
         public PdmConfig[] pdm { get; set; }
         public CanBoardConfig[] canBoard { get; set; }
         public DashConfig[] dash { get; set; }
-    }
-
-    public static class DevicesConfigHandler
-    {
-        public static void Serialize(DevicesConfig config, string filename)
-        {
-            var jsonString = JsonSerializer.Serialize<DevicesConfig>(config);
-            File.WriteAllText(filename, jsonString);
-        }
-
-        public static DevicesConfig Deserialize(string filename)
-        {
-            var jsonString = File.ReadAllText(filename);
-            return JsonSerializer.Deserialize<DevicesConfig>(jsonString);
-        }
     }
 }

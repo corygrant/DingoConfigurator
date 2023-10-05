@@ -108,6 +108,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Config\DevicesConfig.cs" />
+    <Compile Include="Config\DevicesConfigHandler.cs" />
     <Compile Include="ViewModels\CanBoard\CanBoardViewModel.cs" />
     <Compile Include="ViewModels\DingoPdm\DingoPdmSettingsViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
