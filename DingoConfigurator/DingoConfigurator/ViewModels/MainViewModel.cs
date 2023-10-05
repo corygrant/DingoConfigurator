@@ -22,6 +22,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using CommsHandler;
 
 //Add another CanDevices list that holds the online value
 
@@ -29,34 +30,17 @@ namespace DingoConfigurator
 {
     public class MainViewModel : ViewModelBase
     {
-        private ICanInterface _can;
+        private CanCommsHandler _canComms;
 
         private DevicesConfig _config;
-
-        private bool _canInterfaceConnected;
-        public bool CanInterfaceConnected
-        {
-            get => _canInterfaceConnected;
-            set {
-                _canInterfaceConnected = value;
-                OnPropertyChanged(nameof(CanInterfaceConnected));
-            }
-        }
 
         private bool _configFileOpened;
 
         private string _settingsPath;
 
         private System.Timers.Timer _statusBarTimer;
-        private System.Timers.Timer _processQueueTimer;
-
-        private ConcurrentQueue<CanDeviceResponse> _queue;
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-
-        public delegate void DataUpdatedHandler(object sender);
-
-        private CancellationTokenSource _cts;
 
         public MainViewModel()
         {
@@ -100,7 +84,6 @@ namespace DingoConfigurator
             DownloadBtnCmd = new RelayCommand(Download, CanDownload);
             BurnBtnCmd = new RelayCommand(Burn, CanBurn);
 
-            _cts = new CancellationTokenSource();
         }
 
         private void NewConfigFile(object parameter)
@@ -122,7 +105,7 @@ namespace DingoConfigurator
         private bool CanNewConfigFile(object parameter)
         {
             return true;
-        }
+        }   
 
         private void OpenConfigFile(object parameter)
         {
@@ -142,7 +125,7 @@ namespace DingoConfigurator
 
             AddCanDevicesToTree(_config);
 
-            _queue = new ConcurrentQueue<CanDeviceResponse>();
+            
 
             // Create a timer to update status bar
             _statusBarTimer = new System.Timers.Timer(200);
@@ -152,12 +135,12 @@ namespace DingoConfigurator
 
             _configFileOpened = true;
 
-            Task.Factory.StartNew(ProcessQueue, TaskCreationOptions.LongRunning, _cts.Token);
+            
         }
 
         private bool CanOpenConfigFile(object parameter)
         {
-            return !CanInterfaceConnected;
+            return !_canComms.Connected;
         }
 
         private void SaveConfigFile(object parameter)
@@ -165,7 +148,7 @@ namespace DingoConfigurator
             int pdmNum = 0;
             int cbNum = 0;
             int dashNum = 0;
-            foreach (var cd in CanDevices)
+            foreach (var cd in _canComms.CanDevices)
             {
 
                 if(cd.GetType() == typeof(DingoPdmCan))
@@ -290,37 +273,27 @@ namespace DingoConfigurator
 
         private void AddCanDevicesToTree(DevicesConfig config)
         {
-            _canDevices?.Clear();
+            _canComms.ResetCanDevices();
             
-            _canDevices = new ObservableCollection<ICanDevice>();
-
             foreach (var pdm in _config.pdm)
             {
-                var newPdm = new DingoPdmCan(pdm.label, pdm.canOutput.baseId);
-                newPdm.SetVars(pdm);
-                _canDevices.Add(newPdm);
+                _canComms.AddCanDevice(typeof(DingoPdmCan), pdm.label, pdm.canOutput.baseId);
             }
 
             foreach (var cb in _config.canBoard)
             {
-                var newCb = new CanBoardCan(cb.label, cb.baseCanId);
-                _canDevices.Add(newCb);
+                _canComms.AddCanDevice(typeof(CanBoardCan), cb.label, cb.baseCanId);
             }
 
             foreach (var dash in _config.dash)
             {
-                var newDash = new DingoDashCan(dash.label, dash.baseCanId);
-                _canDevices.Add(newDash);
+                _canComms.AddCanDevice(typeof(DingoDashCan), dash.label, dash.baseCanId);
             }
-
-            OnPropertyChanged(nameof(CanDevices));
         }
 
         public void WindowClosing()
         {
-            _cts.Cancel();
-
-            Disconnect(null);
+            _canComms.Disconnect();
 
             if (_statusBarTimer != null)
             {
@@ -338,17 +311,6 @@ namespace DingoConfigurator
             NLog.LogManager.Shutdown(); // Flush and close down internal threads and timers
         }
 
-        private void CanDataReceived(object sender, CanDataEventArgs e)
-        {   
-            foreach (var cd in _canDevices)
-            {
-                if (cd.InIdRange(e.canData.Id))
-                {
-                    cd.Read(e.canData.Id, e.canData.Payload, ref _queue);
-                }
-            }
-        }
-
         private ViewModelBase _currentViewModel { get; set; }
         public ViewModelBase CurrentViewModel {
             get => _currentViewModel;
@@ -359,145 +321,21 @@ namespace DingoConfigurator
             }
         }
 
-        public ICanDevice SelectedCanDevice { get; set; }
-
-        private void GetDeviceSettings(bool getAll)
+        private bool _connected;
+        public bool Connected
         {
-            foreach (var cd in _canDevices)
-            {
-                if ((!getAll && SelectedCanDevice.Equals(cd)) ||
-                    getAll)
-                {
-                    if (cd.IsConnected)
-                    {
-                        var msgs = cd.GetUploadMessages();
-                        if (msgs == null) return;
-
-                        foreach (var msg in msgs)
-                        {
-                            msg.DeviceBaseId = cd.BaseId;
-                            _queue.Enqueue(msg);
-                        }
-                        msgs.Clear();
-                    }
-                }
-            }
-        }
-
-        private void SendDeviceSettings(bool sendAll)
-        {
-            foreach (var cd in _canDevices)
-            {
-                if ((!sendAll && SelectedCanDevice.Equals(cd)) ||
-                        sendAll)
-                {
-                    if (cd.IsConnected)
-                    {
-                        var msgs = cd.GetDownloadMessages();
-                        if (msgs == null) return;
-
-                        foreach (var msg in msgs)
-                        {
-                            msg.DeviceBaseId = cd.BaseId;
-                            _queue.Enqueue(msg);
-                        }
-                        msgs.Clear();
-                    }
-                }
-            }
-        }
-
-        private void BurnDeviceSettings(bool burnAll)
-        {
-            foreach (var cd in _canDevices)
-            {
-                if ((!burnAll && SelectedCanDevice.Equals(cd)) ||
-                        burnAll)
-                {
-                    if (cd.IsConnected)
-                    {
-                        var msg = cd.GetBurnMessage();
-                        if (msg == null) return;
-
-                        msg.DeviceBaseId = cd.BaseId;
-                        _queue.Enqueue(msg);
-                    }
-                }
-            }
-        }
-
-        private void ProcessQueue(object taskState)
-        {
-            CanDeviceResponse msg;
-            bool reQueue;
-
-            while (!_cts.Token.IsCancellationRequested)
-            {
-                //Always have to Enqueue again, unless it was received
-                if(_queue.TryDequeue(out msg))
-                {
-                    reQueue = true;
-
-                    //Send message
-                    if (!msg.Sent && CanInterfaceConnected)
-                    {
-                        _can.Write(msg.Data);
-                        msg.TimeSentStopwatch = Stopwatch.StartNew();
-                        msg.Sent = true;
-                        msg.Received = false;
-                        Task.Delay(100); //Wait a bit to ensure the device can respond
-                        //CANTx task runs every 50ms, so must be longer than that
-                    }
-                    else
-                    {
-                        if (msg.Sent && !msg.Received)
-                        {
-                            if (msg.TimeSentStopwatch.ElapsedMilliseconds > 1000)
-                            {
-                                if (msg.ReceiveAttempts <= 4)
-                                {
-                                    Logger.Warn($"No response {msg.MsgDescription}");
-                                    msg.Sent = false; //Resend request
-                                    msg.ReceiveAttempts++;
-                                }
-                                else
-                                {
-                                    Logger.Error($"No response after 4 attempts {msg.MsgDescription}");
-                                    //Dont put back on queue
-                                    reQueue = false;
-                                }
-                            }
-                        }
-                    }
-
-                    if(msg.Sent && msg.Received)
-                    {
-                        reQueue = false;
-                    }
-
-                    if (reQueue)
-                    {
-                        _queue.Enqueue(msg); //Add back to queue, at the end
-                    }
-                }
-                Task.Delay(10);
-            }
-            //Dump queue
-            while (_queue.TryDequeue(out msg)) ;
-
-        }
-
-        #region TreeView
-        private ObservableCollection<ICanDevice> _canDevices;
-        public ObservableCollection<ICanDevice> CanDevices
-        {
-            get => _canDevices;
+            get => _connected;
             set
             {
-                _canDevices = value;
-                OnPropertyChanged(nameof(CanDevices));
+                _connected = value;
+                OnPropertyChanged(nameof(Connected));
             }
         }
+
+        public ICanDevice SelectedCanDevice { get; set; }
+
+        #region TreeView
+        
 
         internal void Cans_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -524,12 +362,6 @@ namespace DingoConfigurator
 
                 if(sub.CanDevice.GetType() == typeof(DingoPdmCan))
                 {
-                    if (sub.Name.Equals("States"))
-                    {
-                        SelectedCanDevice = (DingoPdmCan)sub.CanDevice;
-                        CurrentViewModel = new DingoPdmSettingsViewModel(this);
-                    }
-
                     if (sub.Name.Equals("Settings"))
                     {
                         SelectedCanDevice = (DingoPdmCan)sub.CanDevice;
@@ -556,42 +388,13 @@ namespace DingoConfigurator
         #region Commands
         private void Connect(object parameter)
         {
-            string port = " ";
-            CanInterfaceBaudRate baud = CanInterfaceBaudRate.BAUD_500K;
-
-            switch (SelectedCan.Name)
-            {
-                case "USB2CAN":
-                    _can = new CanInterfaces.USB2CAN();
-                    port = SelectedComPort;
-                    baud = SelectedBaudRate;
-                    break;
-
-                case "PCAN":
-                    _can = new CanInterfaces.PCAN();
-                    port = "USBBUS1";
-                    baud = SelectedBaudRate;
-                    break;
-
-                case "USB":
-                    _can = new CanInterfaces.USB();
-                    port = SelectedComPort;
-                    baud = SelectedBaudRate;//Not used
-                    break;
-            }
-
-            if(!_can.Init(port, baud)) return;
-            _can.DataReceived += CanDataReceived;
-            if(!_can.Start()) return;
-            CanInterfaceConnected = true;
-            Thread.Sleep(100); //Wait for devices to connect
-            GetDeviceSettings(true);
+            _canComms.Connect(SelectedCan.Name, SelectedComPort, SelectedBaudRate);
         }
 
         
         private bool CanConnect(object parameter)
         {
-            return !CanInterfaceConnected && 
+            return !_canComms.Connected && 
                     _configFileOpened &&
                     ((CanComPorts && (SelectedComPort != null)) ||
                     !CanComPorts);
@@ -599,13 +402,12 @@ namespace DingoConfigurator
 
         private void Disconnect(object parameter)
         {
-            if(_can != null) _can.Stop();
-            CanInterfaceConnected = false;
+            _canComms.Disconnect();
         }
 
         private bool CanDisconnect(object parameter)
         {
-            return CanInterfaceConnected;
+            return _canComms.Connected;
         }
 
         private void RefreshComPorts(object parameter)
@@ -621,32 +423,32 @@ namespace DingoConfigurator
 
         private void Upload(object parameter)
         {
-            GetDeviceSettings(false);
+            _canComms.Upload(SelectedCanDevice);
         }
 
         private bool CanUpload(object parameter)
         {
-            return CanInterfaceConnected && (SelectedCanDevice != null);
+            return _canComms.Connected && (SelectedCanDevice != null);
         }
 
         private void Download(object parameter)
         {
-            SendDeviceSettings(false);
+            _canComms.Download(SelectedCanDevice);
         }
 
         private bool CanDownload(object parameter)
         {
-            return CanInterfaceConnected && (SelectedCanDevice != null);
+            return _canComms.Connected && (SelectedCanDevice != null);
         }
 
         private void Burn(object parameter)
         {
-            BurnDeviceSettings(false);
+            _canComms.Burn(SelectedCanDevice);
         }
 
         private bool CanBurn(object parameter)
         {
-            return CanInterfaceConnected && (SelectedCanDevice != null);
+            return _canComms.Connected && (SelectedCanDevice != null);
         }
         #endregion
 
@@ -739,19 +541,19 @@ namespace DingoConfigurator
         #region StatusBar
         private void UpdateStatusBar(object sender, ElapsedEventArgs e)
         {
-            CanInterfaceStatusText = $"{SelectedCan.Name} {(CanInterfaceConnected ? "Connected" : "Disconnected")}";
+            CanInterfaceStatusText = $"{SelectedCan.Name} {(_canComms.Connected ? "Connected" : "Disconnected")}";
 
             int connectedCount = 0;
 
-            if (_canDevices == null) return;
+            if (_canComms.CanDevices == null) return;
 
-            foreach (var cd in _canDevices)
+            foreach (var cd in _canComms.CanDevices)
             {
                 cd.UpdateIsConnected();
                 if (cd.IsConnected) connectedCount++;
             }
 
-            QueueCount = _queue.Count;
+            QueueCount = _canComms.QueueCount;
 
             DeviceCountText = $"Detected Devices: {connectedCount}";
         }

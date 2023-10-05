@@ -4,14 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2179EBC6-1AA3-4DA3-96F1-50FCEB1FFFA7}</ProjectGuid>
+    <ProjectGuid>{7F95C67B-6FE7-427A-95AB-2D39E6FE9186}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CanInterfaces</RootNamespace>
-    <AssemblyName>CanInterfaces</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <RootNamespace>CommsHandler</RootNamespace>
+    <AssemblyName>CommsHandler</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,7 +39,6 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,23 +47,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CanInterfaceTypes.cs" />
-    <Compile Include="PCAN.cs" />
-    <Compile Include="USB.cs" />
-    <Compile Include="USB2CAN.cs" />
-    <Compile Include="ICanInterface.cs" />
+    <Compile Include="CanCommsHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CanDevices\CanDevices.csproj">
+      <Project>{a12bf4e7-734a-4db0-87ad-e9bfe7e781ad}</Project>
+      <Name>CanDevices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CanInterfaces\CanInterfaces.csproj">
+      <Project>{2179ebc6-1aa3-4da3-96f1-50fceb1fffa7}</Project>
+      <Name>CanInterfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PCAN\PCAN.csproj">
       <Project>{1f1c8f99-4ec0-4fb6-9dae-0df649699b6f}</Project>
       <Name>PCAN</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

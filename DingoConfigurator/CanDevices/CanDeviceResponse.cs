@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CanDevices.DingoPdm
+namespace CanDevices
 {
     public class CanDeviceResponse
     {
