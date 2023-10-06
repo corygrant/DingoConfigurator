@@ -31,6 +31,7 @@ namespace DingoConfigurator
     public class MainViewModel : ViewModelBase
     {
         private CanCommsHandler _canComms;
+        public CanCommsHandler CanComms { get => _canComms; }
 
         private DevicesConfigHandler _configHandler;
 
@@ -42,6 +43,10 @@ namespace DingoConfigurator
 
         public MainViewModel()
         {
+            _canComms = new CanCommsHandler();
+
+            _configHandler = new DevicesConfigHandler();
+
             RefreshComPorts(null);
 
             Cans = new ObservableCollection<ComboBoxCanInterfaces>()
@@ -97,7 +102,7 @@ namespace DingoConfigurator
 
             _configHandler = new DevicesConfigHandler();
 
-            _configHandler.Serialize(_settingsPath);
+            _configHandler.SaveFile(_settingsPath);
         }
 
         private bool CanNewConfigFile(object parameter)
@@ -119,7 +124,7 @@ namespace DingoConfigurator
 
             _configHandler = new DevicesConfigHandler();
 
-            _configHandler.Deserialize(openFileDialog.FileName);
+            _configHandler.OpenFile(openFileDialog.FileName);
 
             AddCanDevicesToTree(_configHandler.Config);
 
@@ -140,7 +145,7 @@ namespace DingoConfigurator
 
         private void SaveConfigFile(object parameter)
         {
-            _configHandler.Save(_settingsPath, _canComms.CanDevices.ToArray());
+            _configHandler.UpdateSaveFile(_settingsPath, _canComms.CanDevices.ToArray());
         }
 
         private bool CanSaveConfigFile(object parameter)
@@ -158,23 +163,28 @@ namespace DingoConfigurator
             return _configHandler.Opened;
         }
 
+        //Add devices from config file to comms handler
         private void AddCanDevicesToTree(DevicesConfig config)
         {
             _canComms.ResetCanDevices();
-            
+
             foreach (var pdm in _configHandler.Config.pdm)
             {
-                _canComms.AddCanDevice(typeof(DingoPdmCan), pdm.label, pdm.canOutput.baseId);
+                DingoPdmCan newPdm = (DingoPdmCan)_canComms.AddCanDevice(typeof(DingoPdmCan), pdm.label, pdm.canOutput.baseId);
+                PdmConfigHandler.ApplyConfig(ref newPdm, pdm); //Apply the config settings to the new device
             }
 
             foreach (var cb in _configHandler.Config.canBoard)
             {
-                _canComms.AddCanDevice(typeof(CanBoardCan), cb.label, cb.baseCanId);
+                CanBoardCan newCb = (CanBoardCan)_canComms.AddCanDevice(typeof(CanBoardCan), cb.label, cb.baseCanId);
+                //CanBoardConfigHandler.ApplyConfig(ref newCb, cb); //Apply the config settings to the new device
             }
 
             foreach (var dash in _configHandler.Config.dash)
             {
-                _canComms.AddCanDevice(typeof(DingoDashCan), dash.label, dash.baseCanId);
+                DingoDashCan newDash =(DingoDashCan)_canComms.AddCanDevice(typeof(DingoDashCan), dash.label, dash.baseCanId);
+                //DashConfigHandler.ApplyConfig(ref newDash, dash); //Apply the config settings to the new device
+
             }
         }
 

@@ -14,6 +14,8 @@ namespace CanDevices.DingoPdm
 {
     public class DingoPdmCan : NotifyPropertyChangedBase, ICanDevice
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         private string _name;
         public string Name
         {
@@ -247,6 +249,8 @@ namespace CanDevices.DingoPdm
 
         public DingoPdmCan(string name, int id)
         {
+            Logger.Info($"New DingoPDM: {name}, ID: {id}");
+
             Name = name;
             BaseId = id;
             DigitalInputs = new ObservableCollection<Input>();
@@ -299,114 +303,6 @@ namespace CanDevices.DingoPdm
             };
 
             SubPages.Add(new CanDeviceSub("Settings", this));
-        }
-
-        public void SetVars(PdmConfig config)
-        {
-            Name = config.label;
-            BaseId = config.canOutput.baseId;
-
-            int index = 0;
-
-            foreach (var di in DigitalInputs)
-            {
-                di.Name = config.input[index].label;
-                di.Enabled = config.input[index].enabled;
-                di.Mode = config.input[index].mode;
-                di.InvertInput = config.input[index].invertInput;
-                di.DebounceTime = config.input[index].debounceTime;
-
-                index++;
-            }
-
-            index = 0;
-
-            foreach (var output in Outputs)
-            {
-                output.Name = config.output[index].label;
-                output.Enabled = config.output[index].enabled;
-                output.Input = config.output[index].input;
-                output.CurrentLimit = config.output[index].currentLimit;
-                output.InrushCurrentLimit = config.output[index].inrushLimit;
-                output.InrushTime = config.output[index].inrushTime;
-                output.ResetMode = config.output[index].resetMode;
-                output.ResetTime = config.output[index].resetTime;
-                output.ResetCountLimit = config.output[index].resetLimit;
-
-                index++;
-            }
-
-            index = 0;
-
-            foreach (var canIn in CanInputs)
-            {
-                canIn.Name = config.canInput[index].label;
-                canIn.Enabled = config.canInput[index].enabled;
-                canIn.Id = config.canInput[index].id;
-                canIn.LowByte = config.canInput[index].lowByte;
-                canIn.HighByte = config.canInput[index].highByte;
-                canIn.Operator = config.canInput[index].oper;
-                canIn.OnVal = config.canInput[index].onValue;
-                canIn.Mode = config.canInput[index].mode;
-
-                index++;
-            }
-
-            index = 0;
-
-            foreach (var virtIn in VirtualInputs)
-            {
-                virtIn.Name = config.virtualInput[index].label;
-                virtIn.Enabled = config.virtualInput[index].enabled;
-                virtIn.Not0 = config.virtualInput[index].not0;
-                virtIn.Var0 = config.virtualInput[index].var0;
-                virtIn.Cond0 = config.virtualInput[index].cond0;
-                virtIn.Not1 = config.virtualInput[index].not1;
-                virtIn.Var1 = config.virtualInput[index].var1;
-                virtIn.Not2 = config.virtualInput[index].not2;
-                virtIn.Var2 = config.virtualInput[index].var2;
-                virtIn.Mode = config.virtualInput[index].mode;
-
-                index++;
-            }
-
-            index = 0;
-
-            Wipers[0].Enabled = config.wiper.enabled;
-            Wipers[0].SlowInput = config.wiper.lowSpeedInput;
-            Wipers[0].FastInput = config.wiper.highSpeedInput;
-            Wipers[0].ParkInput = config.wiper.parkInput;
-            Wipers[0].ParkStopLevel = config.wiper.parkStopLevel;
-            Wipers[0].WashInput = config.wiper.washInput;
-            Wipers[0].WashWipeCycles = config.wiper.washCycles;
-            Wipers[0].InterInput = config.wiper.intermitInput;
-            Wipers[0].SpeedInput = config.wiper.speedInput;
-            Wipers[0].IntermitTime = config.wiper.intermitTime;
-            Wipers[0].SpeedMap = config.wiper.speedMap;
-
-            foreach (var flash in Flashers)
-            {
-                flash.Name = config.flasher[index].label;
-                flash.Enabled = config.flasher[index].enabled;
-                flash.Input = config.flasher[index].input;
-                flash.OnTime = config.flasher[index].flashOnTime;
-                flash.OffTime = config.flasher[index].flashOffTime;
-                flash.Single = config.flasher[index].singleCycle == 1;
-                flash.Output = config.flasher[index].output;
-
-                index++;
-            }
-
-            StarterDisable[0].Enabled = config.starter.enabled;
-            StarterDisable[0].Input = config.starter.input;
-            StarterDisable[0].Output1 = config.starter.disableOut[0];
-            StarterDisable[0].Output2 = config.starter.disableOut[1];
-            StarterDisable[0].Output3 = config.starter.disableOut[2];
-            StarterDisable[0].Output4 = config.starter.disableOut[3];
-            StarterDisable[0].Output5 = config.starter.disableOut[4];
-            StarterDisable[0].Output6 = config.starter.disableOut[5];
-            StarterDisable[0].Output7 = config.starter.disableOut[6];
-            StarterDisable[0].Output8 = config.starter.disableOut[7];
         }
 
         public void UpdateIsConnected()

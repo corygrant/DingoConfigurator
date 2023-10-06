@@ -41,6 +41,8 @@ namespace CommsHandler
         {
             _canDevices = new ObservableCollection<ICanDevice>();
             _cts = new CancellationTokenSource();
+            _queue = new ConcurrentQueue<CanDeviceResponse>();
+            Connected = false;
         }
 
         private bool _connected;
@@ -80,7 +82,6 @@ namespace CommsHandler
             if (!_can.Start()) return;
             Connected = true;
 
-            _queue = new ConcurrentQueue<CanDeviceResponse>();
             Task.Factory.StartNew(ProcessQueue, TaskCreationOptions.LongRunning, _cts.Token);
 
             Thread.Sleep(100); //Wait for devices to connect
@@ -237,32 +238,35 @@ namespace CommsHandler
             _canDevices = new ObservableCollection<ICanDevice>();
         }
 
-        public void AddCanDevice(Type type, string name, int baseId)
+        public ICanDevice AddCanDevice(Type type, string name, int baseId)
         {
-            if (!(type is ICanDevice)) return;
+            if (!(typeof(ICanDevice).IsAssignableFrom(type))) return null;
 
             if(type == typeof(DingoPdmCan))
             {
                 var newPdm = new DingoPdmCan(name, baseId);
-                //newPdm.SetVars(pdm);
                 _canDevices.Add(newPdm);
+                OnPropertyChanged(nameof(CanDevices));
+                return newPdm;
             }
 
             if (type == typeof(CanBoardCan))
             {
                 var newCb = new CanBoardCan(name, baseId);
-                //newCb.SetVars(cb);
                 _canDevices.Add(newCb);
+                OnPropertyChanged(nameof(CanDevices));
+                return newCb;
             }
 
             if (type == typeof(DingoDashCan))
             {
                 var newDash = new DingoDashCan(name, baseId);
-                //newDash.SetVars(dash);
                 _canDevices.Add(newDash);
+                OnPropertyChanged(nameof(CanDevices));
+                return newDash;
             }
 
-            OnPropertyChanged(nameof(CanDevices));
+            return null;
         }
     }
 }

@@ -108,10 +108,10 @@
                     <Rectangle.Style>
                         <Style TargetType="{x:Type Rectangle}">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding CanInterfaceConnected}" Value="True">
+                                <DataTrigger Binding="{Binding CanComms.Connected}" Value="True">
                                     <Setter Property="Fill" Value="Lime"/>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding CanInterfaceConnected}" Value="False">
+                                <DataTrigger Binding="{Binding CanComms.Connected}" Value="False">
                                     <Setter Property="Fill" Value="DarkGray"/>
                                 </DataTrigger>
                             </Style.Triggers>
@@ -159,7 +159,7 @@
                 <ColumnDefinition Width="20*"/>
             </Grid.ColumnDefinitions>
             <TreeView Grid.Column="0"
-                          ItemsSource="{Binding CanDevices}"
+                          ItemsSource="{Binding CanComms.CanDevices}"
                           SelectedItemChanged="TreeView_SelectedItemChanged" Grid.ColumnSpan="2">
                 <TreeView.Resources>
                     <HierarchicalDataTemplate DataType="{x:Type cd:CanDeviceSub}">
