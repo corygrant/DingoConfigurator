@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -19,6 +20,10 @@ namespace CanInterfaces
 
     public class PCAN : ICanInterface
     {
+        private int _rxTimeDelta;
+        public int RxTimeDelta { get => _rxTimeDelta; }
+        private Stopwatch _rxStopwatch;
+
         #region Defines
         /// <summary>
         /// Sets the PCANHandle (Hardware Channel)
@@ -99,6 +104,9 @@ namespace CanInterfaces
             m_ReadThread = new Thread(new ThreadStart(ReceiveThread));
             m_ThreadRun= true;
             m_ReadThread.Start();
+
+            _rxStopwatch = Stopwatch.StartNew();
+
             return true;
         }
 
@@ -180,6 +188,9 @@ namespace CanInterfaces
                 stsResult = PCANBasic.Read(PcanHandle, out TPCANMsg CANMsg, out TPCANTimestamp CANTimeStamp);
                 if (stsResult != TPCANStatus.PCAN_ERROR_QRCVEMPTY)
                 {
+                    _rxTimeDelta = Convert.ToInt32(_rxStopwatch.ElapsedMilliseconds);
+                    _rxStopwatch.Restart();
+
                     CanInterfaceData data = new CanInterfaceData
                     {
                         Id = Convert.ToInt16(CANMsg.ID),

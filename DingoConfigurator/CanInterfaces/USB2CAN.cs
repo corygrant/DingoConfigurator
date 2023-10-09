@@ -1,6 +1,7 @@
 ﻿using PCAN;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
@@ -29,6 +30,10 @@ namespace CanInterfaces
         private USB2CAN_Bitrate bitrate = USB2CAN_Bitrate.BITRATE_500K;
 
         public DataReceivedHandler DataReceived { get; set; }
+
+        private int _rxTimeDelta;
+        public int RxTimeDelta { get => _rxTimeDelta;}
+        private Stopwatch _rxStopwatch;
 
         private void OnDataReceived(CanDataEventArgs e)
         {
@@ -62,6 +67,8 @@ namespace CanInterfaces
                 _serial.NewLine = "\r";
                 _serial.DataReceived += _serial_DataReceived;
                 _serial.Open();
+
+                _rxStopwatch = Stopwatch.StartNew();
             }
             catch (Exception e)
             {
@@ -79,46 +86,50 @@ namespace CanInterfaces
             if (ser == null) return;
             if (!ser.IsOpen) return;
 
-            string raw = ser.ReadLine(); //Use ReadLine to make sure each msg is read individually (must add NewLine="\r" before starting RX above)
-
-            if (raw.Length >= 5) //'t' msg is always at least 5 bytes long (t + ID ID ID + DLC)
+            foreach (var raw in ser.ReadExisting().Split('\r'))
             {
-                if (raw.Substring(0,1) != "t") return;
 
-                var id = int.Parse(raw.Substring(1, 3), System.Globalization.NumberStyles.HexNumber);
-                var len = int.Parse(raw.Substring(4, 1), System.Globalization.NumberStyles.HexNumber);
-
-                //Msg comes in as a hex string
-                //For example, an ID of 2008(0x7D8) will be sent as "t7D8...."
-                //The string needs to be parsed into an int using int.Parse
-                //The payload bytes are split across 2 bytes (a nibble each)
-                //For example, a payload byte of 28 (0001 1100) would be split into "1C"
-                byte[] payload;
-                if ((len > 0) &&
-                    (raw.Length > ((len - 1) * 2 + 6)))
+                if (raw.Length >= 5) //'t' msg is always at least 5 bytes long (t + ID ID ID + DLC)
                 {
-                    payload = new byte[len];
-                    for (int i = 0; i < payload.Length; i++)
+                    if (raw.Substring(0, 1) != "t") return;
+
+                    _rxTimeDelta = Convert.ToInt32(_rxStopwatch.ElapsedMilliseconds);
+                    _rxStopwatch.Restart();
+
+                    var id = int.Parse(raw.Substring(1, 3), System.Globalization.NumberStyles.HexNumber);
+                    var len = int.Parse(raw.Substring(4, 1), System.Globalization.NumberStyles.HexNumber);
+
+                    //Msg comes in as a hex string
+                    //For example, an ID of 2008(0x7D8) will be sent as "t7D8...."
+                    //The string needs to be parsed into an int using int.Parse
+                    //The payload bytes are split across 2 bytes (a nibble each)
+                    //For example, a payload byte of 28 (0001 1100) would be split into "1C"
+                    byte[] payload;
+                    if (len > 0)
                     {
-                        int highNibble = int.Parse(raw.Substring(i * 2 + 5, 1), System.Globalization.NumberStyles.HexNumber);
-                        int lowNibble = int.Parse(raw.Substring(i * 2 + 6, 1), System.Globalization.NumberStyles.HexNumber);
-                        payload[i] = (byte)(((highNibble & 0x0F) << 4) + (lowNibble & 0x0F));
+                        payload = new byte[len];
+                        for (int i = 0; i < payload.Length; i++)
+                        {
+                            int highNibble = int.Parse(raw.Substring(i * 2 + 5, 1), System.Globalization.NumberStyles.HexNumber);
+                            int lowNibble = int.Parse(raw.Substring(i * 2 + 6, 1), System.Globalization.NumberStyles.HexNumber);
+                            payload[i] = (byte)(((highNibble & 0x0F) << 4) + (lowNibble & 0x0F));
+                        }
                     }
-                }
-                else
-                {
-                    //Length was 0, create empty data
-                    payload = new byte[8];
-                }
+                    else
+                    {
+                        //Length was 0, create empty data
+                        payload = new byte[8];
+                    }
 
-                CanInterfaceData data = new CanInterfaceData
-                {
-                    Id = id,
-                    Len = len,
-                    Payload = payload
-                };
+                    CanInterfaceData data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = len,
+                        Payload = payload
+                    };
 
-                OnDataReceived(new CanDataEventArgs(data));
+                    OnDataReceived(new CanDataEventArgs(data));
+                }
             }
         }
 

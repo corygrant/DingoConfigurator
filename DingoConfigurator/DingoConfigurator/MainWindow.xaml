@@ -93,7 +93,11 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="30" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="130" />
                         </Grid.ColumnDefinitions>
@@ -127,12 +131,28 @@
             </StatusBarItem>
             <Separator Grid.Column="3" />
             <StatusBarItem Grid.Column="4"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center">      
+                <TextBlock Text="Queue" />
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="5"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center">
                 <TextBlock Text="{Binding Path=QueueCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
             </StatusBarItem>
-            <Separator Grid.Column="5" />
-            <StatusBarItem Grid.Column="6"
+            <Separator Grid.Column="6" />
+            <StatusBarItem Grid.Column="7"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center">
+                <TextBlock Text="RxTime" />
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="8"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center">
+                <TextBlock Text="{Binding Path=RxTimeDelta, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StatusBarItem>
+            <Separator Grid.Column="9" />
+            <StatusBarItem Grid.Column="10"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center">
                 <TextBlock Text="{Binding Path=DeviceCountText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />

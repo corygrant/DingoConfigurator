@@ -14,5 +14,6 @@ namespace CanInterfaces
         bool Stop();
         bool Write(CanInterfaceData canData);
         DataReceivedHandler DataReceived { get; set; }
+        int RxTimeDelta { get; }
     }
 }

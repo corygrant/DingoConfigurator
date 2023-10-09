@@ -452,6 +452,8 @@ namespace DingoConfigurator
 
             QueueCount = _canComms.QueueCount;
 
+            RxTimeDelta = _canComms.RxTimeDelta;
+
             DeviceCountText = $"Detected Devices: {connectedCount}";
         }
 
@@ -496,6 +498,17 @@ namespace DingoConfigurator
             {
                 _queueCount = value;
                 OnPropertyChanged(nameof(QueueCount));
+            }
+        }
+
+        private int _rxTimeDelta;
+        public int RxTimeDelta
+        {
+            get => _rxTimeDelta;
+            set
+            {
+                _rxTimeDelta = value;
+                OnPropertyChanged(nameof(RxTimeDelta));
             }
         }
         #endregion

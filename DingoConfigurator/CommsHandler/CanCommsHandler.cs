@@ -43,6 +43,13 @@ namespace CommsHandler
             _cts = new CancellationTokenSource();
             _queue = new ConcurrentQueue<CanDeviceResponse>();
             Connected = false;
+
+            Task.Factory.StartNew(ProcessQueue, TaskCreationOptions.LongRunning, _cts.Token);
+        }
+
+        ~CanCommsHandler()
+        {
+            _cts.Cancel();
         }
 
         private bool _connected;
@@ -57,6 +64,13 @@ namespace CommsHandler
         }
 
         public int QueueCount { get => _queue.Count; }
+        public int RxTimeDelta {
+            get
+            {
+                if (_can == null) return 0;
+                return _can.RxTimeDelta;
+            }
+        }
 
         public async Task Connect(string interfaceName, string port, CanInterfaceBaudRate baud)
         {
@@ -82,7 +96,7 @@ namespace CommsHandler
             if (!_can.Start()) return;
             Connected = true;
 
-            Task.Factory.StartNew(ProcessQueue, TaskCreationOptions.LongRunning, _cts.Token);
+            
 
             Thread.Sleep(100); //Wait for devices to connect
             Upload(null);
@@ -90,8 +104,6 @@ namespace CommsHandler
 
         public async Task Disconnect()
         {
-            _cts.Cancel();
-
             if (_can != null) _can.Stop();
             Connected = false;
         }

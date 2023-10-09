@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,12 @@ namespace CanInterfaces
     {
         private SerialPort _serial;
 
+        private int _rxTimeDelta;
+        public int RxTimeDelta { get => _rxTimeDelta; }
+        private Stopwatch _rxStopwatch;
+
         public DataReceivedHandler DataReceived { get; set; }
+
         private void OnDataReceived(CanDataEventArgs e)
         {
             if (DataReceived != null)
@@ -61,6 +67,9 @@ namespace CanInterfaces
                 {
                     if (raw.Substring(0, 1) != "t") return;
 
+                    _rxTimeDelta = Convert.ToInt32(_rxStopwatch.ElapsedMilliseconds);
+                    _rxStopwatch.Restart();
+
                     var id = int.Parse(raw.Substring(1, 3), System.Globalization.NumberStyles.HexNumber);
                     var len = int.Parse(raw.Substring(4, 1), System.Globalization.NumberStyles.HexNumber);
 
@@ -104,6 +113,8 @@ namespace CanInterfaces
             try 
             {
                 _serial.Open();
+
+                _rxStopwatch = Stopwatch.StartNew();
             }
             catch(Exception e)
             {
