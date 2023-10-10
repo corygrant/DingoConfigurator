@@ -323,7 +323,7 @@ namespace CanDevices.DingoPdm
             return (id >= BaseId) && (id <= BaseId + 30) ;
         }
 
-        public bool Read(int id, byte[] data, ref ConcurrentQueue<CanDeviceResponse> queue)
+        public bool Read(int id, byte[] data, ref List<CanDeviceResponse> queue)
         {
             if ((id < BaseId) || (id > BaseId + 30)) 
                 return false;
@@ -533,7 +533,7 @@ namespace CanDevices.DingoPdm
             Wipers[0].FastState = Convert.ToBoolean((data[0] >> 1) & 0x01);
         }
 
-        private void ReadSettingsResponse(byte[] data, ConcurrentQueue<CanDeviceResponse> queue)
+        private void ReadSettingsResponse(byte[] data, List<CanDeviceResponse> queue)
         {
             //Response is lowercase version of set/get prefix
             MessagePrefix prefix = (MessagePrefix)Char.ToUpper(Convert.ToChar(data[0]));
@@ -549,7 +549,8 @@ namespace CanDevices.DingoPdm
                         if((msg.DeviceBaseId == BaseId) &&
                                         ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.Version))
                         {
-                            msg.Received = true;
+                            msg.TimeSentTimer.Dispose();
+                            queue.Remove(msg);
                             break;
                         }
                     }
@@ -562,7 +563,8 @@ namespace CanDevices.DingoPdm
                         if ((msg.DeviceBaseId == BaseId) &&
                                         ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.CAN))
                         {
-                            msg.Received = true;
+                            msg.TimeSentTimer.Dispose();
+                            queue.Remove(msg);
                             break;
                         }
                     }
@@ -585,7 +587,8 @@ namespace CanDevices.DingoPdm
                                         ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.Input) &&
                                         ((msg.Data.Payload[1] & 0xF0) >> 4) == index)
                         {
-                            msg.Received = true;
+                            msg.TimeSentTimer.Dispose();
+                            queue.Remove(msg);
                             break;
                         }
                     }
@@ -612,7 +615,8 @@ namespace CanDevices.DingoPdm
                                         ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.Output) &&
                                         ((msg.Data.Payload[1] & 0xF0) >> 4) == index)
                         {
-                            msg.Received = true;
+                            msg.TimeSentTimer.Dispose();
+                            queue.Remove(msg);
                             break;
                         }
                     }
@@ -641,7 +645,8 @@ namespace CanDevices.DingoPdm
                                         ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.VirtualInput) &&
                                         msg.Data.Payload[2] == index)
                         {
-                            msg.Received = true;
+                            msg.TimeSentTimer.Dispose();
+                            queue.Remove(msg);
                             break;
                         }
                     }
@@ -666,7 +671,8 @@ namespace CanDevices.DingoPdm
                                         ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.Flasher) &&
                                         ((msg.Data.Payload[1] & 0xF0) >> 4) == index)
                         {
-                            msg.Received = true;
+                            msg.TimeSentTimer.Dispose();
+                            queue.Remove(msg);
                             break;
                         }
                     }
@@ -689,7 +695,8 @@ namespace CanDevices.DingoPdm
                         if ((msg.DeviceBaseId == BaseId) &&
                                         ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.Wiper))
                         {
-                            msg.Received = true;
+                            msg.TimeSentTimer.Dispose();
+                            queue.Remove(msg);
                             break;
                         }
                     }
@@ -712,7 +719,8 @@ namespace CanDevices.DingoPdm
                         if ((msg.DeviceBaseId == BaseId) &&
                                         ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.WiperSpeed))
                         {
-                            msg.Received = true;
+                            msg.TimeSentTimer.Dispose();
+                            queue.Remove(msg);
                             break;
                         }
                     }
@@ -731,7 +739,8 @@ namespace CanDevices.DingoPdm
                         if ((msg.DeviceBaseId == BaseId) &&
                                         ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.WiperDelay))
                         {
-                            msg.Received = true;
+                            msg.TimeSentTimer.Dispose();
+                            queue.Remove(msg);
                             break;
                         }
                     }
@@ -754,7 +763,8 @@ namespace CanDevices.DingoPdm
                         if ((msg.DeviceBaseId == BaseId) &&
                                         ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.StarterDisable))
                         {
-                            msg.Received = true;
+                            msg.TimeSentTimer.Dispose();
+                            queue.Remove(msg);
                             break;
                         }
                     }
@@ -778,7 +788,8 @@ namespace CanDevices.DingoPdm
                                             ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.CANInput) &&
                                             msg.Data.Payload[2] == index)
                             {
-                                msg.Received = true;
+                                msg.TimeSentTimer.Dispose();
+                                queue.Remove(msg);
                                 break;
                             }
                         }

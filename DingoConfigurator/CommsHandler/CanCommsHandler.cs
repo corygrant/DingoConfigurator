@@ -1,11 +1,7 @@
 ﻿using CanInterfaces;
 using CanDevices;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
@@ -18,7 +14,8 @@ namespace CommsHandler
     public class CanCommsHandler : NotifyPropertyChangedBase
     {
         private ICanInterface _can;
-        private ConcurrentQueue<CanDeviceResponse> _queue;
+
+        private List<CanDeviceResponse> _queue;
 
         public delegate void DataUpdatedHandler(object sender);
 
@@ -41,10 +38,8 @@ namespace CommsHandler
         {
             _canDevices = new ObservableCollection<ICanDevice>();
             _cts = new CancellationTokenSource();
-            _queue = new ConcurrentQueue<CanDeviceResponse>();
+            _queue = new List<CanDeviceResponse>();
             Connected = false;
-
-            Task.Factory.StartNew(ProcessQueue, TaskCreationOptions.LongRunning, _cts.Token);
         }
 
         ~CanCommsHandler()
@@ -123,7 +118,10 @@ namespace CommsHandler
                         foreach (var msg in msgs)
                         {
                             msg.DeviceBaseId = cd.BaseId;
-                            _queue.Enqueue(msg);
+                            _queue.Add(msg);
+                            _can.Write(msg.Data);
+
+                            msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
                         }
                         msgs.Clear();
                     }
@@ -145,7 +143,10 @@ namespace CommsHandler
                         foreach (var msg in msgs)
                         {
                             msg.DeviceBaseId = cd.BaseId;
-                            _queue.Enqueue(msg);
+                            _queue.Add(msg);
+                            _can.Write(msg.Data);
+
+                            msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
                         }
                         msgs.Clear();
                     }
@@ -165,7 +166,10 @@ namespace CommsHandler
                         if (msg == null) return;
 
                         msg.DeviceBaseId = cd.BaseId;
-                        _queue.Enqueue(msg);
+                        _queue.Add(msg);
+                        _can.Write(msg.Data);
+
+                        msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
                     }
                 }
             }
@@ -182,65 +186,21 @@ namespace CommsHandler
             }
         }
 
-        private void ProcessQueue(object taskState)
+        private void SentTimeElapsed(Object response)
         {
-            CanDeviceResponse msg;
-            bool reQueue;
-
-            while (!_cts.Token.IsCancellationRequested)
+            CanDeviceResponse msg = (CanDeviceResponse)response;
+            if(msg.ReceiveAttempts < 4)
             {
-                //Always have to Enqueue again, unless it was received
-                if (_queue.TryDequeue(out msg))
-                {
-                    reQueue = true;
-
-                    //Send message
-                    if (!msg.Sent && Connected)
-                    {
-                        _can.Write(msg.Data);
-                        msg.TimeSentStopwatch = Stopwatch.StartNew();
-                        msg.Sent = true;
-                        msg.Received = false;
-                        Task.Delay(100); //Wait a bit to ensure the device can respond
-                        //CANTx task runs every 50ms, so must be longer than that
-                    }
-                    else
-                    {
-                        if (msg.Sent && !msg.Received)
-                        {
-                            if (msg.TimeSentStopwatch.ElapsedMilliseconds > 1000)
-                            {
-                                if (msg.ReceiveAttempts <= 4)
-                                {
-                                    Logger.Warn($"No response {msg.MsgDescription}");
-                                    msg.Sent = false; //Resend request
-                                    msg.ReceiveAttempts++;
-                                }
-                                else
-                                {
-                                    Logger.Error($"No response after 4 attempts {msg.MsgDescription}");
-                                    //Dont put back on queue
-                                    reQueue = false;
-                                }
-                            }
-                        }
-                    }
-
-                    if (msg.Sent && msg.Received)
-                    {
-                        reQueue = false;
-                    }
-
-                    if (reQueue)
-                    {
-                        _queue.Enqueue(msg); //Add back to queue, at the end
-                    }
-                }
-                Task.Delay(10);
+                Logger.Warn($"No response {msg.MsgDescription}");
+                _can.Write(msg.Data);
+                msg.ReceiveAttempts++;
             }
-            //Dump queue
-            while (_queue.TryDequeue(out msg)) ;
-
+            else
+            {
+                Logger.Error($"No response after 4 attempts {msg.MsgDescription}");
+                msg.TimeSentTimer.Dispose();
+                _queue.Remove(msg);
+            }
         }
 
         public void ResetCanDevices()

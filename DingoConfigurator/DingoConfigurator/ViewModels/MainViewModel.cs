@@ -128,8 +128,6 @@ namespace DingoConfigurator
 
             AddCanDevicesToTree(_configHandler.Config);
 
-            
-
             // Create a timer to update status bar
             _statusBarTimer = new System.Timers.Timer(200);
             _statusBarTimer.Elapsed += UpdateStatusBar;

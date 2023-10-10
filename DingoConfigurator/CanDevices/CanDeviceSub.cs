@@ -58,7 +58,7 @@ namespace CanDevices
         
         }
 
-        public bool Read(int id, byte[] data, ref ConcurrentQueue<CanDeviceResponse> queue)
+        public bool Read(int id, byte[] data, ref List<CanDeviceResponse> queue)
         {
             return true;
         }
