@@ -12,26 +12,6 @@ namespace DingoConfigurator.Config
 {
     public class DevicesConfig
     {
-        public DevicesConfig()
-        {
-            pdm = new PdmConfig[]
-            {
-                new PdmConfig(),
-                new PdmConfig()
-            };
-
-            canBoard = new CanBoardConfig[]
-            {
-                new CanBoardConfig(),
-                new CanBoardConfig()
-            };
-
-            dash = new DashConfig[]
-            {
-                new DashConfig()
-            };
-        }
-
         public PdmConfig[] pdm { get; set; }
         public CanBoardConfig[] canBoard { get; set; }
         public DashConfig[] dash { get; set; }

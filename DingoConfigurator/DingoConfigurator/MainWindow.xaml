@@ -39,6 +39,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="5*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -84,7 +85,13 @@
                         Command="{Binding BurnBtnCmd}"/>
             </ToolBar>
         </ToolBarTray>
-        <StatusBar Grid.Row="4">
+        <GridSplitter Grid.Row="1"
+                  VerticalAlignment="Center"
+                  Background="White" 
+                  ShowsPreview="True"
+                  IsEnabled="False"
+                  Height="2"/>
+        <StatusBar Grid.Row="5">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
@@ -92,6 +99,8 @@
                             <ColumnDefinition Width="50" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="2*" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="30" />
@@ -131,34 +140,40 @@
             </StatusBarItem>
             <Separator Grid.Column="3" />
             <StatusBarItem Grid.Column="4"
+               HorizontalAlignment="Left">
+                <TextBlock Text="{Binding Path=ConfigFileName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+               Margin="5 0 0 0"/>
+            </StatusBarItem>
+            <Separator Grid.Column="5" />
+            <StatusBarItem Grid.Column="6"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center">      
                 <TextBlock Text="Queue" />
             </StatusBarItem>
-            <StatusBarItem Grid.Column="5"
+            <StatusBarItem Grid.Column="7"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center">
                 <TextBlock Text="{Binding Path=QueueCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
             </StatusBarItem>
-            <Separator Grid.Column="6" />
-            <StatusBarItem Grid.Column="7"
+            <Separator Grid.Column="8" />
+            <StatusBarItem Grid.Column="9"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center">
                 <TextBlock Text="RxTime" />
             </StatusBarItem>
-            <StatusBarItem Grid.Column="8"
+            <StatusBarItem Grid.Column="10"
                HorizontalAlignment="Center"
                VerticalAlignment="Center">
                 <TextBlock Text="{Binding Path=RxTimeDelta, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
             </StatusBarItem>
-            <Separator Grid.Column="9" />
-            <StatusBarItem Grid.Column="10"
+            <Separator Grid.Column="11" />
+            <StatusBarItem Grid.Column="12"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center">
                 <TextBlock Text="{Binding Path=DeviceCountText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
             </StatusBarItem>
         </StatusBar>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <Grid.Resources>
                 <DataTemplate DataType="{x:Type vm:DingoPdmViewModel}">
                     <vw:DingoPdmView/>
@@ -178,92 +193,153 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="20*"/>
             </Grid.ColumnDefinitions>
-            <TreeView Grid.Column="0"
-                          ItemsSource="{Binding CanComms.CanDevices}"
-                          SelectedItemChanged="TreeView_SelectedItemChanged" Grid.ColumnSpan="2">
-                <TreeView.Resources>
-                    <HierarchicalDataTemplate DataType="{x:Type cd:CanDeviceSub}">
-                        <StackPanel Orientation="Horizontal">
-                            <Image x:Name="TypeImage"
-                                       Width="20"
-                                       Height="20"
-                                       Margin="2 2 5 2"/>
-                            <TextBlock Text="{Binding Name}"
-                                           VerticalAlignment="Center"/>
-                        </StackPanel>
-                        <HierarchicalDataTemplate.Triggers>
-                            <DataTrigger Binding="{Binding IsConnected}" Value="True">
-                                <Setter TargetName="TypeImage" Property="Opacity" Value="1.0"/>
-                                <Setter TargetName="TypeImage" Property="Source" Value="Icons\settings_1.png"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding IsConnected}" Value="False">
-                                <Setter TargetName="TypeImage" Property="Opacity" Value="0.5"/>
-                                <Setter TargetName="TypeImage" Property="Source" Value="Icons\settings_0.png"/>
-                            </DataTrigger>
-                        </HierarchicalDataTemplate.Triggers>
-                    </HierarchicalDataTemplate>
-                    <HierarchicalDataTemplate DataType="{x:Type pdm:DingoPdmCan}" ItemsSource="{Binding SubPages}">
-                        <StackPanel Orientation="Horizontal">
-                            <Image  x:Name="TypeImage"
-                                        Width="20"
-                                        Height="20"
-                                        Margin="2 2 5 2"/>
-                            <TextBlock Text="{Binding Name}" 
-                                           VerticalAlignment="Center"/>
-                        </StackPanel>
-                        <HierarchicalDataTemplate.Triggers>
-                            <DataTrigger Binding="{Binding IsConnected}" Value="True">
-                                <Setter TargetName="TypeImage" Property="Opacity" Value="1.0"/>
-                                <Setter TargetName="TypeImage" Property="Source" Value="Icons\pdm_1.png"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding IsConnected}" Value="False">
-                                <Setter TargetName="TypeImage" Property="Opacity" Value="0.5"/>
-                                <Setter TargetName="TypeImage" Property="Source" Value="Icons\pdm_0.png"/>
-                            </DataTrigger>
-                        </HierarchicalDataTemplate.Triggers>
-                    </HierarchicalDataTemplate>
-                    <HierarchicalDataTemplate DataType="{x:Type cb:CanBoardCan}">
-                        <StackPanel Orientation="Horizontal">
-                            <Image  x:Name="TypeImage"
-                                        Width="20"
-                                        Height="20"
-                                        Margin="2 2 5 2"/>
-                            <TextBlock Text="{Binding Name}"
-                                           VerticalAlignment="Center"/>
-                        </StackPanel>
-                        <HierarchicalDataTemplate.Triggers>
-                            <DataTrigger Binding="{Binding IsConnected}" Value="True">
-                                <Setter TargetName="TypeImage" Property="Opacity" Value="1.0"/>
-                                <Setter TargetName="TypeImage" Property="Source" Value="Icons\canboard_1.png"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding IsConnected}" Value="False">
-                                <Setter TargetName="TypeImage" Property="Opacity" Value="0.5"/>
-                                <Setter TargetName="TypeImage" Property="Source" Value="Icons\canboard_0.png"/>
-                            </DataTrigger>
-                        </HierarchicalDataTemplate.Triggers>
-                    </HierarchicalDataTemplate>
-                    <HierarchicalDataTemplate DataType="{x:Type dash:DingoDashCan}">
-                        <StackPanel Orientation="Horizontal">
-                            <Image  x:Name="TypeImage"
-                                        Width="20"
-                                        Height="20"
-                                        Margin="2 2 5 2"/>
-                            <TextBlock Text="{Binding Name}"
-                                           VerticalAlignment="Center"/>
-                        </StackPanel>
-                        <HierarchicalDataTemplate.Triggers>
-                            <DataTrigger Binding="{Binding IsConnected}" Value="True">
-                                <Setter TargetName="TypeImage" Property="Opacity" Value="1.0"/>
-                                <Setter TargetName="TypeImage" Property="Source" Value="Icons\dash_1.png"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding IsConnected}" Value="False">
-                                <Setter TargetName="TypeImage" Property="Opacity" Value="0.5"/>
-                                <Setter TargetName="TypeImage" Property="Source" Value="Icons\dash_0.png"/>
-                            </DataTrigger>
-                        </HierarchicalDataTemplate.Triggers>
-                    </HierarchicalDataTemplate>
-                </TreeView.Resources>
-            </TreeView>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <TreeView Grid.Row="0"
+                              ItemsSource="{Binding CanComms.CanDevices}"
+                              SelectedItemChanged="TreeView_SelectedItemChanged" Grid.ColumnSpan="2">
+                    <TreeView.Resources>
+                        <HierarchicalDataTemplate DataType="{x:Type cd:CanDeviceSub}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image x:Name="TypeImage"
+                                           Width="20"
+                                           Height="20"
+                                           Margin="2 2 5 2"/>
+                                <TextBlock Text="{Binding Name}"
+                                               VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <HierarchicalDataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                    <Setter TargetName="TypeImage" Property="Opacity" Value="1.0"/>
+                                    <Setter TargetName="TypeImage" Property="Source" Value="Icons\settings_1.png"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="False">
+                                    <Setter TargetName="TypeImage" Property="Opacity" Value="0.5"/>
+                                    <Setter TargetName="TypeImage" Property="Source" Value="Icons\settings_0.png"/>
+                                </DataTrigger>
+                            </HierarchicalDataTemplate.Triggers>
+                        </HierarchicalDataTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type pdm:DingoPdmCan}" ItemsSource="{Binding SubPages}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image  x:Name="TypeImage"
+                                            Width="20"
+                                            Height="20"
+                                            Margin="2 2 5 2"/>
+                                <TextBlock Text="{Binding Name}" 
+                                               VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <HierarchicalDataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                    <Setter TargetName="TypeImage" Property="Opacity" Value="1.0"/>
+                                    <Setter TargetName="TypeImage" Property="Source" Value="Icons\pdm_1.png"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="False">
+                                    <Setter TargetName="TypeImage" Property="Opacity" Value="0.5"/>
+                                    <Setter TargetName="TypeImage" Property="Source" Value="Icons\pdm_0.png"/>
+                                </DataTrigger>
+                            </HierarchicalDataTemplate.Triggers>
+                        </HierarchicalDataTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type cb:CanBoardCan}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image  x:Name="TypeImage"
+                                            Width="20"
+                                            Height="20"
+                                            Margin="2 2 5 2"/>
+                                <TextBlock Text="{Binding Name}"
+                                               VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <HierarchicalDataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                    <Setter TargetName="TypeImage" Property="Opacity" Value="1.0"/>
+                                    <Setter TargetName="TypeImage" Property="Source" Value="Icons\canboard_1.png"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="False">
+                                    <Setter TargetName="TypeImage" Property="Opacity" Value="0.5"/>
+                                    <Setter TargetName="TypeImage" Property="Source" Value="Icons\canboard_0.png"/>
+                                </DataTrigger>
+                            </HierarchicalDataTemplate.Triggers>
+                        </HierarchicalDataTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type dash:DingoDashCan}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image  x:Name="TypeImage"
+                                            Width="20"
+                                            Height="20"
+                                            Margin="2 2 5 2"/>
+                                <TextBlock Text="{Binding Name}"
+                                               VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <HierarchicalDataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                    <Setter TargetName="TypeImage" Property="Opacity" Value="1.0"/>
+                                    <Setter TargetName="TypeImage" Property="Source" Value="Icons\dash_1.png"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="False">
+                                    <Setter TargetName="TypeImage" Property="Opacity" Value="0.5"/>
+                                    <Setter TargetName="TypeImage" Property="Source" Value="Icons\dash_0.png"/>
+                                </DataTrigger>
+                            </HierarchicalDataTemplate.Triggers>
+                        </HierarchicalDataTemplate>
+                    </TreeView.Resources>
+                </TreeView>
+                <GridSplitter Grid.Row="1"
+                              VerticalAlignment="Center"
+                              Background="White" 
+                              ShowsPreview="True"
+                              Height="2"/>
+                <Grid Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ComboBox   Grid.Row="0" 
+                                Margin="5"
+                                ItemsSource="{Binding Path=DeviceToAdd}"
+                                SelectedItem="{Binding Path=SelectedDeviceToAdd}"/>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Name" 
+                                   VerticalAlignment="Center" 
+                                   HorizontalAlignment="Right" 
+                                   Margin="5"/>
+                        <TextBox Padding="5"
+                                 HorizontalContentAlignment="Center"
+                                 Margin="5" 
+                                 Width="100" 
+                                 Text="{Binding AddDeviceName, Mode=TwoWay}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Base ID" 
+                                   VerticalAlignment="Center" 
+                                   HorizontalAlignment="Right" 
+                                   Margin="5"/>
+                        <TextBox Padding="5"
+                                 HorizontalContentAlignment="Center"
+                                 Margin="5" 
+                                 Width="100" 
+                                 Text="{Binding AddDeviceBaseId, Mode=TwoWay}"/>
+                    </StackPanel>
+                    <Button Grid.Row="3" 
+                            Content="Add" 
+                            Command="{Binding AddDeviceBtnCmd}"
+                            Margin="5"/>
+                    <GridSplitter Grid.Row="4"
+                                  VerticalAlignment="Center"
+                                  Background="White" 
+                                  ShowsPreview="True"
+                                  Height="2"/>
+                    <Button Grid.Row="5" 
+                            Content="Remove Device" 
+                            Command="{Binding RemoveDeviceBtnCmd}"
+                            Margin="5"/>
+                </Grid>
+            </Grid>
             <GridSplitter Grid.Column="1"
                           HorizontalAlignment="Center"
                           Background="White" 
@@ -271,12 +347,12 @@
                           Width="2"/>
             <ContentControl Content="{Binding CurrentViewModel}" Grid.Column="2" Grid.ColumnSpan="2" Margin="2,0,0,0"/>
         </Grid>
-        <GridSplitter Grid.Row="2"
+        <GridSplitter Grid.Row="3"
                           VerticalAlignment="Center"
                           Background="White" 
                           ShowsPreview="True"
                           Height="2"/>
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="4">
             <nlog:NlogViewer x:Name="logCtrl" TimeWidth="auto" LoggerNameWidth="0" LevelWidth="auto" ExceptionWidth="auto" MessageWidth="auto" MaxRowCount="0"/>
         </Grid>
     </Grid>

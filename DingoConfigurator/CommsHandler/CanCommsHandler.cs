@@ -240,5 +240,11 @@ namespace CommsHandler
 
             return null;
         }
+
+        public void RemoveCanDevice(ICanDevice canDevice)
+        {
+            _canDevices.Remove(canDevice);
+            OnPropertyChanged(nameof(CanDevices));
+        }
     }
 }

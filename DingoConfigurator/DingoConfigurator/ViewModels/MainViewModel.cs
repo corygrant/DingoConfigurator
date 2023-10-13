@@ -86,80 +86,13 @@ namespace DingoConfigurator
             UploadBtnCmd = new RelayCommand(Upload, CanUpload);
             DownloadBtnCmd = new RelayCommand(Download, CanDownload);
             BurnBtnCmd = new RelayCommand(Burn, CanBurn);
+            AddDeviceBtnCmd = new RelayCommand(AddDevice, CanAddDevice);
+            RemoveDeviceBtnCmd = new RelayCommand(RemoveDevice, CanRemoveDevice);
 
+            AddDeviceName = String.Empty;
         }
 
-        private void NewConfigFile(object parameter)
-        {
-            System.Windows.Forms.SaveFileDialog newFileDialog = new System.Windows.Forms.SaveFileDialog();
-            newFileDialog.Filter = "Config files (*.json)|*.json|All files (*.*)|*.*";
-            newFileDialog.InitialDirectory = _settingsPath;
-            if (newFileDialog.ShowDialog() != DialogResult.OK) return;
-
-            if (Path.GetExtension(newFileDialog.FileName).ToLower() != ".json") return;
-
-            _settingsPath = newFileDialog.FileName;
-
-            _configHandler = new DevicesConfigHandler();
-
-            _configHandler.SaveFile(_settingsPath);
-        }
-
-        private bool CanNewConfigFile(object parameter)
-        {
-            return true;
-        }   
-
-        private void OpenConfigFile(object parameter)
-        {
-            System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            openFileDialog.Multiselect = false;
-            openFileDialog.Filter = "Config files (*.json)|*.json|All files (*.*)|*.*";
-            openFileDialog.InitialDirectory = _settingsPath;
-            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
-
-            if (Path.GetExtension(openFileDialog.FileName).ToLower() != ".json") return;
-
-            _settingsPath = openFileDialog.FileName;
-
-            _configHandler = new DevicesConfigHandler();
-
-            _configHandler.OpenFile(openFileDialog.FileName);
-
-            AddCanDevicesToTree(_configHandler.Config);
-
-            // Create a timer to update status bar
-            _statusBarTimer = new System.Timers.Timer(200);
-            _statusBarTimer.Elapsed += UpdateStatusBar;
-            _statusBarTimer.AutoReset = true;
-            _statusBarTimer.Enabled = true;
-            
-        }
-
-        private bool CanOpenConfigFile(object parameter)
-        {
-            return !_canComms.Connected;
-        }
-
-        private void SaveConfigFile(object parameter)
-        {
-            _configHandler.UpdateSaveFile(_settingsPath, _canComms.CanDevices.ToArray());
-        }
-
-        private bool CanSaveConfigFile(object parameter)
-        {
-            return _configHandler.Opened;
-        }
-
-        private void SaveAsConfigFile(object parameter)
-        {
-
-        }
-
-        private bool CanSaveAsConfigFile(object parameter)
-        {
-            return _configHandler.Opened;
-        }
+        
 
         //Add devices from config file to comms handler
         private void AddCanDevicesToTree(DevicesConfig config)
@@ -168,21 +101,29 @@ namespace DingoConfigurator
 
             foreach (var pdm in _configHandler.Config.pdm)
             {
-                DingoPdmCan newPdm = (DingoPdmCan)_canComms.AddCanDevice(typeof(DingoPdmCan), pdm.label, pdm.canOutput.baseId);
-                PdmConfigHandler.ApplyConfig(ref newPdm, pdm); //Apply the config settings to the new device
+                if (pdm != null)
+                {
+                    DingoPdmCan newPdm = (DingoPdmCan)_canComms.AddCanDevice(typeof(DingoPdmCan), pdm.label, pdm.canOutput.baseId);
+                    PdmConfigHandler.ApplyConfig(ref newPdm, pdm); //Apply the config settings to the new device
+                }
             }
 
             foreach (var cb in _configHandler.Config.canBoard)
             {
-                CanBoardCan newCb = (CanBoardCan)_canComms.AddCanDevice(typeof(CanBoardCan), cb.label, cb.baseCanId);
-                //CanBoardConfigHandler.ApplyConfig(ref newCb, cb); //Apply the config settings to the new device
+                if (cb != null)
+                {
+                    CanBoardCan newCb = (CanBoardCan)_canComms.AddCanDevice(typeof(CanBoardCan), cb.label, cb.baseCanId);
+                    CanBoardConfigHandler.ApplyConfig(ref newCb, cb); //Apply the config settings to the new device
+                }
             }
 
             foreach (var dash in _configHandler.Config.dash)
             {
-                DingoDashCan newDash =(DingoDashCan)_canComms.AddCanDevice(typeof(DingoDashCan), dash.label, dash.baseCanId);
-                //DashConfigHandler.ApplyConfig(ref newDash, dash); //Apply the config settings to the new device
-
+                if (dash != null)
+                {
+                    DingoDashCan newDash = (DingoDashCan)_canComms.AddCanDevice(typeof(DingoDashCan), dash.label, dash.baseCanId);
+                    DingoDashConfigHandler.ApplyConfig(ref newDash, dash); //Apply the config settings to the new device
+                }
             }
         }
 
@@ -200,7 +141,10 @@ namespace DingoConfigurator
             Settings.Default.CanInterface = SelectedCan.Name;
             Settings.Default.BaudRate = SelectedBaudRate;
             Settings.Default.ComPort = SelectedComPort;
-            Settings.Default.SettingsPath = Path.GetDirectoryName(_settingsPath);
+            if (_settingsPath != null)
+            {
+                Settings.Default.SettingsPath = Path.GetDirectoryName(_settingsPath);
+            }
             Settings.Default.Save();
 
             NLog.LogManager.Shutdown(); // Flush and close down internal threads and timers
@@ -224,6 +168,28 @@ namespace DingoConfigurator
             {
                 _connected = value;
                 OnPropertyChanged(nameof(Connected));
+            }
+        }
+
+        private int _addDeviceBaseId;
+        public int AddDeviceBaseId
+        {
+            get => _addDeviceBaseId;
+            set
+            {
+                _addDeviceBaseId = value;
+                OnPropertyChanged(nameof(AddDeviceBaseId));
+            }
+        }
+
+        private string _addDeviceName;
+        public string AddDeviceName
+        {
+            get => _addDeviceName;
+            set
+            {
+                _addDeviceName = value;
+                OnPropertyChanged(nameof(AddDeviceName));
             }
         }
 
@@ -284,13 +250,19 @@ namespace DingoConfigurator
         private void Connect(object parameter)
         {
             _canComms.Connect(SelectedCan.Name, SelectedComPort, SelectedBaudRate);
+
+            // Create a timer to update status bar
+            _statusBarTimer = new System.Timers.Timer(200);
+            _statusBarTimer.Elapsed += UpdateStatusBar;
+            _statusBarTimer.AutoReset = true;
+            _statusBarTimer.Enabled = true;
         }
 
         
         private bool CanConnect(object parameter)
         {
             return !_canComms.Connected && 
-                    _configHandler.Opened &&
+                    (_canComms.CanDevices.Count > 0) &&
                     ((CanComPorts && (SelectedComPort != null)) ||
                     !CanComPorts);
         }
@@ -345,6 +317,141 @@ namespace DingoConfigurator
         {
             return _canComms.Connected && (SelectedCanDevice != null);
         }
+
+        private void NewConfigFile(object parameter)
+        {
+            //Clear devices
+            _canComms.Disconnect();
+            _canComms.CanDevices.Clear();
+            _configHandler.Clear();
+            CurrentViewModel = null;
+            ConfigFileName = String.Empty;
+        }
+
+        private bool CanNewConfigFile(object parameter)
+        {
+            return (_canComms.CanDevices.Count > 0);
+        }
+
+        private void OpenConfigFile(object parameter)
+        {
+            _canComms.Disconnect();
+            _canComms.CanDevices.Clear();
+            CurrentViewModel = null;
+
+            System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            openFileDialog.Multiselect = false;
+            openFileDialog.Filter = "Config files (*.json)|*.json|All files (*.*)|*.*";
+            openFileDialog.InitialDirectory = _settingsPath;
+            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+
+            if (Path.GetExtension(openFileDialog.FileName).ToLower() != ".json") return;
+
+            _settingsPath = openFileDialog.FileName;
+            ConfigFileName = Path.GetFileNameWithoutExtension(_settingsPath);
+
+            _configHandler = new DevicesConfigHandler();
+
+            _configHandler.OpenFile(openFileDialog.FileName);
+
+            AddCanDevicesToTree(_configHandler.Config);
+
+        }
+
+        private bool CanOpenConfigFile(object parameter)
+        {
+            return !_canComms.Connected;
+        }
+
+        private void SaveConfigFile(object parameter)
+        {
+            if (_configHandler.CheckDeviceCount(_canComms.CanDevices.ToArray()))
+            {
+                //Config file matches tree device count
+                //Save existing device config
+                _configHandler.UpdateSaveFile(_settingsPath, _canComms.CanDevices.ToArray());
+                return;
+            }
+
+            //Config file doesn't match tree device count
+            //Create a new DevicesConfigHandler and save
+            _configHandler = new DevicesConfigHandler();
+            _configHandler.NewSaveFile(_settingsPath, _canComms.CanDevices.ToArray());
+        }
+
+        private bool CanSaveConfigFile(object parameter)
+        {
+            return _configHandler.Opened;
+        }
+
+        private void SaveAsConfigFile(object parameter)
+        {
+            System.Windows.Forms.SaveFileDialog saveAsFileDialog = new System.Windows.Forms.SaveFileDialog();
+            saveAsFileDialog.Filter = "Config files (*.json)|*.json|All files (*.*)|*.*";
+            saveAsFileDialog.InitialDirectory = _settingsPath;
+            if (saveAsFileDialog.ShowDialog() != DialogResult.OK) return;
+
+            if (Path.GetExtension(saveAsFileDialog.FileName).ToLower() != ".json") return;
+
+            _settingsPath = saveAsFileDialog.FileName;
+            ConfigFileName = Path.GetFileNameWithoutExtension(_settingsPath);
+
+            if (_configHandler.Opened && _configHandler.CheckDeviceCount(_canComms.CanDevices.ToArray()))
+            {
+                //Config already exists, just save in the new location
+                _configHandler.UpdateSaveFile(_settingsPath, _canComms.CanDevices.ToArray());
+                return;
+            }
+  
+            //New configuration or config file doesn't match tree device count
+            //Create a new DevicesConfigHandler and save
+            _configHandler = new DevicesConfigHandler();
+            _configHandler.NewSaveFile(_settingsPath, _canComms.CanDevices.ToArray());
+        }
+
+        private bool CanSaveAsConfigFile(object parameter)
+        {
+            return (_canComms.CanDevices.Count > 0);
+        }
+
+        private void AddDevice(object parameter)
+        {
+            if (AddDeviceBaseId < 1) return;
+            if (AddDeviceBaseId > 2048) return;
+            if (AddDeviceName.Length == 0) return;
+
+            if (SelectedDeviceToAdd.Equals(Devices.DingoPDM))
+            {
+                _canComms.AddCanDevice(typeof(DingoPdmCan), AddDeviceName, AddDeviceBaseId);
+            }
+
+            if (SelectedDeviceToAdd.Equals(Devices.CANBoard))
+            {
+                _canComms.AddCanDevice(typeof(CanBoardCan), AddDeviceName, AddDeviceBaseId);
+            }
+
+            if (SelectedDeviceToAdd.Equals(Devices.DingoDash))
+            {
+                _canComms.AddCanDevice(typeof(DingoDashCan), AddDeviceName, AddDeviceBaseId);
+            }
+        }
+
+        private bool CanAddDevice(object parameter)
+        {
+            return (AddDeviceName.Length > 0) && (AddDeviceBaseId > 0) && (AddDeviceBaseId <= 2048);
+        }
+
+        private void RemoveDevice(object parameter)
+        {
+            _canComms.RemoveCanDevice(SelectedCanDevice);
+            CurrentViewModel = null;
+        }
+
+        private bool CanRemoveDevice(object parameter)
+        {
+            return SelectedCanDevice != null;
+        }
+
         #endregion
 
         #region Combobox
@@ -418,6 +525,25 @@ namespace DingoConfigurator
                 OnPropertyChanged(nameof(CanBaudRates));
             }
         }
+
+        public IEnumerable<Devices> DeviceToAdd
+        {
+            get
+            {
+                return (IEnumerable<Devices>)System.Enum.GetValues(typeof(Devices));
+            }
+        }
+
+        private Devices _selectedDeviceToAdd;
+        public Devices SelectedDeviceToAdd
+        {
+            get => _selectedDeviceToAdd;
+            set
+            {
+                _selectedDeviceToAdd = value;
+                OnPropertyChanged(nameof(SelectedDeviceToAdd));
+            }
+        }
         #endregion
 
         #region Buttons
@@ -431,6 +557,8 @@ namespace DingoConfigurator
         public ICommand UploadBtnCmd { get; set; }
         public ICommand DownloadBtnCmd { get; set; }
         public ICommand BurnBtnCmd { get; set; }
+        public ICommand AddDeviceBtnCmd { get; set; }
+        public ICommand RemoveDeviceBtnCmd { get; set; }
         #endregion
 
         #region StatusBar
@@ -474,6 +602,17 @@ namespace DingoConfigurator
             {
                 _canInterfaceStatusText = value;
                 OnPropertyChanged(nameof(CanInterfaceStatusText));
+            }
+        }
+
+        private string _configFileName;
+        public string ConfigFileName
+        {
+            get => _configFileName;
+            set
+            {
+                _configFileName = value;
+                OnPropertyChanged(nameof(ConfigFileName));
             }
         }
 
@@ -529,6 +668,13 @@ namespace DingoConfigurator
             get { return _name; }
             set { _name = value; }
         }
+    }
+
+    public enum Devices
+    {
+        DingoPDM,
+        CANBoard,
+        DingoDash
     }
     #endregion
 }
