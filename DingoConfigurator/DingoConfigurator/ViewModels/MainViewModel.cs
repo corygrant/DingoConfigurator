@@ -312,7 +312,10 @@ namespace DingoConfigurator
 
         private bool CanUpload(object parameter)
         {
-            return _canComms.Connected && (SelectedCanDevice != null);
+            return _canComms.Connected &&
+                (SelectedCanDevice != null) &&
+                (SelectedCanDevice.IsConnected) &&
+                (SelectedCanDevice.GetType() != typeof(CanMsgLog));
         }
 
         private void Download(object parameter)
@@ -322,7 +325,10 @@ namespace DingoConfigurator
 
         private bool CanDownload(object parameter)
         {
-            return _canComms.Connected && (SelectedCanDevice != null);
+            return _canComms.Connected && 
+                (SelectedCanDevice != null) && 
+                (SelectedCanDevice.IsConnected) &&
+                (SelectedCanDevice.GetType() != typeof(CanMsgLog));
         }
 
         private void Burn(object parameter)
@@ -332,7 +338,10 @@ namespace DingoConfigurator
 
         private bool CanBurn(object parameter)
         {
-            return _canComms.Connected && (SelectedCanDevice != null);
+            return _canComms.Connected &&
+                (SelectedCanDevice != null) &&
+                (SelectedCanDevice.IsConnected) &&
+                (SelectedCanDevice.GetType() != typeof(CanMsgLog));
         }
 
         private void NewConfigFile(object parameter)
