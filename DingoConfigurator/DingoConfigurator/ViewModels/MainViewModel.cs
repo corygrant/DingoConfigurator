@@ -23,6 +23,7 @@ using System.Windows.Media;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using CommsHandler;
+using CanDevices.CanMsgLog;
 
 //Add another CanDevices list that holds the online value
 
@@ -90,6 +91,8 @@ namespace DingoConfigurator
             RemoveDeviceBtnCmd = new RelayCommand(RemoveDevice, CanRemoveDevice);
 
             AddDeviceName = String.Empty;
+
+            CanCans = true;
         }
 
         
@@ -141,7 +144,7 @@ namespace DingoConfigurator
             Settings.Default.CanInterface = SelectedCan.Name;
             Settings.Default.BaudRate = SelectedBaudRate;
             Settings.Default.ComPort = SelectedComPort;
-            if (_settingsPath != null)
+            if (_settingsPath.Length > 0)
             {
                 Settings.Default.SettingsPath = Path.GetDirectoryName(_settingsPath);
             }
@@ -243,6 +246,12 @@ namespace DingoConfigurator
                 SelectedCanDevice = (DingoDashCan)e.NewValue;
                 CurrentViewModel = new DingoDashViewModel(this);
             }
+
+            if (e.NewValue.GetType() == typeof(CanMsgLog))
+            {
+                SelectedCanDevice =(CanMsgLog)e.NewValue;
+                CurrentViewModel = new CanMsgLogViewModel(this);
+            }
         }
         #endregion
 
@@ -250,6 +259,10 @@ namespace DingoConfigurator
         private void Connect(object parameter)
         {
             _canComms.Connect(SelectedCan.Name, SelectedComPort, SelectedBaudRate);
+
+            CanCans = false;
+            CanComPorts = false;
+            CanBaudRates = false;
 
             // Create a timer to update status bar
             _statusBarTimer = new System.Timers.Timer(200);
@@ -270,6 +283,10 @@ namespace DingoConfigurator
         private void Disconnect(object parameter)
         {
             _canComms.Disconnect();
+
+            CanCans = true;
+            CanComPorts = !SelectedCan.Name.Equals("PCAN");
+            CanBaudRates = !SelectedCan.Name.Equals("USB");
         }
 
         private bool CanDisconnect(object parameter)
@@ -348,7 +365,7 @@ namespace DingoConfigurator
             if (Path.GetExtension(openFileDialog.FileName).ToLower() != ".json") return;
 
             _settingsPath = openFileDialog.FileName;
-            ConfigFileName = Path.GetFileNameWithoutExtension(_settingsPath);
+            ConfigFileName = Path.GetFileName(_settingsPath);
 
             _configHandler = new DevicesConfigHandler();
 
@@ -416,6 +433,11 @@ namespace DingoConfigurator
 
         private void AddDevice(object parameter)
         {
+            if (SelectedDeviceToAdd.Equals(Devices.CanMsgLog))
+            {
+                _canComms.AddCanDevice(typeof(CanMsgLog), "CAN Msg Log", 1);
+            }
+
             if (AddDeviceBaseId < 1) return;
             if (AddDeviceBaseId > 2048) return;
             if (AddDeviceName.Length == 0) return;
@@ -438,6 +460,14 @@ namespace DingoConfigurator
 
         private bool CanAddDevice(object parameter)
         {
+            if (SelectedDeviceToAdd.Equals(Devices.CanMsgLog))
+            {
+                //var match = _canComms.CanDevices.FirstOrDefault<ICanDevice>(d => d.Name.Equals("CAN Message Log"));
+                var match = _canComms.CanDevices.FirstOrDefault<ICanDevice>(d => d.GetType() == typeof(CanMsgLog));
+
+                return (match == null);
+            }
+
             return (AddDeviceName.Length > 0) && (AddDeviceBaseId > 0) && (AddDeviceBaseId <= 2048);
         }
 
@@ -466,6 +496,17 @@ namespace DingoConfigurator
         {
             get { return _selectedCan; }
             set { _selectedCan = value; }
+        }
+
+        private bool _canCans;
+        public bool CanCans
+        {
+            get => _canCans;
+            set
+            {
+                _canCans = value;
+                OnPropertyChanged(nameof(CanCans));
+            }
         }
 
         private ObservableCollection<string> _comPorts;
@@ -573,6 +614,10 @@ namespace DingoConfigurator
             foreach (var cd in _canComms.CanDevices)
             {
                 cd.UpdateIsConnected();
+
+                //CanMsgLog is not a real device to be detected 
+                if (cd.GetType().Equals(typeof(CanMsgLog))) continue;
+
                 if (cd.IsConnected) connectedCount++;
             }
 
@@ -674,7 +719,8 @@ namespace DingoConfigurator
     {
         DingoPDM,
         CANBoard,
-        DingoDash
+        DingoDash,
+        CanMsgLog
     }
     #endregion
 }

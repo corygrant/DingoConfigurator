@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using CanDevices.DingoPdm;
 using CanDevices.CanBoard;
 using CanDevices.DingoDash;
+using CanDevices.CanMsgLog;
 
 namespace CommsHandler
 {
@@ -120,6 +121,7 @@ namespace CommsHandler
                             msg.DeviceBaseId = cd.BaseId;
                             _queue.Add(msg);
                             _can.Write(msg.Data);
+                            ProcessMessage(msg.Data);//Catch with CanMsgLog
 
                             msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
                         }
@@ -145,6 +147,7 @@ namespace CommsHandler
                             msg.DeviceBaseId = cd.BaseId;
                             _queue.Add(msg);
                             _can.Write(msg.Data);
+                            ProcessMessage(msg.Data);//Catch with CanMsgLog
 
                             msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
                         }
@@ -168,6 +171,7 @@ namespace CommsHandler
                         msg.DeviceBaseId = cd.BaseId;
                         _queue.Add(msg);
                         _can.Write(msg.Data);
+                        ProcessMessage(msg.Data);//Catch with CanMsgLog
 
                         msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
                     }
@@ -177,11 +181,16 @@ namespace CommsHandler
 
         private void CanDataReceived(object sender, CanDataEventArgs e)
         {
+            ProcessMessage(e.canData);
+        }
+
+        private void ProcessMessage(CanInterfaceData data)
+        {
             foreach (var cd in _canDevices)
             {
-                if (cd.InIdRange(e.canData.Id))
+                if (cd.InIdRange(data.Id))
                 {
-                    cd.Read(e.canData.Id, e.canData.Payload, ref _queue);
+                    cd.Read(data.Id, data.Payload, ref _queue);
                 }
             }
         }
@@ -236,6 +245,14 @@ namespace CommsHandler
                 _canDevices.Add(newDash);
                 OnPropertyChanged(nameof(CanDevices));
                 return newDash;
+            }
+
+            if (type == typeof(CanMsgLog))
+            {
+                var newMsgLog = new CanMsgLog();
+                _canDevices.Add(newMsgLog);
+                OnPropertyChanged(nameof(CanDevices));
+                return newMsgLog;
             }
 
             return null;

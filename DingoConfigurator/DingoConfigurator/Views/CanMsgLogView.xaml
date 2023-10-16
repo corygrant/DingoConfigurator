@@ -1,0 +1,130 @@
+﻿<UserControl x:Class="DingoConfigurator.Views.CanMsgLogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:DingoConfigurator.Views"
+             mc:Ignorable="d"
+             d:DesignHeight="600"
+             d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0"
+                       Grid.Column="0"
+                       Text="ID Format"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       Padding="5" />
+            <ComboBox Grid.Row="0"
+                      Grid.Column="1"
+                      Margin="5"
+                      ItemsSource="{Binding Path=IdFormat}"
+                      SelectedItem="{Binding Path=SelectedIdFormat}" 
+                      ToolTip="Change the display format of the message ID"/>
+            <TextBlock Grid.Row="0"
+                       Grid.Column="2"
+                       Text="Payload Format"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       Padding="5" />
+            <ComboBox Grid.Row="0"
+                      Grid.Column="3"
+                      Margin="5"
+                      ItemsSource="{Binding Path=PayloadFormat}"
+                      SelectedItem="{Binding Path=SelectedPayloadFormat}" 
+                      ToolTip="Change the display format of the message payload bytes"/>
+            <Button Grid.Row="0"
+                    Grid.Column="4"
+                    Content="Clear"
+                    Margin="5"
+                    Command="{Binding Path=ClearBtnCmd}"
+                    ToolTip="Clear all messages &#x0a;NOTES ARE NOT SAVED"/>
+        </Grid>
+
+        <Separator Grid.Row="1"
+                   Margin="0 5 0 0" />
+
+        <DataGrid AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  ItemsSource="{Binding MsgLog.AllData}"
+                  Grid.Row="2">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID"
+                                    Binding="{Binding IdString}"
+                                    IsReadOnly="True"
+                                    Width="70"
+                                    MinWidth="70">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Len"
+                                    Binding="{Binding Len}"
+                                    IsReadOnly="True"
+                                    Width="50"
+                                    MinWidth="50">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Payload"
+                                    Binding="{Binding PayloadString}"
+                                    IsReadOnly="True"
+                                    Width="200"
+                                    MinWidth="200">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Count"
+                                    Binding="{Binding Count}"
+                                    IsReadOnly="True"
+                                    Width="70"
+                                    MinWidth="70">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Notes"
+                                    Binding="{Binding Note}"
+                                    IsReadOnly="False"
+                                    Width="450"
+                                    MinWidth="50">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Left" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

@@ -110,6 +110,7 @@
     <Compile Include="Config\DevicesConfig.cs" />
     <Compile Include="Config\DevicesConfigHandler.cs" />
     <Compile Include="ViewModels\CanBoard\CanBoardViewModel.cs" />
+    <Compile Include="ViewModels\CanMsgLogViewModel.cs" />
     <Compile Include="ViewModels\DingoPdm\DingoPdmSettingsViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
@@ -118,6 +119,9 @@
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\CanBoard\CanBoardView.xaml.cs">
       <DependentUpon>CanBoardView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CanMsgLogView.xaml.cs">
+      <DependentUpon>CanMsgLogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DingoDash\DingoDashView.xaml.cs">
       <DependentUpon>DingoDashView.xaml</DependentUpon>
@@ -129,6 +133,10 @@
       <DependentUpon>DingoPdmView.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\CanBoard\CanBoardView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CanMsgLogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -227,6 +235,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Model\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\log_0.png" />
+    <Resource Include="Icons\log_1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
