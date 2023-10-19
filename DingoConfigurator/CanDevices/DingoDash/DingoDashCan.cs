@@ -28,7 +28,7 @@ namespace CanDevices.DingoDash
         public int BaseId
         {
             get => _baseId;
-            private set
+            set
             {
                 if (_baseId != value)
                 {
@@ -102,6 +102,11 @@ namespace CanDevices.DingoDash
         }
 
         public List<CanDeviceResponse> GetDownloadMessages()
+        {
+            return null;
+        }
+
+        public List<CanDeviceResponse> GetUpdateMessages(int newId)
         {
             return null;
         }

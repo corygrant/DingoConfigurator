@@ -88,9 +88,10 @@ namespace DingoConfigurator
             DownloadBtnCmd = new RelayCommand(Download, CanDownload);
             BurnBtnCmd = new RelayCommand(Burn, CanBurn);
             AddDeviceBtnCmd = new RelayCommand(AddDevice, CanAddDevice);
+            UpdateDeviceBtnCmd = new RelayCommand(UpdateDevice, CanUpdateDevice);
             RemoveDeviceBtnCmd = new RelayCommand(RemoveDevice, CanRemoveDevice);
 
-            AddDeviceName = String.Empty;
+            DeviceName = String.Empty;
 
             CanCans = true;
         }
@@ -174,25 +175,25 @@ namespace DingoConfigurator
             }
         }
 
-        private int _addDeviceBaseId;
-        public int AddDeviceBaseId
+        private int _deviceBaseId;
+        public int DeviceBaseId
         {
-            get => _addDeviceBaseId;
+            get => _deviceBaseId;
             set
             {
-                _addDeviceBaseId = value;
-                OnPropertyChanged(nameof(AddDeviceBaseId));
+                _deviceBaseId = value;
+                OnPropertyChanged(nameof(DeviceBaseId));
             }
         }
 
-        private string _addDeviceName;
-        public string AddDeviceName
+        private string _deviceName;
+        public string DeviceName
         {
-            get => _addDeviceName;
+            get => _deviceName;
             set
             {
-                _addDeviceName = value;
-                OnPropertyChanged(nameof(AddDeviceName));
+                _deviceName = value;
+                OnPropertyChanged(nameof(DeviceName));
             }
         }
 
@@ -218,6 +219,7 @@ namespace DingoConfigurator
             {
                 SelectedCanDevice = (DingoPdmCan)e.NewValue;
                 CurrentViewModel= new DingoPdmViewModel(this);
+                SelectedDeviceToAdd = Devices.DingoPDM;
             }
 
             if(e.NewValue.GetType() == typeof(CanDeviceSub))
@@ -231,6 +233,8 @@ namespace DingoConfigurator
                         SelectedCanDevice = (DingoPdmCan)sub.CanDevice;
                         CurrentViewModel = new DingoPdmSettingsViewModel(this);
                     }
+
+                    SelectedDeviceToAdd = Devices.DingoPDM;
                 }
 
             }
@@ -239,18 +243,32 @@ namespace DingoConfigurator
             {
                 SelectedCanDevice = (CanBoardCan)e.NewValue;
                 CurrentViewModel = new CanBoardViewModel(this);
+                SelectedDeviceToAdd = Devices.CANBoard;
             }
 
             if (e.NewValue.GetType() == typeof(DingoDashCan))
             {
                 SelectedCanDevice = (DingoDashCan)e.NewValue;
                 CurrentViewModel = new DingoDashViewModel(this);
+                SelectedDeviceToAdd = Devices.DingoDash;
             }
 
             if (e.NewValue.GetType() == typeof(CanMsgLog))
             {
                 SelectedCanDevice =(CanMsgLog)e.NewValue;
                 CurrentViewModel = new CanMsgLogViewModel(this);
+                SelectedDeviceToAdd = Devices.CanMsgLog;
+            }
+
+            if (SelectedCanDevice != null)
+            {
+                DeviceName = SelectedCanDevice.Name;
+                DeviceBaseId = SelectedCanDevice.BaseId;
+            }
+            else
+            {
+                DeviceName = String.Empty;
+                DeviceBaseId = 0;
             }
         }
         #endregion
@@ -447,23 +465,23 @@ namespace DingoConfigurator
                 _canComms.AddCanDevice(typeof(CanMsgLog), "CAN Msg Log", 1);
             }
 
-            if (AddDeviceBaseId < 1) return;
-            if (AddDeviceBaseId > 2048) return;
-            if (AddDeviceName.Length == 0) return;
+            if (DeviceBaseId < 1) return;
+            if (DeviceBaseId > 2048) return;
+            if (DeviceName.Length == 0) return;
 
             if (SelectedDeviceToAdd.Equals(Devices.DingoPDM))
             {
-                _canComms.AddCanDevice(typeof(DingoPdmCan), AddDeviceName, AddDeviceBaseId);
+                _canComms.AddCanDevice(typeof(DingoPdmCan), DeviceName, DeviceBaseId);
             }
 
             if (SelectedDeviceToAdd.Equals(Devices.CANBoard))
             {
-                _canComms.AddCanDevice(typeof(CanBoardCan), AddDeviceName, AddDeviceBaseId);
+                _canComms.AddCanDevice(typeof(CanBoardCan), DeviceName, DeviceBaseId);
             }
 
             if (SelectedDeviceToAdd.Equals(Devices.DingoDash))
             {
-                _canComms.AddCanDevice(typeof(DingoDashCan), AddDeviceName, AddDeviceBaseId);
+                _canComms.AddCanDevice(typeof(DingoDashCan), DeviceName, DeviceBaseId);
             }
         }
 
@@ -471,13 +489,33 @@ namespace DingoConfigurator
         {
             if (SelectedDeviceToAdd.Equals(Devices.CanMsgLog))
             {
-                //var match = _canComms.CanDevices.FirstOrDefault<ICanDevice>(d => d.Name.Equals("CAN Message Log"));
                 var match = _canComms.CanDevices.FirstOrDefault<ICanDevice>(d => d.GetType() == typeof(CanMsgLog));
 
                 return (match == null);
             }
 
-            return (AddDeviceName.Length > 0) && (AddDeviceBaseId > 0) && (AddDeviceBaseId <= 2048);
+            return (DeviceName.Length > 0) && (DeviceBaseId > 0) && (DeviceBaseId <= 2048);
+        }
+
+        private void UpdateDevice(object parameter)
+        {
+            if (SelectedCanDevice == null) return;
+            if (SelectedCanDevice.GetType() == typeof(CanMsgLog)) return;
+
+            SelectedCanDevice.Name = DeviceName;
+            if (SelectedCanDevice.BaseId != DeviceBaseId)
+            {
+                _canComms.Update(SelectedCanDevice, DeviceBaseId);
+            }
+        }
+
+        private bool CanUpdateDevice(object parameter)
+        {
+            if (SelectedCanDevice == null) return false;
+
+            if (SelectedCanDevice.GetType() == typeof(CanMsgLog)) return false;
+
+            return (DeviceName.Length > 0) && (DeviceBaseId > 0) && (DeviceBaseId <= 2048);
         }
 
         private void RemoveDevice(object parameter)
@@ -608,6 +646,7 @@ namespace DingoConfigurator
         public ICommand DownloadBtnCmd { get; set; }
         public ICommand BurnBtnCmd { get; set; }
         public ICommand AddDeviceBtnCmd { get; set; }
+        public ICommand UpdateDeviceBtnCmd { get; set; }
         public ICommand RemoveDeviceBtnCmd { get; set; }
         #endregion
 

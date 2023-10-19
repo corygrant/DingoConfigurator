@@ -34,7 +34,7 @@ namespace CanDevices.DingoPdm
         public int BaseId
         {
             get => _baseId;
-            private set
+            set
             {
                 if (_baseId != value)
                 {
@@ -796,6 +796,29 @@ namespace CanDevices.DingoPdm
                     }
                     break;
 
+                case MessagePrefix.Burn:
+                    if (data[1] == 1) //Successful burn
+                    {
+                        Logger.Info($"{Name} ID: {BaseId}, Burn Successful");
+
+                        foreach (var msg in queue)
+                        {
+                            if ((msg.DeviceBaseId == BaseId) &&
+                                            ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.Burn))
+                            {
+                                msg.TimeSentTimer.Dispose();
+                                queue.Remove(msg);
+                                break;
+                            }
+                        }
+                    }
+
+                    if (data[1] == 0) //Unsuccessful burn
+                    {
+                        Logger.Error($"{Name} ID: {BaseId}, Burn Failed");
+                    }
+                    break;
+
                 default:
                     break;
             }
@@ -1267,6 +1290,35 @@ namespace CanDevices.DingoPdm
             return msgs;
         }
 
+        public List<CanDeviceResponse> GetUpdateMessages(int newId)
+        {
+            int id = BaseId - 1;
+
+            List<CanDeviceResponse> msgs = new List<CanDeviceResponse>();
+
+            msgs.Add(new CanDeviceResponse
+            {
+                Sent = false,
+                Received = false,
+                Data = new CanInterfaceData
+                {
+                    Id = id,
+                    Len = 5,
+                    Payload = new byte[] {
+                    Convert.ToByte('C'), //Byte 0
+                    Convert.ToByte((Convert.ToByte(CanSpeed.Bitrate_500K) << 4) +
+                    (0x03)), //Byte 1
+                    Convert.ToByte((newId & 0xFF00) >> 8), //Byte 2
+                    Convert.ToByte(newId & 0x00FF), //Byte 3
+                    Convert.ToByte(5), //Byte 4
+                    0, 0, 0 }
+                },
+                MsgDescription = "CANSettings"
+            });
+
+            return msgs;
+        }
+
         public CanDeviceResponse GetBurnMessage()
         {
             return new CanDeviceResponse
@@ -1278,7 +1330,8 @@ namespace CanDevices.DingoPdm
                     Id = BaseId - 1,
                     Len = 4,
                     Payload = new byte[] { Convert.ToByte('B'), 1, 3, 8, 0, 0, 0, 0 }
-                }
+                },
+                MsgDescription = "Burn Settings"
             };
         }
     }

@@ -9,6 +9,7 @@ using CanDevices.DingoPdm;
 using CanDevices.CanBoard;
 using CanDevices.DingoDash;
 using CanDevices.CanMsgLog;
+using PCAN;
 
 namespace CommsHandler
 {
@@ -152,6 +153,41 @@ namespace CommsHandler
                             msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
                         }
                         msgs.Clear();
+                    }
+                }
+            }
+        }
+
+        public async Task Update(ICanDevice canDevice, int newId)
+        {
+            foreach (var cd in _canDevices)
+            {
+                if ((canDevice == null) || canDevice.Equals(cd))
+                {
+                    if (cd.IsConnected)
+                    {
+                        var msgs = cd.GetUpdateMessages(newId);
+
+                        if (msgs != null)
+                        {
+                            foreach (var msg in msgs)
+                            {
+                                msg.DeviceBaseId = newId; //Set msg ID to new ID so response is processed properly
+                                _queue.Add(msg);
+                                _can.Write(msg.Data);
+                                ProcessMessage(msg.Data);//Catch with CanMsgLog
+
+                                msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
+                            }
+                            msgs.Clear();
+                        }
+
+                        //After sending updated ID, set local base ID
+                        cd.BaseId = newId;
+                    }
+                    else
+                    {
+                        cd.BaseId = newId;
                     }
                 }
             }

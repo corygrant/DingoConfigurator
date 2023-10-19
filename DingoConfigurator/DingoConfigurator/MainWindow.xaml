@@ -265,9 +265,9 @@
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="3*" />
+                    <RowDefinition Height="4*" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <TreeView Grid.Row="0"
                           ItemsSource="{Binding CanComms.CanDevices}"
@@ -440,6 +440,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <ComboBox   Grid.Row="0"
                                 Margin="5"
@@ -457,7 +458,7 @@
                                  HorizontalContentAlignment="Center"
                                  Margin="5"
                                  Width="100"
-                                 Text="{Binding AddDeviceName, Mode=TwoWay}"
+                                 Text="{Binding DeviceName, Mode=TwoWay}"
                                  ToolTip="Device display name" />
                     </StackPanel>
                     <StackPanel Grid.Row="2"
@@ -471,7 +472,7 @@
                                  HorizontalContentAlignment="Center"
                                  Margin="5"
                                  Width="100"
-                                 Text="{Binding AddDeviceBaseId, Mode=TwoWay}"
+                                 Text="{Binding DeviceBaseId, Mode=TwoWay}"
                                  ToolTip="Device CAN base ID" />
                     </StackPanel>
                     <Button Grid.Row="3"
@@ -480,12 +481,18 @@
                             ToolTip="Add the device to the list &#x0a;Must enter Name and Base ID &#x0a;Except CanMsgLog"
                             ToolTipService.ShowOnDisabled="True"
                             Margin="5" />
-                    <GridSplitter Grid.Row="4"
+                    <Button Grid.Row="4"
+                            Content="Update"
+                            Command="{Binding UpdateDeviceBtnCmd}"
+                            ToolTip="Update the selected device Name and Base ID &#x0a;Must enter Name and Base ID"
+                            ToolTipService.ShowOnDisabled="True"
+                            Margin="5" />
+                    <GridSplitter Grid.Row="5"
                                   VerticalAlignment="Center"
                                   Background="White"
                                   ShowsPreview="True"
                                   Height="2" />
-                    <Button Grid.Row="5"
+                    <Button Grid.Row="6"
                             Content="Remove Device"
                             Command="{Binding RemoveDeviceBtnCmd}"
                             ToolTip="Remove the selected device from the list"

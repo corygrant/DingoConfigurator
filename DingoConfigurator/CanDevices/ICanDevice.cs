@@ -11,8 +11,8 @@ namespace CanDevices
 {
     public interface ICanDevice
     {
-        string Name { get; }
-        int BaseId { get;}
+        string Name { get; set; }
+        int BaseId { get; set; }
         bool IsConnected { get;}
         DateTime LastRxTime { get;}
         void UpdateIsConnected();
@@ -21,6 +21,7 @@ namespace CanDevices
         bool InIdRange(int id);
         List<CanDeviceResponse> GetUploadMessages();
         List<CanDeviceResponse> GetDownloadMessages();
+        List<CanDeviceResponse> GetUpdateMessages(int newId);
         CanDeviceResponse GetBurnMessage();
     }
 }

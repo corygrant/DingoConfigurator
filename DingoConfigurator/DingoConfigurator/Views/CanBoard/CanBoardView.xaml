@@ -40,6 +40,7 @@
                      Margin="5"
                      MinWidth="40"
                      HorizontalContentAlignment="Center"
+                     IsReadOnly="True"
                      Text="{Binding Cb.BaseId, Mode=OneWay}"/>
 
             <TextBlock Grid.Row="0"
@@ -54,6 +55,7 @@
                      Margin="5"
                      MinWidth="40"
                      HorizontalContentAlignment="Center"
+                     IsReadOnly="True"
                      Text="{Binding Cb.Heartbeat, Mode=OneWay}"/>
 
             <TextBlock Grid.Row="0"
@@ -68,6 +70,7 @@
                      Margin="5"
                      MinWidth="40"
                      HorizontalContentAlignment="Center"
+                     IsReadOnly="True"
                      Text="{Binding Cb.BoardTempF, Mode=OneWay}"/>
         </Grid>
 

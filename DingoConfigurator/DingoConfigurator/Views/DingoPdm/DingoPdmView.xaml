@@ -1,13 +1,14 @@
 ﻿<UserControl x:Class="DingoConfigurator.Views.DingoPdmView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:DingoConfigurator.Views"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:cd="clr-namespace:CanDevices.DingoPdm;assembly=CanDevices"
-             mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800">
+             mc:Ignorable="d"
+             d:DesignHeight="600"
+             d:DesignWidth="800">
     <UserControl.Resources>
         <ObjectDataProvider x:Key="VarMapEnumDataSource"
                             ObjectType="{x:Type sys:Enum}"
@@ -33,152 +34,183 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0"
-                               Grid.Column="0"
-                               Text="CAN Base ID"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Right"
-                               Padding="5"/>
+                       Grid.Column="0"
+                       Text="CAN Base ID"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       Padding="5" />
             <TextBox Grid.Row="0"
-                             Grid.Column="1"
-                             Padding="5"
-                             Margin="5"
-                             MinWidth="50"
-                             MaxWidth="100"
-                             HorizontalAlignment="Left"
-                             HorizontalContentAlignment="Center"
-                             Text="{Binding Pdm.BaseId, Mode=OneWay}"/>
+                     Grid.Column="1"
+                     Padding="5"
+                     Margin="5"
+                     MinWidth="50"
+                     MaxWidth="100"
+                     HorizontalAlignment="Left"
+                     HorizontalContentAlignment="Center"
+                     IsReadOnly="True"
+                     Text="{Binding Pdm.BaseId, Mode=OneWay}" />
 
             <TextBlock Grid.Row="0"
-                               Grid.Column="2"
-                               Text="Total Current (A)"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Right"
-                               Padding="5"/>
+                       Grid.Column="2"
+                       Text="Total Current (A)"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       Padding="5" />
             <TextBox Grid.Row="0"
-                             Grid.Column="3"
-                             Padding="5"
-                             Margin="5"
-                             MinWidth="50"
-                             MaxWidth="100"
-                             HorizontalAlignment="Left"
-                             HorizontalContentAlignment="Center"
-                             Text="{Binding Pdm.TotalCurrent, Mode=OneWay}"/>
+                     Grid.Column="3"
+                     Padding="5"
+                     Margin="5"
+                     MinWidth="50"
+                     MaxWidth="100"
+                     HorizontalAlignment="Left"
+                     HorizontalContentAlignment="Center"
+                     IsReadOnly="True"
+                     Text="{Binding Pdm.TotalCurrent, Mode=OneWay}" />
 
             <TextBlock Grid.Row="1"
-                               Grid.Column="0"
-                               Text="Battery Voltage (V)"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Right"
-                               Padding="5"/>
+                       Grid.Column="0"
+                       Text="Battery Voltage (V)"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       Padding="5" />
             <TextBox Grid.Row="1"
-                             Grid.Column="1"
-                             Padding="5"
-                             Margin="5"
-                             MinWidth="50"
-                             MaxWidth="100"
-                             HorizontalAlignment="Left"
-                             HorizontalContentAlignment="Center"
-                             Text="{Binding Pdm.BatteryVoltage, Mode=OneWay}"/>
+                     Grid.Column="1"
+                     Padding="5"
+                     Margin="5"
+                     MinWidth="50"
+                     MaxWidth="100"
+                     HorizontalAlignment="Left"
+                     HorizontalContentAlignment="Center"
+                     IsReadOnly="True"
+                     Text="{Binding Pdm.BatteryVoltage, Mode=OneWay}" />
 
             <TextBlock Grid.Row="1"
-                               Grid.Column="2"
-                               Text="Board Temperature (°F)"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Right"
-                               Padding="5"/>
+                       Grid.Column="2"
+                       Text="Board Temperature (°F)"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       Padding="5" />
             <TextBox Grid.Row="1"
-                             Grid.Column="3"
-                             Padding="5"
-                             Margin="5"
-                             MinWidth="50"
-                             MaxWidth="100"
-                             HorizontalAlignment="Left"
-                             HorizontalContentAlignment="Center"
-                             Text="{Binding Pdm.BoardTempF, Mode=OneWay}"/>
+                     Grid.Column="3"
+                     Padding="5"
+                     Margin="5"
+                     MinWidth="50"
+                     MaxWidth="100"
+                     HorizontalAlignment="Left"
+                     HorizontalContentAlignment="Center"
+                     IsReadOnly="True"
+                     Text="{Binding Pdm.BoardTempF, Mode=OneWay}" />
             <TextBlock Grid.Row="0"
-                               Grid.Column="4"
-                               Text="FW Version"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Right"
-                               Padding="5"/>
+                       Grid.Column="4"
+                       Text="FW Version"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       Padding="5" />
             <TextBox Grid.Row="0"
-                             Grid.Column="5"
-                             Padding="5"
-                             Margin="5"
-                             MinWidth="100"
-                             MaxWidth="100"
-                             HorizontalAlignment="Left"
-                             HorizontalContentAlignment="Center"
-                             Text="{Binding Pdm.Version, Mode=OneWay}"/>
+                     Grid.Column="5"
+                     Padding="5"
+                     Margin="5"
+                     MinWidth="100"
+                     MaxWidth="100"
+                     HorizontalAlignment="Left"
+                     HorizontalContentAlignment="Center"
+                     IsReadOnly="True"
+                     Text="{Binding Pdm.Version, Mode=OneWay}" />
         </Grid>
 
         <Separator Grid.Row="1"
-                           Margin="0 5 0 0"/>
+                   Margin="0 5 0 0" />
 
         <DataGrid AutoGenerateColumns="False"
                   CanUserAddRows="False"
-                          ItemsSource="{Binding Pdm.Outputs}"
-                          Grid.Row="2">
+                  ItemsSource="{Binding Pdm.Outputs}"
+                  Grid.Row="2">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Output" Binding="{Binding Number}" IsReadOnly="True"  Width="70" MinWidth="70">
+                <DataGridTextColumn Header="Output"
+                                    Binding="{Binding Number}"
+                                    IsReadOnly="True"
+                                    Width="70"
+                                    MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridCheckBoxColumn Header="En" Binding="{Binding Enabled, UpdateSourceTrigger=PropertyChanged}"  Width="40" MinWidth="40">
+                <DataGridCheckBoxColumn Header="En"
+                                        Binding="{Binding Enabled, UpdateSourceTrigger=PropertyChanged}"
+                                        Width="40"
+                                        MinWidth="40">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
                         </Style>
                     </DataGridCheckBoxColumn.ElementStyle>
                 </DataGridCheckBoxColumn>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}"  Width="120" MinWidth="120">
+                <DataGridTextColumn Header="Name"
+                                    Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                                    Width="120"
+                                    MinWidth="120">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTemplateColumn Header="State" IsReadOnly="True" Width="60" MinWidth="60">
+                <DataGridTemplateColumn Header="State"
+                                        IsReadOnly="True"
+                                        Width="60"
+                                        MinWidth="60">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Ellipse Name="StatusEllipse" Height="15" Width="15">
+                            <Ellipse Name="StatusEllipse"
+                                     Height="15"
+                                     Width="15">
                                 <Ellipse.Style>
                                     <Style TargetType="{x:Type Ellipse}">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding State}" Value="Off">
-                                                <Setter Property="Fill" Value="Gray"/>
+                                            <DataTrigger Binding="{Binding State}"
+                                                         Value="Off">
+                                                <Setter Property="Fill"
+                                                        Value="Gray" />
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding State}" Value="On">
-                                                <Setter Property="Fill" Value="Lime"/>
+                                            <DataTrigger Binding="{Binding State}"
+                                                         Value="On">
+                                                <Setter Property="Fill"
+                                                        Value="Lime" />
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding State}" Value="Fault">
-                                                <Setter Property="Fill" Value="Red"/>
+                                            <DataTrigger Binding="{Binding State}"
+                                                         Value="Fault">
+                                                <Setter Property="Fill"
+                                                        Value="Red" />
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding State}" Value="Overcurrent">
-                                                <Setter Property="Fill" Value="Yellow"/>
+                                            <DataTrigger Binding="{Binding State}"
+                                                         Value="Overcurrent">
+                                                <Setter Property="Fill"
+                                                        Value="Yellow" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -187,34 +219,53 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Amps" IsReadOnly="True" Width="100" MinWidth="100">
+                <DataGridTemplateColumn Header="Amps"
+                                        IsReadOnly="True"
+                                        Width="100"
+                                        MinWidth="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ProgressBar Width="80" MinWidth="80" Minimum="0" Maximum="{Binding CurrentLimit}" Value="{Binding Current}">
+                            <ProgressBar Width="80"
+                                         MinWidth="80"
+                                         Minimum="0"
+                                         Maximum="{Binding CurrentLimit}"
+                                         Value="{Binding Current}">
                                 <ProgressBar.Template>
                                     <ControlTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Rectangle Name="PART_Indicator" Height="20">
+                                            <Rectangle Name="PART_Indicator"
+                                                       Height="20">
                                                 <Rectangle.Style>
                                                     <Style TargetType="{x:Type Rectangle}">
                                                         <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding State}" Value="Off">
-                                                                <Setter Property="Fill" Value="Gray"/>
+                                                            <DataTrigger Binding="{Binding State}"
+                                                                         Value="Off">
+                                                                <Setter Property="Fill"
+                                                                        Value="Gray" />
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding State}" Value="On">
-                                                                <Setter Property="Fill" Value="Lime"/>
+                                                            <DataTrigger Binding="{Binding State}"
+                                                                         Value="On">
+                                                                <Setter Property="Fill"
+                                                                        Value="Lime" />
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding State}" Value="Fault">
-                                                                <Setter Property="Fill" Value="Red"/>
+                                                            <DataTrigger Binding="{Binding State}"
+                                                                         Value="Fault">
+                                                                <Setter Property="Fill"
+                                                                        Value="Red" />
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding State}" Value="Overcurrent">
-                                                                <Setter Property="Fill" Value="Yellow"/>
+                                                            <DataTrigger Binding="{Binding State}"
+                                                                         Value="Overcurrent">
+                                                                <Setter Property="Fill"
+                                                                        Value="Yellow" />
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
                                                 </Rectangle.Style>
                                             </Rectangle>
-                                            <Rectangle Name="PART_Track" Width="80" Height="20" Fill="Gray" />
+                                            <Rectangle Name="PART_Track"
+                                                       Width="80"
+                                                       Height="20"
+                                                       Fill="Gray" />
                                         </StackPanel>
                                     </ControlTemplate>
                                 </ProgressBar.Template>
@@ -222,60 +273,92 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Current(A)" Binding="{Binding Current}" IsReadOnly="True" Width="90" MinWidth="90">
+                <DataGridTextColumn Header="Current(A)"
+                                    Binding="{Binding Current}"
+                                    IsReadOnly="True"
+                                    Width="90"
+                                    MinWidth="90">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Current&#x0a;Limit (A)" Binding="{Binding CurrentLimit, UpdateSourceTrigger=PropertyChanged}" Width="80" MinWidth="80">
+                <DataGridTextColumn Header="Current&#x0a;Limit (A)"
+                                    Binding="{Binding CurrentLimit, UpdateSourceTrigger=PropertyChanged}"
+                                    Width="80"
+                                    MinWidth="80">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Reset&#x0a;Count" Binding="{Binding ResetCount, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Width="70" MinWidth="70">
+                <DataGridTextColumn Header="Reset&#x0a;Count"
+                                    Binding="{Binding ResetCount, UpdateSourceTrigger=PropertyChanged}"
+                                    IsReadOnly="True"
+                                    Width="70"
+                                    MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridComboBoxColumn Header="Variable" 
-                                        ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
+                <DataGridComboBoxColumn Header="Variable"
+                                        ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}"
                                         SelectedItemBinding="{Binding Input, UpdateSourceTrigger=PropertyChanged}"
-                                        Width="100" MinWidth="100"/>
-                <DataGridTextColumn Header="Reset #&#x0a;Limit" Binding="{Binding ResetCountLimit, UpdateSourceTrigger=PropertyChanged}" Width="70" MinWidth="70">
+                                        Width="100"
+                                        MinWidth="100" />
+                <DataGridTextColumn Header="Reset #&#x0a;Limit"
+                                    Binding="{Binding ResetCountLimit, UpdateSourceTrigger=PropertyChanged}"
+                                    Width="70"
+                                    MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridComboBoxColumn Header="Variable" 
-                                        ItemsSource="{Binding Source={StaticResource ResetModeEnumDataSource}, Mode=OneWay}" 
+                <DataGridComboBoxColumn Header="Reset Mode"
+                                        ItemsSource="{Binding Source={StaticResource ResetModeEnumDataSource}, Mode=OneWay}"
                                         SelectedItemBinding="{Binding ResetMode, UpdateSourceTrigger=PropertyChanged}"
-                                        Width="100" MinWidth="100"/>
-                <DataGridTextColumn Header="Reset&#x0a;Time" Binding="{Binding ResetTime, UpdateSourceTrigger=PropertyChanged}" Width="70" MinWidth="70">
+                                        Width="100"
+                                        MinWidth="100" />
+                <DataGridTextColumn Header="Reset&#x0a;Time"
+                                    Binding="{Binding ResetTime, UpdateSourceTrigger=PropertyChanged}"
+                                    Width="70"
+                                    MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Inrush&#x0a;Limit" Binding="{Binding InrushCurrentLimit, UpdateSourceTrigger=PropertyChanged}" Width="70" MinWidth="70">
+                <DataGridTextColumn Header="Inrush&#x0a;Limit"
+                                    Binding="{Binding InrushCurrentLimit, UpdateSourceTrigger=PropertyChanged}"
+                                    Width="70"
+                                    MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Inrush&#x0a;Time" Binding="{Binding InrushTime, UpdateSourceTrigger=PropertyChanged}" Width="70" MinWidth="70">
+                <DataGridTextColumn Header="Inrush&#x0a;Time"
+                                    Binding="{Binding InrushTime, UpdateSourceTrigger=PropertyChanged}"
+                                    Width="70"
+                                    MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
@@ -283,46 +366,69 @@
         </DataGrid>
 
         <Separator Grid.Row="3"
-                           Margin="0 5 0 0"/>
+                   Margin="0 5 0 0" />
 
         <DataGrid AutoGenerateColumns="False"
                   CanUserAddRows="False"
-                          ItemsSource="{Binding Pdm.DigitalInputs}"
-                          Grid.Row="4">
+                  ItemsSource="{Binding Pdm.DigitalInputs}"
+                  Grid.Row="4">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Input" Binding="{Binding Number}" IsReadOnly="True"  Width="60" MinWidth="60">
+                <DataGridTextColumn Header="Input"
+                                    Binding="{Binding Number}"
+                                    IsReadOnly="True"
+                                    Width="60"
+                                    MinWidth="60">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridCheckBoxColumn Header="En" Binding="{Binding Enabled, UpdateSourceTrigger=PropertyChanged}"  Width="40" MinWidth="40">
+                <DataGridCheckBoxColumn Header="En"
+                                        Binding="{Binding Enabled, UpdateSourceTrigger=PropertyChanged}"
+                                        Width="40"
+                                        MinWidth="40">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
                         </Style>
                     </DataGridCheckBoxColumn.ElementStyle>
                 </DataGridCheckBoxColumn>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}"  Width="120" MinWidth="120">
+                <DataGridTextColumn Header="Name"
+                                    Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                                    Width="120"
+                                    MinWidth="120">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTemplateColumn Header="State" IsReadOnly="True" Width="60" MinWidth="60">
+                <DataGridTemplateColumn Header="State"
+                                        IsReadOnly="True"
+                                        Width="60"
+                                        MinWidth="60">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Ellipse Name="StatusEllipse" Height="15" Width="15" Fill="Lime">
+                            <Ellipse Name="StatusEllipse"
+                                     Height="15"
+                                     Width="15"
+                                     Fill="Lime">
                                 <Ellipse.Style>
                                     <Style TargetType="{x:Type Ellipse}">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding State}" Value="True">
-                                                <Setter Property="Opacity" Value="1.0"/>
+                                            <DataTrigger Binding="{Binding State}"
+                                                         Value="True">
+                                                <Setter Property="Opacity"
+                                                        Value="1.0" />
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding State}" Value="False">
-                                                <Setter Property="Opacity" Value="0.1"/>
+                                            <DataTrigger Binding="{Binding State}"
+                                                         Value="False">
+                                                <Setter Property="Opacity"
+                                                        Value="0.1" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -331,21 +437,30 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridCheckBoxColumn Header="Invert Input" Binding="{Binding InvertInput, UpdateSourceTrigger=PropertyChanged}"  Width="100" MinWidth="100">
+                <DataGridCheckBoxColumn Header="Invert Input"
+                                        Binding="{Binding InvertInput, UpdateSourceTrigger=PropertyChanged}"
+                                        Width="100"
+                                        MinWidth="100">
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style TargetType="CheckBox">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
                         </Style>
                     </DataGridCheckBoxColumn.ElementStyle>
                 </DataGridCheckBoxColumn>
-                <DataGridComboBoxColumn Header="Mode" 
-                                        ItemsSource="{Binding Source={StaticResource InputModeEnumDataSource}, Mode=OneWay}" 
+                <DataGridComboBoxColumn Header="Mode"
+                                        ItemsSource="{Binding Source={StaticResource InputModeEnumDataSource}, Mode=OneWay}"
                                         SelectedItemBinding="{Binding Mode, UpdateSourceTrigger=PropertyChanged}"
-                                        Width="100" MinWidth="100"/>
-                <DataGridTextColumn Header="Debounce&#x0a;Time" Binding="{Binding DebounceTime, UpdateSourceTrigger=PropertyChanged}" Width="70" MinWidth="70">
+                                        Width="100"
+                                        MinWidth="100" />
+                <DataGridTextColumn Header="Debounce&#x0a;Time"
+                                    Binding="{Binding DebounceTime, UpdateSourceTrigger=PropertyChanged}"
+                                    Width="70"
+                                    MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>

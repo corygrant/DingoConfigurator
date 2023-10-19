@@ -11,9 +11,17 @@ namespace CanDevices.CanMsgLog
 {
     public class CanMsgLog : NotifyPropertyChangedBase, ICanDevice
     {
-        public string Name => "CAN Message Log";
+        public string Name
+        {
+            get => "CAN Message Log";
+            set => Name = value;
+        } 
 
-        public int BaseId => 1;
+        public int BaseId
+        {
+            get => 1;
+            set => BaseId = value;
+        }
 
         private DateTime _lastRxTime;
         public DateTime LastRxTime { get => _lastRxTime; }
@@ -117,6 +125,10 @@ namespace CanDevices.CanMsgLog
         }
 
         public List<CanDeviceResponse> GetDownloadMessages()
+        {
+            return null;
+        }
+        public List<CanDeviceResponse> GetUpdateMessages(int newId)
         {
             return null;
         }

@@ -25,7 +25,11 @@ namespace CanDevices
             set => _canDevice = value;
         }
 
-        public int BaseId => CanDevice.BaseId;
+        public int BaseId
+        {
+            get => CanDevice.BaseId;
+            set => BaseId = value;
+        } 
 
         public bool IsConnected
         {
@@ -74,6 +78,10 @@ namespace CanDevices
         }
 
         public List<CanDeviceResponse> GetDownloadMessages()
+        {
+            return null;
+        }
+        public List<CanDeviceResponse> GetUpdateMessages(int newId)
         {
             return null;
         }

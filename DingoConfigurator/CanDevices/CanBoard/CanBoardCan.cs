@@ -30,7 +30,7 @@ namespace CanDevices.CanBoard
         private int _baseId;
         public int BaseId { 
             get => _baseId;
-            private set
+            set
             {
                 if(_baseId != value)
                 {
@@ -245,6 +245,11 @@ namespace CanDevices.CanBoard
         }
 
         public List<CanDeviceResponse> GetDownloadMessages()
+        {
+            return null;
+        }
+
+        public List<CanDeviceResponse> GetUpdateMessages(int newId)
         {
             return null;
         }
