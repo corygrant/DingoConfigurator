@@ -333,7 +333,7 @@ namespace DingoConfigurator
             return _canComms.Connected &&
                 (SelectedCanDevice != null) &&
                 (SelectedCanDevice.IsConnected) &&
-                (SelectedCanDevice.GetType() != typeof(CanMsgLog));
+                (SelectedCanDevice.GetType() == typeof(DingoPdmCan));
         }
 
         private void Download(object parameter)
@@ -346,7 +346,7 @@ namespace DingoConfigurator
             return _canComms.Connected && 
                 (SelectedCanDevice != null) && 
                 (SelectedCanDevice.IsConnected) &&
-                (SelectedCanDevice.GetType() != typeof(CanMsgLog));
+                (SelectedCanDevice.GetType() == typeof(DingoPdmCan));
         }
 
         private void Burn(object parameter)
@@ -359,7 +359,7 @@ namespace DingoConfigurator
             return _canComms.Connected &&
                 (SelectedCanDevice != null) &&
                 (SelectedCanDevice.IsConnected) &&
-                (SelectedCanDevice.GetType() != typeof(CanMsgLog));
+                (SelectedCanDevice.GetType() == typeof(DingoPdmCan));
         }
 
         private void NewConfigFile(object parameter)

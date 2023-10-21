@@ -249,8 +249,6 @@ namespace CanDevices.DingoPdm
 
         public DingoPdmCan(string name, int id)
         {
-            Logger.Info($"New DingoPDM: {name}, ID: {id}");
-
             Name = name;
             BaseId = id;
             DigitalInputs = new ObservableCollection<Input>();
