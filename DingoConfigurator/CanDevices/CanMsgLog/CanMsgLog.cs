@@ -19,7 +19,7 @@ namespace CanDevices.CanMsgLog
 
         public int BaseId
         {
-            get => 1;
+            get => 9999;
             set => BaseId = value;
         }
 

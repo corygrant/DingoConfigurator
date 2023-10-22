@@ -462,7 +462,7 @@ namespace DingoConfigurator
         {
             if (SelectedDeviceToAdd.Equals(Devices.CanMsgLog))
             {
-                _canComms.AddCanDevice(typeof(CanMsgLog), "CAN Msg Log", 1);
+                _canComms.AddCanDevice(typeof(CanMsgLog), "CAN Msg Log", 9999);
             }
 
             if (DeviceBaseId < 1) return;
