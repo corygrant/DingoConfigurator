@@ -54,6 +54,10 @@
     <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.5.2.4\lib\net46\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="NlogViewer, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\NlogViewer\NlogViewer\bin\Release\NlogViewer.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -196,10 +200,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\NlogViewer\NlogViewer\NlogViewer.csproj">
-      <Project>{c04e879d-287e-49b5-9933-42fc2eff75f0}</Project>
-      <Name>NlogViewer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CanDevices\CanDevices.csproj">
       <Project>{a12bf4e7-734a-4db0-87ad-e9bfe7e781ad}</Project>
       <Name>CanDevices</Name>
