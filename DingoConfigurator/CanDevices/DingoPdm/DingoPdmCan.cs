@@ -450,7 +450,15 @@ namespace CanDevices.DingoPdm
 
         private void ReadMessage10(byte[] data)
         {
+            Flashers[0].InputValue = Convert.ToBoolean(data[1] & 0x01);
+            Flashers[1].InputValue = Convert.ToBoolean((data[1] & 0x02) >> 1);
+            Flashers[2].InputValue = Convert.ToBoolean((data[1] & 0x04) >> 2);
+            Flashers[3].InputValue = Convert.ToBoolean((data[1] & 0x08) >> 3);
 
+            Flashers[0].Value = Convert.ToBoolean(data[0] & 0x01) && Flashers[0].Enabled && Flashers[0].InputValue;
+            Flashers[1].Value = Convert.ToBoolean((data[0] & 0x02) >> 1) && Flashers[1].Enabled && Flashers[1].InputValue;
+            Flashers[2].Value = Convert.ToBoolean((data[0] & 0x04) >> 2) && Flashers[2].Enabled && Flashers[2].InputValue;
+            Flashers[3].Value = Convert.ToBoolean((data[0] & 0x08) >> 3) && Flashers[3].Enabled && Flashers[3].InputValue;
         }
 
         private void ReadMessage11(byte[] data)
@@ -529,6 +537,8 @@ namespace CanDevices.DingoPdm
         {
             Wipers[0].SlowState = Convert.ToBoolean(data[0] & 0x01);
             Wipers[0].FastState = Convert.ToBoolean((data[0] >> 1) & 0x01);
+            Wipers[0].State = (WiperState)data[1];
+            Wipers[0].Speed = (WiperSpeed)data[2];
         }
 
         private void ReadSettingsResponse(byte[] data, List<CanDeviceResponse> queue)
@@ -679,7 +689,7 @@ namespace CanDevices.DingoPdm
                 case MessagePrefix.Wiper:
                     Wipers[0].Enabled = true;
                     Wipers[0].Mode = (WiperMode)((data[1] & 0x03) >> 1);
-                    Wipers[0].ParkStopLevel = Convert.ToBoolean((data[1] & 0x04) >> 3);
+                    Wipers[0].ParkStopLevel = Convert.ToBoolean((data[1] & 0x08) >> 3);
                     Wipers[0].WashWipeCycles = (data[1] & 0xF0) >> 4;
                     Wipers[0].SlowInput = (VarMap)data[2];
                     Wipers[0].FastInput = (VarMap)data[3];

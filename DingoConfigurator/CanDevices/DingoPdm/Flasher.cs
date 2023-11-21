@@ -30,8 +30,8 @@
             }
         }
 
-        private int _value;
-        public int Value
+        private bool _value;
+        public bool Value
         {
             get => _value;
             set
@@ -82,6 +82,20 @@
                 {
                     _input = value;
                     OnPropertyChanged(nameof(Input));
+                }
+            }
+        }
+
+        private bool _inputValue;
+        public bool InputValue
+        {
+            get => _inputValue;
+            set
+            {
+                if (_inputValue != value)
+                {
+                    _inputValue = value;
+                    OnPropertyChanged(nameof(InputValue));
                 }
             }
         }
