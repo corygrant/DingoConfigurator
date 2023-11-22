@@ -124,7 +124,8 @@ namespace CanDevices.DingoPdm
         Output7,
         Output8,
         WiperSlow,
-        WiperFast
+        WiperFast,
+        AlwaysOn
     }
 
 
