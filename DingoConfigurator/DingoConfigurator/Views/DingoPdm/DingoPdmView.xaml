@@ -24,6 +24,13 @@
                 <x:Type TypeName="cd:InputMode" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
+        <ObjectDataProvider x:Key="InputPullEnumDataSource"
+                            ObjectType="{x:Type sys:Enum}"
+                            MethodName="GetValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="cd:InputPull" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
         <ObjectDataProvider x:Key="ResetModeEnumDataSource"
                             ObjectType="{x:Type sys:Enum}"
                             MethodName="GetValues">
@@ -464,6 +471,11 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
+                <DataGridComboBoxColumn Header="Pull"
+                                        ItemsSource="{Binding Source={StaticResource InputPullEnumDataSource}, Mode=OneWay}"
+                                        SelectedItemBinding="{Binding Pull, UpdateSourceTrigger=PropertyChanged}"
+                                        Width="100"
+                                        MinWidth="100" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

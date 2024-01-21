@@ -587,6 +587,7 @@ namespace CanDevices.DingoPdm
                         DigitalInputs[index].InvertInput = Convert.ToBoolean((data[1] & 0x08) >> 3);
                         DigitalInputs[index].Mode = (InputMode)((data[1] & 0x06) >> 1);
                         DigitalInputs[index].DebounceTime = data[2] * 10;
+                        DigitalInputs[index].Pull = (InputPull)(data[3] & 0x03);
                     }
 
                     foreach (var msg in queue)
@@ -1061,7 +1062,7 @@ namespace CanDevices.DingoPdm
                     Data = new CanInterfaceData
                     {
                         Id = id,
-                        Len = 3,
+                        Len = 4,
                         Payload = new byte[] {
                         Convert.ToByte('I'), //Byte 0
                         Convert.ToByte((((input.Number - 1) & 0x0F) << 4) +
@@ -1069,7 +1070,8 @@ namespace CanDevices.DingoPdm
                         ((Convert.ToByte(input.Mode) & 0x03) << 1) +
                         (Convert.ToByte(input.Enabled) & 0x01)), //Byte 1
                         (Convert.ToByte(input.DebounceTime / 10)), //Byte 2
-                        0, 0, 0, 0, 0 }
+                        Convert.ToByte(input.Pull), //Byte 3
+                        0, 0, 0, 0 }
                     },
                     MsgDescription = $"Input{input.Number}"
                 });

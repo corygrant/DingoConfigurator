@@ -29,6 +29,7 @@ namespace CanDevices.DingoPdm
                 config.input[i].mode = 0;
                 config.input[i].invertInput = pdm.DigitalInputs[i].InvertInput;
                 config.input[i].debounceTime = 20;
+                config.input[i].pull = pdm.DigitalInputs[i].Pull;
             }
 
             for (int i = 0; i < config.virtualInput.Length; i++)
@@ -127,6 +128,7 @@ namespace CanDevices.DingoPdm
                 di.Mode = config.input[index].mode;
                 di.InvertInput = config.input[index].invertInput;
                 di.DebounceTime = config.input[index].debounceTime;
+                di.Pull = config.input[index].pull;
 
                 index++;
             }
@@ -373,6 +375,7 @@ namespace CanDevices.DingoPdm
         public InputMode mode { get; set; }
         public bool invertInput { get; set; }
         public int debounceTime { get; set; }
+        public InputPull pull { get; set; }
     }
 
     public class VirtualInputConfig

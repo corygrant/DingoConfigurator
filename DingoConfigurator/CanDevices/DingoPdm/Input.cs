@@ -99,5 +99,19 @@
                 }
             }
         }
+
+        private InputPull _inputPull;
+        public InputPull Pull
+        {
+            get => _inputPull;
+            set
+            {
+                if (_inputPull != value)
+                {
+                    _inputPull = value;
+                    OnPropertyChanged(nameof(InputPull));
+                }
+            }
+        }
     }
 }

@@ -148,6 +148,13 @@ namespace CanDevices.DingoPdm
         Momentary,
         Latching
     }
+    
+    public enum InputPull
+    {
+        NoPull,
+        PullUp,
+        PullDown
+    }
 
     public enum Conditional
     {
