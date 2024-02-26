@@ -104,6 +104,11 @@ namespace CanDevices.SoftButtonBox
             return true;
         }
 
+        public void Clear()
+        {
+
+        }
+
         public void UpdateIsConnected()
         {
             TimeSpan timeSpan = DateTime.Now - _lastRxTime;

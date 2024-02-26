@@ -241,6 +241,11 @@ namespace CanDevices.CanMsgLog
             return true;
         }
 
+        public void Clear()
+        {
+
+        }
+
         public void ClearAll()
         {
             AllData.Clear();

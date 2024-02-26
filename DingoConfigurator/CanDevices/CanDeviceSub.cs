@@ -67,6 +67,11 @@ namespace CanDevices
             return true;
         }
 
+        public void Clear()
+        {
+
+        }
+
         public void UpdateProperty(string property)
         {
             OnPropertyChanged(property);

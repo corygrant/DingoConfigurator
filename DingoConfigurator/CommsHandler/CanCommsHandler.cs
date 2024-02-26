@@ -103,6 +103,10 @@ namespace CommsHandler
         public void Disconnect()
         {
             if (_can != null) _can.Stop();
+            foreach(var cd in CanDevices)
+            {
+                cd.Clear();
+            }
             Connected = false;
         }
 

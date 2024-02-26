@@ -96,6 +96,11 @@ namespace CanDevices.DingoDash
             return true;
         }
 
+        public void Clear()
+        {
+            
+        }
+
         public List<CanDeviceResponse> GetUploadMessages()
         {
             return null;

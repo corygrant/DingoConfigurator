@@ -1344,5 +1344,29 @@ namespace CanDevices.DingoPdm
                 MsgDescription = "Burn Settings"
             };
         }
+
+        public void Clear()
+        {
+            foreach(var input in DigitalInputs)
+            {
+                input.State = false;
+            }
+
+            foreach(var output in Outputs)
+            {
+                output.Current = 0;
+                output.State = OutState.Off;
+            }
+
+            foreach(var input in VirtualInputs)
+            {
+                input.Value = 0;
+            }
+
+            foreach(var canInput in CanInputs)
+            {
+                canInput.Value = 0;
+            }
+        }
     }
 }

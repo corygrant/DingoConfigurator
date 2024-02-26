@@ -175,6 +175,26 @@ namespace CanDevices.CanBoard
          
         }
 
+        public void Clear()
+        {
+            foreach(var ai in AnalogIn)
+            {
+                ai.Millivolts = 0;
+                ai.DigitalIn = false;
+                ai.RotarySwitchPos  = 0;
+            }
+
+            foreach(var di in DigitalIn)
+            {
+                di.State = false;
+            }
+
+            foreach(var dout in DigitalOut)
+            {
+                dout.State = false;
+            }
+        }
+
         public bool Read(int id, byte[] data, ref List<CanDeviceResponse> queue)
         {
             if ((id < BaseId) || (id > BaseId + 2)) return false;
