@@ -120,6 +120,7 @@
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="ViewModels\DingoDash\DingoDashViewModel.cs" />
     <Compile Include="ViewModels\DingoPdm\DingoPdmViewModel.cs" />
+    <Compile Include="ViewModels\SoftButtonBoxViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\CanBoard\CanBoardView.xaml.cs">
       <DependentUpon>CanBoardView.xaml</DependentUpon>
@@ -135,6 +136,9 @@
     </Compile>
     <Compile Include="Views\DingoPdm\DingoPdmView.xaml.cs">
       <DependentUpon>DingoPdmView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SoftButtonBoxView.xaml.cs">
+      <DependentUpon>SoftButtonBoxView.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\CanBoard\CanBoardView.xaml">
       <SubType>Designer</SubType>
@@ -165,6 +169,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DingoPdm\DingoPdmView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SoftButtonBoxView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -239,6 +247,10 @@
   <ItemGroup>
     <Resource Include="Icons\log_0.png" />
     <Resource Include="Icons\log_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\softbtnbox_0.png" />
+    <Resource Include="Icons\softbtnbox_1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

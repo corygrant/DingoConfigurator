@@ -1,7 +1,9 @@
 ﻿using CanDevices;
 using CanDevices.CanBoard;
+using CanDevices.CanMsgLog;
 using CanDevices.DingoDash;
 using CanDevices.DingoPdm;
+using CanDevices.SoftButtonBox;
 using System;
 using System.IO;
 using System.Text.Json;
@@ -29,6 +31,8 @@ namespace DingoConfigurator.Config
             int pdmNum = 0;
             int cbNum = 0;
             int dashNum = 0;
+            int sbbNum = 0;
+            int logNum = 0;
 
             foreach (var cd in devices)
             {
@@ -46,15 +50,29 @@ namespace DingoConfigurator.Config
                 {
                     dashNum++;
                 }
+
+                if (cd.GetType() == typeof(SoftButtonBox))
+                {
+                    sbbNum++;
+                }
+
+                if (cd.GetType() == typeof(CanMsgLog))
+                {
+                    logNum++;
+                }
             }
 
             _config.pdm = new PdmConfig[pdmNum];
             _config.canBoard = new CanBoardConfig[cbNum];
             _config.dash = new DashConfig[dashNum];
+            _config.sbb = new SoftButtonBoxConfig[sbbNum];
+            _config.log = new CanMsgLogConfig[logNum];
 
             pdmNum = 0;
             cbNum = 0;
             dashNum = 0;
+            sbbNum = 0;
+            logNum = 0;
 
             foreach (var cd in devices)
             {
@@ -90,6 +108,28 @@ namespace DingoConfigurator.Config
 
                     dashNum++;
                 }
+
+                if (cd.GetType() == typeof(SoftButtonBox))
+                {
+                    var sbb = (SoftButtonBox)cd;
+
+                    _config.sbb[sbbNum] = new SoftButtonBoxConfig();
+
+                    SoftButtonBoxConfigHandler.UpdateConfig(ref sbb, ref _config.sbb[sbbNum], sbbNum);
+
+                    sbbNum++;
+                }
+
+                if (cd.GetType() == typeof(CanMsgLog))
+                {
+                    var log = (CanMsgLog)cd;
+
+                    _config.log[logNum] = new CanMsgLogConfig();
+
+                    CanMsgLogConfigHandler.UpdateConfig(ref log, ref _config.log[logNum], logNum);
+
+                    logNum++;
+                }
             }
 
             SaveFile(path);
@@ -104,6 +144,9 @@ namespace DingoConfigurator.Config
             int pdmNum = 0;
             int cbNum = 0;
             int dashNum = 0;
+            int sbbNum = 0;
+            int logNum = 0;
+
             foreach (var cd in devices)
             {
                 if (cd.GetType() == typeof(DingoPdmCan))
@@ -132,6 +175,25 @@ namespace DingoConfigurator.Config
 
                     dashNum++;
                 }
+
+                if (cd.GetType() == typeof(SoftButtonBox))
+                {
+                    var sbb = (SoftButtonBox)cd;
+
+                    SoftButtonBoxConfigHandler.UpdateConfig(ref sbb, ref _config.sbb[sbbNum], sbbNum);
+
+                    sbbNum++;
+                }
+
+                if (cd.GetType() == typeof(CanMsgLog))
+                {
+                    var log = (CanMsgLog)cd;
+
+                    CanMsgLogConfigHandler.UpdateConfig(ref log, ref _config.log[logNum], logNum);
+
+                    logNum++;
+                }
+
             }
 
             SaveFile(path);
@@ -164,6 +226,8 @@ namespace DingoConfigurator.Config
             int pdmNum = 0;
             int cbNum = 0;
             int dashNum = 0;
+            int sbbNum = 0;
+            int logNum = 0;
 
             foreach (var cd in devices)
             {
@@ -181,9 +245,23 @@ namespace DingoConfigurator.Config
                 {
                     dashNum++;
                 }
+
+                if (cd.GetType() == typeof(SoftButtonBox))
+                {
+                    sbbNum++;
+                }
+
+                if (cd.GetType() == typeof(CanMsgLog))
+                {
+                    logNum++;
+                }
             }
 
-            return (pdmNum == _config.pdm.Length) && (cbNum == _config.canBoard.Length) && (dashNum == _config.dash.Length);
+            return  (pdmNum == _config.pdm.Length) && 
+                    (cbNum == _config.canBoard.Length) && 
+                    (dashNum == _config.dash.Length) && 
+                    (sbbNum == _config.sbb.Length) &&
+                    (logNum == _config.log.Length);
         }
     }
 }

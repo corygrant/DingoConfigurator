@@ -10,6 +10,8 @@ using CanDevices.CanBoard;
 using CanDevices.DingoDash;
 using CanDevices.CanMsgLog;
 using PCAN;
+using System.Runtime.InteropServices;
+using CanDevices.SoftButtonBox;
 
 namespace CommsHandler
 {
@@ -69,9 +71,8 @@ namespace CommsHandler
             }
         }
 
-        public async Task Connect(string interfaceName, string port, CanInterfaceBaudRate baud)
+        public void Connect(string interfaceName, string port, CanInterfaceBaudRate baud)
         {
-
             switch (interfaceName)
             {
                 case "USB2CAN":
@@ -93,13 +94,13 @@ namespace CommsHandler
             if (!_can.Start()) return;
             Connected = true;
 
-            
+
 
             Thread.Sleep(100); //Wait for devices to connect
             Upload(null);
         }
 
-        public async Task Disconnect()
+        public void Disconnect()
         {
             if (_can != null) _can.Stop();
             Connected = false;
@@ -107,112 +108,132 @@ namespace CommsHandler
 
         public async Task Upload(ICanDevice canDevice)
         {
-            //If null, upload all
-            foreach (var cd in _canDevices)
-            {
-                if((canDevice == null) || canDevice.Equals(cd))
+            await Task.Run(() =>
+            { 
+                //If null, upload all
+                foreach (var cd in _canDevices)
                 {
-                    if (cd.IsConnected)
+                    if ((canDevice == null) || canDevice.Equals(cd))
                     {
-                        var msgs = cd.GetUploadMessages();
-                        if (msgs == null) return;
-
-                        foreach (var msg in msgs)
+                        if (cd.IsConnected)
                         {
-                            msg.DeviceBaseId = cd.BaseId;
-                            _queue.Add(msg);
-                            _can.Write(msg.Data);
-                            ProcessMessage(msg.Data);//Catch with CanMsgLog
+                            var msgs = cd.GetUploadMessages();
+                            if (msgs == null) return;
 
-                            msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
-                        }
-                        msgs.Clear();
-                    }
-                }
-            }
-        }
-
-        public async Task Download(ICanDevice canDevice)
-        {
-            foreach (var cd in _canDevices)
-            {
-                if ((canDevice == null) || canDevice.Equals(cd))
-                {
-                    if (cd.IsConnected)
-                    {
-                        var msgs = cd.GetDownloadMessages();
-                        if (msgs == null) return;
-
-                        foreach (var msg in msgs)
-                        {
-                            msg.DeviceBaseId = cd.BaseId;
-                            _queue.Add(msg);
-                            _can.Write(msg.Data);
-                            ProcessMessage(msg.Data);//Catch with CanMsgLog
-
-                            msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
-                        }
-                        msgs.Clear();
-                    }
-                }
-            }
-        }
-
-        public async Task Update(ICanDevice canDevice, int newId)
-        {
-            foreach (var cd in _canDevices)
-            {
-                if ((canDevice == null) || canDevice.Equals(cd))
-                {
-                    if (cd.IsConnected)
-                    {
-                        var msgs = cd.GetUpdateMessages(newId);
-
-                        if (msgs != null)
-                        {
                             foreach (var msg in msgs)
                             {
-                                msg.DeviceBaseId = newId; //Set msg ID to new ID so response is processed properly
+                                msg.DeviceBaseId = cd.BaseId;
                                 _queue.Add(msg);
                                 _can.Write(msg.Data);
                                 ProcessMessage(msg.Data);//Catch with CanMsgLog
 
                                 msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
+
+                                Thread.Sleep(20); //Slow down, device can't respond fast enough
                             }
                             msgs.Clear();
                         }
-
-                        //After sending updated ID, set local base ID
-                        cd.BaseId = newId;
-                    }
-                    else
-                    {
-                        cd.BaseId = newId;
                     }
                 }
-            }
+            });
+        }
+
+        public async Task Download(ICanDevice canDevice)
+        {
+            await Task.Run(() =>
+            {
+                foreach (var cd in _canDevices)
+                {
+                    if ((canDevice == null) || canDevice.Equals(cd))
+                    {
+                        if (cd.IsConnected)
+                        {
+                            var msgs = cd.GetDownloadMessages();
+                            if (msgs == null) return;
+
+                            foreach (var msg in msgs)
+                            {
+                                msg.DeviceBaseId = cd.BaseId;
+                                _queue.Add(msg);
+                                _can.Write(msg.Data);
+                                ProcessMessage(msg.Data);//Catch with CanMsgLog
+
+                                msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
+
+                                Thread.Sleep(20); //Slow down, device can't respond fast enough
+                            }
+                            msgs.Clear();
+                        }
+                    }
+                }
+            });
+        }
+
+        public async Task Update(ICanDevice canDevice, int newId)
+        {
+            await Task.Run(() =>
+            {
+                foreach (var cd in _canDevices)
+                {
+                    if ((canDevice == null) || canDevice.Equals(cd))
+                    {
+                        if (cd.IsConnected)
+                        {
+                            var msgs = cd.GetUpdateMessages(newId);
+
+                            if (msgs != null)
+                            {
+                                foreach (var msg in msgs)
+                                {
+                                    msg.DeviceBaseId = newId; //Set msg ID to new ID so response is processed properly
+                                    _queue.Add(msg);
+                                    _can.Write(msg.Data);
+                                    ProcessMessage(msg.Data);//Catch with CanMsgLog
+
+                                    msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
+
+                                    Thread.Sleep(20); //Slow down, device can't respond fast enough
+                                }
+                                msgs.Clear();
+                            }
+
+                            //After sending updated ID, set local base ID
+                            cd.BaseId = newId;
+                        }
+                        else
+                        {
+                            cd.BaseId = newId;
+                        }
+                    }
+                }
+            });
         }
 
         public async Task Burn(ICanDevice canDevice)
         {
-            foreach (var cd in _canDevices)
+            await Task.Run(() =>
             {
-                if ((canDevice == null) || canDevice.Equals(cd))
+                foreach (var cd in _canDevices)
                 {
-                    if (cd.IsConnected)
+                    if ((canDevice == null) || canDevice.Equals(cd))
                     {
-                        var msg = cd.GetBurnMessage();
-                        if (msg == null) return;
+                        if (cd.IsConnected)
+                        {
+                            var msg = cd.GetBurnMessage();
+                            if (msg == null) return;
 
-                        msg.DeviceBaseId = cd.BaseId;
-                        _queue.Add(msg);
-                        _can.Write(msg.Data);
-                        ProcessMessage(msg.Data);//Catch with CanMsgLog
+                            msg.DeviceBaseId = cd.BaseId;
+                            _queue.Add(msg);
+                            _can.Write(msg.Data);
+                            ProcessMessage(msg.Data);//Catch with CanMsgLog
 
-                        msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
+                            msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
+
+                            Thread.Sleep(20); //Slow down, device can't respond fast enough
+                        }
                     }
                 }
-            }
+            });
         }
 
         private void CanDataReceived(object sender, CanDataEventArgs e)
@@ -289,6 +310,14 @@ namespace CommsHandler
                 _canDevices.Add(newMsgLog);
                 OnPropertyChanged(nameof(CanDevices));
                 return newMsgLog;
+            }
+
+            if (type == typeof(SoftButtonBox))
+            {
+                var newSbb = new SoftButtonBox(name, baseId);
+                _canDevices.Add(newSbb);
+                OnPropertyChanged(nameof(CanDevices));
+                return newSbb;
             }
 
             return null;

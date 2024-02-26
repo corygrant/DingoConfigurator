@@ -24,6 +24,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using CommsHandler;
 using CanDevices.CanMsgLog;
+using CanDevices.SoftButtonBox;
 
 //Add another CanDevices list that holds the online value
 
@@ -127,6 +128,24 @@ namespace DingoConfigurator
                 {
                     DingoDashCan newDash = (DingoDashCan)_canComms.AddCanDevice(typeof(DingoDashCan), dash.label, dash.baseCanId);
                     DingoDashConfigHandler.ApplyConfig(ref newDash, dash); //Apply the config settings to the new device
+                }
+            }
+
+            foreach (var sbb in _configHandler.Config.sbb)
+            {
+                if (sbb != null)
+                {
+                    SoftButtonBox newSbb = (SoftButtonBox)_canComms.AddCanDevice(typeof(SoftButtonBox), sbb.label, sbb.baseCanId);
+                    SoftButtonBoxConfigHandler.ApplyConfig(ref newSbb, sbb); //Apply the config settings to the new device
+                }
+            }
+
+            foreach (var log in _configHandler.Config.log)
+            {
+                if (log != null)
+                {
+                    CanMsgLog newLog = (CanMsgLog)_canComms.AddCanDevice(typeof(CanMsgLog), log.label, log.baseCanId);
+                    CanMsgLogConfigHandler.ApplyConfig(ref newLog, log); //Apply the config settings to the new device
                 }
             }
         }
@@ -258,6 +277,13 @@ namespace DingoConfigurator
                 SelectedCanDevice =(CanMsgLog)e.NewValue;
                 CurrentViewModel = new CanMsgLogViewModel(this);
                 SelectedDeviceToAdd = Devices.CanMsgLog;
+            }
+
+            if (e.NewValue.GetType() == typeof(SoftButtonBox))
+            {
+                SelectedCanDevice = (SoftButtonBox)e.NewValue;
+                CurrentViewModel = new SoftButtonBoxViewModel(this);
+                SelectedDeviceToAdd = Devices.SoftButtonBox;
             }
 
             if (SelectedCanDevice != null)
@@ -482,6 +508,11 @@ namespace DingoConfigurator
             if (SelectedDeviceToAdd.Equals(Devices.DingoDash))
             {
                 _canComms.AddCanDevice(typeof(DingoDashCan), DeviceName, DeviceBaseId);
+            }
+
+            if (SelectedDeviceToAdd.Equals(Devices.SoftButtonBox))
+            {
+                _canComms.AddCanDevice(typeof(SoftButtonBox), DeviceName, DeviceBaseId);
             }
         }
 
@@ -768,7 +799,8 @@ namespace DingoConfigurator
         DingoPDM,
         CANBoard,
         DingoDash,
-        CanMsgLog
+        CanMsgLog,
+        SoftButtonBox
     }
     #endregion
 }
