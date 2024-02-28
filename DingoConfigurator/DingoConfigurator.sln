@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CanDevices", "CanDevices\Ca
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DingoConfigurator", "DingoConfigurator\DingoConfigurator.csproj", "{2914178E-7D14-40F3-B9DB-FFA6F88AEB69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NlogViewer", "..\..\NlogViewer\NlogViewer\NlogViewer.csproj", "{C04E879D-287E-49B5-9933-42FC2EFF75F0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommsHandler", "CommsHandler\CommsHandler.csproj", "{7F95C67B-6FE7-427A-95AB-2D39E6FE9186}"
 EndProject
 Global
@@ -37,10 +35,6 @@ Global
 		{2914178E-7D14-40F3-B9DB-FFA6F88AEB69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2914178E-7D14-40F3-B9DB-FFA6F88AEB69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2914178E-7D14-40F3-B9DB-FFA6F88AEB69}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C04E879D-287E-49B5-9933-42FC2EFF75F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C04E879D-287E-49B5-9933-42FC2EFF75F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C04E879D-287E-49B5-9933-42FC2EFF75F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C04E879D-287E-49B5-9933-42FC2EFF75F0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7F95C67B-6FE7-427A-95AB-2D39E6FE9186}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7F95C67B-6FE7-427A-95AB-2D39E6FE9186}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F95C67B-6FE7-427A-95AB-2D39E6FE9186}.Release|Any CPU.ActiveCfg = Release|Any CPU
