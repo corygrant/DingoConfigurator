@@ -43,9 +43,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="*" MinHeight="100"/>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="*" MinHeight="100"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.RowDefinitions>
@@ -372,8 +372,12 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Separator Grid.Row="3"
-                   Margin="0 5 0 0" />
+        <GridSplitter     Grid.Row="3"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Center"
+                  Background="White" 
+                  ShowsPreview="True"
+                  Height="2"/>
 
         <DataGrid AutoGenerateColumns="False"
                   CanUserAddRows="False"

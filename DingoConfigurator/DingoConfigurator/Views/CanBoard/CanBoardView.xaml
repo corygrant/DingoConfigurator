@@ -11,11 +11,11 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="2*" />
+            <RowDefinition Height="2*" MinHeight="100"/>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="3*" />
+            <RowDefinition Height="3*" MinHeight="100"/>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="2*" />
+            <RowDefinition Height="2*" MinHeight="100"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.RowDefinitions>
@@ -163,8 +163,12 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Separator Grid.Row="3"
-                   Margin="0 5 0 0" />
+        <GridSplitter     Grid.Row="3"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Center"
+                  Background="White" 
+                  ShowsPreview="True"
+                  Height="2"/>
 
         <DataGrid AutoGenerateColumns="False"
                   CanUserAddRows="False"
@@ -227,8 +231,12 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Separator Grid.Row="5"
-                   Margin="0 5 0 0" />
+        <GridSplitter     Grid.Row="5"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Center"
+                  Background="White" 
+                  ShowsPreview="True"
+                  Height="2"/>
 
         <DataGrid AutoGenerateColumns="False"
                   CanUserAddRows="False"
