@@ -1,4 +1,6 @@
-﻿namespace CanDevices.DingoPdm
+﻿using System.Text.Json.Serialization;
+
+namespace CanDevices.DingoPdm
 {
     public class CanInput : NotifyPropertyChangedBase
     {
@@ -31,6 +33,7 @@
         }
 
         private int _value;
+        [JsonIgnore]
         public int Value
         {
             get => _value;

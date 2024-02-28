@@ -25,6 +25,7 @@ using System.Diagnostics;
 using CommsHandler;
 using CanDevices.CanMsgLog;
 using CanDevices.SoftButtonBox;
+using Microsoft.Win32;
 
 //Add another CanDevices list that holds the online value
 
@@ -35,8 +36,6 @@ namespace DingoConfigurator
         private CanCommsHandler _canComms;
         public CanCommsHandler CanComms { get => _canComms; }
 
-        private DevicesConfigHandler _configHandler;
-
         private string _settingsPath;
 
         private System.Timers.Timer _statusBarTimer;
@@ -46,8 +45,6 @@ namespace DingoConfigurator
         public MainViewModel()
         {
             _canComms = new CanCommsHandler();
-
-            _configHandler = new DevicesConfigHandler();
 
             RefreshComPorts(null);
 
@@ -97,58 +94,6 @@ namespace DingoConfigurator
             CanCans = true;
         }
 
-        
-
-        //Add devices from config file to comms handler
-        private void AddCanDevicesToTree(DevicesConfig config)
-        {
-            _canComms.ResetCanDevices();
-
-            foreach (var pdm in _configHandler.Config.pdm)
-            {
-                if (pdm != null)
-                {
-                    DingoPdmCan newPdm = (DingoPdmCan)_canComms.AddCanDevice(typeof(DingoPdmCan), pdm.label, pdm.canOutput.baseId);
-                    PdmConfigHandler.ApplyConfig(ref newPdm, pdm); //Apply the config settings to the new device
-                }
-            }
-
-            foreach (var cb in _configHandler.Config.canBoard)
-            {
-                if (cb != null)
-                {
-                    CanBoardCan newCb = (CanBoardCan)_canComms.AddCanDevice(typeof(CanBoardCan), cb.label, cb.baseCanId);
-                    CanBoardConfigHandler.ApplyConfig(ref newCb, cb); //Apply the config settings to the new device
-                }
-            }
-
-            foreach (var dash in _configHandler.Config.dash)
-            {
-                if (dash != null)
-                {
-                    DingoDashCan newDash = (DingoDashCan)_canComms.AddCanDevice(typeof(DingoDashCan), dash.label, dash.baseCanId);
-                    DingoDashConfigHandler.ApplyConfig(ref newDash, dash); //Apply the config settings to the new device
-                }
-            }
-
-            foreach (var sbb in _configHandler.Config.sbb)
-            {
-                if (sbb != null)
-                {
-                    SoftButtonBox newSbb = (SoftButtonBox)_canComms.AddCanDevice(typeof(SoftButtonBox), sbb.label, sbb.baseCanId);
-                    SoftButtonBoxConfigHandler.ApplyConfig(ref newSbb, sbb); //Apply the config settings to the new device
-                }
-            }
-
-            foreach (var log in _configHandler.Config.log)
-            {
-                if (log != null)
-                {
-                    CanMsgLog newLog = (CanMsgLog)_canComms.AddCanDevice(typeof(CanMsgLog), log.label, log.baseCanId);
-                    CanMsgLogConfigHandler.ApplyConfig(ref newLog, log); //Apply the config settings to the new device
-                }
-            }
-        }
 
         public void WindowClosing()
         {
@@ -388,14 +333,17 @@ namespace DingoConfigurator
                 (SelectedCanDevice.GetType() == typeof(DingoPdmCan));
         }
 
+        private bool ConfigFileOpen { get; set; }
+
         private void NewConfigFile(object parameter)
         {
             //Clear devices
             _canComms.Disconnect();
             _canComms.CanDevices.Clear();
-            _configHandler.Clear();
             CurrentViewModel = null;
             ConfigFileName = String.Empty;
+
+            ConfigFileOpen = false;
         }
 
         private bool CanNewConfigFile(object parameter)
@@ -405,28 +353,31 @@ namespace DingoConfigurator
 
         private void OpenConfigFile(object parameter)
         {
+            System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            openFileDialog.Multiselect = false;
+            openFileDialog.Filter = "Config files (*.dco)|*.dco|All files (*.*)|*.*";
+            openFileDialog.InitialDirectory = _settingsPath;
+            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+
+            if (Path.GetExtension(openFileDialog.FileName).ToLower() != ".dco") return;
+
             _canComms.Disconnect();
             _canComms.CanDevices.Clear();
             CurrentViewModel = null;
 
-            System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            openFileDialog.Multiselect = false;
-            openFileDialog.Filter = "Config files (*.json)|*.json|All files (*.*)|*.*";
-            openFileDialog.InitialDirectory = _settingsPath;
-            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
-
-            if (Path.GetExtension(openFileDialog.FileName).ToLower() != ".json") return;
-
-            _settingsPath = openFileDialog.FileName;
-            ConfigFileName = Path.GetFileName(_settingsPath);
-
-            _configHandler = new DevicesConfigHandler();
-
-            _configHandler.OpenFile(openFileDialog.FileName);
-
-            AddCanDevicesToTree(_configHandler.Config);
-
+            
+            OpenFile(openFileDialog.FileName);
         }
+
+        public void OpenFile(string fileName)
+        {
+            _settingsPath = fileName;
+            ConfigFileName = Path.GetFullPath(fileName);
+
+            DevicesConfig devices = new DevicesConfig();
+            ConfigFileOpen = ConfigFile.Open(fileName, out devices);
+            _canComms.CanDevices = ConfigFile.ConfigToCollection(devices);
+        }   
 
         private bool CanOpenConfigFile(object parameter)
         {
@@ -435,48 +386,27 @@ namespace DingoConfigurator
 
         private void SaveConfigFile(object parameter)
         {
-            if (_configHandler.CheckDeviceCount(_canComms.CanDevices.ToArray()))
-            {
-                //Config file matches tree device count
-                //Save existing device config
-                _configHandler.UpdateSaveFile(_settingsPath, _canComms.CanDevices.ToArray());
-                return;
-            }
-
-            //Config file doesn't match tree device count
-            //Create a new DevicesConfigHandler and save
-            _configHandler = new DevicesConfigHandler();
-            _configHandler.NewSaveFile(_settingsPath, _canComms.CanDevices.ToArray());
+            ConfigFile.Save(_settingsPath, ConfigFile.CollectionToConfig(_canComms.CanDevices));
         }
 
         private bool CanSaveConfigFile(object parameter)
         {
-            return _configHandler.Opened;
+            return ConfigFileOpen;
         }
 
         private void SaveAsConfigFile(object parameter)
         {
             System.Windows.Forms.SaveFileDialog saveAsFileDialog = new System.Windows.Forms.SaveFileDialog();
-            saveAsFileDialog.Filter = "Config files (*.json)|*.json|All files (*.*)|*.*";
+            saveAsFileDialog.Filter = "Config files (*.dco)|*.dco|All files (*.*)|*.*";
             saveAsFileDialog.InitialDirectory = _settingsPath;
             if (saveAsFileDialog.ShowDialog() != DialogResult.OK) return;
 
-            if (Path.GetExtension(saveAsFileDialog.FileName).ToLower() != ".json") return;
+            if (Path.GetExtension(saveAsFileDialog.FileName).ToLower() != ".dco") return;
 
             _settingsPath = saveAsFileDialog.FileName;
-            ConfigFileName = Path.GetFileNameWithoutExtension(_settingsPath);
+            ConfigFileName = Path.GetFullPath(_settingsPath);
 
-            if (_configHandler.Opened && _configHandler.CheckDeviceCount(_canComms.CanDevices.ToArray()))
-            {
-                //Config already exists, just save in the new location
-                _configHandler.UpdateSaveFile(_settingsPath, _canComms.CanDevices.ToArray());
-                return;
-            }
-  
-            //New configuration or config file doesn't match tree device count
-            //Create a new DevicesConfigHandler and save
-            _configHandler = new DevicesConfigHandler();
-            _configHandler.NewSaveFile(_settingsPath, _canComms.CanDevices.ToArray());
+            ConfigFile.Save(_settingsPath, ConfigFile.CollectionToConfig(_canComms.CanDevices));
         }
 
         private bool CanSaveAsConfigFile(object parameter)

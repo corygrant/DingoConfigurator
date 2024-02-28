@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace CanDevices.CanBoard
@@ -41,9 +42,11 @@ namespace CanDevices.CanBoard
         }
 
         private DateTime _lastRxTime;
+        [JsonIgnore]
         public DateTime LastRxTime { get => _lastRxTime; }
 
         private bool _isConnected;
+        [JsonIgnore]
         public bool IsConnected
         {
             get => _isConnected;
@@ -58,6 +61,7 @@ namespace CanDevices.CanBoard
         }
 
         private double _boardTempC;
+        [JsonIgnore]
         public double BoardTempC { 
             get => _boardTempC; 
             private set
@@ -71,6 +75,7 @@ namespace CanDevices.CanBoard
         }
 
         private double _boardTempF;
+        [JsonIgnore]
         public double BoardTempF => _boardTempC * 1.8 + 32.0;
 
         private ObservableCollection<AnalogInput> _analogIn;
@@ -113,6 +118,7 @@ namespace CanDevices.CanBoard
         }
 
         private int _heartbeat;
+        [JsonIgnore]
         public int Heartbeat
         {
             get { return _heartbeat; }

@@ -1,4 +1,6 @@
-﻿namespace CanDevices.DingoPdm
+﻿using System.Text.Json.Serialization;
+
+namespace CanDevices.DingoPdm
 {
     public class Output : NotifyPropertyChangedBase
     {
@@ -45,6 +47,7 @@
         }
 
         private double _current;
+        [JsonIgnore]
         public double Current
         {
             get => _current;
@@ -59,6 +62,7 @@
         }
 
         private OutState _state;
+        [JsonIgnore]
         public OutState State
         {
             get => _state;
@@ -87,6 +91,7 @@
         }
 
         private int _resetCount;
+        [JsonIgnore]
         public int ResetCount
         {
             get => _resetCount;

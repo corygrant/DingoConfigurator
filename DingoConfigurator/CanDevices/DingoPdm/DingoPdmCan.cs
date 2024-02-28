@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -45,6 +46,7 @@ namespace CanDevices.DingoPdm
         }
 
         private List<CanDeviceSub> _subPages = new List<CanDeviceSub>();
+        [JsonIgnore]
         public List<CanDeviceSub> SubPages
         {
             get => _subPages;
@@ -59,9 +61,11 @@ namespace CanDevices.DingoPdm
         }
 
         private DateTime _lastRxTime { get; set; }
+        [JsonIgnore]
         public DateTime LastRxTime { get => _lastRxTime; }
 
         private bool _isConnected;
+        [JsonIgnore]
         public bool IsConnected
         {
             get => _isConnected;
@@ -94,6 +98,7 @@ namespace CanDevices.DingoPdm
         }
 
         private double _totalCurrent;
+        [JsonIgnore]
         public double TotalCurrent
         {
             get => _totalCurrent;
@@ -108,6 +113,7 @@ namespace CanDevices.DingoPdm
         }
 
         private double _batteryVoltage;
+        [JsonIgnore]
         public double BatteryVoltage
         {
             get => _batteryVoltage;
@@ -122,6 +128,7 @@ namespace CanDevices.DingoPdm
         }
 
         private double _boardTempC;
+        [JsonIgnore]
         public double BoardTempC
         {
             get => _boardTempC;
@@ -136,6 +143,7 @@ namespace CanDevices.DingoPdm
         }
 
         private double _boardTempF;
+        [JsonIgnore]
         public double BoardTempF
         {
             get => _boardTempF;
@@ -150,6 +158,7 @@ namespace CanDevices.DingoPdm
         }
 
         private string _version;
+        [JsonIgnore]
         public string Version
         {
             get => _version;
@@ -247,10 +256,10 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        public DingoPdmCan(string name, int id)
+        public DingoPdmCan(string name, int baseId)
         {
             Name = name;
-            BaseId = id;
+            BaseId = baseId;
             DigitalInputs = new ObservableCollection<Input>();
             for (int i = 0; i < 2; i++)
             {

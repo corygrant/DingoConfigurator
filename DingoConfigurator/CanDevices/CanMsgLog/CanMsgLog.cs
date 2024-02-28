@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
@@ -11,22 +12,33 @@ namespace CanDevices.CanMsgLog
 {
     public class CanMsgLog : NotifyPropertyChangedBase, ICanDevice
     {
+        private string _name;
         public string Name
         {
-            get => "CAN Message Log";
-            set => Name = value;
+            get => _name;
+            set
+            {
+                if (_name != value)
+                {
+                    _name = value;
+                    OnPropertyChanged(nameof(Name));
+                }
+            }
         } 
 
+        private int _baseId;
         public int BaseId
         {
-            get => 9999;
-            set => BaseId = value;
+            get => _baseId;
+            set => _baseId = value;
         }
 
         private DateTime _lastRxTime;
+        [JsonIgnore]
         public DateTime LastRxTime { get => _lastRxTime; }
 
         private bool _isConnected;
+        [JsonIgnore]
         public bool IsConnected
         {
             get => _isConnected;
@@ -102,6 +114,7 @@ namespace CanDevices.CanMsgLog
 
         private readonly object _allDataLock;
         private ObservableCollection<CanMsgLogData> _allData;
+        [JsonIgnore]
         public ObservableCollection<CanMsgLogData> AllData
         {
             get => _allData;

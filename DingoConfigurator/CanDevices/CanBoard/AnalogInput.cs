@@ -1,4 +1,6 @@
-﻿namespace CanDevices.CanBoard
+﻿using System.Text.Json.Serialization;
+
+namespace CanDevices.CanBoard
 {
     public class AnalogInput : NotifyPropertyChangedBase
     {
@@ -31,6 +33,7 @@
         }
 
         private double _millivolts;
+        [JsonIgnore]
         public double Millivolts
         {
             get => _millivolts;
@@ -45,6 +48,7 @@
         }
 
         private int _rotarySwitchPos;
+        [JsonIgnore]
         public int RotarySwitchPos
         {
             get => _rotarySwitchPos;
@@ -59,6 +63,7 @@
         }
 
         private bool _digitalIn;
+        [JsonIgnore]
         public bool DigitalIn
         {
             get => _digitalIn;

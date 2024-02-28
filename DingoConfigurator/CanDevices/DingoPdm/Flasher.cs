@@ -1,4 +1,6 @@
-﻿namespace CanDevices.DingoPdm
+﻿using System.Text.Json.Serialization;
+
+namespace CanDevices.DingoPdm
 {
     public class Flasher : NotifyPropertyChangedBase
     {
@@ -31,6 +33,7 @@
         }
 
         private bool _value;
+        [JsonIgnore]
         public bool Value
         {
             get => _value;

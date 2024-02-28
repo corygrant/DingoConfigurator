@@ -1,4 +1,6 @@
-﻿namespace CanDevices.DingoPdm
+﻿using System.Text.Json.Serialization;
+
+namespace CanDevices.DingoPdm
 {
     public class Wiper : NotifyPropertyChangedBase
     {
@@ -51,6 +53,7 @@
         }
 
         private bool _slowState;
+        [JsonIgnore]
         public bool SlowState
         {
             get => _slowState;
@@ -65,6 +68,7 @@
         }
 
         private bool _fastState;
+        [JsonIgnore]
         public bool FastState
         {
             get => _fastState;
@@ -93,6 +97,7 @@
         }
 
         private WiperState _state;
+        [JsonIgnore]
         public WiperState State
         {
             get => _state;
@@ -107,6 +112,7 @@
         }
 
         private WiperSpeed _speed;
+        [JsonIgnore]
         public WiperSpeed Speed
         {
             get => _speed;

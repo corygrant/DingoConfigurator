@@ -31,7 +31,7 @@ namespace CommsHandler
         public ObservableCollection<ICanDevice> CanDevices
         {
             get => _canDevices;
-            private set
+            set
             {
                 _canDevices = value;
                 OnPropertyChanged(nameof(CanDevices));

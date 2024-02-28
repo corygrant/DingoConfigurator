@@ -1,4 +1,6 @@
-﻿namespace CanDevices.CanBoard
+﻿using System.Text.Json.Serialization;
+
+namespace CanDevices.CanBoard
 {
     public class Output : NotifyPropertyChangedBase
     {
@@ -31,6 +33,7 @@
         }
 
         private bool _state;
+        [JsonIgnore]
         public bool State
         {
             get => _state;

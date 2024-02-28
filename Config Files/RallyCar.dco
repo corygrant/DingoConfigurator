@@ -1,0 +1,902 @@
+{
+  "pdm": [
+    {
+      "Name": "Pink",
+      "BaseId": 2000,
+      "DigitalInputs": [
+        {
+          "Enabled": true,
+          "Name": null,
+          "Number": 1,
+          "InvertInput": true,
+          "Mode": 1,
+          "DebounceTime": 20,
+          "Pull": 1
+        },
+        {
+          "Enabled": true,
+          "Name": null,
+          "Number": 2,
+          "InvertInput": true,
+          "Mode": 1,
+          "DebounceTime": 20,
+          "Pull": 1
+        }
+      ],
+      "Outputs": [
+        {
+          "Enabled": false,
+          "Name": null,
+          "Number": 1,
+          "CurrentLimit": 0,
+          "ResetCountLimit": 0,
+          "ResetMode": 0,
+          "ResetTime": 0,
+          "InrushCurrentLimit": 0,
+          "InrushTime": 0,
+          "Input": 0
+        },
+        {
+          "Enabled": false,
+          "Name": null,
+          "Number": 2,
+          "CurrentLimit": 0,
+          "ResetCountLimit": 0,
+          "ResetMode": 0,
+          "ResetTime": 0,
+          "InrushCurrentLimit": 0,
+          "InrushTime": 0,
+          "Input": 0
+        },
+        {
+          "Enabled": false,
+          "Name": null,
+          "Number": 3,
+          "CurrentLimit": 0,
+          "ResetCountLimit": 0,
+          "ResetMode": 0,
+          "ResetTime": 0,
+          "InrushCurrentLimit": 0,
+          "InrushTime": 0,
+          "Input": 0
+        },
+        {
+          "Enabled": false,
+          "Name": null,
+          "Number": 4,
+          "CurrentLimit": 0,
+          "ResetCountLimit": 0,
+          "ResetMode": 0,
+          "ResetTime": 0,
+          "InrushCurrentLimit": 0,
+          "InrushTime": 0,
+          "Input": 0
+        },
+        {
+          "Enabled": false,
+          "Name": null,
+          "Number": 5,
+          "CurrentLimit": 0,
+          "ResetCountLimit": 0,
+          "ResetMode": 0,
+          "ResetTime": 0,
+          "InrushCurrentLimit": 0,
+          "InrushTime": 0,
+          "Input": 0
+        },
+        {
+          "Enabled": false,
+          "Name": null,
+          "Number": 6,
+          "CurrentLimit": 0,
+          "ResetCountLimit": 0,
+          "ResetMode": 0,
+          "ResetTime": 0,
+          "InrushCurrentLimit": 0,
+          "InrushTime": 0,
+          "Input": 0
+        },
+        {
+          "Enabled": false,
+          "Name": null,
+          "Number": 7,
+          "CurrentLimit": 0,
+          "ResetCountLimit": 0,
+          "ResetMode": 0,
+          "ResetTime": 0,
+          "InrushCurrentLimit": 0,
+          "InrushTime": 0,
+          "Input": 0
+        },
+        {
+          "Enabled": false,
+          "Name": null,
+          "Number": 8,
+          "CurrentLimit": 0,
+          "ResetCountLimit": 0,
+          "ResetMode": 0,
+          "ResetTime": 0,
+          "InrushCurrentLimit": 0,
+          "InrushTime": 0,
+          "Input": 0
+        }
+      ],
+      "CanInputs": [
+        {
+          "Name": null,
+          "Number": 1,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 2,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 3,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 4,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 5,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 6,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 7,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 8,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 9,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 10,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 11,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 12,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 13,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 14,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 15,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 16,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 17,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 18,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 19,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 20,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 21,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 22,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 23,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 24,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 25,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 26,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 27,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 28,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 29,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 30,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 31,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 32,
+          "Enabled": false,
+          "Id": 0,
+          "LowByte": 0,
+          "HighByte": 0,
+          "Operator": 0,
+          "OnVal": 0,
+          "Mode": 0
+        }
+      ],
+      "VirtualInputs": [
+        {
+          "Name": null,
+          "Number": 1,
+          "Enabled": false,
+          "Not0": false,
+          "Var0": 0,
+          "Cond0": 0,
+          "Not1": false,
+          "Var1": 0,
+          "Cond1": 0,
+          "Not2": false,
+          "Var2": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 2,
+          "Enabled": false,
+          "Not0": false,
+          "Var0": 0,
+          "Cond0": 0,
+          "Not1": false,
+          "Var1": 0,
+          "Cond1": 0,
+          "Not2": false,
+          "Var2": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 3,
+          "Enabled": false,
+          "Not0": false,
+          "Var0": 0,
+          "Cond0": 0,
+          "Not1": false,
+          "Var1": 0,
+          "Cond1": 0,
+          "Not2": false,
+          "Var2": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 4,
+          "Enabled": false,
+          "Not0": false,
+          "Var0": 0,
+          "Cond0": 0,
+          "Not1": false,
+          "Var1": 0,
+          "Cond1": 0,
+          "Not2": false,
+          "Var2": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 5,
+          "Enabled": false,
+          "Not0": false,
+          "Var0": 0,
+          "Cond0": 0,
+          "Not1": false,
+          "Var1": 0,
+          "Cond1": 0,
+          "Not2": false,
+          "Var2": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 6,
+          "Enabled": false,
+          "Not0": false,
+          "Var0": 0,
+          "Cond0": 0,
+          "Not1": false,
+          "Var1": 0,
+          "Cond1": 0,
+          "Not2": false,
+          "Var2": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 7,
+          "Enabled": false,
+          "Not0": false,
+          "Var0": 0,
+          "Cond0": 0,
+          "Not1": false,
+          "Var1": 0,
+          "Cond1": 0,
+          "Not2": false,
+          "Var2": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 8,
+          "Enabled": false,
+          "Not0": false,
+          "Var0": 0,
+          "Cond0": 0,
+          "Not1": false,
+          "Var1": 0,
+          "Cond1": 0,
+          "Not2": false,
+          "Var2": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 9,
+          "Enabled": false,
+          "Not0": false,
+          "Var0": 0,
+          "Cond0": 0,
+          "Not1": false,
+          "Var1": 0,
+          "Cond1": 0,
+          "Not2": false,
+          "Var2": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 10,
+          "Enabled": false,
+          "Not0": false,
+          "Var0": 0,
+          "Cond0": 0,
+          "Not1": false,
+          "Var1": 0,
+          "Cond1": 0,
+          "Not2": false,
+          "Var2": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 11,
+          "Enabled": false,
+          "Not0": false,
+          "Var0": 0,
+          "Cond0": 0,
+          "Not1": false,
+          "Var1": 0,
+          "Cond1": 0,
+          "Not2": false,
+          "Var2": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 12,
+          "Enabled": false,
+          "Not0": false,
+          "Var0": 0,
+          "Cond0": 0,
+          "Not1": false,
+          "Var1": 0,
+          "Cond1": 0,
+          "Not2": false,
+          "Var2": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 13,
+          "Enabled": false,
+          "Not0": false,
+          "Var0": 0,
+          "Cond0": 0,
+          "Not1": false,
+          "Var1": 0,
+          "Cond1": 0,
+          "Not2": false,
+          "Var2": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 14,
+          "Enabled": false,
+          "Not0": false,
+          "Var0": 0,
+          "Cond0": 0,
+          "Not1": false,
+          "Var1": 0,
+          "Cond1": 0,
+          "Not2": false,
+          "Var2": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 15,
+          "Enabled": false,
+          "Not0": false,
+          "Var0": 0,
+          "Cond0": 0,
+          "Not1": false,
+          "Var1": 0,
+          "Cond1": 0,
+          "Not2": false,
+          "Var2": 0,
+          "Mode": 0
+        },
+        {
+          "Name": null,
+          "Number": 16,
+          "Enabled": false,
+          "Not0": false,
+          "Var0": 0,
+          "Cond0": 0,
+          "Not1": false,
+          "Var1": 0,
+          "Cond1": 0,
+          "Not2": false,
+          "Var2": 0,
+          "Mode": 0
+        }
+      ],
+      "Wipers": [
+        {
+          "Enabled": false,
+          "Name": null,
+          "Number": 0,
+          "Mode": 0,
+          "SlowInput": 0,
+          "FastInput": 0,
+          "InterInput": 0,
+          "OnInput": 0,
+          "SpeedInput": 0,
+          "ParkInput": 0,
+          "ParkStopLevel": false,
+          "SwipeInput": 0,
+          "WashInput": 0,
+          "WashWipeCycles": 0,
+          "SpeedMap": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "IntermitTime": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "Flashers": [
+        {
+          "Name": null,
+          "Number": 1,
+          "Enabled": false,
+          "Single": false,
+          "Input": 0,
+          "InputValue": false,
+          "Output": 0,
+          "OnTime": 0,
+          "OffTime": 0
+        },
+        {
+          "Name": null,
+          "Number": 2,
+          "Enabled": false,
+          "Single": false,
+          "Input": 0,
+          "InputValue": false,
+          "Output": 0,
+          "OnTime": 0,
+          "OffTime": 0
+        },
+        {
+          "Name": null,
+          "Number": 3,
+          "Enabled": false,
+          "Single": false,
+          "Input": 0,
+          "InputValue": false,
+          "Output": 0,
+          "OnTime": 0,
+          "OffTime": 0
+        },
+        {
+          "Name": null,
+          "Number": 4,
+          "Enabled": false,
+          "Single": false,
+          "Input": 0,
+          "InputValue": false,
+          "Output": 0,
+          "OnTime": 0,
+          "OffTime": 0
+        }
+      ],
+      "StarterDisable": [
+        {
+          "Enabled": false,
+          "Input": 8,
+          "Output1": false,
+          "Output2": true,
+          "Output3": false,
+          "Output4": false,
+          "Output5": false,
+          "Output6": false,
+          "Output7": false,
+          "Output8": false
+        }
+      ]
+    }
+  ],
+  "canBoard": [
+    {
+      "Name": "SteeringWheel",
+      "BaseId": 1600,
+      "AnalogIn": [
+        {
+          "Number": 1,
+          "Name": "Wiper Speed"
+        },
+        {
+          "Number": 2,
+          "Name": null
+        },
+        {
+          "Number": 3,
+          "Name": null
+        },
+        {
+          "Number": 4,
+          "Name": null
+        },
+        {
+          "Number": 5,
+          "Name": null
+        }
+      ],
+      "DigitalIn": [
+        {
+          "Number": 1,
+          "Name": null
+        },
+        {
+          "Number": 2,
+          "Name": null
+        },
+        {
+          "Number": 3,
+          "Name": null
+        },
+        {
+          "Number": 4,
+          "Name": null
+        },
+        {
+          "Number": 5,
+          "Name": null
+        },
+        {
+          "Number": 6,
+          "Name": null
+        },
+        {
+          "Number": 7,
+          "Name": null
+        },
+        {
+          "Number": 8,
+          "Name": null
+        }
+      ],
+      "DigitalOut": [
+        {
+          "Number": 1,
+          "Name": null
+        },
+        {
+          "Number": 2,
+          "Name": null
+        },
+        {
+          "Number": 3,
+          "Name": null
+        },
+        {
+          "Number": 4,
+          "Name": null
+        }
+      ]
+    }
+  ],
+  "dash": [
+    {
+      "Name": "Dash",
+      "BaseId": 1300
+    }
+  ],
+  "sbb": [
+    {
+      "Name": "TestButtons",
+      "BaseId": 20
+    }
+  ],
+  "log": [
+    {
+      "Name": "CAN Message Log",
+      "BaseId": 9999,
+      "IdFormat": 0,
+      "PayloadFormat": 0
+    }
+  ]
+}

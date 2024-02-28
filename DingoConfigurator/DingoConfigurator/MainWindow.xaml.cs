@@ -22,6 +22,7 @@ namespace DingoConfigurator
     public partial class MainWindow : MetroWindow
     {
         private readonly MainViewModel _vm;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -29,6 +30,10 @@ namespace DingoConfigurator
             DataContext = _vm;
 
             Closing += MainWindow_Closing;
+
+            string[] args = Environment.GetCommandLineArgs();
+            if (args.Length > 1)
+                _vm.OpenFile(args[1]);
         }
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)

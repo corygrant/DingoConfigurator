@@ -3,6 +3,7 @@ using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -39,9 +40,11 @@ namespace CanDevices.SoftButtonBox
         }
 
         private DateTime _lastRxTime { get; set; }
+        [JsonIgnore]
         public DateTime LastRxTime { get => _lastRxTime; }
 
         private bool _isConnected;
+        [JsonIgnore]
         public bool IsConnected
         {
             get => _isConnected;
