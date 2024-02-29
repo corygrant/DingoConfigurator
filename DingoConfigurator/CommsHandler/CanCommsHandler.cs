@@ -259,6 +259,14 @@ namespace CommsHandler
         private void SentTimeElapsed(Object response)
         {
             CanDeviceResponse msg = (CanDeviceResponse)response;
+
+            if (!Connected)
+            {
+                msg.TimeSentTimer.Dispose();
+                _queue.Remove(msg);
+                return;
+            }
+            
             if(msg.ReceiveAttempts < 4)
             {
                 Logger.Warn($"No response {msg.MsgDescription}");
