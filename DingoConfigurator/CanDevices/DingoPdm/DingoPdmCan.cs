@@ -73,6 +73,8 @@ namespace CanDevices.DingoPdm
             {
                 if (_isConnected != value)
                 {
+                    Clear();
+
                     _isConnected = value;
                     OnPropertyChanged(nameof(IsConnected));
                     foreach (var subPage in _subPages)
