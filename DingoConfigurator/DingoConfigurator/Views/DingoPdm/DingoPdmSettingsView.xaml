@@ -245,13 +245,13 @@
                   CanUserAddRows="False"
                   Grid.Row="4">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Wiper" IsReadOnly="True" Width="110" MinWidth="110">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
+                <DataGridCheckBoxColumn Header="Wiper" Binding="{Binding Enabled, UpdateSourceTrigger=PropertyChanged}" Width="110" MinWidth="110">
+                    <DataGridCheckBoxColumn.ElementStyle>
+                        <Style TargetType="CheckBox">
                             <Setter Property="HorizontalAlignment" Value="Center" />
                         </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
+                    </DataGridCheckBoxColumn.ElementStyle>
+                </DataGridCheckBoxColumn>
                 <DataGridComboBoxColumn Header="State" 
                                         IsReadOnly="True"
                                         ItemsSource="{Binding Source={StaticResource WiperStateEnumDataSource}, Mode=OneWay}" 

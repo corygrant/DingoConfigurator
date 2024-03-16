@@ -699,7 +699,7 @@ namespace CanDevices.DingoPdm
                     break;
 
                 case MessagePrefix.Wiper:
-                    Wipers[0].Enabled = true;
+                    Wipers[0].Enabled = Convert.ToBoolean(data[1] & 0x01);
                     Wipers[0].Mode = (WiperMode)((data[1] & 0x03) >> 1);
                     Wipers[0].ParkStopLevel = Convert.ToBoolean((data[1] & 0x08) >> 3);
                     Wipers[0].WashWipeCycles = (data[1] & 0xF0) >> 4;
