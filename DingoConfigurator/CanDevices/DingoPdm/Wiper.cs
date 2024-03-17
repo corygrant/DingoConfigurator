@@ -6,7 +6,7 @@ namespace CanDevices.DingoPdm
     {
         public Wiper()
         {
-            SpeedMap = new int[8];
+            SpeedMap = new WiperSpeed[8];
             IntermitTime = new int[6];
         }
 
@@ -265,8 +265,8 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private int[] _speedMap;
-        public int[] SpeedMap
+        private WiperSpeed[] _speedMap;
+        public WiperSpeed[] SpeedMap
         {
             get => _speedMap;
             set

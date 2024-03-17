@@ -70,6 +70,10 @@
             <RowDefinition Height="*" MinHeight="50"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" MinHeight="50"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" MinHeight="50"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" MinHeight="50"/>
         </Grid.RowDefinitions>
 
 
@@ -352,7 +356,6 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-
             </DataGrid.Columns>
         </DataGrid>
         
@@ -364,9 +367,135 @@
                           Height="2"/>
         
         <DataGrid AutoGenerateColumns="False"
+          ItemsSource="{Binding Pdm.Wipers}"
+          CanUserAddRows="False"
+          Grid.Row="6">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Wiper Speed" IsReadOnly="True" Width="110" MinWidth="110">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridComboBoxColumn Header="Speed 0" 
+                                        IsReadOnly="False"
+                                        ItemsSource="{Binding Source={StaticResource WiperSpeedEnumDataSource}, Mode=OneWay}" 
+                                        SelectedItemBinding="{Binding SpeedMap[0], Mode=TwoWay}"
+                                        Width="100" MinWidth="100"/>
+                <DataGridComboBoxColumn Header="Speed 1" 
+                                        IsReadOnly="False"
+                                        ItemsSource="{Binding Source={StaticResource WiperSpeedEnumDataSource}, Mode=OneWay}" 
+                                        SelectedItemBinding="{Binding SpeedMap[1], Mode=TwoWay}"
+                                        Width="100" MinWidth="100"/>
+                <DataGridComboBoxColumn Header="Speed 2" 
+                                        IsReadOnly="False"
+                                        ItemsSource="{Binding Source={StaticResource WiperSpeedEnumDataSource}, Mode=OneWay}" 
+                                        SelectedItemBinding="{Binding SpeedMap[2], Mode=TwoWay}"
+                                        Width="100" MinWidth="100"/>
+                <DataGridComboBoxColumn Header="Speed 3" 
+                                        IsReadOnly="False"
+                                        ItemsSource="{Binding Source={StaticResource WiperSpeedEnumDataSource}, Mode=OneWay}" 
+                                        SelectedItemBinding="{Binding SpeedMap[3], Mode=TwoWay}"
+                                        Width="100" MinWidth="100"/>    
+                <DataGridComboBoxColumn Header="Speed 4" 
+                                        IsReadOnly="False"
+                                        ItemsSource="{Binding Source={StaticResource WiperSpeedEnumDataSource}, Mode=OneWay}" 
+                                        SelectedItemBinding="{Binding SpeedMap[4], Mode=TwoWay}"
+                                        Width="100" MinWidth="100"/>
+                <DataGridComboBoxColumn Header="Speed 5" 
+                                        IsReadOnly="False"
+                                        ItemsSource="{Binding Source={StaticResource WiperSpeedEnumDataSource}, Mode=OneWay}" 
+                                        SelectedItemBinding="{Binding SpeedMap[5], Mode=TwoWay}"
+                                        Width="100" MinWidth="100"/>
+                <DataGridComboBoxColumn Header="Speed 6" 
+                                        IsReadOnly="False"
+                                        ItemsSource="{Binding Source={StaticResource WiperSpeedEnumDataSource}, Mode=OneWay}" 
+                                        SelectedItemBinding="{Binding SpeedMap[6], Mode=TwoWay}"
+                                        Width="100" MinWidth="100"/>
+                <DataGridComboBoxColumn Header="Speed 7" 
+                                        IsReadOnly="False"
+                                        ItemsSource="{Binding Source={StaticResource WiperSpeedEnumDataSource}, Mode=OneWay}" 
+                                        SelectedItemBinding="{Binding SpeedMap[7], Mode=TwoWay}"
+                                        Width="100" MinWidth="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <GridSplitter     Grid.Row="7"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Center"
+                  Background="White" 
+                  ShowsPreview="True"
+                  Height="2"/>
+
+        <DataGrid AutoGenerateColumns="False"
+                  ItemsSource="{Binding Pdm.Wipers}"
+                  CanUserAddRows="False"
+                  Grid.Row="8">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Wiper Intermittent Time (ms)" IsReadOnly="True" Width="210" MinWidth="210">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Intermit 1" Binding="{Binding IntermitTime[0]}" IsReadOnly="False" Width="90" MinWidth="90">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Intermit 2" Binding="{Binding IntermitTime[1]}" IsReadOnly="False" Width="90" MinWidth="90">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Intermit 3" Binding="{Binding IntermitTime[2]}" IsReadOnly="False" Width="90" MinWidth="90">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Intermit 4" Binding="{Binding IntermitTime[3]}" IsReadOnly="False" Width="90" MinWidth="90">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Intermit 5" Binding="{Binding IntermitTime[4]}" IsReadOnly="False" Width="90" MinWidth="90">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Intermit 6" Binding="{Binding IntermitTime[5]}" IsReadOnly="False" Width="90" MinWidth="90">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <GridSplitter     Grid.Row="9"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Center"
+          Background="White" 
+          ShowsPreview="True"
+          Height="2"/>
+        
+        <DataGrid AutoGenerateColumns="False"
                   ItemsSource="{Binding Pdm.Flashers}"
                   CanUserAddRows="False"
-                  Grid.Row="6">
+                  Grid.Row="10">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Flasher" Binding="{Binding Number}" IsReadOnly="True" Width="110" MinWidth="110">
                     <DataGridTextColumn.ElementStyle>
@@ -441,7 +570,7 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <GridSplitter     Grid.Row="7"
+        <GridSplitter     Grid.Row="11"
                           HorizontalAlignment="Stretch"
                           VerticalAlignment="Center"
                           Background="White" 
@@ -451,7 +580,7 @@
         <DataGrid AutoGenerateColumns="False"
                   ItemsSource="{Binding Pdm.StarterDisable}"
                   CanUserAddRows="False"
-                  Grid.Row="8">
+                  Grid.Row="12">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Starter Disable" IsReadOnly="True" Width="120" MinWidth="120">
                     <DataGridTextColumn.ElementStyle>

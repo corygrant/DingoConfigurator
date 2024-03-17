@@ -25,117 +25,117 @@
       ],
       "Outputs": [
         {
-          "Enabled": false,
-          "Name": null,
           "Number": 1,
-          "CurrentLimit": 0,
+          "Enabled": true,
+          "Name": null,
+          "CurrentLimit": 20,
+          "Input": 1,
           "ResetCountLimit": 0,
-          "ResetMode": 0,
-          "ResetTime": 0,
-          "InrushCurrentLimit": 0,
-          "InrushTime": 0,
-          "Input": 0
+          "ResetMode": 2,
+          "ResetTime": 1000,
+          "InrushCurrentLimit": 30,
+          "InrushTime": 1000
         },
         {
-          "Enabled": false,
-          "Name": null,
           "Number": 2,
-          "CurrentLimit": 0,
+          "Enabled": true,
+          "Name": null,
+          "CurrentLimit": 20,
+          "Input": 1,
           "ResetCountLimit": 0,
-          "ResetMode": 0,
-          "ResetTime": 0,
-          "InrushCurrentLimit": 0,
-          "InrushTime": 0,
-          "Input": 0
+          "ResetMode": 2,
+          "ResetTime": 1000,
+          "InrushCurrentLimit": 30,
+          "InrushTime": 1000
         },
         {
-          "Enabled": false,
-          "Name": null,
           "Number": 3,
-          "CurrentLimit": 0,
+          "Enabled": true,
+          "Name": null,
+          "CurrentLimit": 12,
+          "Input": 1,
           "ResetCountLimit": 0,
-          "ResetMode": 0,
-          "ResetTime": 0,
-          "InrushCurrentLimit": 0,
-          "InrushTime": 0,
-          "Input": 0
+          "ResetMode": 2,
+          "ResetTime": 1000,
+          "InrushCurrentLimit": 20,
+          "InrushTime": 1000
         },
         {
-          "Enabled": false,
-          "Name": null,
           "Number": 4,
-          "CurrentLimit": 0,
+          "Enabled": true,
+          "Name": null,
+          "CurrentLimit": 12,
+          "Input": 1,
           "ResetCountLimit": 0,
-          "ResetMode": 0,
-          "ResetTime": 0,
-          "InrushCurrentLimit": 0,
-          "InrushTime": 0,
-          "Input": 0
+          "ResetMode": 2,
+          "ResetTime": 1000,
+          "InrushCurrentLimit": 20,
+          "InrushTime": 1000
         },
         {
-          "Enabled": false,
-          "Name": null,
           "Number": 5,
-          "CurrentLimit": 0,
+          "Enabled": true,
+          "Name": null,
+          "CurrentLimit": 12,
+          "Input": 1,
           "ResetCountLimit": 0,
-          "ResetMode": 0,
-          "ResetTime": 0,
-          "InrushCurrentLimit": 0,
-          "InrushTime": 0,
-          "Input": 0
+          "ResetMode": 2,
+          "ResetTime": 1000,
+          "InrushCurrentLimit": 20,
+          "InrushTime": 1000
         },
         {
-          "Enabled": false,
-          "Name": null,
           "Number": 6,
-          "CurrentLimit": 0,
+          "Enabled": true,
+          "Name": null,
+          "CurrentLimit": 12,
+          "Input": 1,
           "ResetCountLimit": 0,
-          "ResetMode": 0,
-          "ResetTime": 0,
-          "InrushCurrentLimit": 0,
-          "InrushTime": 0,
-          "Input": 0
+          "ResetMode": 2,
+          "ResetTime": 1000,
+          "InrushCurrentLimit": 20,
+          "InrushTime": 1000
         },
         {
-          "Enabled": false,
-          "Name": null,
           "Number": 7,
-          "CurrentLimit": 0,
+          "Enabled": true,
+          "Name": null,
+          "CurrentLimit": 12,
+          "Input": 1,
           "ResetCountLimit": 0,
-          "ResetMode": 0,
-          "ResetTime": 0,
-          "InrushCurrentLimit": 0,
-          "InrushTime": 0,
-          "Input": 0
+          "ResetMode": 2,
+          "ResetTime": 1000,
+          "InrushCurrentLimit": 20,
+          "InrushTime": 1000
         },
         {
-          "Enabled": false,
-          "Name": null,
           "Number": 8,
-          "CurrentLimit": 0,
+          "Enabled": true,
+          "Name": null,
+          "CurrentLimit": 12,
+          "Input": 1,
           "ResetCountLimit": 0,
-          "ResetMode": 0,
-          "ResetTime": 0,
-          "InrushCurrentLimit": 0,
-          "InrushTime": 0,
-          "Input": 0
+          "ResetMode": 2,
+          "ResetTime": 1000,
+          "InrushCurrentLimit": 20,
+          "InrushTime": 1000
         }
       ],
       "CanInputs": [
         {
-          "Name": null,
           "Number": 1,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
           "HighByte": 0,
-          "Operator": 0,
+          "Operator": 3,
           "OnVal": 0,
-          "Mode": 0
+          "Mode": 1
         },
         {
-          "Name": null,
           "Number": 2,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -145,8 +145,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 3,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -156,8 +156,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 4,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -167,8 +167,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 5,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -178,8 +178,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 6,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -189,8 +189,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 7,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -200,8 +200,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 8,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -211,8 +211,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 9,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -222,8 +222,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 10,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -233,8 +233,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 11,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -244,8 +244,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 12,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -255,8 +255,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 13,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -266,8 +266,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 14,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -277,8 +277,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 15,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -288,8 +288,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 16,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -299,8 +299,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 17,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -310,8 +310,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 18,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -321,8 +321,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 19,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -332,8 +332,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 20,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -343,8 +343,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 21,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -354,8 +354,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 22,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -365,8 +365,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 23,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -376,8 +376,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 24,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -387,8 +387,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 25,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -398,8 +398,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 26,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -409,8 +409,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 27,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -420,8 +420,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 28,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -431,8 +431,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 29,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -442,8 +442,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 30,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -453,8 +453,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 31,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -464,8 +464,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 32,
+          "Name": null,
           "Enabled": false,
           "Id": 0,
           "LowByte": 0,
@@ -477,22 +477,22 @@
       ],
       "VirtualInputs": [
         {
-          "Name": null,
           "Number": 1,
+          "Name": null,
           "Enabled": false,
           "Not0": false,
           "Var0": 0,
           "Cond0": 0,
           "Not1": false,
           "Var1": 0,
-          "Cond1": 0,
+          "Cond1": 1,
           "Not2": false,
           "Var2": 0,
-          "Mode": 0
+          "Mode": 1
         },
         {
-          "Name": null,
           "Number": 2,
+          "Name": null,
           "Enabled": false,
           "Not0": false,
           "Var0": 0,
@@ -505,8 +505,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 3,
+          "Name": null,
           "Enabled": false,
           "Not0": false,
           "Var0": 0,
@@ -519,8 +519,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 4,
+          "Name": null,
           "Enabled": false,
           "Not0": false,
           "Var0": 0,
@@ -533,8 +533,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 5,
+          "Name": null,
           "Enabled": false,
           "Not0": false,
           "Var0": 0,
@@ -547,8 +547,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 6,
+          "Name": null,
           "Enabled": false,
           "Not0": false,
           "Var0": 0,
@@ -561,8 +561,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 7,
+          "Name": null,
           "Enabled": false,
           "Not0": false,
           "Var0": 0,
@@ -575,8 +575,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 8,
+          "Name": null,
           "Enabled": false,
           "Not0": false,
           "Var0": 0,
@@ -589,8 +589,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 9,
+          "Name": null,
           "Enabled": false,
           "Not0": false,
           "Var0": 0,
@@ -603,8 +603,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 10,
+          "Name": null,
           "Enabled": false,
           "Not0": false,
           "Var0": 0,
@@ -617,8 +617,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 11,
+          "Name": null,
           "Enabled": false,
           "Not0": false,
           "Var0": 0,
@@ -631,8 +631,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 12,
+          "Name": null,
           "Enabled": false,
           "Not0": false,
           "Var0": 0,
@@ -645,8 +645,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 13,
+          "Name": null,
           "Enabled": false,
           "Not0": false,
           "Var0": 0,
@@ -659,8 +659,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 14,
+          "Name": null,
           "Enabled": false,
           "Not0": false,
           "Var0": 0,
@@ -673,8 +673,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 15,
+          "Name": null,
           "Enabled": false,
           "Not0": false,
           "Var0": 0,
@@ -687,8 +687,8 @@
           "Mode": 0
         },
         {
-          "Name": null,
           "Number": 16,
+          "Name": null,
           "Enabled": false,
           "Not0": false,
           "Var0": 0,
@@ -703,84 +703,84 @@
       ],
       "Wipers": [
         {
-          "Enabled": false,
-          "Name": null,
-          "Number": 0,
+          "Enabled": true,
           "Mode": 0,
           "SlowInput": 0,
           "FastInput": 0,
           "InterInput": 0,
-          "OnInput": 0,
-          "SpeedInput": 0,
-          "ParkInput": 0,
-          "ParkStopLevel": false,
-          "SwipeInput": 0,
-          "WashInput": 0,
-          "WashWipeCycles": 0,
+          "OnInput": 15,
+          "SpeedInput": 7,
+          "ParkInput": 1,
+          "ParkStopLevel": true,
+          "SwipeInput": 4,
+          "WashInput": 14,
+          "WashWipeCycles": 7,
           "SpeedMap": [
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
+            1,
+            2,
+            3,
+            5,
+            4,
+            6,
+            7
           ],
           "IntermitTime": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
-          ]
+            200,
+            500,
+            1000,
+            2000,
+            3000,
+            5000
+          ],
+          "Name": null,
+          "Number": 0
         }
       ],
       "Flashers": [
         {
-          "Name": null,
           "Number": 1,
+          "Name": null,
           "Enabled": false,
           "Single": false,
           "Input": 0,
-          "InputValue": false,
-          "Output": 0,
-          "OnTime": 0,
-          "OffTime": 0
+          "Output": 51,
+          "OnTime": 500,
+          "OffTime": 500,
+          "InputValue": false
         },
         {
-          "Name": null,
           "Number": 2,
+          "Name": null,
           "Enabled": false,
           "Single": false,
           "Input": 0,
-          "InputValue": false,
-          "Output": 0,
-          "OnTime": 0,
-          "OffTime": 0
+          "Output": 51,
+          "OnTime": 500,
+          "OffTime": 500,
+          "InputValue": false
         },
         {
-          "Name": null,
           "Number": 3,
+          "Name": null,
           "Enabled": false,
           "Single": false,
           "Input": 0,
-          "InputValue": false,
-          "Output": 0,
-          "OnTime": 0,
-          "OffTime": 0
+          "Output": 51,
+          "OnTime": 500,
+          "OffTime": 500,
+          "InputValue": false
         },
         {
-          "Name": null,
           "Number": 4,
+          "Name": null,
           "Enabled": false,
           "Single": false,
           "Input": 0,
-          "InputValue": false,
-          "Output": 0,
-          "OnTime": 0,
-          "OffTime": 0
+          "Output": 51,
+          "OnTime": 500,
+          "OffTime": 500,
+          "InputValue": false
         }
       ],
       "StarterDisable": [

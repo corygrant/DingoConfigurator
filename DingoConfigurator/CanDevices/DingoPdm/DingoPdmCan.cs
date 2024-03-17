@@ -725,14 +725,14 @@ namespace CanDevices.DingoPdm
                 case MessagePrefix.WiperSpeed:
                     Wipers[0].SwipeInput = (VarMap)data[1];
                     Wipers[0].SpeedInput = (VarMap)data[2];
-                    Wipers[0].SpeedMap[0] = (data[3] & 0x0F);
-                    Wipers[0].SpeedMap[1] = (data[3] & 0xF0) >> 4;
-                    Wipers[0].SpeedMap[2] = (data[4] & 0x0F);
-                    Wipers[0].SpeedMap[3] = (data[4] & 0xF0) >> 4;
-                    Wipers[0].SpeedMap[4] = (data[5] & 0x0F);
-                    Wipers[0].SpeedMap[5] = (data[5] & 0xF0) >> 4;
-                    Wipers[0].SpeedMap[6] = (data[6] & 0x0F);
-                    Wipers[0].SpeedMap[7] = (data[6] & 0xF0) >> 4;
+                    Wipers[0].SpeedMap[0] = (WiperSpeed)(data[3] & 0x0F);
+                    Wipers[0].SpeedMap[1] = (WiperSpeed)((data[3] & 0xF0) >> 4);
+                    Wipers[0].SpeedMap[2] = (WiperSpeed)(data[4] & 0x0F);
+                    Wipers[0].SpeedMap[3] = (WiperSpeed)((data[4] & 0xF0) >> 4);
+                    Wipers[0].SpeedMap[4] = (WiperSpeed)(data[5] & 0x0F);
+                    Wipers[0].SpeedMap[5] = (WiperSpeed)((data[5] & 0xF0) >> 4);
+                    Wipers[0].SpeedMap[6] = (WiperSpeed)(data[6] & 0x0F);
+                    Wipers[0].SpeedMap[7] = (WiperSpeed)((data[6] & 0xF0) >> 4);
 
                     foreach (var msg in queue)
                     {
@@ -747,12 +747,12 @@ namespace CanDevices.DingoPdm
                     break;
 
                 case MessagePrefix.WiperDelay:
-                    Wipers[0].IntermitTime[0] = data[1] * 10;
-                    Wipers[0].IntermitTime[1] = data[2] * 10;
-                    Wipers[0].IntermitTime[2] = data[3] * 10;
-                    Wipers[0].IntermitTime[3] = data[4] * 10;
-                    Wipers[0].IntermitTime[4] = data[5] * 10;
-                    Wipers[0].IntermitTime[5] = data[6] * 10;
+                    Wipers[0].IntermitTime[0] = data[1] * 100;
+                    Wipers[0].IntermitTime[1] = data[2] * 100;
+                    Wipers[0].IntermitTime[2] = data[3] * 100;
+                    Wipers[0].IntermitTime[3] = data[4] * 100;
+                    Wipers[0].IntermitTime[4] = data[5] * 100;
+                    Wipers[0].IntermitTime[5] = data[6] * 100;
 
                     foreach (var msg in queue)
                     {
@@ -1247,6 +1247,7 @@ namespace CanDevices.DingoPdm
                     Convert.ToByte('P'), //Byte 0 
                     Convert.ToByte(Wipers[0].SwipeInput), //Byte 1
                     Convert.ToByte(Wipers[0].SpeedInput), //Byte 2
+
                     Convert.ToByte(((Convert.ToByte(Wipers[0].SpeedMap[1]) & 0x0F) << 4) +
                     (Convert.ToByte(Wipers[0].SpeedMap[0]) & 0x0F)), //Byte 3
                     Convert.ToByte(((Convert.ToByte(Wipers[0].SpeedMap[3]) & 0x0F) << 4) +
@@ -1255,10 +1256,11 @@ namespace CanDevices.DingoPdm
                     (Convert.ToByte(Wipers[0].SpeedMap[5]) & 0x0F)), //Byte 5
                     Convert.ToByte(((Convert.ToByte(Wipers[0].SpeedMap[7]) & 0x0F) << 4) +
                     (Convert.ToByte(Wipers[0].SpeedMap[6]) & 0x0F)), //Byte 6
+                    
                     0 }
                 },
                 MsgDescription = "WiperSpeed"
-            });
+            }) ;
 
             //Wiper delays
             msgs.Add(new CanDeviceResponse
@@ -1271,12 +1273,12 @@ namespace CanDevices.DingoPdm
                     Len = 7,
                     Payload = new byte[] {
                     Convert.ToByte('Y'), //Byte 0 
-                    Convert.ToByte(Wipers[0].IntermitTime[0] / 10), //Byte 1
-                    Convert.ToByte(Wipers[0].IntermitTime[1] / 10), //Byte 2
-                    Convert.ToByte(Wipers[0].IntermitTime[2] / 10), //Byte 3
-                    Convert.ToByte(Wipers[0].IntermitTime[3] / 10), //Byte 4
-                    Convert.ToByte(Wipers[0].IntermitTime[4] / 10), //Byte 5
-                    Convert.ToByte(Wipers[0].IntermitTime[5] / 10), //Byte 6
+                    Convert.ToByte(Wipers[0].IntermitTime[0] / 100), //Byte 1
+                    Convert.ToByte(Wipers[0].IntermitTime[1] / 100), //Byte 2
+                    Convert.ToByte(Wipers[0].IntermitTime[2] / 100), //Byte 3
+                    Convert.ToByte(Wipers[0].IntermitTime[3] / 100), //Byte 4
+                    Convert.ToByte(Wipers[0].IntermitTime[4] / 100), //Byte 5
+                    Convert.ToByte(Wipers[0].IntermitTime[5] / 100), //Byte 6
                     0 }
                 },
                 MsgDescription = "WiperDelay"
