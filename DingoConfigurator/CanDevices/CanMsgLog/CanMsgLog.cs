@@ -12,6 +12,14 @@ namespace CanDevices.CanMsgLog
 {
     public class CanMsgLog : NotifyPropertyChangedBase, ICanDevice
     {
+        private bool _logToFile;
+        [JsonIgnore]
+        public bool LogToFile
+        {
+            get => _logToFile;
+            set => _logToFile = value;
+        }
+
         private string _name;
         public string Name
         {
@@ -125,6 +133,8 @@ namespace CanDevices.CanMsgLog
             }
         }
 
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         public CanMsgLog()
         {
             _allDataLock = new object();
@@ -203,6 +213,12 @@ namespace CanDevices.CanMsgLog
                         msg.Count++;
                         OnPropertyChanged(nameof(AllData));
                         addNew = false;
+
+                        if (LogToFile)
+                        {
+                            Logger.Debug($"ID:{msg.Id} Len:{msg.Len} Data:{msg.PayloadString}");
+                        }
+
                         break;
                     }
                 }

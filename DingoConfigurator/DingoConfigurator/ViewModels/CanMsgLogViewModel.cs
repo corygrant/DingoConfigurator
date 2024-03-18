@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -52,6 +53,21 @@ namespace DingoConfigurator.ViewModels
                 _selectedPayloadFormat = value;
                 OnPropertyChanged(nameof(SelectedPayloadFormat));
                 _msgLog.PayloadFormat = value;
+            }
+        }
+
+        private bool _logToFile;
+        public bool LogToFile
+        {
+            get => _logToFile;
+            set
+            {
+                if (_logToFile != value)
+                {
+                    _logToFile = value;
+                    OnPropertyChanged(nameof(LogToFile));
+                    _msgLog.LogToFile = value;
+                }
             }
         }
 

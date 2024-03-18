@@ -23,6 +23,8 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0"
                        Grid.Column="0"
@@ -54,6 +56,18 @@
                     Margin="5"
                     Command="{Binding Path=ClearBtnCmd}"
                     ToolTip="Clear all messages &#x0a;NOTES ARE NOT SAVED"/>
+            <GridSplitter     Grid.Row="0"
+                              Grid.Column="5"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Stretch"
+                              Background="White" 
+                              ShowsPreview="True"
+                              Width="2"/>
+            <CheckBox Grid.Row="0"
+                      Grid.Column="6"
+                      Margin="5"
+                      Content="Log To File"
+                      IsChecked="{Binding Path=LogToFile}"/>
         </Grid>
 
         <Separator Grid.Row="1"

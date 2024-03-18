@@ -371,7 +371,7 @@
           CanUserAddRows="False"
           Grid.Row="6">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Wiper Speed" IsReadOnly="True" Width="110" MinWidth="110">
+                <DataGridTextColumn Header="Wiper Speed Map" IsReadOnly="True" Width="130" MinWidth="130">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center" />
