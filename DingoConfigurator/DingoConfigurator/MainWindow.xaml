@@ -168,6 +168,8 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="2*" />
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="30" />
                             <ColumnDefinition Width="Auto" />
@@ -182,7 +184,8 @@
             <StatusBarItem HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            HorizontalContentAlignment="Stretch"
-                           ToolTip="CAN interface connected">
+                           ToolTip="CAN interface connected"
+                           Grid.Column="0">
                 <Rectangle Height="20"
                            Width="30">
                     <Rectangle.Style>
@@ -217,32 +220,38 @@
             </StatusBarItem>
             <Separator Grid.Column="5" />
             <StatusBarItem Grid.Column="6"
+               HorizontalAlignment="Left">
+                <TextBlock Text="{Binding Path=CurrentVersion, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+               Margin="5 0 0 0" />
+            </StatusBarItem>
+            <Separator Grid.Column="7" />
+            <StatusBarItem Grid.Column="8"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
                            ToolTip="CAN messages queued to be sent/received">
                 <TextBlock Text="Queue"/>
             </StatusBarItem>
-            <StatusBarItem Grid.Column="7"
+            <StatusBarItem Grid.Column="9"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            ToolTip="CAN messages queued to be sent/received">
                 <TextBlock Text="{Binding Path=QueueCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
             </StatusBarItem>
-            <Separator Grid.Column="8" />
-            <StatusBarItem Grid.Column="9"
+            <Separator Grid.Column="10" />
+            <StatusBarItem Grid.Column="11"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
                            ToolTip="Time (ms) since last CAN message received">
                 <TextBlock Text="RxTime" />
             </StatusBarItem>
-            <StatusBarItem Grid.Column="10"
+            <StatusBarItem Grid.Column="12"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            ToolTip="Time (ms) since last CAN message received">
                 <TextBlock Text="{Binding Path=RxTimeDelta, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
             </StatusBarItem>
-            <Separator Grid.Column="11" />
-            <StatusBarItem Grid.Column="12"
+            <Separator Grid.Column="13" />
+            <StatusBarItem Grid.Column="14"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            ToolTip="Devices detected with IDs matching those in the device list">
