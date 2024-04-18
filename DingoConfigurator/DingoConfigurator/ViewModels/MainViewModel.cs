@@ -26,7 +26,6 @@ using CommsHandler;
 using CanDevices.CanMsgLog;
 using CanDevices.SoftButtonBox;
 using Microsoft.Win32;
-using Squirrel;
 
 //Add another CanDevices list that holds the online value
 
@@ -93,18 +92,8 @@ namespace DingoConfigurator
             DeviceName = String.Empty;
 
             CanCans = true;
-
         }
 
-        public async Task WindowLoaded()
-        {
-            using (var mgr = new UpdateManager(@"D:\GitHub\DingoConfigurator\DingoConfigurator\Releases"))
-            {
-                var updateInfo = await mgr.CheckForUpdate();
-                CurrentVersion = updateInfo.CurrentlyInstalledVersion.Version.ToString();
-                await mgr.UpdateApp();
-            }
-        }
 
         public void WindowClosing()
         {
@@ -127,17 +116,6 @@ namespace DingoConfigurator
             Settings.Default.Save();
 
             NLog.LogManager.Shutdown(); // Flush and close down internal threads and timers
-        }
-
-        private string _currentVersion;
-        public string CurrentVersion
-        {
-            get => _currentVersion;
-            set
-            {
-                _currentVersion = value;
-                OnPropertyChanged(nameof(CurrentVersion));
-            }
         }
 
         private ViewModelBase _currentViewModel { get; set; }

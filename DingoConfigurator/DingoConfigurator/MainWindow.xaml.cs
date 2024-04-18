@@ -29,17 +29,11 @@ namespace DingoConfigurator
             _vm = new MainViewModel();
             DataContext = _vm;
 
-            Loaded += MainWindow_Loaded ;
             Closing += MainWindow_Closing;
 
             string[] args = Environment.GetCommandLineArgs();
             if (args.Length > 1)
                 _vm.OpenFile(args[1]);
-        }
-
-        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            await _vm.WindowLoaded();
         }
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
