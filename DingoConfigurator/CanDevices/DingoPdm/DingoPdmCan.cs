@@ -312,6 +312,7 @@ namespace CanDevices.DingoPdm
             };
 
             SubPages.Add(new CanDeviceSub("Settings", this));
+            SubPages.Add(new CanDeviceSub("Plots", this));
         }
 
         public void UpdateIsConnected()

@@ -12,6 +12,7 @@ using CanDevices.CanMsgLog;
 using PCAN;
 using System.Runtime.InteropServices;
 using CanDevices.SoftButtonBox;
+using System.Management;
 
 namespace CommsHandler
 {
@@ -26,6 +27,10 @@ namespace CommsHandler
         private CancellationTokenSource _cts;
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+        private string _port;
+
+        private System.Timers.Timer _checkConnectionTimer = new System.Timers.Timer(1000);
 
         private ObservableCollection<ICanDevice> _canDevices;
         public ObservableCollection<ICanDevice> CanDevices
@@ -44,6 +49,17 @@ namespace CommsHandler
             _cts = new CancellationTokenSource();
             _queue = new List<CanDeviceResponse>();
             Connected = false;
+
+            _checkConnectionTimer.Elapsed += (sender, e) =>
+            {
+                if (!IsPortConnected(_port))
+                {
+                    Logger.Warn("CAN disconnected");
+                    Disconnect();
+                    _checkConnectionTimer.Stop();
+                }
+            };
+            
         }
 
         ~CanCommsHandler()
@@ -89,14 +105,17 @@ namespace CommsHandler
                     break;
             }
 
+            _port = port;
+
             if (!_can.Init(port, baud)) return;
             _can.DataReceived += CanDataReceived;
             if (!_can.Start()) return;
             Connected = true;
 
-
-
             Thread.Sleep(100); //Wait for devices to connect
+
+            _checkConnectionTimer.Start();
+
             Upload(null);
         }
 
@@ -191,7 +210,11 @@ namespace CommsHandler
                                 {
                                     msg.DeviceBaseId = newId; //Set msg ID to new ID so response is processed properly
                                     _queue.Add(msg);
-                                    _can.Write(msg.Data);
+                                    if (!_can.Write(msg.Data))
+                                    {
+                                        Logger.Error("Failed to write to CAN");
+                                        Disconnect();
+                                    }
                                     ProcessMessage(msg.Data);//Catch with CanMsgLog
 
                                     msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
@@ -339,6 +362,22 @@ namespace CommsHandler
         {
             _canDevices.Remove(canDevice);
             OnPropertyChanged(nameof(CanDevices));
+        }
+
+        public bool IsPortConnected(string portName)
+        {
+            using (var searcher = new ManagementObjectSearcher("SELECT * FROM WIN32_SerialPort"))
+            {
+                var ports = searcher.Get();
+                foreach (ManagementObject port in ports)
+                {
+                    if (port["DeviceID"].ToString().Equals(portName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }

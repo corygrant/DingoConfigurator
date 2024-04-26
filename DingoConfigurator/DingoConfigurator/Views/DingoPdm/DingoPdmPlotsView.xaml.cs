@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace DingoConfigurator.Views
 {
     /// <summary>
-    /// Interaction logic for DingoPdmSettingsView.xaml
+    /// Interaction logic for DingoPdmPlotsView.xaml
     /// </summary>
-    public partial class DingoPdmSettingsView : UserControl
+    public partial class DingoPdmPlotsView : UserControl
     {
-        public DingoPdmSettingsView()
+        public DingoPdmPlotsView()
         {
             InitializeComponent();
         }

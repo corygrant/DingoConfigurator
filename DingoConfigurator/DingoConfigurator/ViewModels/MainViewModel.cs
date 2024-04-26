@@ -45,6 +45,8 @@ namespace DingoConfigurator
         public MainViewModel()
         {
             _canComms = new CanCommsHandler();
+            _canComms.PropertyChanged += _canComms_PropertyChanged  ;
+
 
             RefreshComPorts(null);
 
@@ -92,8 +94,23 @@ namespace DingoConfigurator
             DeviceName = String.Empty;
 
             CanCans = true;
+
         }
 
+        private void _canComms_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName == "Connected")
+            {
+                if(!_canComms.Connected)
+                {
+                    CanCans = true;
+                    CanComPorts = !SelectedCan.Name.Equals("PCAN");
+                    CanBaudRates = !SelectedCan.Name.Equals("USB");
+
+                    CommandManager.InvalidateRequerySuggested();
+                }
+            }
+        }
 
         public void WindowClosing()
         {
@@ -125,17 +142,6 @@ namespace DingoConfigurator
                 _currentViewModel?.Dispose();
                 _currentViewModel= value;
                 OnPropertyChanged(nameof(CurrentViewModel));
-            }
-        }
-
-        private bool _connected;
-        public bool Connected
-        {
-            get => _connected;
-            set
-            {
-                _connected = value;
-                OnPropertyChanged(nameof(Connected));
             }
         }
 
@@ -196,6 +202,12 @@ namespace DingoConfigurator
                     {
                         SelectedCanDevice = (DingoPdmCan)sub.CanDevice;
                         CurrentViewModel = new DingoPdmSettingsViewModel(this);
+                    }
+
+                    if (sub.Name.Equals("Plots"))
+                    {
+                        SelectedCanDevice = (DingoPdmCan)sub.CanDevice;
+                        CurrentViewModel = new DingoPdmPlotsViewModel(this);
                     }
 
                     SelectedDeviceToAdd = Devices.DingoPDM;

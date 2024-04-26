@@ -58,7 +58,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\NlogViewer.dll</HintPath>
     </Reference>
+    <Reference Include="OxyPlot, Version=2.1.2.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Core.2.1.2\lib\net45\OxyPlot.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot.Wpf, Version=2.1.2.0, Culture=neutral, PublicKeyToken=75e952ba404cdbb0, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Wpf.2.1.2\lib\net45\OxyPlot.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot.Wpf.Shared, Version=2.1.2.0, Culture=neutral, PublicKeyToken=75e952ba404cdbb0, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Wpf.Shared.2.1.2\lib\net45\OxyPlot.Wpf.Shared.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework.Aero2" />
+    <Reference Include="ReachFramework" />
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
@@ -75,6 +85,7 @@
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
+    <Reference Include="System.Printing" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
@@ -114,6 +125,7 @@
     <Compile Include="Config\ConfigFile.cs" />
     <Compile Include="ViewModels\CanBoard\CanBoardViewModel.cs" />
     <Compile Include="ViewModels\CanMsgLogViewModel.cs" />
+    <Compile Include="ViewModels\DingoPdm\DingoPdmPlotsViewModel.cs" />
     <Compile Include="ViewModels\DingoPdm\DingoPdmSettingsViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
@@ -129,6 +141,9 @@
     </Compile>
     <Compile Include="Views\DingoDash\DingoDashView.xaml.cs">
       <DependentUpon>DingoDashView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DingoPdm\DingoPdmPlotsView.xaml.cs">
+      <DependentUpon>DingoPdmPlotsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DingoPdm\DingoPdmSettingsView.xaml.cs">
       <DependentUpon>DingoPdmSettingsView.xaml</DependentUpon>
@@ -163,6 +178,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\DingoPdm\DingoPdmPlotsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DingoPdm\DingoPdmSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
