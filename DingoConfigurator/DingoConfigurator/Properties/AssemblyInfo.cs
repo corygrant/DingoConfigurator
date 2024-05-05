@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("DingoConfigurator")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("CoryGrant")]
+[assembly: AssemblyCompany("Dingo Electronics, LLC")]
 [assembly: AssemblyProduct("DingoConfigurator")]
 [assembly: AssemblyCopyright("Copyright ©  2024")]
 [assembly: AssemblyTrademark("")]

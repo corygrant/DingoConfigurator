@@ -189,7 +189,7 @@ namespace DingoConfigurator
             {
                 SelectedCanDevice = (DingoPdmCan)e.NewValue;
                 CurrentViewModel= new DingoPdmViewModel(this);
-                SelectedDeviceToAdd = Devices.DingoPDM;
+                SelectedDeviceToAdd = Devices.dingoPDM;
             }
 
             if(e.NewValue.GetType() == typeof(CanDeviceSub))
@@ -210,7 +210,7 @@ namespace DingoConfigurator
                         CurrentViewModel = new DingoPdmPlotsViewModel(this);
                     }
 
-                    SelectedDeviceToAdd = Devices.DingoPDM;
+                    SelectedDeviceToAdd = Devices.dingoPDM;
                 }
 
             }
@@ -222,12 +222,14 @@ namespace DingoConfigurator
                 SelectedDeviceToAdd = Devices.CANBoard;
             }
 
+            /*
             if (e.NewValue.GetType() == typeof(DingoDashCan))
             {
                 SelectedCanDevice = (DingoDashCan)e.NewValue;
                 CurrentViewModel = new DingoDashViewModel(this);
                 SelectedDeviceToAdd = Devices.DingoDash;
             }
+            */
 
             if (e.NewValue.GetType() == typeof(CanMsgLog))
             {
@@ -437,7 +439,7 @@ namespace DingoConfigurator
             if (DeviceBaseId > 2048) return;
             if (DeviceName.Length == 0) return;
 
-            if (SelectedDeviceToAdd.Equals(Devices.DingoPDM))
+            if (SelectedDeviceToAdd.Equals(Devices.dingoPDM))
             {
                 _canComms.AddCanDevice(typeof(DingoPdmCan), DeviceName, DeviceBaseId);
             }
@@ -447,10 +449,12 @@ namespace DingoConfigurator
                 _canComms.AddCanDevice(typeof(CanBoardCan), DeviceName, DeviceBaseId);
             }
 
+            /*
             if (SelectedDeviceToAdd.Equals(Devices.DingoDash))
             {
                 _canComms.AddCanDevice(typeof(DingoDashCan), DeviceName, DeviceBaseId);
             }
+            */
 
             if (SelectedDeviceToAdd.Equals(Devices.SoftButtonBox))
             {
@@ -738,9 +742,9 @@ namespace DingoConfigurator
 
     public enum Devices
     {
-        DingoPDM,
+        dingoPDM,
         CANBoard,
-        DingoDash,
+        //DingoDash,
         CanMsgLog,
         SoftButtonBox
     }
