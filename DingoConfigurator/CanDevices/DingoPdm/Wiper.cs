@@ -11,6 +11,7 @@ namespace CanDevices.DingoPdm
         }
 
         private bool _enabled;
+        [JsonPropertyName("enabled")]
         public bool Enabled
         {
             get => _enabled;
@@ -25,6 +26,7 @@ namespace CanDevices.DingoPdm
         }
 
         private string _name;
+        [JsonPropertyName("name")]
         public string Name
         {
             get => _name;
@@ -39,6 +41,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _number;
+        [JsonPropertyName("number")]
         public int Number
         {
             get => _number;
@@ -83,6 +86,7 @@ namespace CanDevices.DingoPdm
         }
 
         private WiperMode _mode;
+        [JsonPropertyName("mode")]
         public WiperMode Mode
         {
             get => _mode;
@@ -126,6 +130,7 @@ namespace CanDevices.DingoPdm
             }
         }
         private VarMap _slowInput;
+        [JsonPropertyName("slowInput")]
         public VarMap SlowInput
         {
             get => _slowInput;
@@ -140,6 +145,7 @@ namespace CanDevices.DingoPdm
         }
 
         private VarMap _fastInput;
+        [JsonPropertyName("fastInput")]
         public VarMap FastInput
         {
             get => _fastInput;
@@ -154,6 +160,7 @@ namespace CanDevices.DingoPdm
         }
 
         private VarMap _interInput;
+        [JsonPropertyName("interInput")]
         public VarMap InterInput
         {
             get => _interInput;
@@ -168,6 +175,7 @@ namespace CanDevices.DingoPdm
         }
 
         private VarMap _onInput;
+        [JsonPropertyName("onInput")]   
         public VarMap OnInput
         {
             get => _onInput;
@@ -182,6 +190,7 @@ namespace CanDevices.DingoPdm
         }
 
         private VarMap _speedInput;
+        [JsonPropertyName("speedInput")]
         public VarMap SpeedInput
         {
             get => _speedInput;
@@ -196,6 +205,7 @@ namespace CanDevices.DingoPdm
         }
 
         private VarMap _parkInput;
+        [JsonPropertyName("parkInput")]
         public VarMap ParkInput
         {
             get => _parkInput;
@@ -210,6 +220,7 @@ namespace CanDevices.DingoPdm
         }
 
         private bool _parkStopLevel;
+        [JsonPropertyName("parkStopLevel")]
         public bool ParkStopLevel
         {
             get => _parkStopLevel;
@@ -224,6 +235,7 @@ namespace CanDevices.DingoPdm
         }
 
         private VarMap _swipeInput;
+        [JsonPropertyName("swipeInput")]
         public VarMap SwipeInput
         {
             get => _swipeInput;
@@ -238,6 +250,7 @@ namespace CanDevices.DingoPdm
         }
 
         private VarMap _washInput;
+        [JsonPropertyName("washInput")]
         public VarMap WashInput
         {
             get => _washInput;
@@ -252,6 +265,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _washWipeCycles;
+        [JsonPropertyName("washWipeCycles")]
         public int WashWipeCycles
         {
             get => _washWipeCycles;
@@ -266,6 +280,7 @@ namespace CanDevices.DingoPdm
         }
 
         private WiperSpeed[] _speedMap;
+        [JsonPropertyName("speedMap")]
         public WiperSpeed[] SpeedMap
         {
             get => _speedMap;
@@ -280,6 +295,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int[] _intermitTime;
+        [JsonPropertyName("intermitTime")]
         public int[] IntermitTime
         {
             get => _intermitTime;

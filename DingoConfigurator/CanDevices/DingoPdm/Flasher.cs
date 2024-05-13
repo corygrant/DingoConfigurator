@@ -5,6 +5,7 @@ namespace CanDevices.DingoPdm
     public class Flasher : NotifyPropertyChangedBase
     {
         private string _name;
+        [JsonPropertyName("name")]
         public string Name
         {
             get => _name;
@@ -19,6 +20,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _number;
+        [JsonPropertyName("number")]
         public int Number
         {
             get => _number;
@@ -48,6 +50,7 @@ namespace CanDevices.DingoPdm
         }
 
         private bool _enabled;
+        [JsonPropertyName("enabled")]
         public bool Enabled
         {
             get => _enabled;
@@ -62,6 +65,7 @@ namespace CanDevices.DingoPdm
         }
 
         private bool _single;
+        [JsonPropertyName("single")]
         public bool Single
         {
             get => _single;
@@ -76,6 +80,7 @@ namespace CanDevices.DingoPdm
         }
 
         private VarMap _input;
+        [JsonPropertyName("input")]
         public VarMap Input
         {
             get => _input;
@@ -90,6 +95,7 @@ namespace CanDevices.DingoPdm
         }
 
         private bool _inputValue;
+        [JsonPropertyName("inputValue")]
         public bool InputValue
         {
             get => _inputValue;
@@ -104,6 +110,7 @@ namespace CanDevices.DingoPdm
         }
 
         private VarMap _output;
+        [JsonPropertyName("output")]
         public VarMap Output
         {
             get => _output;
@@ -118,6 +125,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _onTime;
+        [JsonPropertyName("onTime")]
         public int OnTime
         {
             get => _onTime;
@@ -132,6 +140,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _offTime;
+        [JsonPropertyName("offTime")]
         public int OffTime
         {
             get => _offTime;

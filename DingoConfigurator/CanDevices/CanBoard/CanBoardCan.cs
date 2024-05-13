@@ -15,6 +15,7 @@ namespace CanDevices.CanBoard
     public class CanBoardCan : NotifyPropertyChangedBase, ICanDevice
     {
         private string _name;
+        [JsonPropertyName("name")]
         public string Name
         {
             get => _name;
@@ -29,6 +30,7 @@ namespace CanDevices.CanBoard
         }
 
         private int _baseId;
+        [JsonPropertyName("baseId")]
         public int BaseId { 
             get => _baseId;
             set
@@ -79,6 +81,7 @@ namespace CanDevices.CanBoard
         public double BoardTempF => _boardTempC * 1.8 + 32.0;
 
         private ObservableCollection<AnalogInput> _analogIn;
+        [JsonPropertyName("analogIn")]
         public ObservableCollection<AnalogInput> AnalogIn
         {
             get => _analogIn;
@@ -93,6 +96,7 @@ namespace CanDevices.CanBoard
         }
 
         private ObservableCollection<DigitalInput> _digitalIn;
+        [JsonPropertyName("digitalIn")]
         public ObservableCollection<DigitalInput> DigitalIn { 
             get => _digitalIn; 
             private set
@@ -106,6 +110,7 @@ namespace CanDevices.CanBoard
         }
 
         private ObservableCollection<Output> _digitalOut;
+        [JsonPropertyName("digitalOut")]
         public ObservableCollection<Output> DigitalOut { 
             get => _digitalOut; private set
             {

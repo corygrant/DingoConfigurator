@@ -5,6 +5,7 @@ namespace CanDevices.DingoPdm
     public class VirtualInput : NotifyPropertyChangedBase
     {
         private string _name;
+        [JsonPropertyName("name")]
         public string Name
         {
             get => _name;
@@ -19,6 +20,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _number;
+        [JsonPropertyName("number")]
         public int Number
         {
             get => _number;
@@ -48,6 +50,7 @@ namespace CanDevices.DingoPdm
         }
 
         private bool _enabled;
+        [JsonPropertyName("enabled")]
         public bool Enabled
         {
             get => _enabled;
@@ -62,6 +65,7 @@ namespace CanDevices.DingoPdm
         }
 
         private bool _not0;
+        [JsonPropertyName("not0")]
         public bool Not0
         {
             get => _not0;
@@ -76,6 +80,7 @@ namespace CanDevices.DingoPdm
         }
 
         private VarMap _var0;
+        [JsonPropertyName("var0")]
         public VarMap Var0
         {
             get => _var0;
@@ -90,6 +95,7 @@ namespace CanDevices.DingoPdm
         }
 
         private Conditional _cond0;
+        [JsonPropertyName("cond0")]
         public Conditional Cond0
         {
             get => _cond0;
@@ -104,6 +110,7 @@ namespace CanDevices.DingoPdm
         }
 
         private bool _not1;
+        [JsonPropertyName("not1")]
         public bool Not1
         {
             get => _not1;
@@ -118,6 +125,7 @@ namespace CanDevices.DingoPdm
         }
 
         private VarMap _var1;
+        [JsonPropertyName("var1")]
         public VarMap Var1
         {
             get => _var1;
@@ -132,6 +140,7 @@ namespace CanDevices.DingoPdm
         }
 
         private Conditional _cond1;
+        [JsonPropertyName("cond1")]
         public Conditional Cond1
         {
             get => _cond1;
@@ -146,6 +155,7 @@ namespace CanDevices.DingoPdm
         }
 
         private bool _not2;
+        [JsonPropertyName("not2")]
         public bool Not2
         {
             get => _not2;
@@ -160,6 +170,7 @@ namespace CanDevices.DingoPdm
         }
 
         private VarMap _var2;
+        [JsonPropertyName("var2")]
         public VarMap Var2
         {
             get => _var2;
@@ -174,6 +185,7 @@ namespace CanDevices.DingoPdm
         }
 
         private InputMode _mode;
+        [JsonPropertyName("mode")]
         public InputMode Mode
         {
             get => _mode;

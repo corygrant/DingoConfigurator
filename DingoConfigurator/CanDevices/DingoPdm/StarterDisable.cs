@@ -1,8 +1,11 @@
-﻿namespace CanDevices.DingoPdm
+﻿using System.Text.Json.Serialization;
+
+namespace CanDevices.DingoPdm
 {
     public class StarterDisable : NotifyPropertyChangedBase
     {
         private bool _enabled;
+        [JsonPropertyName("enabled")]
         public bool Enabled
         {
             get => _enabled;
@@ -16,6 +19,7 @@
             }
         }
         private VarMap _input;
+        [JsonPropertyName("input")]
         public VarMap Input
         {
             get => _input;
@@ -30,6 +34,7 @@
         }
 
         private bool _output1;
+        [JsonPropertyName("output1")]
         public bool Output1
         {
             get => _output1;
@@ -44,6 +49,7 @@
         }
 
         private bool _output2;
+        [JsonPropertyName("output2")]
         public bool Output2
         {
             get => _output2;
@@ -58,6 +64,7 @@
         }
 
         private bool _output3;
+        [JsonPropertyName("output3")]
         public bool Output3
         {
             get => _output3;
@@ -72,6 +79,7 @@
         }
 
         private bool _output4;
+        [JsonPropertyName("output4")]
         public bool Output4
         {
             get => _output4;
@@ -86,6 +94,7 @@
         }
 
         private bool _output5;
+        [JsonPropertyName("output5")]
         public bool Output5
         {
             get => _output5;
@@ -100,6 +109,7 @@
         }
 
         private bool _output6;
+        [JsonPropertyName("output6")]
         public bool Output6
         {
             get => _output6;
@@ -114,6 +124,7 @@
         }
 
         private bool _output7;
+        [JsonPropertyName("output7")]
         public bool Output7
         {
             get => _output7;
@@ -128,6 +139,7 @@
         }
 
         private bool _output8;
+        [JsonPropertyName("output8")]
         public bool Output8
         {
             get => _output8;

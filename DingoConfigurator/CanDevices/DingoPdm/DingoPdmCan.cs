@@ -18,6 +18,7 @@ namespace CanDevices.DingoPdm
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         private string _name;
+        [JsonPropertyName("name")]
         public string Name
         {
             get => _name;
@@ -32,6 +33,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _baseId;
+        [JsonPropertyName("baseId")]
         public int BaseId
         {
             get => _baseId;
@@ -86,6 +88,7 @@ namespace CanDevices.DingoPdm
         }
 
         private ObservableCollection<Input> _digitalInputs { get; set; }
+        [JsonPropertyName("digitalInputs")]
         public ObservableCollection<Input> DigitalInputs
         {
             get => _digitalInputs;
@@ -175,10 +178,11 @@ namespace CanDevices.DingoPdm
         }
 
         private ObservableCollection<Output> _outputs;
+        [JsonPropertyName("outputs")]
         public ObservableCollection<Output> Outputs
         {
             get => _outputs;
-            private set
+            set
             {
                 if (_outputs != value)
                 {
@@ -189,10 +193,11 @@ namespace CanDevices.DingoPdm
         }
 
         private ObservableCollection<CanInput> _canInputs;
+        [JsonPropertyName("canInputs")]
         public ObservableCollection<CanInput> CanInputs
         {
             get => _canInputs;
-            private set
+            set
             {
                 if (_canInputs != value)
                 {
@@ -203,10 +208,11 @@ namespace CanDevices.DingoPdm
         }
 
         private ObservableCollection<VirtualInput> _virtualInputs;
+        [JsonPropertyName("virtualInputs")]
         public ObservableCollection<VirtualInput> VirtualInputs
         {
             get => _virtualInputs;
-            private set
+            set
             {
                 if (_virtualInputs != value)
                 {
@@ -217,10 +223,11 @@ namespace CanDevices.DingoPdm
         }
 
         private ObservableCollection<Wiper> _wipers;
+        [JsonPropertyName("wipers")]
         public ObservableCollection<Wiper> Wipers
         {
             get => _wipers;
-            private set
+            set
             {
                 if (_wipers != value)
                 {
@@ -231,10 +238,11 @@ namespace CanDevices.DingoPdm
         }
 
         private ObservableCollection<Flasher> _flashers;
+        [JsonPropertyName("flashers")]
         public ObservableCollection<Flasher> Flashers
         {
             get => _flashers;
-            private set
+            set
             {
                 if (_flashers != value)
                 {
@@ -245,6 +253,7 @@ namespace CanDevices.DingoPdm
         }
 
         private ObservableCollection<StarterDisable> _starterDisable;
+        [JsonPropertyName("starterDisable")]
         public ObservableCollection<StarterDisable> StarterDisable
         {
             get => _starterDisable;

@@ -93,16 +93,20 @@ namespace DingoConfigurator.Config
             var jsonString = JsonSerializer.Serialize(devices, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(filename, jsonString);
 
-            //Catch file exceptions and return false
+            //Catch file exceptions
             return true;
         }
 
         public static bool Open(string filename, out DevicesConfig devices)
         {
             var jsonString = File.ReadAllText(filename);
-            devices = JsonSerializer.Deserialize<DevicesConfig>(jsonString);
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            devices = JsonSerializer.Deserialize<DevicesConfig>(jsonString, options);
 
-            //Catch file exceptions and return false
+            //Catch file exceptions
             return true;
         }
     }

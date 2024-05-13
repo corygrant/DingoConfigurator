@@ -116,7 +116,8 @@ namespace CommsHandler
 
             _checkConnectionTimer.Start();
 
-            Upload(null);
+            //TODO: Need to ask before uploading
+            //Upload(null);
         }
 
         public void Disconnect()

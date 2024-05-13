@@ -3,8 +3,10 @@
 namespace CanDevices.DingoPdm
 {
     public class CanInput : NotifyPropertyChangedBase
-    {
+    {     
+
         private string _name;
+        [JsonPropertyName("name")]
         public string Name
         {
             get => _name;
@@ -19,6 +21,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _number;
+        [JsonPropertyName("number")]
         public int Number
         {
             get => _number;
@@ -48,6 +51,7 @@ namespace CanDevices.DingoPdm
         }
 
         private bool _enabled;
+        [JsonPropertyName("enabled")]
         public bool Enabled
         {
             get => _enabled;
@@ -62,6 +66,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _id;
+        [JsonPropertyName("id")]
         public int Id
         {
             get => _id;
@@ -76,6 +81,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _lowByte;
+        [JsonPropertyName("lowByte")]
         public int LowByte
         {
             get => _lowByte;
@@ -90,6 +96,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _highByte;
+        [JsonPropertyName("highByte")]
         public int HighByte
         {
             get => _highByte;
@@ -104,6 +111,7 @@ namespace CanDevices.DingoPdm
         }
 
         private Operator _operator;
+        [JsonPropertyName("operator")]
         public Operator Operator
         {
             get => _operator;
@@ -118,6 +126,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _onVal;
+        [JsonPropertyName("onVal")]
         public int OnVal
         {
             get => _onVal;
@@ -132,6 +141,7 @@ namespace CanDevices.DingoPdm
         }
 
         private InputMode _mode;
+        [JsonPropertyName("mode")]
         public InputMode Mode
         {
             get => _mode;

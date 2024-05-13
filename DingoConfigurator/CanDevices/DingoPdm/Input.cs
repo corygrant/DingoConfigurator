@@ -5,6 +5,7 @@ namespace CanDevices.DingoPdm
     public class Input : NotifyPropertyChangedBase
     {
         private bool _enabled;
+        [JsonPropertyName("enabled")]
         public bool Enabled
         {
             get => _enabled;
@@ -19,6 +20,7 @@ namespace CanDevices.DingoPdm
         }
 
         private string _name;
+        [JsonPropertyName("name")]
         public string Name
         {
             get => _name;
@@ -33,6 +35,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _number;
+        [JsonPropertyName("number")]
         public int Number
         {
             get => _number;
@@ -62,6 +65,7 @@ namespace CanDevices.DingoPdm
         }
 
         private bool _invertInput;
+        [JsonPropertyName("invertInput")]
         public bool InvertInput
         {
             get => _invertInput;
@@ -76,6 +80,7 @@ namespace CanDevices.DingoPdm
         }
 
         private InputMode _mode;
+        [JsonPropertyName("mode")]
         public InputMode Mode
         {
             get => _mode;
@@ -90,6 +95,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _debounceTime;
+        [JsonPropertyName("debounceTime")]
         public int DebounceTime
         {
             get => _debounceTime;
@@ -104,6 +110,7 @@ namespace CanDevices.DingoPdm
         }
 
         private InputPull _inputPull;
+        [JsonPropertyName("pull")]
         public InputPull Pull
         {
             get => _inputPull;

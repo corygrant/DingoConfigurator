@@ -13,6 +13,7 @@ namespace CanDevices.DingoDash
     public class DingoDashCan : NotifyPropertyChangedBase, ICanDevice
     {
         private string _name;
+        [JsonPropertyName("name")]
         public string Name { 
             get => _name; 
             set
@@ -26,6 +27,7 @@ namespace CanDevices.DingoDash
         }
 
         private int _baseId;
+        [JsonPropertyName("baseId")]
         public int BaseId
         {
             get => _baseId;

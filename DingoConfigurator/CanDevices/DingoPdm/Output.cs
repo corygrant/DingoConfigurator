@@ -5,6 +5,7 @@ namespace CanDevices.DingoPdm
     public class Output : NotifyPropertyChangedBase
     {
         private bool _enabled;
+        [JsonPropertyName("enabled")]
         public bool Enabled
         {
             get => _enabled;
@@ -19,6 +20,7 @@ namespace CanDevices.DingoPdm
         }
 
         private string _name;
+        [JsonPropertyName("name")]
         public string Name
         {
             get => _name;
@@ -33,6 +35,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _number;
+        [JsonPropertyName("number")]
         public int Number
         {
             get => _number;
@@ -77,6 +80,7 @@ namespace CanDevices.DingoPdm
         }
 
         private double _currentLimit;
+        [JsonPropertyName("currentLimit")]
         public double CurrentLimit
         {
             get => _currentLimit;
@@ -106,6 +110,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _resetCountLimit;
+        [JsonPropertyName("resetCountLimit")]
         public int ResetCountLimit
         {
             get => _resetCountLimit;
@@ -120,6 +125,7 @@ namespace CanDevices.DingoPdm
         }
 
         private ResetMode _resetMode;
+        [JsonPropertyName("resetMode")]
         public ResetMode ResetMode
         {
             get => _resetMode;
@@ -134,6 +140,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _resetTime;
+        [JsonPropertyName("resetTime")]
         public int ResetTime
         {
             get => _resetTime;
@@ -148,6 +155,7 @@ namespace CanDevices.DingoPdm
         }
 
         private double _inrushCurrentLimit;
+        [JsonPropertyName("inrushCurrentLimit")]
         public double InrushCurrentLimit
         {
             get => _inrushCurrentLimit;
@@ -162,6 +170,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _inrushTime;
+        [JsonPropertyName("inrushTime")]
         public int InrushTime
         {
             get => _inrushTime;
@@ -176,6 +185,7 @@ namespace CanDevices.DingoPdm
         }
 
         private VarMap _input;
+        [JsonPropertyName("input")]
         public VarMap Input
         {
             get => _input;

@@ -5,6 +5,7 @@ namespace CanDevices.CanBoard
     public class AnalogInput : NotifyPropertyChangedBase
     {
         private int _number { get; set; }
+        [JsonPropertyName("number")]
         public int Number
         {
             get => _number;
@@ -19,6 +20,7 @@ namespace CanDevices.CanBoard
         }
 
         private string _name;
+        [JsonPropertyName("name")]
         public string Name
         {
             get => _name;
