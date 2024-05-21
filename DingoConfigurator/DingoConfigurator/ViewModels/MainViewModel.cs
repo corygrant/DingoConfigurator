@@ -26,6 +26,8 @@ using CommsHandler;
 using CanDevices.CanMsgLog;
 using CanDevices.SoftButtonBox;
 using Microsoft.Win32;
+using System.Management;
+using System.Text.RegularExpressions;
 
 //Add another CanDevices list that holds the online value
 
@@ -261,7 +263,7 @@ namespace DingoConfigurator
         #region Commands
         private void Connect(object parameter)
         {
-            _canComms.Connect(SelectedCan.Name, SelectedComPort, SelectedBaudRate);
+            _canComms.Connect(SelectedCan.Name, ExtractComPort(SelectedComPort), SelectedBaudRate);
 
             CanCans = false;
             CanComPorts = false;
@@ -299,13 +301,36 @@ namespace DingoConfigurator
 
         private void RefreshComPorts(object parameter)
         {
-            if(ComPorts != null) ComPorts.Clear();
-            ComPorts = new ObservableCollection<string>(SerialPort.GetPortNames());
+            if (ComPorts != null) ComPorts.Clear();
+
+            var detailedPortNames = new ObservableCollection<string>();
+
+            using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE ConfigManagerErrorCode = 0"))
+            {
+                foreach (var device in searcher.Get())
+                {
+                    string caption = device["Caption"]?.ToString();
+                    string deviceId = device["DeviceID"]?.ToString();
+
+                    if (caption != null && caption.Contains("(COM"))
+                    {
+                        detailedPortNames.Add(caption);
+                    }
+                }
+            }
+
+            ComPorts = detailedPortNames;
         }
 
         private bool CanRefreshComPorts(object parameter)
         {
             return CanComPorts;
+        }
+
+        private string ExtractComPort(string fullName)
+        {
+            var match = Regex.Match(fullName, @"\((COM\d+)\)");
+            return match.Success ? match.Groups[1].Value : string.Empty;
         }
 
         private void Upload(object parameter)
