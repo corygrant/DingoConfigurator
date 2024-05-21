@@ -61,26 +61,27 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*" MinHeight="50"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="3*" MinHeight="50"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" MinHeight="50"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" MinHeight="50"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*" MinHeight="50"/>
+            <RowDefinition Height="Auto" MinHeight="50"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*" MinHeight="50"/>
+            <RowDefinition Height="Auto" MinHeight="50"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*" MinHeight="50"/>
+            <RowDefinition Height="Auto" MinHeight="50"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" MinHeight="50"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" MinHeight="50"/>
         </Grid.RowDefinitions>
 
 
         <DataGrid AutoGenerateColumns="False"
                   ItemsSource="{Binding Pdm.CanInputs}"
                   CanUserAddRows="False"
-                  Grid.Row="0">
+                  Grid.Row="0"
+                  PreviewMouseWheel="DataGrid_PreviewMouseWheel">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="CAN Input" Binding="{Binding Number}" IsReadOnly="True" Width="90" MinWidth="90">
                     <DataGridTextColumn.ElementStyle>
@@ -159,7 +160,8 @@
         <DataGrid AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   ItemsSource="{Binding Pdm.VirtualInputs}"
-                  Grid.Row="2">
+                  Grid.Row="2"
+                  PreviewMouseWheel="DataGrid_PreviewMouseWheel">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Virtual Input" Binding="{Binding Number}" IsReadOnly="True" Width="110" MinWidth="110">
                     <DataGridTextColumn.ElementStyle>

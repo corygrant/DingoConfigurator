@@ -24,5 +24,44 @@ namespace DingoConfigurator.Views
         {
             InitializeComponent();
         }
+
+        private void DataGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (sender is DataGrid dataGrid)
+            {
+                var scrollViewer = FindVisualChild<ScrollViewer>(dataGrid);
+                if (scrollViewer != null)
+                {
+                    if (e.Delta > 0)
+                    {
+                        scrollViewer.LineUp();
+                    }
+                    else
+                    {
+                        scrollViewer.LineDown();
+                    }
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is T)
+                {
+                    return (T)child;
+                }
+
+                T childOfChild = FindVisualChild<T>(child);
+                if (childOfChild != null)
+                {
+                    return childOfChild;
+                }
+            }
+            return null;
+        }
     }
 }
