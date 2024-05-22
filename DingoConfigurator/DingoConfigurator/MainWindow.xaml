@@ -109,7 +109,7 @@
                           DisplayMemberPath="Name" 
                           ToolTip="CAN interface device"
                           ToolTipService.ShowOnDisabled="True"/>
-                <ComboBox Width="75"
+                <ComboBox Width="350"
                           Margin="5 0 5 0"
                           ItemsSource="{Binding Path=ComPorts}"
                           SelectedItem="{Binding Path=SelectedComPort}"
