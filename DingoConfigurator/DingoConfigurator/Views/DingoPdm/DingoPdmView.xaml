@@ -143,6 +143,22 @@
                      HorizontalContentAlignment="Center"
                      IsReadOnly="True"
                      Text="{Binding Pdm.Version, Mode=OneWay}" />
+            <TextBlock Grid.Row="1"
+                       Grid.Column="4"
+                       Text="Device State"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       Padding="5" />
+            <TextBox Grid.Row="1"
+                     Grid.Column="5"
+                     Padding="5"
+                     Margin="5"
+                     MinWidth="100"
+                     MaxWidth="100"
+                     HorizontalAlignment="Left"
+                     HorizontalContentAlignment="Center"
+                     IsReadOnly="True"
+                     Text="{Binding Pdm.DeviceState, Mode=OneWay}" />
         </Grid>
 
         <Separator Grid.Row="1"

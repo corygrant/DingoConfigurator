@@ -6,6 +6,16 @@ using System.Threading.Tasks;
 
 namespace CanDevices.DingoPdm
 {
+
+    public enum DeviceState
+    {
+        PowerOn,
+        Starting,
+        Run,
+        OverTemp,
+        Error
+    }
+
     public enum MessagePrefix
     {
         Burn = 'B',

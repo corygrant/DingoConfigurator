@@ -102,6 +102,21 @@ namespace CanDevices.DingoPdm
             }
         }
 
+        private DeviceState _deviceState;
+        [JsonIgnore]
+        public DeviceState DeviceState
+        {
+            get => _deviceState;
+            set
+            {
+                if (_deviceState != value)
+                {
+                    _deviceState = value;
+                    OnPropertyChanged(nameof(DeviceState));
+                }
+            }
+        }
+
         private double _totalCurrent;
         [JsonIgnore]
         public double TotalCurrent
@@ -382,6 +397,8 @@ namespace CanDevices.DingoPdm
         {
             DigitalInputs[0].State = Convert.ToBoolean(data[0] & 0x01);
             DigitalInputs[1].State = Convert.ToBoolean((data[0] >> 1) & 0x01);
+
+            DeviceState = (DeviceState)(data[1]);
 
             TotalCurrent = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
             BatteryVoltage = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
