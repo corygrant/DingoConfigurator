@@ -385,6 +385,7 @@ namespace DingoConfigurator
         private bool CanSleep(object parameter)
         {
             return _canComms.Connected &&
+                (SelectedCan.Name != "USB") &&
                 (SelectedCanDevice != null) &&
                 (SelectedCanDevice.GetType() == typeof(DingoPdmCan));
         }
