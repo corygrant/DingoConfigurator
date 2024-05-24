@@ -95,5 +95,10 @@ namespace CanDevices
         {
             return null;
         }
+
+        public CanDeviceResponse GetSleepMessage()
+        {
+            return null;
+        }
     }
 }

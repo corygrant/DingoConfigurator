@@ -12,6 +12,8 @@ namespace CanDevices.DingoPdm
         PowerOn,
         Starting,
         Run,
+        Sleep,
+        Wakeup,
         OverTemp,
         Error
     }
@@ -19,6 +21,7 @@ namespace CanDevices.DingoPdm
     public enum MessagePrefix
     {
         Burn = 'B',
+        Sleep = 'Q',
         Version = 'V',
         CAN = 'C',
         Input = 'I',

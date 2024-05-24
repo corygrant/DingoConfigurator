@@ -125,5 +125,10 @@ namespace CanDevices.DingoDash
         {
             return null;
         }
+
+        public CanDeviceResponse GetSleepMessage()
+        {
+            return null;
+        }
     }
 }

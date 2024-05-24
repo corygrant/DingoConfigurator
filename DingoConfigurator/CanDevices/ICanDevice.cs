@@ -29,5 +29,6 @@ namespace CanDevices
         List<CanDeviceResponse> GetDownloadMessages();
         List<CanDeviceResponse> GetUpdateMessages(int newId);
         CanDeviceResponse GetBurnMessage();
+        CanDeviceResponse GetSleepMessage();
     }
 }

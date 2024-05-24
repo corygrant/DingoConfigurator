@@ -149,6 +149,10 @@
                         Command="{Binding BurnBtnCmd}"
                         ToolTip="Burn the current settings on the device to non-volatile memory"
                         ToolTipService.ShowOnDisabled="True" />
+                <Button Content="{Binding SleepBtnContent}"
+                        Command="{Binding SleepBtnCmd}"
+                        ToolTip="Set the device to sleep mode (will auto wakeup on CAN or digital input)"
+                        ToolTipService.ShowOnDisabled="True" />
             </ToolBar>
         </ToolBarTray>
         <GridSplitter Grid.Row="1"

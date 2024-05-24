@@ -289,5 +289,10 @@ namespace CanDevices.CanBoard
         {
             return null;
         }
+
+        public CanDeviceResponse GetSleepMessage()
+        {
+            return null;
+        }
     }
 }

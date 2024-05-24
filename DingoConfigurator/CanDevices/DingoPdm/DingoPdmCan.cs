@@ -866,6 +866,29 @@ namespace CanDevices.DingoPdm
                     }
                     break;
 
+                case MessagePrefix.Sleep:
+                    if (data[1] == 1) //Successful sleep
+                    {
+                        Logger.Info($"{Name} ID: {BaseId}, Sleep Successful");
+
+                        foreach (var msg in queue)
+                        {
+                            if ((msg.DeviceBaseId == BaseId) &&
+                                            ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.Sleep))
+                            {
+                                msg.TimeSentTimer.Dispose();
+                                queue.Remove(msg);
+                                break;
+                            }
+                        }
+                    }
+
+                    if (data[1] == 0) //Unsuccessful sleep
+                    {
+                        Logger.Error($"{Name} ID: {BaseId}, Sleep Failed");
+                    }
+                    break;
+
                 default:
                     break;
             }
@@ -1382,6 +1405,22 @@ namespace CanDevices.DingoPdm
                     Payload = new byte[] { Convert.ToByte('B'), 1, 3, 8, 0, 0, 0, 0 }
                 },
                 MsgDescription = "Burn Settings"
+            };
+        }
+
+        public CanDeviceResponse GetSleepMessage()
+        {
+            return new CanDeviceResponse
+            {
+                Sent = false,
+                Received = false,
+                Data = new CanInterfaceData
+                {
+                    Id = BaseId - 1,
+                    Len = 4,
+                    Payload = new byte[] { Convert.ToByte('Q'), Convert.ToByte('U'), Convert.ToByte('I'), Convert.ToByte('T'), 0, 0, 0, 0 }
+                },
+                MsgDescription = "Sleep Request"
             };
         }
 

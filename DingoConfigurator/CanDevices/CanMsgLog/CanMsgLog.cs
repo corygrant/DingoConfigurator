@@ -147,6 +147,11 @@ namespace CanDevices.CanMsgLog
             return null;
         }
 
+        public CanDeviceResponse GetSleepMessage()
+        {
+            return null;
+        }
+
         public List<CanDeviceResponse> GetDownloadMessages()
         {
             return null;

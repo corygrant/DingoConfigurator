@@ -89,6 +89,7 @@ namespace DingoConfigurator
             UploadBtnCmd = new RelayCommand(Upload, CanUpload);
             DownloadBtnCmd = new RelayCommand(Download, CanDownload);
             BurnBtnCmd = new RelayCommand(Burn, CanBurn);
+            SleepBtnCmd = new RelayCommand(Sleep, CanSleep);
             AddDeviceBtnCmd = new RelayCommand(AddDevice, CanAddDevice);
             UpdateDeviceBtnCmd = new RelayCommand(UpdateDevice, CanUpdateDevice);
             RemoveDeviceBtnCmd = new RelayCommand(RemoveDevice, CanRemoveDevice);
@@ -372,6 +373,22 @@ namespace DingoConfigurator
                 (SelectedCanDevice.GetType() == typeof(DingoPdmCan));
         }
 
+        private void Sleep(object parameter)
+        {
+            if(SelectedCanDevice.IsConnected)
+                _canComms.Sleep(SelectedCanDevice);
+            else
+                _canComms.Wakeup(SelectedCanDevice);
+
+        }
+
+        private bool CanSleep(object parameter)
+        {
+            return _canComms.Connected &&
+                (SelectedCanDevice != null) &&
+                (SelectedCanDevice.GetType() == typeof(DingoPdmCan));
+        }
+
         private bool ConfigFileOpen { get; set; }
 
         private void NewConfigFile(object parameter)
@@ -647,6 +664,17 @@ namespace DingoConfigurator
         public ICommand UploadBtnCmd { get; set; }
         public ICommand DownloadBtnCmd { get; set; }
         public ICommand BurnBtnCmd { get; set; }
+        public ICommand SleepBtnCmd { get; set;}
+        private string _sleepBtnContent;
+        public string SleepBtnContent
+        {
+            get => _sleepBtnContent;
+            set
+            {
+                _sleepBtnContent = value;
+                OnPropertyChanged(nameof(SleepBtnContent));
+            }
+        }
         public ICommand AddDeviceBtnCmd { get; set; }
         public ICommand UpdateDeviceBtnCmd { get; set; }
         public ICommand RemoveDeviceBtnCmd { get; set; }
@@ -676,6 +704,9 @@ namespace DingoConfigurator
             RxTimeDelta = _canComms.RxTimeDelta;
 
             DeviceCountText = $"Detected Devices: {connectedCount}";
+
+            //Not in the status bar...but whatever
+            SleepBtnContent = SelectedCanDevice?.IsConnected == true ? "Sleep" : "Wake";
         }
 
         private Brush _canInterfaceStatusFill;

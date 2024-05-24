@@ -264,6 +264,61 @@ namespace CommsHandler
             });
         }
 
+        public async Task Sleep(ICanDevice canDevice)
+        {
+            await Task.Run(() =>
+            {
+                foreach (var cd in _canDevices)
+                {
+                    if ((canDevice == null) || canDevice.Equals(cd))
+                    {
+                        if (cd.IsConnected)
+                        {
+                            var msg = cd.GetSleepMessage();
+                            if (msg == null) return;
+
+                            msg.DeviceBaseId = cd.BaseId;
+                            _queue.Add(msg);
+                            _can.Write(msg.Data);
+                            ProcessMessage(msg.Data);//Catch with CanMsgLog
+
+                            msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
+
+                            Thread.Sleep(20); //Slow down, device can't respond fast enough
+                        }
+                    }
+                }
+            });
+        }
+
+        public async Task Wakeup(ICanDevice canDevice)
+        {
+            await Task.Run(() =>
+            {
+                foreach (var cd in _canDevices)
+                {
+                    if ((canDevice == null) || canDevice.Equals(cd))
+                    {
+                        var msg = new CanDeviceResponse
+                        {
+                            Sent = false,
+                            Received = false,
+                            Data = new CanInterfaceData
+                            {
+                                Id = canDevice.BaseId - 1,
+                                Len = 1,
+                                Payload = new byte[] { Convert.ToByte('!'), 0, 0, 0, 0, 0, 0, 0 }
+                            },
+                            MsgDescription = "Wake Request"
+                        };
+
+                        msg.DeviceBaseId = cd.BaseId;
+                        _can.Write(msg.Data);
+                    }
+                }
+            });
+        }
+
         private void CanDataReceived(object sender, CanDataEventArgs e)
         {
             ProcessMessage(e.canData);
