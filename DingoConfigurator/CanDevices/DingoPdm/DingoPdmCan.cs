@@ -368,18 +368,6 @@ namespace CanDevices.DingoPdm
             if (id == BaseId + 3) ReadMessage3(data);
             if (id == BaseId + 4) ReadMessage4(data);
             if (id == BaseId + 5) ReadMessage5(data);
-            if (id == BaseId + 6) ReadMessage6(data);
-            if (id == BaseId + 7) ReadMessage7(data);
-            if (id == BaseId + 8) ReadMessage8(data);
-            if (id == BaseId + 9) ReadMessage9(data);
-            if (id == BaseId + 10) ReadMessage10(data);
-            if (id == BaseId + 11) ReadMessage11(data);
-            if (id == BaseId + 12) ReadMessage12(data);
-            if (id == BaseId + 13) ReadMessage13(data);
-            if (id == BaseId + 14) ReadMessage14(data);
-            if (id == BaseId + 15) ReadMessage15(data);
-            if (id == BaseId + 16) ReadMessage16(data);
-            if (id == BaseId + 17) ReadMessage17(data);
 
             if (id == BaseId + 30)
             {
@@ -409,18 +397,13 @@ namespace CanDevices.DingoPdm
 
         private void ReadMessage1(byte[] data)
         {
-            
-        }
-
-        private void ReadMessage2(byte[] data)
-        {
             Outputs[0].Current = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
             Outputs[1].Current = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
             Outputs[2].Current = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
             Outputs[3].Current = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
         }
 
-        private void ReadMessage3(byte[] data)
+        private void ReadMessage2(byte[] data)
         {
             Outputs[4].Current = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
             Outputs[5].Current = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
@@ -428,53 +411,34 @@ namespace CanDevices.DingoPdm
             Outputs[7].Current = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
         }
 
-        private void ReadMessage4(byte[] data)
-        {
-
-        }
-
-        private void ReadMessage5(byte[] data)
+        private void ReadMessage3(byte[] data)
         {
             Outputs[0].State = (OutState)((data[0] & 0x0F));
-            Outputs[1].State = (OutState)((data[0] & 0xF0) >> 4);
+            Outputs[1].State = (OutState)(data[0] >> 4);
             Outputs[2].State = (OutState)((data[1] & 0x0F));
-            Outputs[3].State = (OutState)((data[1] & 0xF0) >> 4);
+            Outputs[3].State = (OutState)(data[1] >> 4);
             Outputs[4].State = (OutState)((data[2] & 0x0F));
-            Outputs[5].State = (OutState)((data[2] & 0xF0) >> 4);
+            Outputs[5].State = (OutState)(data[2] >> 4);
             Outputs[6].State = (OutState)((data[3] & 0x0F));
-            Outputs[7].State  = (OutState)((data[3] & 0xF0) >> 4);
+            Outputs[7].State = (OutState)(data[3] >> 4);
+
+            Wipers[0].SlowState = Convert.ToBoolean(data[4] & 0x01);
+            Wipers[0].FastState = Convert.ToBoolean((data[4] >> 1) & 0x01);
+            Wipers[0].State = (WiperState)(data[5] >> 4);
+            Wipers[0].Speed = (WiperSpeed)(data[5] & 0x0F);
+
+            Flashers[0].Value = Convert.ToBoolean(data[6] & 0x01) && Flashers[0].Enabled && Flashers[0].InputValue;
+            Flashers[1].Value = Convert.ToBoolean((data[6] >> 1) & 0x01) && Flashers[1].Enabled && Flashers[1].InputValue;
+            Flashers[2].Value = Convert.ToBoolean((data[6] >> 2) & 0x01) && Flashers[2].Enabled && Flashers[2].InputValue;
+            Flashers[3].Value = Convert.ToBoolean((data[6] >> 3) & 0x01) && Flashers[3].Enabled && Flashers[3].InputValue;
+
+            Flashers[0].InputValue = Convert.ToBoolean((data[6] >> 4) & 0x01);
+            Flashers[1].InputValue = Convert.ToBoolean((data[6] >> 5) & 0x01);
+            Flashers[2].InputValue = Convert.ToBoolean((data[6] >> 6) & 0x01);
+            Flashers[3].InputValue = Convert.ToBoolean((data[6] >> 7) & 0x01);
         }
 
-        private void ReadMessage6(byte[] data)
-        {
-            //This overwrites values that are entered
-            //Get the current limit from the settings response instead
-            /*
-            Outputs[0].CurrentLimit = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
-            Outputs[1].CurrentLimit = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
-            Outputs[2].CurrentLimit = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
-            Outputs[3].CurrentLimit = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
-            */
-        }
-
-        private void ReadMessage7(byte[] data)
-        {
-            //This overwrites values that are entered
-            //Get the current limit from the settings response instead
-            /*
-            Outputs[4].CurrentLimit = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
-            Outputs[5].CurrentLimit = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
-            Outputs[6].CurrentLimit = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
-            Outputs[7].CurrentLimit = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
-            */
-        }
-
-        private void ReadMessage8(byte[] data)
-        {
-
-        }
-
-        private void ReadMessage9(byte[] data)
+        private void ReadMessage4(byte[] data)
         {
             Outputs[0].ResetCount = data[0];
             Outputs[1].ResetCount = data[1];
@@ -486,98 +450,63 @@ namespace CanDevices.DingoPdm
             Outputs[7].ResetCount = data[7];
         }
 
-        private void ReadMessage10(byte[] data)
+        private void ReadMessage5(byte[] data)
         {
-            Flashers[0].InputValue = Convert.ToBoolean(data[1] & 0x01);
-            Flashers[1].InputValue = Convert.ToBoolean((data[1] & 0x02) >> 1);
-            Flashers[2].InputValue = Convert.ToBoolean((data[1] & 0x04) >> 2);
-            Flashers[3].InputValue = Convert.ToBoolean((data[1] & 0x08) >> 3);
+            CanInputs[0].Value = data[0] & 0x01;
+            CanInputs[1].Value = (data[0] >> 1) & 0x01;
+            CanInputs[2].Value = (data[0] >> 2) & 0x01;
+            CanInputs[3].Value = (data[0] >> 3) & 0x01;
+            CanInputs[4].Value = (data[0] >> 4) & 0x01;
+            CanInputs[5].Value = (data[0] >> 5) & 0x01;
+            CanInputs[6].Value = (data[0] >> 6) & 0x01;
+            CanInputs[7].Value = (data[0] >> 7) & 0x01;
 
-            Flashers[0].Value = Convert.ToBoolean(data[0] & 0x01) && Flashers[0].Enabled && Flashers[0].InputValue;
-            Flashers[1].Value = Convert.ToBoolean((data[0] & 0x02) >> 1) && Flashers[1].Enabled && Flashers[1].InputValue;
-            Flashers[2].Value = Convert.ToBoolean((data[0] & 0x04) >> 2) && Flashers[2].Enabled && Flashers[2].InputValue;
-            Flashers[3].Value = Convert.ToBoolean((data[0] & 0x08) >> 3) && Flashers[3].Enabled && Flashers[3].InputValue;
+            CanInputs[8].Value = data[1] & 0x01;
+            CanInputs[9].Value = (data[1] >> 1) & 0x01;
+            CanInputs[10].Value = (data[1] >> 2) & 0x01;
+            CanInputs[11].Value = (data[1] >> 3) & 0x01;
+            CanInputs[12].Value = (data[1] >> 4) & 0x01;
+            CanInputs[13].Value = (data[1] >> 5) & 0x01;
+            CanInputs[14].Value = (data[1] >> 6) & 0x01;
+            CanInputs[15].Value = (data[1] >> 7) & 0x01;
+
+            CanInputs[16].Value = data[2] & 0x01;
+            CanInputs[17].Value = (data[2] >> 1) & 0x01;
+            CanInputs[18].Value = (data[2] >> 2) & 0x01;
+            CanInputs[19].Value = (data[2] >> 3) & 0x01;
+            CanInputs[20].Value = (data[2] >> 4) & 0x01;
+            CanInputs[21].Value = (data[2] >> 5) & 0x01;
+            CanInputs[22].Value = (data[2] >> 6) & 0x01;
+            CanInputs[23].Value = (data[2] >> 7) & 0x01;
+
+            CanInputs[24].Value = data[3] & 0x01;
+            CanInputs[25].Value = (data[3] >> 1) & 0x01;
+            CanInputs[26].Value = (data[3] >> 2) & 0x01;
+            CanInputs[27].Value = (data[3] >> 3) & 0x01;
+            CanInputs[28].Value = (data[3] >> 4) & 0x01;
+            CanInputs[29].Value = (data[3] >> 5) & 0x01;
+            CanInputs[30].Value = (data[3] >> 6) & 0x01;
+            CanInputs[31].Value = (data[3] >> 7) & 0x01;
+
+            VirtualInputs[0].Value = data[4] & 0x01;
+            VirtualInputs[1].Value = (data[4] >> 1) & 0x01;
+            VirtualInputs[2].Value = (data[4] >> 2) & 0x01;
+            VirtualInputs[3].Value = (data[4] >> 3) & 0x01;
+            VirtualInputs[4].Value = (data[4] >> 4) & 0x01;
+            VirtualInputs[5].Value = (data[4] >> 5) & 0x01;
+            VirtualInputs[6].Value = (data[4] >> 6) & 0x01;
+            VirtualInputs[7].Value = (data[4] >> 7) & 0x01;
+
+            VirtualInputs[8].Value = data[5] & 0x01;
+            VirtualInputs[9].Value = (data[5] >> 1) & 0x01;
+            VirtualInputs[10].Value = (data[5] >> 2) & 0x01;
+            VirtualInputs[11].Value = (data[5] >> 3) & 0x01;
+            VirtualInputs[12].Value = (data[5] >> 4) & 0x01;
+            VirtualInputs[13].Value = (data[5] >> 5) & 0x01;
+            VirtualInputs[14].Value = (data[5] >> 6) & 0x01;
+            VirtualInputs[15].Value = (data[5] >> 7) & 0x01;
         }
 
-        private void ReadMessage11(byte[] data)
-        {
-            CanInputs[0].Value = data[0];
-            CanInputs[1].Value = data[1];
-            CanInputs[2].Value = data[2];
-            CanInputs[3].Value = data[3];
-            CanInputs[4].Value = data[4];
-            CanInputs[5].Value = data[5];
-            CanInputs[6].Value = data[6];
-            CanInputs[7].Value = data[7];
-        }
-
-        private void ReadMessage12(byte[] data)
-        {
-            CanInputs[8].Value = data[0];
-            CanInputs[9].Value = data[1];
-            CanInputs[10].Value = data[2];
-            CanInputs[11].Value = data[3];
-            CanInputs[12].Value = data[4];
-            CanInputs[13].Value = data[5];
-            CanInputs[14].Value = data[6];
-            CanInputs[15].Value = data[7];
-        }
-
-        private void ReadMessage13(byte[] data)
-        {
-            CanInputs[16].Value = data[0];
-            CanInputs[17].Value = data[1];
-            CanInputs[18].Value = data[2];
-            CanInputs[19].Value = data[3];
-            CanInputs[20].Value = data[4];
-            CanInputs[21].Value = data[5];
-            CanInputs[22].Value = data[6];
-            CanInputs[23].Value = data[7];
-        }
-
-        private void ReadMessage14(byte[] data)
-        {
-            CanInputs[24].Value = data[0];
-            CanInputs[25].Value = data[1];
-            CanInputs[26].Value = data[2];
-            CanInputs[27].Value = data[3];
-            CanInputs[28].Value = data[4];
-            CanInputs[29].Value = data[5];
-            CanInputs[30].Value = data[6];
-            CanInputs[31].Value = data[7];
-        }
-
-        private void ReadMessage15(byte[] data)
-        {
-            VirtualInputs[0].Value = data[0];
-            VirtualInputs[1].Value = data[1];
-            VirtualInputs[2].Value = data[2];
-            VirtualInputs[3].Value = data[3];
-            VirtualInputs[4].Value = data[4];
-            VirtualInputs[5].Value = data[5];
-            VirtualInputs[6].Value = data[6];
-            VirtualInputs[7].Value = data[7];
-        }
-
-        private void ReadMessage16(byte[] data)
-        {
-            VirtualInputs[8].Value = data[0];
-            VirtualInputs[9].Value = data[1];
-            VirtualInputs[10].Value = data[2];
-            VirtualInputs[11].Value = data[3];
-            VirtualInputs[12].Value = data[4];
-            VirtualInputs[13].Value = data[5];
-            VirtualInputs[14].Value = data[6];
-            VirtualInputs[15].Value = data[7];
-        }
-
-        private void ReadMessage17(byte[] data)
-        {
-            Wipers[0].SlowState = Convert.ToBoolean(data[0] & 0x01);
-            Wipers[0].FastState = Convert.ToBoolean((data[0] >> 1) & 0x01);
-            Wipers[0].State = (WiperState)data[1];
-            Wipers[0].Speed = (WiperSpeed)data[2];
-        }
 
         private void ReadSettingsResponse(byte[] data, List<CanDeviceResponse> queue)
         {
