@@ -1,5 +1,6 @@
 ﻿using CanInterfaces;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -349,17 +350,17 @@ namespace CanDevices.DingoPdm
 
         public bool IsPriorityMsg(int id)
         {
-            return (id == BaseId + 30);
+            return (id == BaseId + 31);
         }
 
         public bool InIdRange(int id)
         {
-            return (id >= BaseId) && (id <= BaseId + 30) ;
+            return (id >= BaseId) && (id <= BaseId + 31) ;
         }
 
         public bool Read(int id, byte[] data, ref List<CanDeviceResponse> queue)
         {
-            if ((id < BaseId) || (id > BaseId + 30)) 
+            if ((id < BaseId) || (id > BaseId + 31)) 
                 return false;
 
             if (id == BaseId + 0) ReadMessage0(data);
@@ -372,6 +373,11 @@ namespace CanDevices.DingoPdm
             if (id == BaseId + 30)
             {
                 ReadSettingsResponse(data, queue);
+            }
+
+            if (id == BaseId + 31)
+            {
+                ReadInfoWarnErrorMessage(data);
             }
 
             _lastRxTime = DateTime.Now;
@@ -819,6 +825,28 @@ namespace CanDevices.DingoPdm
                     break;
 
                 default:
+                    break;
+            }
+        }
+
+        private void ReadInfoWarnErrorMessage(byte[] data)
+        {
+            //Response is lowercase version of set/get prefix
+            MessagePrefix prefix = (MessagePrefix)Char.ToUpper(Convert.ToChar(data[0]));
+            MessageSrc src = (MessageSrc)data[1];
+
+            int index = 0;
+
+            switch (prefix)
+            {
+                case MessagePrefix.Info:
+                    Logger.Info($"{Name} ID: {BaseId}, Src: {src} {data[2]} {data[3]} {data[4]}");
+                    break;
+                case MessagePrefix.Warning:
+                    Logger.Warn($"{Name} ID: {BaseId}, Src: {src} {data[2]} {data[3]} {data[4]}");
+                    break;
+                case MessagePrefix.Error:
+                    Logger.Error($"{Name} ID: {BaseId}, Src: {src} {data[2]} {data[3]} {data[4]}");
                     break;
             }
         }

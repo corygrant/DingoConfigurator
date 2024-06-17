@@ -32,7 +32,32 @@ namespace CanDevices.DingoPdm
         WiperSpeed = 'P',
         WiperDelay = 'Y',
         StarterDisable = 'D',
-        CANInput = 'N'
+        CANInput = 'N',
+        Info = 'F',
+        Warning = 'R',
+        Error = 'E'
+    }
+
+    public enum MessageSrc
+{
+        StatePowerOn = 1,
+        StateStarting,
+        StateRun,
+        StateOvertemp,
+        StateError,
+        StateSleep,
+        StateWake,
+        OverCurrent,
+        BatteryVoltage,
+        CAN,
+        USB,
+        OverTemp,
+        Config,
+        FRAM,
+        ADC,
+        I2C,
+        TempSensor,
+        USBConnected
     }
 
     public enum OutState
