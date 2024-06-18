@@ -169,15 +169,9 @@ namespace CanDevices.DingoPdm
 
     public enum CanSpeed
     {
-        Bitrate_10K = 0,
-        Bitrate_20K = 1,
-        Bitrate_50K = 2,
-        Bitrate_100K = 3,
-        Bitrate_125K = 4,
-        Bitrate_250K = 5,
-        Bitrate_500K = 6,
-        Bitrate_750K = 7,
-        Bitrate_1000K = 8
+        Bitrate_1000K = 0,
+        Bitrate_500K = 1,
+        Bitrate_250K = 2
     }
 
     public enum InputMode

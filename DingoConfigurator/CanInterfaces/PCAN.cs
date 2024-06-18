@@ -311,21 +311,6 @@ namespace CanInterfaces
                 case CanInterfaceBaudRate.BAUD_250K:
                     return TPCANBaudrate.PCAN_BAUD_250K;
 
-                case CanInterfaceBaudRate.BAUD_125K:
-                    return TPCANBaudrate.PCAN_BAUD_125K;
-
-                case CanInterfaceBaudRate.BAUD_100K:
-                    return TPCANBaudrate.PCAN_BAUD_100K;
-
-                case CanInterfaceBaudRate.BAUD_50K:
-                    return TPCANBaudrate.PCAN_BAUD_50K;
-
-                case CanInterfaceBaudRate.BAUD_20K:
-                    return TPCANBaudrate.PCAN_BAUD_20K;
-
-                case CanInterfaceBaudRate.BAUD_10K:
-                    return TPCANBaudrate.PCAN_BAUD_10K;
-
                 default:
                     return TPCANBaudrate.PCAN_BAUD_500K;
             }
