@@ -31,19 +31,16 @@
         <KeyBinding Command="{Binding Path=SaveBtnCmd}"
                     Key="S"
                     Modifiers="Control" />
-        <KeyBinding Command="{Binding Path=RefreshComPortsBtnCmd}"
-                    Key="R"
-                    Modifiers="Control" />
         <KeyBinding Command="{Binding Path=ConnectBtnCmd}"
                     Key="C"
                     Modifiers="Control" />
         <KeyBinding Command="{Binding Path=DisconnectBtnCmd}"
                     Key="D"
                     Modifiers="Control" />
-        <KeyBinding Command="{Binding Path=UploadBtnCmd}"
-                    Key="U"
+        <KeyBinding Command="{Binding Path=ReadBtnCmd}"
+                    Key="R"
                     Modifiers="Control" />
-        <KeyBinding Command="{Binding Path=DownloadBtnCmd}"
+        <KeyBinding Command="{Binding Path=WriteBtnCmd}"
                     Key="W"
                     Modifiers="Control" />
         <KeyBinding Command="{Binding Path=BurnBtnCmd}"
@@ -83,15 +80,15 @@
                      BandIndex="1">
                 <Button Content="New"
                         Command="{Binding NewBtnCmd}"
-                        ToolTip="Clear devices and start a new configuration"
+                        ToolTip="Clear devices and start a new configuration (CTRL+N)"
                         ToolTipService.ShowOnDisabled="True"/>
                 <Button Content="Open"
                         Command="{Binding OpenBtnCmd}" 
-                        ToolTip="Open an existing configuration file (.json)"
+                        ToolTip="Open an existing configuration file (.json) (CTRL+O)"
                         ToolTipService.ShowOnDisabled="True"/>
                 <Button Content="Save"
                         Command="{Binding SaveBtnCmd}"
-                        ToolTip="Save the current devices to the open configuration file"
+                        ToolTip="Save the current devices to the open configuration file (CTRL+S)"
                         ToolTipService.ShowOnDisabled="True" />
                 <Button Content="Save As"
                         Command="{Binding SaveAsBtnCmd}"
@@ -129,25 +126,25 @@
                           ToolTipService.ShowOnDisabled="True"/>
                 <Button Content="Connect"
                         Command="{Binding ConnectBtnCmd}"
-                        ToolTip="Connect using the selected CAN interface"
+                        ToolTip="Connect using the selected CAN interface (CTRL+C)"
                         ToolTipService.ShowOnDisabled="True" />
                 <Button Content="Disconnect"
                         Command="{Binding DisconnectBtnCmd}"
-                        ToolTip="Disconnect from the selected CAN interface"
+                        ToolTip="Disconnect from the selected CAN interface (CTRL+D)"
                         ToolTipService.ShowOnDisabled="True" />
             </ToolBar>
             <ToolBar Band="1"
                      BandIndex="3">
-                <Button Content="Upload"
-                        Command="{Binding UploadBtnCmd}"
-                        ToolTip="Upload settings from the selected device"/>
-                <Button Content="Download"
-                        Command="{Binding DownloadBtnCmd}"
-                        ToolTip="Download settings to the selected device"
+                <Button Content="Read"
+                        Command="{Binding ReadBtnCmd}"
+                        ToolTip="Read settings from the selected device (CTRL+R)"/>
+                <Button Content="Write"
+                        Command="{Binding WriteBtnCmd}"
+                        ToolTip="Write settings to the selected device (CTRL+W)"
                         ToolTipService.ShowOnDisabled="True"/>
                 <Button Content="Burn"
                         Command="{Binding BurnBtnCmd}"
-                        ToolTip="Burn the current settings on the device to non-volatile memory"
+                        ToolTip="Burn the current settings on the device to non-volatile memory (CTRL+B)"
                         ToolTipService.ShowOnDisabled="True" />
                 <Button Content="{Binding SleepBtnContent}"
                         Command="{Binding SleepBtnCmd}"

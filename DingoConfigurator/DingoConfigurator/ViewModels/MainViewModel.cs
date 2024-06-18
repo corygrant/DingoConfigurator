@@ -86,8 +86,8 @@ namespace DingoConfigurator
             ConnectBtnCmd = new RelayCommand(Connect, CanConnect);
             DisconnectBtnCmd = new RelayCommand(Disconnect, CanDisconnect);
             RefreshComPortsBtnCmd = new RelayCommand(RefreshComPorts, CanRefreshComPorts);
-            UploadBtnCmd = new RelayCommand(Upload, CanUpload);
-            DownloadBtnCmd = new RelayCommand(Download, CanDownload);
+            ReadBtnCmd = new RelayCommand(Read, CanRead);
+            WriteBtnCmd = new RelayCommand(Write, CanWrite);
             BurnBtnCmd = new RelayCommand(Burn, CanBurn);
             SleepBtnCmd = new RelayCommand(Sleep, CanSleep);
             AddDeviceBtnCmd = new RelayCommand(AddDevice, CanAddDevice);
@@ -334,12 +334,12 @@ namespace DingoConfigurator
             return match.Success ? match.Groups[1].Value : string.Empty;
         }
 
-        private void Upload(object parameter)
+        private void Read(object parameter)
         {
-            _canComms.Upload(SelectedCanDevice);
+            _canComms.Read(SelectedCanDevice);
         }
 
-        private bool CanUpload(object parameter)
+        private bool CanRead(object parameter)
         {
             return _canComms.Connected &&
                 (SelectedCanDevice != null) &&
@@ -347,12 +347,12 @@ namespace DingoConfigurator
                 (SelectedCanDevice.GetType() == typeof(DingoPdmCan));
         }
 
-        private void Download(object parameter)
+        private void Write(object parameter)
         {
-            _canComms.Download(SelectedCanDevice);
+            _canComms.Write(SelectedCanDevice);
         }
 
-        private bool CanDownload(object parameter)
+        private bool CanWrite(object parameter)
         {
             return _canComms.Connected && 
                 (SelectedCanDevice != null) && 
@@ -662,8 +662,8 @@ namespace DingoConfigurator
         public ICommand ConnectBtnCmd { get; set; }
         public ICommand DisconnectBtnCmd { get; set; }
         public ICommand RefreshComPortsBtnCmd { get; set; }
-        public ICommand UploadBtnCmd { get; set; }
-        public ICommand DownloadBtnCmd { get; set; }
+        public ICommand ReadBtnCmd { get; set; }
+        public ICommand WriteBtnCmd { get; set; }
         public ICommand BurnBtnCmd { get; set; }
         public ICommand SleepBtnCmd { get; set;}
         private string _sleepBtnContent;

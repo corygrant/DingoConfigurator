@@ -80,6 +80,8 @@
         <DataGrid AutoGenerateColumns="False"
                   ItemsSource="{Binding Pdm.CanInputs}"
                   CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="False"
                   Grid.Row="0"
                   PreviewMouseWheel="DataGrid_PreviewMouseWheel">
             <DataGrid.Columns>
@@ -159,6 +161,8 @@
 
         <DataGrid AutoGenerateColumns="False"
                   CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="False"
                   ItemsSource="{Binding Pdm.VirtualInputs}"
                   Grid.Row="2"
                   PreviewMouseWheel="DataGrid_PreviewMouseWheel">
@@ -249,6 +253,8 @@
         <DataGrid AutoGenerateColumns="False"
                   ItemsSource="{Binding Pdm.Wipers}"
                   CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="False"
                   Grid.Row="4">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Header="Wiper" Binding="{Binding Enabled, UpdateSourceTrigger=PropertyChanged}" Width="110" MinWidth="110">
@@ -369,9 +375,11 @@
                           Height="2"/>
         
         <DataGrid AutoGenerateColumns="False"
-          ItemsSource="{Binding Pdm.Wipers}"
-          CanUserAddRows="False"
-          Grid.Row="6">
+                  ItemsSource="{Binding Pdm.Wipers}"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="False"
+                  Grid.Row="6">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Wiper Speed Map" IsReadOnly="True" Width="130" MinWidth="130">
                     <DataGridTextColumn.ElementStyle>
@@ -433,6 +441,8 @@
         <DataGrid AutoGenerateColumns="False"
                   ItemsSource="{Binding Pdm.Wipers}"
                   CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="False"
                   Grid.Row="8">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Wiper Intermittent Time (ms)" IsReadOnly="True" Width="210" MinWidth="210">
@@ -497,6 +507,8 @@
         <DataGrid AutoGenerateColumns="False"
                   ItemsSource="{Binding Pdm.Flashers}"
                   CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="False"
                   Grid.Row="10">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Flasher" Binding="{Binding Number}" IsReadOnly="True" Width="110" MinWidth="110">
@@ -582,6 +594,8 @@
         <DataGrid AutoGenerateColumns="False"
                   ItemsSource="{Binding Pdm.StarterDisable}"
                   CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="False"
                   Grid.Row="12">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Starter Disable" IsReadOnly="True" Width="120" MinWidth="120">

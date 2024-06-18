@@ -130,11 +130,11 @@ namespace CommsHandler
             Connected = false;
         }
 
-        public async Task Upload(ICanDevice canDevice)
+        public async Task Read(ICanDevice canDevice)
         {
             await Task.Run(() =>
             { 
-                //If null, upload all
+                //If null, read all
                 foreach (var cd in _canDevices)
                 {
                     if ((canDevice == null) || canDevice.Equals(cd))
@@ -162,7 +162,7 @@ namespace CommsHandler
             });
         }
 
-        public async Task Download(ICanDevice canDevice)
+        public async Task Write(ICanDevice canDevice)
         {
             await Task.Run(() =>
             {

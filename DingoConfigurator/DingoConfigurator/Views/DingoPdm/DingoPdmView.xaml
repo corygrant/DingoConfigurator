@@ -166,6 +166,8 @@
 
         <DataGrid AutoGenerateColumns="False"
                   CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="False"
                   ItemsSource="{Binding Pdm.Outputs}"
                   Grid.Row="2">
             <DataGrid.Columns>
@@ -397,6 +399,8 @@
 
         <DataGrid AutoGenerateColumns="False"
                   CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="False"
                   ItemsSource="{Binding Pdm.DigitalInputs}"
                   Grid.Row="4">
             <DataGrid.Columns>
