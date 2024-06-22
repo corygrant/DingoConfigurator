@@ -264,8 +264,15 @@ namespace DingoConfigurator
         #region Commands
         private void Connect(object parameter)
         {
-            _canComms.Connect(SelectedCan.Name, ExtractComPort(SelectedComPort), SelectedBaudRate);
-
+            if (SelectedCan.Name.Equals("PCAN"))
+            {
+                _canComms.Connect(SelectedCan.Name, string.Empty, SelectedBaudRate);
+            }
+            else
+            {
+                _canComms.Connect(SelectedCan.Name, ExtractComPort(SelectedComPort), SelectedBaudRate);
+            }
+            
             CanCans = false;
             CanComPorts = false;
             CanBaudRates = false;

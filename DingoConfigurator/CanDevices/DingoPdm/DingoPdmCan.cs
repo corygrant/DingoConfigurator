@@ -16,6 +16,7 @@ namespace CanDevices.DingoPdm
 {
     public class DingoPdmCan : NotifyPropertyChangedBase, ICanDevice
     {
+
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         private string _name;
@@ -193,6 +194,26 @@ namespace CanDevices.DingoPdm
             }
         }
 
+        private CanSpeed _baudRate;
+        public CanSpeed BaudRate
+        {
+            get { return _baudRate; }
+            set
+            {
+                _baudRate = value;
+                OnPropertyChanged(nameof(BaudRate));
+            }
+        }
+
+        [JsonIgnore]
+        public IEnumerable<CanSpeed> BaudRates
+        {
+            get
+            {
+                return (IEnumerable<CanSpeed>)System.Enum.GetValues(typeof(CanSpeed));
+            }
+        }
+
         private ObservableCollection<Output> _outputs;
         [JsonPropertyName("outputs")]
         public ObservableCollection<Output> Outputs
@@ -350,7 +371,7 @@ namespace CanDevices.DingoPdm
 
         public bool IsPriorityMsg(int id)
         {
-            return (id == BaseId + 31);
+            return ((id == BaseId + 30) || (id == BaseId + 31));
         }
 
         public bool InIdRange(int id)
@@ -539,6 +560,8 @@ namespace CanDevices.DingoPdm
 
                 case MessagePrefix.CAN:
                     BaseId = (data[2] << 8) + data[3];
+                    BaudRate = (CanSpeed)((data[1] & 0xF0)>>4);
+
                     foreach (var msg in queue)
                     {
                         if ((msg.DeviceBaseId == BaseId) &&
@@ -624,12 +647,15 @@ namespace CanDevices.DingoPdm
                     foreach (var msg in queue)
                     {
                         if ((msg.DeviceBaseId == BaseId) &&
-                                        ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.VirtualInput) &&
-                                        msg.Data.Payload[2] == index)
+                                        ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.VirtualInput))
                         {
-                            msg.TimeSentTimer.Dispose();
-                            queue.Remove(msg);
-                            break;
+                            if (((msg.Data.Len == 7) && (msg.Data.Payload[2] == index)) ||
+                                    ((msg.Data.Len == 2) && (msg.Data.Payload[1] == index)))
+                            {
+                                msg.TimeSentTimer.Dispose();
+                                queue.Remove(msg);
+                                break;
+                            }
                         }
                     }
                     break;
@@ -767,12 +793,15 @@ namespace CanDevices.DingoPdm
                         foreach (var msg in queue)
                         {
                             if ((msg.DeviceBaseId == BaseId) &&
-                                            ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.CANInput) &&
-                                            msg.Data.Payload[2] == index)
+                                            ((MessagePrefix)Convert.ToChar(msg.Data.Payload[0]) == MessagePrefix.CANInput))
                             {
-                                msg.TimeSentTimer.Dispose();
-                                queue.Remove(msg);
-                                break;
+                                if (((msg.Data.Len == 7) && (msg.Data.Payload[2] == index)) ||
+                                    ((msg.Data.Len == 2) && (msg.Data.Payload[1] == index)))
+                                {
+                                    msg.TimeSentTimer.Dispose();
+                                    queue.Remove(msg);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -1060,7 +1089,7 @@ namespace CanDevices.DingoPdm
                     Len = 5,
                     Payload = new byte[] {
                     Convert.ToByte('C'), //Byte 0
-                    Convert.ToByte((Convert.ToByte(CanSpeed.Bitrate_500K) << 4) +
+                    Convert.ToByte((Convert.ToByte(BaudRate) << 4) +
                     (0x03)), //Byte 1
                     Convert.ToByte((BaseId & 0xFF00) >> 8), //Byte 2
                     Convert.ToByte(BaseId & 0x00FF), //Byte 3
@@ -1336,7 +1365,7 @@ namespace CanDevices.DingoPdm
                     Len = 5,
                     Payload = new byte[] {
                     Convert.ToByte('C'), //Byte 0
-                    Convert.ToByte((Convert.ToByte(CanSpeed.Bitrate_500K) << 4) +
+                    Convert.ToByte((Convert.ToByte(BaudRate) << 4) +
                     (0x03)), //Byte 1
                     Convert.ToByte((newId & 0xFF00) >> 8), //Byte 2
                     Convert.ToByte(newId & 0x00FF), //Byte 3

@@ -140,14 +140,14 @@ namespace CanInterfaces
             byte[] data = new byte[8];
             try
             {
-                //Open slcan
-                data[0] = (byte)'O';
-                _serial.Write(data, 0, 1);
-
                 //Set bitrate
                 data[0] = (byte)'S';
                 data[1] = Convert.ToByte(bitrate);
-                _serial.Write(data, 0 , 1);
+                _serial.Write(data, 0, 1);
+
+                //Open slcan
+                data[0] = (byte)'O';
+                _serial.Write(data, 0, 1);
 
             }
             catch(Exception e)

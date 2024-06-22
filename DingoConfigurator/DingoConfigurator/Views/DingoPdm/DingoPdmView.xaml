@@ -59,6 +59,8 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0"
                        Grid.Column="0"
@@ -159,6 +161,18 @@
                      HorizontalContentAlignment="Center"
                      IsReadOnly="True"
                      Text="{Binding Pdm.DeviceState, Mode=OneWay}" />
+            <TextBlock Grid.Row="0"
+                       Grid.Column="6"
+                       Text="Baud rate"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       Padding="5" />
+            <ComboBox Grid.Row="0"
+                      Grid.Column="7"
+                      Width="100"
+                      Margin="5 5 5 5"
+                      ItemsSource="{Binding Path=Pdm.BaudRates}"
+                      SelectedItem="{Binding Path=Pdm.BaudRate}"/>
         </Grid>
 
         <Separator Grid.Row="1"

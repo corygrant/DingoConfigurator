@@ -1,4 +1,5 @@
 ﻿using CanDevices.DingoPdm;
+using CanInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,5 +33,6 @@ namespace DingoConfigurator.ViewModels
             _pdm.PropertyChanged -= _pdm_PropertyChanged;
             base.Dispose();
         }
+
     }
 }

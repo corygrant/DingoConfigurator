@@ -137,7 +137,8 @@
                      BandIndex="3">
                 <Button Content="Read"
                         Command="{Binding ReadBtnCmd}"
-                        ToolTip="Read settings from the selected device (CTRL+R)"/>
+                        ToolTip="Read settings from the selected device (CTRL+R)"
+                        ToolTipService.ShowOnDisabled="True"/>
                 <Button Content="Write"
                         Command="{Binding WriteBtnCmd}"
                         ToolTip="Write settings to the selected device (CTRL+W)"
