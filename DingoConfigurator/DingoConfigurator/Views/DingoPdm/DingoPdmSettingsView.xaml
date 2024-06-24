@@ -569,7 +569,7 @@
                                         Width="100" MinWidth="100"/>
                 <DataGridTextColumn Header="On Time (ms)" 
                                     Binding="{Binding OnTime, UpdateSourceTrigger=PropertyChanged}" 
-                                    Width="80" 
+                                    Width="100" 
                                     MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
@@ -579,7 +579,7 @@
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="Off Time (ms)" 
                                     Binding="{Binding OffTime, UpdateSourceTrigger=PropertyChanged}" 
-                                    Width="80" 
+                                    Width="110" 
                                     MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
