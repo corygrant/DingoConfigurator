@@ -27,6 +27,7 @@ namespace CanInterfaces
     {
         BAUD_1000K,
         BAUD_500K,
-        BAUD_250K
+        BAUD_250K,
+        BAUD_125K
     }
 }

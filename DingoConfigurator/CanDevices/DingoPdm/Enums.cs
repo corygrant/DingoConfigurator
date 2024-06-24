@@ -171,7 +171,8 @@ namespace CanDevices.DingoPdm
     {
         BAUD_1000K = 0,
         BAUD_500K = 1,
-        BAUD_250K = 2
+        BAUD_250K = 2,
+        BAUD_125K = 3
     }
 
     public enum InputMode

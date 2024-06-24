@@ -243,6 +243,9 @@ namespace CanInterfaces
                 case CanInterfaceBaudRate.BAUD_250K:
                     return USB2CAN_Bitrate.BITRATE_250K;
 
+                case CanInterfaceBaudRate.BAUD_125K:
+                    return USB2CAN_Bitrate.BITRATE_125K;
+
                 default:
                     return USB2CAN_Bitrate.BITRATE_500K;
             }
