@@ -25,7 +25,7 @@ namespace CanInterfaces
 
     public enum CanInterfaceBaudRate
     {
-        BAUD_1M,
+        BAUD_1000K,
         BAUD_500K,
         BAUD_250K
     }

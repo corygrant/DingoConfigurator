@@ -37,7 +37,7 @@ namespace DingoConfigurator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("BAUD_1M")]
+        [global::System.Configuration.DefaultSettingValueAttribute("BAUD_1000K")]
         public global::CanInterfaces.CanInterfaceBaudRate BaudRate {
             get {
                 return ((global::CanInterfaces.CanInterfaceBaudRate)(this["BaudRate"]));

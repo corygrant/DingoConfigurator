@@ -567,14 +567,20 @@
                                         ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
                                         SelectedItemBinding="{Binding Output, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100" MinWidth="100"/>
-                <DataGridTextColumn Header="On Time" Binding="{Binding OnTime, UpdateSourceTrigger=PropertyChanged}" Width="70" MinWidth="70">
+                <DataGridTextColumn Header="On Time (ms)" 
+                                    Binding="{Binding OnTime, UpdateSourceTrigger=PropertyChanged}" 
+                                    Width="80" 
+                                    MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Off Time" Binding="{Binding OffTime, UpdateSourceTrigger=PropertyChanged}" Width="70" MinWidth="70">
+                <DataGridTextColumn Header="Off Time (ms)" 
+                                    Binding="{Binding OffTime, UpdateSourceTrigger=PropertyChanged}" 
+                                    Width="80" 
+                                    MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center" />

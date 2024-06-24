@@ -117,7 +117,7 @@
                         Command="{Binding RefreshComPortsBtnCmd}" 
                         ToolTip="Refresh the list of available COM ports"
                         ToolTipService.ShowOnDisabled="True"/>
-                <ComboBox Width="100"
+                <ComboBox Width="120"
                           Margin="5 0 5 0"
                           ItemsSource="{Binding Path=BaudRates}"
                           SelectedItem="{Binding Path=SelectedBaudRate}"

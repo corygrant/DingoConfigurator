@@ -169,7 +169,7 @@
                        Padding="5" />
             <ComboBox Grid.Row="0"
                       Grid.Column="7"
-                      Width="100"
+                      Width="120"
                       Margin="5 5 5 5"
                       ItemsSource="{Binding Path=Pdm.BaudRates}"
                       SelectedItem="{Binding Path=Pdm.BaudRate}"/>
@@ -368,9 +368,9 @@
                                         SelectedItemBinding="{Binding ResetMode, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100"
                                         MinWidth="100" />
-                <DataGridTextColumn Header="Reset&#x0a;Time"
+                <DataGridTextColumn Header="Reset&#x0a;Time (ms)"
                                     Binding="{Binding ResetTime, UpdateSourceTrigger=PropertyChanged}"
-                                    Width="70"
+                                    Width="80"
                                     MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
@@ -379,9 +379,9 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Inrush&#x0a;Limit"
+                <DataGridTextColumn Header="Inrush&#x0a;Limit (A)"
                                     Binding="{Binding InrushCurrentLimit, UpdateSourceTrigger=PropertyChanged}"
-                                    Width="70"
+                                    Width="80"
                                     MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
@@ -390,9 +390,9 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Inrush&#x0a;Time"
+                <DataGridTextColumn Header="Inrush&#x0a;Time (ms)"
                                     Binding="{Binding InrushTime, UpdateSourceTrigger=PropertyChanged}"
-                                    Width="70"
+                                    Width="80"
                                     MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
@@ -498,9 +498,9 @@
                                         SelectedItemBinding="{Binding Mode, UpdateSourceTrigger=PropertyChanged}"
                                         Width="100"
                                         MinWidth="100" />
-                <DataGridTextColumn Header="Debounce&#x0a;Time"
+                <DataGridTextColumn Header="Debounce&#x0a;Time (ms)"
                                     Binding="{Binding DebounceTime, UpdateSourceTrigger=PropertyChanged}"
-                                    Width="70"
+                                    Width="90"
                                     MinWidth="70">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">

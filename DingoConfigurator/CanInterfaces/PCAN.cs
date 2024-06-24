@@ -302,7 +302,7 @@ namespace CanInterfaces
         {
             switch (baud)
             {
-                case CanInterfaceBaudRate.BAUD_1M:
+                case CanInterfaceBaudRate.BAUD_1000K:
                     return TPCANBaudrate.PCAN_BAUD_1M;
 
                 case CanInterfaceBaudRate.BAUD_500K:

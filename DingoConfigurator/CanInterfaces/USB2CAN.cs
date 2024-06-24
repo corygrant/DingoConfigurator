@@ -137,17 +137,25 @@ namespace CanInterfaces
         {
             if (!_serial.IsOpen) return false;
 
-            byte[] data = new byte[8];
+            //byte[] data = new byte[8];
+            string sData = "";
             try
             {
+                //data[0] = (byte)'C';
+                sData = "C\r";
+                _serial.Write(Encoding.ASCII.GetBytes(sData), 0, Encoding.ASCII.GetByteCount(sData));
+
                 //Set bitrate
-                data[0] = (byte)'S';
-                data[1] = Convert.ToByte(bitrate);
-                _serial.Write(data, 0, 1);
+                //data[0] = (byte)'S';
+                //data[1] = Convert.ToByte(bitrate);
+                sData = "S" + (int)bitrate + "\r";
+                _serial.Write(Encoding.ASCII.GetBytes(sData), 0, Encoding.ASCII.GetByteCount(sData));
 
                 //Open slcan
-                data[0] = (byte)'O';
-                _serial.Write(data, 0, 1);
+                //data[0] = (byte)'O';
+                sData = "O\r";
+                //_serial.Write(data, 0, 1);
+                _serial.Write(Encoding.ASCII.GetBytes(sData), 0, Encoding.ASCII.GetByteCount(sData));
 
             }
             catch(Exception e)
@@ -165,9 +173,12 @@ namespace CanInterfaces
             if(_serial == null) return false;
             if (!_serial.IsOpen) return false;
 
-            byte[] data = new byte[8];
-            data[0] = (byte)'C';
-            _serial.Write(data, 0, 1);
+            //byte[] data = new byte[8];
+            //data[0] = (byte)'C';
+            //_serial.Write(data, 0, 1);
+            string sData = "";
+            sData = "C\r";
+            _serial.Write(Encoding.ASCII.GetBytes(sData), 0, Encoding.ASCII.GetByteCount(sData));
 
             _serial.DataReceived -= _serial_DataReceived;
 
@@ -223,7 +234,7 @@ namespace CanInterfaces
         {
             switch (baud)
             {
-                case CanInterfaceBaudRate.BAUD_1M:
+                case CanInterfaceBaudRate.BAUD_1000K:
                     return USB2CAN_Bitrate.BITRATE_1000K;
 
                 case CanInterfaceBaudRate.BAUD_500K:
