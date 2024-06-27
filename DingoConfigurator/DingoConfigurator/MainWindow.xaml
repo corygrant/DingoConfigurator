@@ -1,7 +1,6 @@
-﻿<mah:MetroWindow x:Class="DingoConfigurator.MainWindow"
+﻿<Window x:Class="DingoConfigurator.MainWindow"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:local="clr-namespace:DingoConfigurator"
@@ -20,7 +19,8 @@
                  Title="DingoConfigurator"
                  Height="1000"
                  Width="1500"
-                 Icon="Icons\dingoconfigurator.png">
+                 Icon="Icons\dingoconfigurator.ico"
+                 Style="{StaticResource MaterialDesignWindow}">
     <Window.InputBindings>
         <KeyBinding Command="{Binding Path=NewBtnCmd}"
                     Key="N"
@@ -49,6 +49,7 @@
     </Window.InputBindings>
     <Window.Resources>
         <ResourceDictionary>
+          
             <SolidColorBrush x:Key="PdmBrush"
                              Color="Crimson" />
             <SolidColorBrush x:Key="CanBoardBrush"
@@ -70,9 +71,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="5*" />
+            <RowDefinition Height="10*" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="3*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <ToolBarTray Grid.Row="0">
@@ -153,104 +154,10 @@
                         ToolTipService.ShowOnDisabled="True" />
             </ToolBar>
         </ToolBarTray>
-        <GridSplitter Grid.Row="1"
-                      VerticalAlignment="Center"
-                      Background="White"
-                      ShowsPreview="True"
-                      IsEnabled="False"
-                      Height="2" />
-        <StatusBar Grid.Row="5">
-            <StatusBar.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="2*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="30" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="30" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="130" />
-                        </Grid.ColumnDefinitions>
-                    </Grid>
-                </ItemsPanelTemplate>
-            </StatusBar.ItemsPanel>
-            <StatusBarItem HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           HorizontalContentAlignment="Stretch"
-                           ToolTip="CAN interface connected">
-                <Rectangle Height="20"
-                           Width="30">
-                    <Rectangle.Style>
-                        <Style TargetType="{x:Type Rectangle}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding CanComms.Connected}"
-                                             Value="True">
-                                    <Setter Property="Fill"
-                                            Value="Lime" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding CanComms.Connected}"
-                                             Value="False">
-                                    <Setter Property="Fill"
-                                            Value="DarkGray" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Rectangle.Style>
-                </Rectangle>
-            </StatusBarItem>
-            <Separator Grid.Column="1" />
-            <StatusBarItem Grid.Column="2"
-                           HorizontalAlignment="Left">
-                <TextBlock Text="{Binding Path=CanInterfaceStatusText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                           Margin="5 0 0 0" />
-            </StatusBarItem>
-            <Separator Grid.Column="3" />
-            <StatusBarItem Grid.Column="4"
-                           HorizontalAlignment="Left">
-                <TextBlock Text="{Binding Path=ConfigFileName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                           Margin="5 0 0 0" />
-            </StatusBarItem>
-            <Separator Grid.Column="5" />
-            <StatusBarItem Grid.Column="6"
-                           HorizontalAlignment="Right"
-                           VerticalAlignment="Center"
-                           ToolTip="CAN messages queued to be sent/received">
-                <TextBlock Text="Queue"/>
-            </StatusBarItem>
-            <StatusBarItem Grid.Column="7"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           ToolTip="CAN messages queued to be sent/received">
-                <TextBlock Text="{Binding Path=QueueCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </StatusBarItem>
-            <Separator Grid.Column="8" />
-            <StatusBarItem Grid.Column="9"
-                           HorizontalAlignment="Right"
-                           VerticalAlignment="Center"
-                           ToolTip="Time (ms) since last CAN message received">
-                <TextBlock Text="RxTime" />
-            </StatusBarItem>
-            <StatusBarItem Grid.Column="10"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           ToolTip="Time (ms) since last CAN message received">
-                <TextBlock Text="{Binding Path=RxTimeDelta, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-            </StatusBarItem>
-            <Separator Grid.Column="11" />
-            <StatusBarItem Grid.Column="12"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           ToolTip="Devices detected with IDs matching those in the device list">
-                <TextBlock Text="{Binding Path=DeviceCountText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-            </StatusBarItem>
-        </StatusBar>
+
+        <Separator Grid.Row="1"
+           Margin="0 5 0 0" />
+        
         <Grid Grid.Row="2">
             <Grid.Resources>
                 <DataTemplate DataType="{x:Type vm:DingoPdmViewModel}">
@@ -476,10 +383,10 @@
                     </TreeView.Resources>
                 </TreeView>
                 <GridSplitter Grid.Row="1"
-                              VerticalAlignment="Center"
+                              HorizontalAlignment="Stretch"
                               Background="White"
                               ShowsPreview="True"
-                              Height="2" />
+                              Height="3" />
                 <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -552,7 +459,7 @@
                           HorizontalAlignment="Center"
                           Background="White"
                           ShowsPreview="True"
-                          Width="2" />
+                          Width="3" />
             <ScrollViewer Grid.Column="2"
                           Grid.ColumnSpan="2"
                           VerticalScrollBarVisibility="Auto" 
@@ -560,23 +467,123 @@
                           VerticalAlignment="Top"
                           CanContentScroll="True">
                 <ContentControl Content="{Binding CurrentViewModel}"
-                                MaxHeight="700"
-                            Margin="2,0,0,0" />
+                                MaxHeight="1500"/>
             </ScrollViewer>
         </Grid>
         <GridSplitter Grid.Row="3"
-                      VerticalAlignment="Center"
+                      HorizontalAlignment="Stretch"
                       Background="White"
                       ShowsPreview="True"
-                      Height="2" />
+                      Height="3" />
         <Grid Grid.Row="4">
             <nlog:NlogViewer x:Name="logCtrl"
                              TimeWidth="auto"
                              LoggerNameWidth="0"
                              LevelWidth="auto"
-                             ExceptionWidth="auto"
+                             ExceptionWidth="0"
                              MessageWidth="auto"
                              MaxRowCount="0" />
         </Grid>
+        <StatusBar Grid.Row="5">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="130" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="50" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   HorizontalContentAlignment="Stretch"
+                   ToolTip="CAN interface connected">
+                <Rectangle Height="20"
+                   Width="30">
+                    <Rectangle.Style>
+                        <Style TargetType="{x:Type Rectangle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CanComms.Connected}"
+                                     Value="True">
+                                    <Setter Property="Fill"
+                                    Value="Lime" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CanComms.Connected}"
+                                     Value="False">
+                                    <Setter Property="Fill"
+                                    Value="DarkGray" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Rectangle.Style>
+                </Rectangle>
+            </StatusBarItem>
+            <Separator Grid.Column="1" />
+            <StatusBarItem Grid.Column="2"
+                   HorizontalAlignment="Left">
+                <TextBlock Text="{Binding Path=CanInterfaceStatusText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                   Margin="5 0 0 0" />
+            </StatusBarItem>
+            <Separator Grid.Column="3" />
+            <StatusBarItem Grid.Column="4"
+                   HorizontalAlignment="Left">
+                <TextBlock Text="{Binding Path=ConfigFileName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                   Margin="5 0 0 0" />
+            </StatusBarItem>
+            <Separator Grid.Column="5" />
+            <StatusBarItem Grid.Column="6"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Center"
+                   ToolTip="CAN messages queued to be sent/received">
+                <TextBlock Text="Queue"/>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="7"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   ToolTip="CAN messages queued to be sent/received">
+                <TextBlock Text="{Binding Path=QueueCount, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StatusBarItem>
+            <Separator Grid.Column="8" />
+            <StatusBarItem Grid.Column="9"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Center"
+                   ToolTip="Time (ms) since last CAN message received">
+                <TextBlock Text="RxTime" />
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="10"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   ToolTip="Time (ms) since last CAN message received">
+                <TextBlock Text="{Binding Path=RxTimeDelta, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StatusBarItem>
+            <Separator Grid.Column="11" />
+            <StatusBarItem Grid.Column="12"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   ToolTip="Devices detected with IDs matching those in the device list">
+                <TextBlock Text="{Binding Path=DeviceCountText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StatusBarItem>
+            <Separator Grid.Column="13"/>
+            <StatusBarItem Grid.Column="14"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   ToolTip="DingoConfigurator version">
+                <TextBlock Text="{Binding Path=Version, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
-</mah:MetroWindow>
+</Window>

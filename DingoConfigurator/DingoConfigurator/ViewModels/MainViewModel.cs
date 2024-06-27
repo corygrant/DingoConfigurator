@@ -28,6 +28,7 @@ using CanDevices.SoftButtonBox;
 using Microsoft.Win32;
 using System.Management;
 using System.Text.RegularExpressions;
+using System.Reflection;
 
 //Add another CanDevices list that holds the online value
 
@@ -46,6 +47,9 @@ namespace DingoConfigurator
 
         public MainViewModel()
         {
+            Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+
             _canComms = new CanCommsHandler();
             _canComms.PropertyChanged += _canComms_PropertyChanged  ;
 
@@ -95,6 +99,8 @@ namespace DingoConfigurator
             RemoveDeviceBtnCmd = new RelayCommand(RemoveDevice, CanRemoveDevice);
 
             DeviceName = String.Empty;
+
+            DeviceCountText = "Detected Devices: 0";
 
             CanCans = true;
 
@@ -167,6 +173,17 @@ namespace DingoConfigurator
             {
                 _deviceName = value;
                 OnPropertyChanged(nameof(DeviceName));
+            }
+        }
+
+        private string _version;
+        public string Version
+        {
+            get => _version;
+            set
+            {
+                _version = value;
+                OnPropertyChanged(nameof(Version));
             }
         }
 
@@ -271,6 +288,11 @@ namespace DingoConfigurator
             else
             {
                 _canComms.Connect(SelectedCan.Name, ExtractComPort(SelectedComPort), SelectedBaudRate);
+            }
+
+            foreach(var cd in _canComms.CanDevices)
+            {
+                _canComms.Wakeup(cd);
             }
             
             CanCans = false;
