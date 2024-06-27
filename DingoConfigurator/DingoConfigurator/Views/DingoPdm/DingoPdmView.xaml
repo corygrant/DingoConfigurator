@@ -40,6 +40,7 @@
         </ObjectDataProvider>
         <Style x:Key="CenterAlignedHeaderStyle" TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="5,2,5,2"/>
         </Style>
     </UserControl.Resources>
     <Grid>

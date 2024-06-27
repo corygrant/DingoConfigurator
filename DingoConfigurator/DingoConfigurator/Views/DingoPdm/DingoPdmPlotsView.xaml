@@ -12,6 +12,7 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <oxy:PlotView Model="{Binding CurrentOutput}"
+                      Height="500"
                       Background="Transparent"
                       
         />
