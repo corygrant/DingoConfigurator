@@ -17,13 +17,15 @@ namespace DingoConfigurator.ViewModels
         private DingoPdmCan _pdm;
         public DingoPdmCan Pdm { get { return _pdm; } }
 
-        public PlotModel CurrentOutput
+        public PlotModel CurrentOutputPlotModel
         {
             get;
             private set;
         }
 
         private Timer _timer;
+
+        private DateTime _zeroTime;
 
         public DingoPdmPlotsViewModel(MainViewModel vm)
         {
@@ -33,32 +35,53 @@ namespace DingoConfigurator.ViewModels
 
             _pdm.PropertyChanged += _pdm_PropertyChanged;
 
-            CurrentOutput = new PlotModel { 
+            CurrentOutputPlotModel = new PlotModel { 
                 Title = "Current Output",
                 TextColor = OxyColors.White,
                 TitleColor = OxyColors.White,
-                PlotAreaBorderColor = OxyColors.White
+                PlotAreaBorderColor = OxyColors.White,
+                
             };
 
-            var yAxis = new LinearAxis
+            var currentAxis = new LinearAxis
             {
                 Position = AxisPosition.Left,
-                Title = "Current (A)",
+                Title = "Current",
                 TitleColor = OxyColors.White,
                 TextColor = OxyColors.White,
                 TicklineColor = OxyColors.White,
                 MajorGridlineColor = OxyColors.White,
                 MinorGridlineColor = OxyColors.White,
-                AbsoluteMinimum = -0.001
+                AbsoluteMinimum = -0.001,
+                Unit = "A",
             };
-            
-            CurrentOutput.Axes.Add(yAxis);
-            
+
+            currentAxis.Zoom(0.0, 25.0);
+
+            var timeAxis = new LinearAxis
+            {
+                Position = AxisPosition.Bottom,
+                Title = "Time",
+                TitleColor = OxyColors.White,
+                TextColor = OxyColors.White,
+                TicklineColor = OxyColors.White,
+                MajorGridlineColor = OxyColors.White,
+                MinorGridlineColor = OxyColors.White,
+                AbsoluteMinimum = 0,
+                Unit = "s"
+            };
+
+            timeAxis.Zoom(0.0, 60.0);
+
+            CurrentOutputPlotModel.Axes.Add(currentAxis);
+            CurrentOutputPlotModel.Axes.Add(timeAxis);
              
             foreach (var output in _pdm.Outputs)
             {
-                CurrentOutput.Series.Add(new LineSeries());
+                CurrentOutputPlotModel.Series.Add(new LineSeries());
             }
+
+            _zeroTime = DateTime.Now;
 
             _timer = new Timer(100);
             _timer.AutoReset = true;
@@ -74,21 +97,36 @@ namespace DingoConfigurator.ViewModels
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (_pdm == null) return;
-            if (!_pdm.IsConnected) return;
 
-            for (int i=0; i<CurrentOutput.Series.Count; i++)
+            for (int i=0; i< CurrentOutputPlotModel.Series.Count; i++)
             {
-                LineSeries series = (LineSeries) CurrentOutput.Series[i];
+               
+                LineSeries series = (LineSeries)CurrentOutputPlotModel.Series[i];
                 if (series == null) return;
 
-                series.Points.Add(new DataPoint(DateTime.Now.ToOADate(), _pdm.Outputs[i].Current));
+                double val;
+                if (!_pdm.IsConnected)
+                {
+                    val = 0;
+                }
+                else
+                {
+                    val = _pdm.Outputs[i].Current;
+                }
+
+                series.Points.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), val));
                 if (series.Points.Count > 10000)
                 {
                     series.Points.RemoveAt(0);
                 }
             }
 
-            CurrentOutput.InvalidatePlot(true);
+            CurrentOutputPlotModel.InvalidatePlot(true);
+        }
+
+        public void ResetZoom()
+        {
+            CurrentOutputPlotModel.ResetAllAxes();
         }
 
         public override void Dispose()
