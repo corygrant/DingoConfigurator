@@ -86,6 +86,7 @@
     <Compile Include="DingoDash\DingoDashCan.cs" />
     <Compile Include="DingoPdm\DingoPdmCan.cs" />
     <Compile Include="DingoPdm\CanInput.cs" />
+    <Compile Include="DingoPdm\DingoPdmPlot.cs" />
     <Compile Include="DingoPdm\Enums.cs" />
     <Compile Include="DingoPdm\Flasher.cs" />
     <Compile Include="DingoPdm\Input.cs" />

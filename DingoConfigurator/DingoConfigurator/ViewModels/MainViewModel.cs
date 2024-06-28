@@ -224,9 +224,20 @@ namespace DingoConfigurator
                         CurrentViewModel = new DingoPdmSettingsViewModel(this);
                     }
 
-                    if (sub.Name.Equals("Plots"))
+                    SelectedDeviceToAdd = Devices.dingoPDM;
+                }
+
+            }
+
+            if (e.NewValue.GetType() == typeof(DingoPdmPlot))
+            {
+                DingoPdmPlot plot = (DingoPdmPlot)e.NewValue;
+
+                if (plot.CanDevice.GetType() == typeof(DingoPdmCan))
+                {
+                    if (plot.Name.Equals("Plots"))
                     {
-                        SelectedCanDevice = (DingoPdmCan)sub.CanDevice;
+                        SelectedCanDevice = (DingoPdmCan)plot.CanDevice;
                         CurrentViewModel = new DingoPdmPlotsViewModel(this);
                     }
 
