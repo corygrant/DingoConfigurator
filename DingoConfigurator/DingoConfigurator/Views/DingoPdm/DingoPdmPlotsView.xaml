@@ -10,13 +10,23 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="6*"/>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="6*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <oxy:PlotView Grid.Row="0"
                       Model="{Binding CurrentOutputPlotModel}"
-                      MinHeight="500"
+                      MinHeight="250"
                       Background="Transparent"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1">
+        <oxy:PlotView Grid.Row="1"
+                      Model="{Binding StatePlotModel}"
+                      MinHeight="250"
+                      Background="Transparent"/>
+        <oxy:PlotView Grid.Row="2"
+                      Model="{Binding BatteryPlotModel}"
+                      MinHeight="250"
+                      Background="Transparent"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="3">
             <TextBox Grid.Column="0"
                      Margin="20 0 20 0"
                      HorizontalContentAlignment="Center"
