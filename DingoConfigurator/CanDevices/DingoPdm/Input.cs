@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using System.Windows.Controls;
 
 namespace CanDevices.DingoPdm
 {
@@ -122,6 +123,20 @@ namespace CanDevices.DingoPdm
                     OnPropertyChanged(nameof(InputPull));
                 }
             }
+        }
+    }
+
+    public class DebounceTimeValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
+        {
+            double proposedValue;
+            string input = value.ToString();
+            if (input == string.Empty) return new ValidationResult(false, "Entry is required");
+            if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
+            if (proposedValue < 0.00) return new ValidationResult(false, "Value must be zero or greater");
+            if (proposedValue > 500.00) return new ValidationResult(false, "Value must less than or equal to 500.0");
+            return new ValidationResult(true, null);
         }
     }
 }

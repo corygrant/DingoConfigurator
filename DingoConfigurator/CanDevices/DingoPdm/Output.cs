@@ -211,7 +211,63 @@ namespace CanDevices.DingoPdm
             if (input == string.Empty) return new ValidationResult(false, "Entry is required");
             if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
             if (proposedValue < 0.00) return new ValidationResult(false, "Value must be zero or greater");
-            if (proposedValue > 20.00) return new ValidationResult(false, "Value must less than 20.0");
+            if (proposedValue > 20.00) return new ValidationResult(false, "Value must less than or equal to 20.0");
+            return new ValidationResult(true, null);
+        }
+    }
+
+    public class ResetLimitValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
+        {
+            double proposedValue;
+            string input = value.ToString();
+            if (input == string.Empty) return new ValidationResult(false, "Entry is required");
+            if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
+            if (proposedValue < 0.00) return new ValidationResult(false, "Value must be zero or greater");
+            if (proposedValue > 15.00) return new ValidationResult(false, "Value must less than or equal to 15");
+            return new ValidationResult(true, null);
+        }
+    }
+
+    public class ResetTimeValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
+        {
+            double proposedValue;
+            string input = value.ToString();
+            if (input == string.Empty) return new ValidationResult(false, "Entry is required");
+            if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
+            if (proposedValue < 0.00) return new ValidationResult(false, "Value must be zero or greater");
+            if (proposedValue > 2500.00) return new ValidationResult(false, "Value must less than or equal to 2500");
+            return new ValidationResult(true, null);
+        }
+    }
+
+    public class InrushLimitValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
+        {
+            double proposedValue;
+            string input = value.ToString();
+            if (input == string.Empty) return new ValidationResult(false, "Entry is required");
+            if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
+            if (proposedValue < 0.00) return new ValidationResult(false, "Value must be zero or greater");
+            if (proposedValue > 250.00) return new ValidationResult(false, "Value must less than or equal to 250.0");
+            return new ValidationResult(true, null);
+        }
+    }
+
+    public class InrushTimeValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
+        {
+            double proposedValue;
+            string input = value.ToString();
+            if (input == string.Empty) return new ValidationResult(false, "Entry is required");
+            if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
+            if (proposedValue < 0.00) return new ValidationResult(false, "Value must be zero or greater");
+            if (proposedValue > 2500.00) return new ValidationResult(false, "Value must less than or equal to 2500");
             return new ValidationResult(true, null);
         }
     }
