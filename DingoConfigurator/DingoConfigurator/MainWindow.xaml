@@ -511,7 +511,7 @@
                              LoggerNameWidth="0"
                              LevelWidth="auto"
                              ExceptionWidth="0"
-                             MessageWidth="auto"
+                             MessageWidth="800"
                              MaxRowCount="0" />
         </Grid>
         <StatusBar Grid.Row="5">

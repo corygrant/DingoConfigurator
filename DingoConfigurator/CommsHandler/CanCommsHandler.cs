@@ -13,6 +13,7 @@ using PCAN;
 using System.Runtime.InteropServices;
 using CanDevices.SoftButtonBox;
 using System.Management;
+using System.Reflection;
 
 namespace CommsHandler
 {

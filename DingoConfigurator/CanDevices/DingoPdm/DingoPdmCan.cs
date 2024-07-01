@@ -16,6 +16,9 @@ namespace CanDevices.DingoPdm
 {
     public class DingoPdmCan : NotifyPropertyChangedBase, ICanDevice
     {
+        private const int _minMajorVersion = 0;
+        private const int _minMinorVersion = 3;
+        private const int _minBuildVersion = 0;
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -546,6 +549,12 @@ namespace CanDevices.DingoPdm
             {
                 case MessagePrefix.Version:
                     Version = $"V{data[1]}.{data[2]}.{(data[3] << 8) + (data[4])}";
+
+                    if (!CheckVersion(data[1], data[2], data[3]))
+                    {
+                        Logger.Error($"{Name} ID: {BaseId}, Firmware needs to be updated. V{_minMajorVersion}.{_minMinorVersion}.{_minBuildVersion} or greater");
+                    }
+
                     foreach(var msg in queue)
                     {
                         if((msg.DeviceBaseId == BaseId) &&
@@ -1408,6 +1417,20 @@ namespace CanDevices.DingoPdm
                 },
                 MsgDescription = "Sleep Request"
             };
+        }
+
+        private bool CheckVersion(int major, int minor, int build)
+        {
+            if (major > _minMajorVersion)
+                return true;
+
+            if ((major == _minMajorVersion) && (minor > _minMinorVersion))
+                return true;
+
+            if ((major == _minMajorVersion) && (minor == _minMinorVersion) && (build >= _minBuildVersion))
+                return true;
+            
+            return false;
         }
 
         public void Clear()
