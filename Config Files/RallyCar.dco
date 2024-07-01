@@ -744,7 +744,6 @@
           "enabled": true,
           "single": false,
           "input": 3,
-          "output": 57,
           "onTime": 500,
           "offTime": 500,
           "inputValue": false
@@ -755,7 +754,6 @@
           "enabled": true,
           "single": false,
           "input": 3,
-          "output": 58,
           "onTime": 500,
           "offTime": 500,
           "inputValue": false
@@ -766,7 +764,6 @@
           "enabled": false,
           "single": false,
           "input": 0,
-          "output": 51,
           "onTime": 0,
           "offTime": 0,
           "inputValue": false
@@ -777,7 +774,6 @@
           "enabled": false,
           "single": false,
           "input": 0,
-          "output": 51,
           "onTime": 0,
           "offTime": 0,
           "inputValue": false

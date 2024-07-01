@@ -18,7 +18,7 @@ namespace CanDevices.DingoPdm
     {
         private const int _minMajorVersion = 0;
         private const int _minMinorVersion = 3;
-        private const int _minBuildVersion = 1;
+        private const int _minBuildVersion = 2;
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -550,7 +550,7 @@ namespace CanDevices.DingoPdm
                 case MessagePrefix.Version:
                     Version = $"V{data[1]}.{data[2]}.{(data[3] << 8) + (data[4])}";
 
-                    if (!CheckVersion(data[1], data[2], data[3]))
+                    if (!CheckVersion(data[1], data[2], (data[3] << 8) + (data[4])))
                     {
                         Logger.Error($"{Name} ID: {BaseId}, Firmware needs to be updated. V{_minMajorVersion}.{_minMinorVersion}.{_minBuildVersion} or greater");
                     }
@@ -677,7 +677,6 @@ namespace CanDevices.DingoPdm
                         Flashers[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
                         Flashers[index].Single = Convert.ToBoolean((data[1] & 0x02) >> 1);
                         Flashers[index].Input = (VarMap)(data[2]);
-                        Flashers[index].Output = (VarMap)(data[3] + Convert.ToInt16(VarMap.Output1));
                         Flashers[index].OnTime = data[4] / 10.0;
                         Flashers[index].OffTime = data[5] / 10.0;
                     }
@@ -1193,16 +1192,6 @@ namespace CanDevices.DingoPdm
             //Flashers
             foreach(var flash in Flashers)
             {
-                int flashOut = 0;
-                if ((flash.Output == VarMap.Output1) ||
-                    (flash.Output == VarMap.Output2) ||
-                    (flash.Output == VarMap.Output3) ||
-                    (flash.Output == VarMap.Output4) ||
-                    (flash.Output == VarMap.Output5) ||
-                    (flash.Output == VarMap.Output6) ||
-                    (flash.Output == VarMap.Output7) ||
-                    (flash.Output == VarMap.Output8))
-                    flashOut = flash.Output - VarMap.Output1;
                 msgs.Add(new CanDeviceResponse
                 {
                     Sent = false,
@@ -1217,7 +1206,7 @@ namespace CanDevices.DingoPdm
                         (Convert.ToByte(flash.Single) << 1) +
                         (Convert.ToByte(flash.Enabled))), //Byte 1
                         Convert.ToByte(flash.Input), //Byte 2
-                        Convert.ToByte(flashOut), //Byte 3
+                        0,
                         Convert.ToByte(flash.OnTime * 10), //Byte 4
                         Convert.ToByte(flash.OffTime * 10), //Byte 5
                         0, 0 }

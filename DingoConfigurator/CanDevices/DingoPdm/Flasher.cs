@@ -110,21 +110,6 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private VarMap _output;
-        [JsonPropertyName("output")]
-        public VarMap Output
-        {
-            get => _output;
-            set
-            {
-                if (_output != value)
-                {
-                    _output = value;
-                    OnPropertyChanged(nameof(Output));
-                }
-            }
-        }
-
         private double _onTime;
         [JsonPropertyName("onTime")]
         public double OnTime

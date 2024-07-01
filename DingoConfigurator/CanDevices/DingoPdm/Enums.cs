@@ -163,6 +163,10 @@ namespace CanDevices.DingoPdm
         Output8,
         WiperSlow,
         WiperFast,
+        Flasher1,
+        Flasher2,
+        Flasher3,
+        Flasher4,
         AlwaysOn
     }
 

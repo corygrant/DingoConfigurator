@@ -1006,21 +1006,6 @@
                         <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
                     </DataGridTemplateColumn.CellStyle>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn  Header="Output" 
-                                         Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox HorizontalContentAlignment="Center"
-                                      ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
-                                      SelectedValue="{Binding Output, UpdateSourceTrigger=PropertyChanged}"
-                                      BorderThickness="0">
-                            </ComboBox>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                    <DataGridTemplateColumn.CellStyle>
-                        <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
-                    </DataGridTemplateColumn.CellStyle>
-                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="On Time [s]" 
                                     Width="120" 
                                     MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
