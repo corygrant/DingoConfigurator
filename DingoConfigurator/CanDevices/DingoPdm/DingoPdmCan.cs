@@ -18,7 +18,7 @@ namespace CanDevices.DingoPdm
     {
         private const int _minMajorVersion = 0;
         private const int _minMinorVersion = 3;
-        private const int _minBuildVersion = 0;
+        private const int _minBuildVersion = 1;
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -618,9 +618,9 @@ namespace CanDevices.DingoPdm
                         Outputs[index].CurrentLimit = data[3];
                         Outputs[index].ResetCountLimit = (data[4] & 0xF0) >> 4;
                         Outputs[index].ResetMode = (ResetMode)(data[4] & 0x0F);
-                        Outputs[index].ResetTime = data[5] * 10;
+                        Outputs[index].ResetTime = data[5] / 10.0;
                         Outputs[index].InrushCurrentLimit = data[6];
-                        Outputs[index].InrushTime = data[7] * 10;
+                        Outputs[index].InrushTime = data[7] / 10.0;
                     }
 
                     foreach (var msg in queue)
@@ -678,8 +678,8 @@ namespace CanDevices.DingoPdm
                         Flashers[index].Single = Convert.ToBoolean((data[1] & 0x02) >> 1);
                         Flashers[index].Input = (VarMap)(data[2]);
                         Flashers[index].Output = (VarMap)(data[3] + Convert.ToInt16(VarMap.Output1));
-                        Flashers[index].OnTime = data[4] * 10;
-                        Flashers[index].OffTime = data[5] * 10;
+                        Flashers[index].OnTime = data[4] / 10.0;
+                        Flashers[index].OffTime = data[5] / 10.0;
                     }
 
                     foreach (var msg in queue)
@@ -744,12 +744,12 @@ namespace CanDevices.DingoPdm
                     break;
 
                 case MessagePrefix.WiperDelay:
-                    Wipers[0].IntermitTime[0] = data[1] * 100;
-                    Wipers[0].IntermitTime[1] = data[2] * 100;
-                    Wipers[0].IntermitTime[2] = data[3] * 100;
-                    Wipers[0].IntermitTime[3] = data[4] * 100;
-                    Wipers[0].IntermitTime[4] = data[5] * 100;
-                    Wipers[0].IntermitTime[5] = data[6] * 100;
+                    Wipers[0].IntermitTime[0] = data[1] / 10.0;
+                    Wipers[0].IntermitTime[1] = data[2] / 10.0;
+                    Wipers[0].IntermitTime[2] = data[3] / 10.0;
+                    Wipers[0].IntermitTime[3] = data[4] / 10.0;
+                    Wipers[0].IntermitTime[4] = data[5] / 10.0;
+                    Wipers[0].IntermitTime[5] = data[6] / 10.0;
 
                     foreach (var msg in queue)
                     {
@@ -1152,9 +1152,9 @@ namespace CanDevices.DingoPdm
                         Convert.ToByte(output.CurrentLimit), //Byte 3 
                         Convert.ToByte((Convert.ToByte(output.ResetCountLimit) << 4) +
                         (Convert.ToByte(output.ResetMode) & 0x0F)), //Byte 4
-                        Convert.ToByte(output.ResetTime / 10), //Byte 5
+                        Convert.ToByte(output.ResetTime * 10), //Byte 5
                         Convert.ToByte(output.InrushCurrentLimit), //Byte 6 
-                        Convert.ToByte(output.InrushTime / 10) } //Byte 7
+                        Convert.ToByte(output.InrushTime * 10) } //Byte 7
                     },
                     MsgDescription = $"Output{output.Number}"
                 });
@@ -1218,8 +1218,8 @@ namespace CanDevices.DingoPdm
                         (Convert.ToByte(flash.Enabled))), //Byte 1
                         Convert.ToByte(flash.Input), //Byte 2
                         Convert.ToByte(flashOut), //Byte 3
-                        Convert.ToByte(flash.OnTime / 10), //Byte 4
-                        Convert.ToByte(flash.OffTime / 10), //Byte 5
+                        Convert.ToByte(flash.OnTime * 10), //Byte 4
+                        Convert.ToByte(flash.OffTime * 10), //Byte 5
                         0, 0 }
                     },
                     MsgDescription = $"Flasher{flash.Number}"
@@ -1318,12 +1318,12 @@ namespace CanDevices.DingoPdm
                     Len = 7,
                     Payload = new byte[] {
                     Convert.ToByte('Y'), //Byte 0 
-                    Convert.ToByte(Wipers[0].IntermitTime[0] / 100), //Byte 1
-                    Convert.ToByte(Wipers[0].IntermitTime[1] / 100), //Byte 2
-                    Convert.ToByte(Wipers[0].IntermitTime[2] / 100), //Byte 3
-                    Convert.ToByte(Wipers[0].IntermitTime[3] / 100), //Byte 4
-                    Convert.ToByte(Wipers[0].IntermitTime[4] / 100), //Byte 5
-                    Convert.ToByte(Wipers[0].IntermitTime[5] / 100), //Byte 6
+                    Convert.ToByte(Wipers[0].IntermitTime[0] * 10), //Byte 1
+                    Convert.ToByte(Wipers[0].IntermitTime[1] * 10), //Byte 2
+                    Convert.ToByte(Wipers[0].IntermitTime[2] * 10), //Byte 3
+                    Convert.ToByte(Wipers[0].IntermitTime[3] * 10), //Byte 4
+                    Convert.ToByte(Wipers[0].IntermitTime[4] * 10), //Byte 5
+                    Convert.ToByte(Wipers[0].IntermitTime[5] * 10), //Byte 6
                     0 }
                 },
                 MsgDescription = "WiperDelay"

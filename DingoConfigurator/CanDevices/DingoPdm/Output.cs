@@ -80,9 +80,9 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private double _currentLimit;
+        private int _currentLimit;
         [JsonPropertyName("currentLimit")]
-        public double CurrentLimit
+        public int CurrentLimit
         {
             get => _currentLimit;
             set
@@ -140,9 +140,9 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private int _resetTime;
+        private double _resetTime;
         [JsonPropertyName("resetTime")]
-        public int ResetTime
+        public double ResetTime
         {
             get => _resetTime;
             set
@@ -155,9 +155,9 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private double _inrushCurrentLimit;
+        private int _inrushCurrentLimit;
         [JsonPropertyName("inrushCurrentLimit")]
-        public double InrushCurrentLimit
+        public int InrushCurrentLimit
         {
             get => _inrushCurrentLimit;
             set
@@ -170,9 +170,9 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private int _inrushTime;
+        private double _inrushTime;
         [JsonPropertyName("inrushTime")]
-        public int InrushTime
+        public double InrushTime
         {
             get => _inrushTime;
             set
@@ -239,7 +239,7 @@ namespace CanDevices.DingoPdm
             if (input == string.Empty) return new ValidationResult(false, "Entry is required");
             if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
             if (proposedValue < 0.00) return new ValidationResult(false, "Value must be zero or greater");
-            if (proposedValue > 2500.00) return new ValidationResult(false, "Value must less than or equal to 2500");
+            if (proposedValue > 25.50) return new ValidationResult(false, "Value must less than or equal to 25.5");
             return new ValidationResult(true, null);
         }
     }
@@ -267,7 +267,7 @@ namespace CanDevices.DingoPdm
             if (input == string.Empty) return new ValidationResult(false, "Entry is required");
             if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
             if (proposedValue < 0.00) return new ValidationResult(false, "Value must be zero or greater");
-            if (proposedValue > 2500.00) return new ValidationResult(false, "Value must less than or equal to 2500");
+            if (proposedValue > 25.50) return new ValidationResult(false, "Value must less than or equal to 25.5");
             return new ValidationResult(true, null);
         }
     }

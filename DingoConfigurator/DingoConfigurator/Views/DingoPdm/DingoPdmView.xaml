@@ -114,7 +114,7 @@
 
             <TextBlock Grid.Row="0"
                        Grid.Column="2"
-                       Text="Total Current (A)"
+                       Text="Total Current [A]"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
                        Padding="5" />
@@ -131,7 +131,7 @@
 
             <TextBlock Grid.Row="1"
                        Grid.Column="0"
-                       Text="Battery Voltage (V)"
+                       Text="Battery Voltage [V]"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
                        Padding="5" />
@@ -148,7 +148,7 @@
 
             <TextBlock Grid.Row="1"
                        Grid.Column="2"
-                       Text="Board Temperature (°F)"
+                       Text="Board Temperature [°F]"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
                        Padding="5" />
@@ -458,7 +458,7 @@
                         <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
                     </DataGridTemplateColumn.CellStyle>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Reset&#x0a;Time [ms]"
+                <DataGridTextColumn Header="Reset&#x0a;Time [s]"
                                     Width="100"
                                     MinWidth="100"
                                     HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">        
@@ -504,7 +504,7 @@
                         <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
                     </DataGridTextColumn.CellStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Inrush&#x0a;Time [ms]"
+                <DataGridTextColumn Header="Inrush&#x0a;Time [s]"
                                     Width="100"
                                     MinWidth="100"
                                     HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">

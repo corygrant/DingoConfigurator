@@ -8,7 +8,7 @@ namespace CanDevices.DingoPdm
         public Wiper()
         {
             SpeedMap = new WiperSpeed[8];
-            IntermitTime = new int[6];
+            IntermitTime = new double[6];
         }
 
         private bool _enabled;
@@ -295,9 +295,9 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private int[] _intermitTime;
+        private double[] _intermitTime;
         [JsonPropertyName("intermitTime")]
-        public int[] IntermitTime
+        public double[] IntermitTime
         {
             get => _intermitTime;
             set
@@ -333,7 +333,7 @@ namespace CanDevices.DingoPdm
             if (input == string.Empty) return new ValidationResult(false, "Entry is required");
             if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
             if (proposedValue < 0.00) return new ValidationResult(false, "Value must be zero or greater");
-            if (proposedValue > 3000) return new ValidationResult(false, "Value must less than or equal to 3000");
+            if (proposedValue > 25.5) return new ValidationResult(false, "Value must less than or equal to 25.5");
             return new ValidationResult(true, null);
         }
     }

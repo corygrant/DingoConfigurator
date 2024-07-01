@@ -125,9 +125,9 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private int _onTime;
+        private double _onTime;
         [JsonPropertyName("onTime")]
-        public int OnTime
+        public double OnTime
         {
             get => _onTime;
             set
@@ -140,9 +140,9 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private int _offTime;
+        private double _offTime;
         [JsonPropertyName("offTime")]
-        public int OffTime
+        public double OffTime
         {
             get => _offTime;
             set
@@ -165,7 +165,7 @@ namespace CanDevices.DingoPdm
             if (input == string.Empty) return new ValidationResult(false, "Entry is required");
             if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
             if (proposedValue < 0.00) return new ValidationResult(false, "Value must be zero or greater");
-            if (proposedValue > 3000) return new ValidationResult(false, "Value must less than or equal to 3000");
+            if (proposedValue > 25.5) return new ValidationResult(false, "Value must less than or equal to 25.5");
             return new ValidationResult(true, null);
         }
     }

@@ -808,7 +808,7 @@
                   CanUserSortColumns="False"
                   Grid.Row="8">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Wiper Intermittent Time (ms)" IsReadOnly="True" Width="210" MinWidth="210" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTextColumn Header="Wiper Intermittent Time [s]" IsReadOnly="True" Width="210" MinWidth="210" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -1021,7 +1021,7 @@
                         <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
                     </DataGridTemplateColumn.CellStyle>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="On Time (ms)" 
+                <DataGridTextColumn Header="On Time [s]" 
                                     Width="120" 
                                     MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                     <DataGridTextColumn.Binding>
@@ -1040,7 +1040,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Off Time (ms)" 
+                <DataGridTextColumn Header="Off Time [s]" 
                                     Width="120" 
                                     MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                     <DataGridTextColumn.Binding>
