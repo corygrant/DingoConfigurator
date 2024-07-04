@@ -87,7 +87,7 @@
                             <Run Text="New"/>
                         </TextBlock>
                         <Popup IsOpen="{Binding IsConfirmNewConfigFileVisible}" Placement="Right">
-                            <Border BorderThickness="2" BorderBrush="Red">
+                            <Border BorderThickness="2" BorderBrush="Lime">
                             <StackPanel>
                                 <TextBlock Text="Clear all devices?" Margin="5"/>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -160,7 +160,7 @@
                             <Run Text="Read"/>
                         </TextBlock>
                         <Popup IsOpen="{Binding IsReadConfirmVisible}" Placement="Right">
-                            <Border BorderThickness="2" BorderBrush="Red">
+                            <Border BorderThickness="2" BorderBrush="Lime">
                                 <StackPanel>
                                     <TextBlock Text="Overwrite all values?" Margin="5"/>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
