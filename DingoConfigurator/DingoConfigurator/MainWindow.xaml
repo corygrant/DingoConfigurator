@@ -79,10 +79,26 @@
         <ToolBarTray Grid.Row="0">
             <ToolBar Band="1"
                      BandIndex="1">
-                <Button Content="New"
-                        Command="{Binding NewBtnCmd}"
+                <Button Command="{Binding NewBtnCmd}"
                         ToolTip="Clear devices and start a new configuration (CTRL+N)"
-                        ToolTipService.ShowOnDisabled="True"/>
+                        ToolTipService.ShowOnDisabled="True">
+                    <StackPanel>
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Run Text="New"/>
+                        </TextBlock>
+                        <Popup IsOpen="{Binding IsConfirmNewConfigFileVisible}" Placement="Right">
+                            <Border BorderThickness="2" BorderBrush="Red">
+                            <StackPanel>
+                                <TextBlock Text="Clear all devices?" Margin="5"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Content="Yes" Command="{Binding NewBtnConfirmCmd}" Margin="5"/>
+                                    <Button Content="No" Command="{Binding CancelConfirmCmd}" Margin="5"/>
+                                </StackPanel>
+                            </StackPanel>
+                            </Border>
+                        </Popup>
+                    </StackPanel>
+                </Button>
                 <Button Content="Open"
                         Command="{Binding OpenBtnCmd}" 
                         ToolTip="Open an existing configuration file (.json) (CTRL+O)"
@@ -136,10 +152,26 @@
             </ToolBar>
             <ToolBar Band="1"
                      BandIndex="3">
-                <Button Content="Read"
-                        Command="{Binding ReadBtnCmd}"
+                <Button Command="{Binding ReadBtnCmd}"
                         ToolTip="Read settings from the selected device (CTRL+R)"
-                        ToolTipService.ShowOnDisabled="True"/>
+                        ToolTipService.ShowOnDisabled="True">
+                    <StackPanel>
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Run Text="Read"/>
+                        </TextBlock>
+                        <Popup IsOpen="{Binding IsReadConfirmVisible}" Placement="Right">
+                            <Border BorderThickness="2" BorderBrush="Red">
+                                <StackPanel>
+                                    <TextBlock Text="Overwrite all values?" Margin="5"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="Yes" Command="{Binding ReadBtnConfirmCmd}" Margin="5"/>
+                                        <Button Content="No" Command="{Binding CancelConfirmCmd}" Margin="5"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </Popup>
+                    </StackPanel>
+                </Button>
                 <Button Content="Write"
                         Command="{Binding WriteBtnCmd}"
                         ToolTip="Write settings to the selected device (CTRL+W)"

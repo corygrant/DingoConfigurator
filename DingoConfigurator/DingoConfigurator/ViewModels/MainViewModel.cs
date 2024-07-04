@@ -84,6 +84,7 @@ namespace DingoConfigurator
 
             //Set Button Commands
             NewBtnCmd = new RelayCommand(NewConfigFile, CanNewConfigFile);
+            NewBtnConfirmCmd = new RelayCommand(NewConfigFileConfirm, CanNewConfigFile);
             OpenBtnCmd = new RelayCommand(OpenConfigFile, CanOpenConfigFile);
             SaveBtnCmd = new RelayCommand(SaveConfigFile, CanSaveConfigFile);
             SaveAsBtnCmd = new RelayCommand(SaveAsConfigFile, CanSaveAsConfigFile);
@@ -91,12 +92,14 @@ namespace DingoConfigurator
             DisconnectBtnCmd = new RelayCommand(Disconnect, CanDisconnect);
             RefreshComPortsBtnCmd = new RelayCommand(RefreshComPorts, CanRefreshComPorts);
             ReadBtnCmd = new RelayCommand(Read, CanRead);
+            ReadBtnConfirmCmd = new RelayCommand(ReadConfirm, CanRead);
             WriteBtnCmd = new RelayCommand(Write, CanWrite);
             BurnBtnCmd = new RelayCommand(Burn, CanBurn);
             SleepBtnCmd = new RelayCommand(Sleep, CanSleep);
             AddDeviceBtnCmd = new RelayCommand(AddDevice, CanAddDevice);
             UpdateDeviceBtnCmd = new RelayCommand(UpdateDevice, CanUpdateDevice);
             RemoveDeviceBtnCmd = new RelayCommand(RemoveDevice, CanRemoveDevice);
+            CancelConfirmCmd = new RelayCommand(CancelConfirm, CanCancelConfirm);
 
             DeviceName = String.Empty;
 
@@ -376,7 +379,7 @@ namespace DingoConfigurator
 
         private void Read(object parameter)
         {
-            _canComms.Read(SelectedCanDevice);
+            IsReadConfirmVisible = true;
         }
 
         private bool CanRead(object parameter)
@@ -385,6 +388,23 @@ namespace DingoConfigurator
                 (SelectedCanDevice != null) &&
                 (SelectedCanDevice.IsConnected) &&
                 (SelectedCanDevice.GetType() == typeof(DingoPdmCan));
+        }
+
+        private void ReadConfirm(object parameter)
+        {
+            IsReadConfirmVisible = false;
+            _canComms.Read(SelectedCanDevice);
+        }
+
+        private bool _isReadConfirmVisible;
+        public bool IsReadConfirmVisible
+        {
+            get => _isReadConfirmVisible;
+            set
+            {
+                _isReadConfirmVisible = value;
+                OnPropertyChanged(nameof(IsReadConfirmVisible));
+            }
         }
 
         private void Write(object parameter)
@@ -434,6 +454,29 @@ namespace DingoConfigurator
 
         private void NewConfigFile(object parameter)
         {
+            IsConfirmNewConfigFileVisible = true;
+        }
+
+        private bool CanNewConfigFile(object parameter)
+        {
+            return (_canComms.CanDevices.Count > 0);
+        }
+
+        private bool _isConfirmNewConfigFileVisible;
+        public bool IsConfirmNewConfigFileVisible
+        {
+            get => _isConfirmNewConfigFileVisible;
+            set
+            {
+                _isConfirmNewConfigFileVisible = value;
+                OnPropertyChanged(nameof(IsConfirmNewConfigFileVisible));
+            }
+        }
+
+        private void NewConfigFileConfirm(object parameter)
+        {
+            IsConfirmNewConfigFileVisible = false;
+
             //Clear devices
             _canComms.Disconnect();
             _canComms.CanDevices.Clear();
@@ -443,9 +486,15 @@ namespace DingoConfigurator
             ConfigFileOpen = false;
         }
 
-        private bool CanNewConfigFile(object parameter)
+        private void CancelConfirm(object parameter)
         {
-            return (_canComms.CanDevices.Count > 0);
+            IsConfirmNewConfigFileVisible = false;
+            IsReadConfirmVisible = false;
+        }
+
+        private bool CanCancelConfirm(object parameter)
+        {
+            return true;
         }
 
         private void OpenConfigFile(object parameter)
@@ -696,6 +745,7 @@ namespace DingoConfigurator
 
         #region Buttons
         public ICommand NewBtnCmd { get; set; }
+        public ICommand NewBtnConfirmCmd { get; set; }
         public ICommand OpenBtnCmd { get; set; }
         public ICommand SaveBtnCmd { get; set; }
         public ICommand SaveAsBtnCmd { get; set; }
@@ -703,9 +753,11 @@ namespace DingoConfigurator
         public ICommand DisconnectBtnCmd { get; set; }
         public ICommand RefreshComPortsBtnCmd { get; set; }
         public ICommand ReadBtnCmd { get; set; }
+        public ICommand ReadBtnConfirmCmd { get; set; }
         public ICommand WriteBtnCmd { get; set; }
         public ICommand BurnBtnCmd { get; set; }
         public ICommand SleepBtnCmd { get; set;}
+        public ICommand CancelConfirmCmd { get; set; }
         private string _sleepBtnContent;
         public string SleepBtnContent
         {
