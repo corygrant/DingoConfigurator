@@ -9,13 +9,13 @@
              d:DesignHeight="800" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="6*"/>
+            <RowDefinition Height="Auto" MinHeight="220"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="6*"/>
+            <RowDefinition Height="Auto" MinHeight="220"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="6*"/>
+            <RowDefinition Height="Auto" MinHeight="220"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <oxy:PlotView Grid.Row="0"
                       Model="{Binding CurrentOutputPlotModel}"
@@ -84,7 +84,12 @@
                 </ControlTemplate>
             </oxy:PlotView.DefaultTrackerTemplate>
         </oxy:PlotView>
-        <Separator Grid.Row="5" Height="3" Background="White"/>
+        <GridSplitter     Grid.Row="5"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Center"
+                          Background="White" 
+                          ShowsPreview="True"
+                          Height="3"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="40" Grid.Row="6">
             <TextBox Grid.Column="0"
                      Margin="20 0 20 0"

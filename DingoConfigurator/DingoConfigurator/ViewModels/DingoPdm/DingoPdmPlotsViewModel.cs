@@ -56,7 +56,8 @@ namespace DingoConfigurator.ViewModels
 
             _pdm.PropertyChanged += _pdm_PropertyChanged;
 
-            CurrentOutputPlotModel = new PlotModel { 
+            CurrentOutputPlotModel = new PlotModel
+            {
                 Title = "Current Output",
                 TextColor = OxyColors.White,
                 TitleColor = OxyColors.White,
@@ -95,10 +96,16 @@ namespace DingoConfigurator.ViewModels
 
             CurrentOutputPlotModel.Axes.Add(currentAxis);
             CurrentOutputPlotModel.Axes.Add(currentTimeAxis);
-             
+
             foreach (var output in _pdm.Outputs)
             {
                 CurrentOutputPlotModel.Series.Add(new LineSeries());
+            }
+
+            for (int i = 0; i < _pdm.Outputs.Count; i++)
+            {
+                LineSeries series = (LineSeries)CurrentOutputPlotModel.Series[i];
+                series.Title = $"O{i}: {_pdm.Outputs[i].Name} Current";
             }
 
 
@@ -148,9 +155,21 @@ namespace DingoConfigurator.ViewModels
                 StatePlotModel.Series.Add(new LineSeries());
             }
 
+            for (int i = 0; i < _pdm.Outputs.Count; i++)
+            {
+                LineSeries series = (LineSeries)StatePlotModel.Series[i];
+                series.Title = $"O{i}: {_pdm.Outputs[i].Name} State";
+            }
+
             foreach (var digInput in _pdm.DigitalInputs)
             {
                 StatePlotModel.Series.Add(new LineSeries());
+            }
+
+            for (int i = 0; i < _pdm.DigitalInputs.Count; i++)
+            {
+                LineSeries series = (LineSeries)StatePlotModel.Series[8 + i];
+                series.Title = $"I{i}: {_pdm.DigitalInputs[i].Name}";
             }
 
             foreach (var canInput in _pdm.CanInputs)
@@ -158,11 +177,22 @@ namespace DingoConfigurator.ViewModels
                 StatePlotModel.Series.Add(new LineSeries());
             }
 
+            for (int i = 0; i < _pdm.CanInputs.Count; i++)
+            {
+                LineSeries series = (LineSeries)StatePlotModel.Series[10 + i];
+                series.Title = $"CI{i}: {_pdm.CanInputs[i].Name}";
+            }
+
             foreach (var virtInput in _pdm.VirtualInputs)
             {
                 StatePlotModel.Series.Add(new LineSeries());
             }
 
+            for (int i = 0; i < _pdm.VirtualInputs.Count; i++)
+            {
+                LineSeries series = (LineSeries)StatePlotModel.Series[42 + i];
+                series.Title = $"VI{i}: {_pdm.VirtualInputs[i].Name}";
+            }
 
             BatteryPlotModel = new PlotModel
             {
@@ -205,6 +235,7 @@ namespace DingoConfigurator.ViewModels
             BatteryPlotModel.Axes.Add(batteryTimeAxis);
 
             BatteryPlotModel.Series.Add(new LineSeries());
+            BatteryPlotModel.Series[0].Title = "Battery Voltage";
 
             _zeroTime = DateTime.Now;
 
@@ -253,9 +284,9 @@ namespace DingoConfigurator.ViewModels
             _lastBatteryTimeZoomMin = BatteryPlotModel.Axes[1].ActualMinimum;
             _lastBatteryTimeZoomMax = BatteryPlotModel.Axes[1].ActualMaximum;
 
-            for (int i=0; i< CurrentOutputPlotModel.Series.Count; i++)
+            for (int i = 0; i < CurrentOutputPlotModel.Series.Count; i++)
             {
-               
+
                 LineSeries series = (LineSeries)CurrentOutputPlotModel.Series[i];
                 if (series == null) return;
 
@@ -271,12 +302,12 @@ namespace DingoConfigurator.ViewModels
 
                 series.Points.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), val));
                 //if (series.Points.Count > 10000)
-               // {
-               //     series.Points.RemoveAt(0);
-               // }
+                // {
+                //     series.Points.RemoveAt(0);
+                // }
             }
 
-            for(int i=0; i< StatePlotModel.Series.Count; i++)
+            for (int i = 0; i < StatePlotModel.Series.Count; i++)
             {
                 LineSeries series = (LineSeries)StatePlotModel.Series[i];
                 if (series == null) return;
@@ -288,42 +319,42 @@ namespace DingoConfigurator.ViewModels
                 }
                 else
                 {
-                    if((i >= 0) && (i < 8))
+                    if ((i >= 0) && (i < 8))
                     {
                         val = Convert.ToInt16(_pdm.Outputs[i].State == OutState.On);
                     }
 
                     if ((i >= 8) && (i < 10))
                     {
-                        val = Convert.ToInt16(_pdm.DigitalInputs[i-8].State);
+                        val = Convert.ToInt16(_pdm.DigitalInputs[i - 8].State);
                     }
 
                     if ((i >= 10) && (i < 42))
                     {
-                        val = Convert.ToInt16(_pdm.CanInputs[i-10].Value);
+                        val = Convert.ToInt16(_pdm.CanInputs[i - 10].Value);
                     }
 
                     if ((i >= 42) && (i < 58))
                     {
-                        val = Convert.ToInt16(_pdm.CanInputs[i-42].Value);
+                        val = Convert.ToInt16(_pdm.CanInputs[i - 42].Value);
                     }
                 }
 
                 series.Points.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), val));
-               // if (series.Points.Count > 10000)
-               // {
-              //      series.Points.RemoveAt(0);
-               // }
+                // if (series.Points.Count > 10000)
+                // {
+                //      series.Points.RemoveAt(0);
+                // }
             }
 
             LineSeries battSeries = (LineSeries)BatteryPlotModel.Series[0];
-            if(battSeries != null)
+            if (battSeries != null)
             {
                 battSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.BatteryVoltage));
-               // if (battSeries.Points.Count > 10000)
-              //  {
-              //      battSeries.Points.RemoveAt(0);
-              //  }
+                // if (battSeries.Points.Count > 10000)
+                //  {
+                //      battSeries.Points.RemoveAt(0);
+                //  }
             }
 
             CurrentOutputPlotModel.InvalidatePlot(true);
