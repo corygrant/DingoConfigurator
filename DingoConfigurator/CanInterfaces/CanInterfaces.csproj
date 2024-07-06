@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="InnoMakerUsb2CanLib">
+      <HintPath>..\InnoMaker\InnoMakerUsb2CanLib.dll</HintPath>
+    </Reference>
     <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.5.2.5\lib\net46\NLog.dll</HintPath>
     </Reference>
@@ -49,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CanInterfaceTypes.cs" />
+    <Compile Include="InnoMaker.cs" />
     <Compile Include="PCAN.cs" />
     <Compile Include="USB.cs" />
     <Compile Include="USB2CAN.cs" />
