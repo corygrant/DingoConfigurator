@@ -564,7 +564,11 @@ namespace DingoConfigurator
         {
             if (SelectedDeviceToAdd.Equals(Devices.CanMsgLog))
             {
-                _canComms.AddCanDevice(typeof(CanMsgLog), "CAN Msg Log", 9999);
+                if(DeviceName.Length == 0)
+                {
+                    DeviceName = "CAN Msg Log";
+                }
+                _canComms.AddCanDevice(typeof(CanMsgLog), DeviceName, 9999);
             }
 
             if (DeviceBaseId < 1) return;
@@ -573,11 +577,19 @@ namespace DingoConfigurator
 
             if (SelectedDeviceToAdd.Equals(Devices.dingoPDM))
             {
+                if (DeviceName.Length == 0)
+                {
+                    DeviceName = "Dingo PDM";
+                }
                 _canComms.AddCanDevice(typeof(DingoPdmCan), DeviceName, DeviceBaseId);
             }
 
             if (SelectedDeviceToAdd.Equals(Devices.CANBoard))
             {
+                if (DeviceName.Length == 0)
+                {
+                    DeviceName = "CAN Board";
+                }
                 _canComms.AddCanDevice(typeof(CanBoardCan), DeviceName, DeviceBaseId);
             }
 
@@ -590,6 +602,10 @@ namespace DingoConfigurator
 
             if (SelectedDeviceToAdd.Equals(Devices.SoftButtonBox))
             {
+                if (DeviceName.Length == 0)
+                {
+                    DeviceName = "Soft Button Box";
+                }
                 _canComms.AddCanDevice(typeof(SoftButtonBox), DeviceName, DeviceBaseId);
             }
         }
@@ -609,9 +625,9 @@ namespace DingoConfigurator
         private void UpdateDevice(object parameter)
         {
             if (SelectedCanDevice == null) return;
-            if (SelectedCanDevice.GetType() == typeof(CanMsgLog)) return;
-
+            
             SelectedCanDevice.Name = DeviceName;
+            if (SelectedCanDevice.GetType() == typeof(CanMsgLog)) return;
             if (SelectedCanDevice.BaseId != DeviceBaseId)
             {
                 _canComms.Update(SelectedCanDevice, DeviceBaseId);
@@ -622,7 +638,7 @@ namespace DingoConfigurator
         {
             if (SelectedCanDevice == null) return false;
 
-            if (SelectedCanDevice.GetType() == typeof(CanMsgLog)) return false;
+            if (SelectedCanDevice.GetType() == typeof(CanMsgLog)) return true;
 
             return (DeviceName.Length > 0) && (DeviceBaseId > 0) && (DeviceBaseId <= 2048);
         }

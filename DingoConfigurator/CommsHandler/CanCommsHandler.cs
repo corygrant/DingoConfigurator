@@ -403,7 +403,7 @@ namespace CommsHandler
 
             if (type == typeof(CanMsgLog))
             {
-                var newMsgLog = new CanMsgLog();
+                var newMsgLog = new CanMsgLog(name, baseId);
                 _canDevices.Add(newMsgLog);
                 OnPropertyChanged(nameof(CanDevices));
                 return newMsgLog;

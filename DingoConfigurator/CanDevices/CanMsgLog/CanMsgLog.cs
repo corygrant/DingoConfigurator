@@ -135,8 +135,10 @@ namespace CanDevices.CanMsgLog
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public CanMsgLog()
+        public CanMsgLog(string name, int baseId)
         {
+            _name = name;
+            _baseId = baseId;
             _allDataLock = new object();
             AllData = new ObservableCollection<CanMsgLogData>();
             BindingOperations.EnableCollectionSynchronization(_allData, _allDataLock);
