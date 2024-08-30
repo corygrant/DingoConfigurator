@@ -184,6 +184,26 @@
                         Command="{Binding SleepBtnCmd}"
                         ToolTip="Set the device to sleep mode (will auto wakeup on CAN or digital input)"
                         ToolTipService.ShowOnDisabled="True" />
+                <Button Command="{Binding FwUpdateBtnCmd}"
+                        ToolTip="Enter bootloader to update firmware"
+                        ToolTipService.ShowOnDisabled="True">
+                    <StackPanel>
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Run Text="FwUpdate"/>
+                        </TextBlock>
+                        <Popup IsOpen="{Binding IsFwUpdateConfirmVisible}" Placement="Right">
+                            <Border BorderThickness="2" BorderBrush="Lime">
+                                <StackPanel>
+                                    <TextBlock Text="Enter firmware update (bootloader)?" Margin="5"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="Yes" Command="{Binding FwUpdateBtnConfirmCmd}" Margin="5"/>
+                                        <Button Content="No" Command="{Binding CancelConfirmCmd}" Margin="5"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </Popup>
+                    </StackPanel>
+                </Button>
             </ToolBar>
         </ToolBarTray>
 

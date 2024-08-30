@@ -96,6 +96,8 @@ namespace DingoConfigurator
             WriteBtnCmd = new RelayCommand(Write, CanWrite);
             BurnBtnCmd = new RelayCommand(Burn, CanBurn);
             SleepBtnCmd = new RelayCommand(Sleep, CanSleep);
+            FwUpdateBtnCmd = new RelayCommand(FwUpdate, CanFwUpdate);
+            FwUpdateBtnConfirmCmd = new RelayCommand(FwUpdateConfirm, CanFwUpdate);
             AddDeviceBtnCmd = new RelayCommand(AddDevice, CanAddDevice);
             UpdateDeviceBtnCmd = new RelayCommand(UpdateDevice, CanUpdateDevice);
             RemoveDeviceBtnCmd = new RelayCommand(RemoveDevice, CanRemoveDevice);
@@ -450,6 +452,38 @@ namespace DingoConfigurator
                 (SelectedCanDevice.GetType() == typeof(DingoPdmCan));
         }
 
+        private void FwUpdate(object parameter)
+        {
+            IsFwUpdateConfirmVisible = true;
+        }
+
+        private bool CanFwUpdate(object parameter)
+        {
+            return _canComms.Connected &&
+                SelectedCan.Name.Equals("USB") &&
+                (SelectedCanDevice != null) &&
+                (SelectedCanDevice.IsConnected) &&
+                (SelectedCanDevice.GetType() == typeof(DingoPdmCan));
+        }
+
+        private void FwUpdateConfirm(object parameter)
+        {
+            IsFwUpdateConfirmVisible = false;
+            _canComms.FwUpdate(SelectedCanDevice);
+            
+        }
+
+        private bool _isFwUpdateConfirmVisible;
+        public bool IsFwUpdateConfirmVisible
+        {
+            get => _isFwUpdateConfirmVisible;
+            set
+            {
+                _isFwUpdateConfirmVisible = value;
+                OnPropertyChanged(nameof(IsFwUpdateConfirmVisible));
+            }
+        }
+
         private bool ConfigFileOpen { get; set; }
 
         private void NewConfigFile(object parameter)
@@ -773,6 +807,8 @@ namespace DingoConfigurator
         public ICommand WriteBtnCmd { get; set; }
         public ICommand BurnBtnCmd { get; set; }
         public ICommand SleepBtnCmd { get; set;}
+        public ICommand FwUpdateBtnCmd { get; set; }
+        public ICommand FwUpdateBtnConfirmCmd { get; set; }
         public ICommand CancelConfirmCmd { get; set; }
         private string _sleepBtnContent;
         public string SleepBtnContent

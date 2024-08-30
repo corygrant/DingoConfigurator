@@ -325,6 +325,34 @@ namespace CommsHandler
             });
         }
 
+        public async Task FwUpdate(ICanDevice canDevice)
+        {
+            await Task.Run(() =>
+            {
+                foreach (var cd in _canDevices)
+                {
+                    if ((canDevice == null) || canDevice.Equals(cd))
+                    {
+                        var msg = new CanDeviceResponse
+                        {
+                            Sent = false,
+                            Received = false,
+                            Data = new CanInterfaceData
+                            {
+                                Id = canDevice.BaseId - 1,
+                                Len = 6,
+                                Payload = new byte[] { Convert.ToByte('~'), 0x42, 0x4F, 0x4F, 0x54, 0x4C, 0, 0 }
+                            },
+                            MsgDescription = "Fw Update Request"
+                        };
+
+                        msg.DeviceBaseId = cd.BaseId;
+                        _can.Write(msg.Data);
+                    }
+                }
+            });
+        }
+
         private void CanDataReceived(object sender, CanDataEventArgs e)
         {
             ProcessMessage(e.canData);

@@ -18,7 +18,7 @@ namespace CanDevices.DingoPdm
     {
         private const int _minMajorVersion = 0;
         private const int _minMinorVersion = 3;
-        private const int _minBuildVersion = 2;
+        private const int _minBuildVersion = 5;
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
