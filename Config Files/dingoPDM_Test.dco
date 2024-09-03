@@ -31,7 +31,7 @@
           "number": 1,
           "currentLimit": 13,
           "resetCountLimit": 3,
-          "resetMode": 1,
+          "resetMode": 2,
           "resetTime": 3,
           "inrushCurrentLimit": 20,
           "inrushTime": 1,
@@ -796,86 +796,7 @@
       ]
     }
   ],
-  "canBoard": [
-    {
-      "name": "SteeringWheel",
-      "baseId": 1600,
-      "analogIn": [
-        {
-          "number": 1,
-          "name": ""
-        },
-        {
-          "number": 2,
-          "name": null
-        },
-        {
-          "number": 3,
-          "name": null
-        },
-        {
-          "number": 4,
-          "name": null
-        },
-        {
-          "number": 5,
-          "name": null
-        }
-      ],
-      "digitalIn": [
-        {
-          "number": 1,
-          "name": null
-        },
-        {
-          "number": 2,
-          "name": null
-        },
-        {
-          "number": 3,
-          "name": null
-        },
-        {
-          "number": 4,
-          "name": null
-        },
-        {
-          "number": 5,
-          "name": null
-        },
-        {
-          "number": 6,
-          "name": null
-        },
-        {
-          "number": 7,
-          "name": null
-        },
-        {
-          "number": 8,
-          "name": null
-        }
-      ],
-      "digitalOut": [
-        {
-          "number": 1,
-          "name": null
-        },
-        {
-          "number": 2,
-          "name": null
-        },
-        {
-          "number": 3,
-          "name": null
-        },
-        {
-          "number": 4,
-          "name": null
-        }
-      ]
-    }
-  ],
+  "canBoard": [],
   "dash": [],
   "sbb": [],
   "log": [
