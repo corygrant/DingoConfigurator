@@ -1,5 +1,6 @@
 ﻿using CanDevices;
 using CanDevices.DingoPdm;
+using CanDevices.dingoPdmMax;
 using CanDevices.CanBoard;
 using CanDevices.DingoDash;
 using CanInterfaces;
@@ -247,6 +248,48 @@ namespace DingoConfigurator
                     }
 
                     SelectedDeviceToAdd = Devices.dingoPDM;
+                }
+
+            }
+
+
+            if (e.NewValue.GetType() == typeof(dingoPdmMaxCan))
+            {
+                SelectedCanDevice = (dingoPdmMaxCan)e.NewValue;
+                CurrentViewModel = new dingoPdmMaxViewModel(this);
+                SelectedDeviceToAdd = Devices.dingoPDMMax;
+            }
+
+            if (e.NewValue.GetType() == typeof(CanDeviceSub))
+            {
+                CanDeviceSub sub = (CanDeviceSub)e.NewValue;
+
+                if (sub.CanDevice.GetType() == typeof(dingoPdmMaxCan))
+                {
+                    if (sub.Name.Equals("Settings"))
+                    {
+                        SelectedCanDevice = (dingoPdmMaxCan)sub.CanDevice;
+                        CurrentViewModel = new dingoPdmMaxSettingsViewModel(this);
+                    }
+
+                    SelectedDeviceToAdd = Devices.dingoPDMMax;
+                }
+
+            }
+
+            if (e.NewValue.GetType() == typeof(dingoPdmMaxPlot))
+            {
+                DingoPdmPlot plot = (DingoPdmPlot)e.NewValue;
+
+                if (plot.CanDevice.GetType() == typeof(dingoPdmMaxCan))
+                {
+                    if (plot.Name.Equals("Plots"))
+                    {
+                        SelectedCanDevice = (dingoPdmMaxCan)plot.CanDevice;
+                        CurrentViewModel = new DingoPdmPlotsViewModel(this);
+                    }
+
+                    SelectedDeviceToAdd = Devices.dingoPDMMax;
                 }
 
             }
@@ -613,9 +656,18 @@ namespace DingoConfigurator
             {
                 if (DeviceName.Length == 0)
                 {
-                    DeviceName = "Dingo PDM";
+                    DeviceName = "dingoPDM";
                 }
                 _canComms.AddCanDevice(typeof(DingoPdmCan), DeviceName, DeviceBaseId);
+            }
+
+            if (SelectedDeviceToAdd.Equals(Devices.dingoPDMMax))
+            {
+                if (DeviceName.Length == 0)
+                {
+                    DeviceName = "dingoPDM-Max";
+                }
+                _canComms.AddCanDevice(typeof(dingoPdmMaxCan), DeviceName, DeviceBaseId);
             }
 
             if (SelectedDeviceToAdd.Equals(Devices.CANBoard))
@@ -947,7 +999,8 @@ namespace DingoConfigurator
         CANBoard,
         //DingoDash,
         CanMsgLog,
-        SoftButtonBox
+        SoftButtonBox,
+        dingoPDMMax
     }
     #endregion
 }

@@ -14,6 +14,7 @@ using System.Runtime.InteropServices;
 using CanDevices.SoftButtonBox;
 using System.Management;
 using System.Reflection;
+using CanDevices.dingoPdmMax;
 
 namespace CommsHandler
 {
@@ -408,6 +409,14 @@ namespace CommsHandler
             if(type == typeof(DingoPdmCan))
             {
                 var newPdm = new DingoPdmCan(name, baseId);
+                _canDevices.Add(newPdm);
+                OnPropertyChanged(nameof(CanDevices));
+                return newPdm;
+            }
+
+            if (type == typeof(dingoPdmMaxCan))
+            {
+                var newPdm = new dingoPdmMaxCan(name, baseId);
                 _canDevices.Add(newPdm);
                 OnPropertyChanged(nameof(CanDevices));
                 return newPdm;

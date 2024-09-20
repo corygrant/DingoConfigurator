@@ -7,6 +7,7 @@
                  xmlns:sys="clr-namespace:System;assembly=mscorlib"
                  xmlns:cd="clr-namespace:CanDevices;assembly=CanDevices"
                  xmlns:pdm="clr-namespace:CanDevices.DingoPdm;assembly=CanDevices"
+                 xmlns:pdmMax="clr-namespace:CanDevices.dingoPdmMax;assembly=CanDevices"
                  xmlns:cb="clr-namespace:CanDevices.CanBoard;assembly=CanDevices"
                  xmlns:dash="clr-namespace:CanDevices.DingoDash;assembly=CanDevices"
                  xmlns:msglog="clr-namespace:CanDevices.CanMsgLog;assembly=CanDevices"
@@ -88,13 +89,13 @@
                         </TextBlock>
                         <Popup IsOpen="{Binding IsConfirmNewConfigFileVisible}" Placement="Right">
                             <Border BorderThickness="2" BorderBrush="Lime">
-                            <StackPanel>
-                                <TextBlock Text="Clear all devices?" Margin="5"/>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <Button Content="Yes" Command="{Binding NewBtnConfirmCmd}" Margin="5"/>
-                                    <Button Content="No" Command="{Binding CancelConfirmCmd}" Margin="5"/>
+                                <StackPanel>
+                                    <TextBlock Text="Clear all devices?" Margin="5"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="Yes" Command="{Binding NewBtnConfirmCmd}" Margin="5"/>
+                                        <Button Content="No" Command="{Binding CancelConfirmCmd}" Margin="5"/>
+                                    </StackPanel>
                                 </StackPanel>
-                            </StackPanel>
                             </Border>
                         </Popup>
                     </StackPanel>
@@ -221,6 +222,15 @@
                 <DataTemplate DataType="{x:Type vm:DingoPdmPlotsViewModel}">
                     <vw:DingoPdmPlotsView />
                 </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:dingoPdmMaxViewModel}">
+                    <vw:dingoPdmMaxView />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:dingoPdmMaxSettingsViewModel}">
+                    <vw:dingoPdmMaxSettingsView />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:dingoPdmMaxPlotsViewModel}">
+                    <vw:dingoPdmMaxPlotsView />
+                </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:CanBoardViewModel}">
                     <vw:CanBoardView />
                 </DataTemplate>
@@ -298,13 +308,13 @@
                                             Value="1.0" />
                                     <Setter TargetName="TypeImage"
                                             Property="Source"
-                                            Value="Icons\plot_1.png" />         
+                                            Value="Icons\plot_1.png" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding IsConnected}"
                                              Value="False">
                                     <Setter TargetName="TypeImage"
                                             Property="Opacity"
-                                            Value="0.5" />  
+                                            Value="0.5" />
                                     <Setter TargetName="TypeImage"
                                             Property="Source"
                                             Value="Icons\plot_0.png" />
@@ -339,6 +349,37 @@
                                     <Setter TargetName="TypeImage"
                                             Property="Source"
                                             Value="Icons\pdm_0.png" />
+                                </DataTrigger>
+                            </HierarchicalDataTemplate.Triggers>
+                        </HierarchicalDataTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type pdmMax:dingoPdmMaxCan}"
+                                                  ItemsSource="{Binding SubPages}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image  x:Name="TypeImage"
+                                        Width="20"
+                                        Height="20"
+                                        Margin="2 2 5 2" />
+                                <TextBlock Text="{Binding Name}"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                            <HierarchicalDataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsConnected}"
+                                            Value="True">
+                                    <Setter TargetName="TypeImage"
+                                                        Property="Opacity"
+                                                        Value="1.0" />
+                                    <Setter TargetName="TypeImage"
+                                                        Property="Source"
+                                                        Value="Icons\pdm_max_1.png" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsConnected}"
+                                                         Value="False">
+                                    <Setter TargetName="TypeImage"
+                                                    Property="Opacity"
+                                                    Value="0.5" />
+                                    <Setter TargetName="TypeImage"
+                                                Property="Source"
+                                                Value="Icons\pdm_max_0.png" />
                                 </DataTrigger>
                             </HierarchicalDataTemplate.Triggers>
                         </HierarchicalDataTemplate>
