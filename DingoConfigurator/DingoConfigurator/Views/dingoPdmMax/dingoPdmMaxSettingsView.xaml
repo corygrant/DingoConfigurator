@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:cd="clr-namespace:CanDevices.dingoPdmMax;assembly=CanDevices"
+             xmlns:cd="clr-namespace:CanDevices.DingoPdm;assembly=CanDevices"
              xmlns:local="clr-namespace:DingoConfigurator.Views"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="400">

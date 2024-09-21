@@ -16,13 +16,21 @@ namespace CanDevices.DingoPdm
 {
     public class DingoPdmCan : NotifyPropertyChangedBase, ICanDevice
     {
-        private const int _minMajorVersion = 0;
-        private const int _minMinorVersion = 3;
-        private const int _minBuildVersion = 5;
+        protected virtual int _minMajorVersion { get; } = 0;
+        protected virtual int _minMinorVersion { get; } = 3;
+        protected virtual int _minBuildVersion { get; } = 5;
 
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        protected virtual int _numDigitalInputs { get; } = 2;
+        protected virtual int _numOutputs { get; } = 8;
+        protected virtual int _numCanInputs { get; } = 32;
+        protected virtual int _numVirtualInputs { get; } = 16;
+        protected virtual int _numFlashers { get; } = 4;
 
-        private string _name;
+        protected static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+        protected int _pdmType;
+
+        protected string _name;
         [JsonPropertyName("name")]
         public string Name
         {
@@ -37,7 +45,7 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private int _baseId;
+        protected int _baseId;
         [JsonPropertyName("baseId")]
         public int BaseId
         {
@@ -52,12 +60,12 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private List<CanDeviceSub> _subPages = new List<CanDeviceSub>();
+        protected List<CanDeviceSub> _subPages = new List<CanDeviceSub>();
         [JsonIgnore]
         public List<CanDeviceSub> SubPages
         {
             get => _subPages;
-            private set
+            protected set
             {
                 if (_subPages != value)
                 {
@@ -67,11 +75,11 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private DateTime _lastRxTime { get; set; }
+        protected DateTime _lastRxTime { get; set; }
         [JsonIgnore]
         public DateTime LastRxTime { get => _lastRxTime; }
 
-        private bool _isConnected;
+        protected bool _isConnected;
         [JsonIgnore]
         public bool IsConnected
         {
@@ -92,7 +100,7 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private ObservableCollection<Input> _digitalInputs { get; set; }
+        protected ObservableCollection<Input> _digitalInputs { get; set; }
         [JsonPropertyName("digitalInputs")]
         public ObservableCollection<Input> DigitalInputs
         {
@@ -107,7 +115,7 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private DeviceState _deviceState;
+        protected DeviceState _deviceState;
         [JsonIgnore]
         public DeviceState DeviceState
         {
@@ -122,12 +130,12 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private double _totalCurrent;
+        protected double _totalCurrent;
         [JsonIgnore]
         public double TotalCurrent
         {
             get => _totalCurrent;
-            private set
+            protected set
             {
                 if (_totalCurrent != value)
                 {
@@ -137,12 +145,12 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private double _batteryVoltage;
+        protected double _batteryVoltage;
         [JsonIgnore]
         public double BatteryVoltage
         {
             get => _batteryVoltage;
-            private set
+            protected set
             {
                 if (_batteryVoltage != value)
                 {
@@ -152,12 +160,12 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private double _boardTempC;
+        protected double _boardTempC;
         [JsonIgnore]
         public double BoardTempC
         {
             get => _boardTempC;
-            private set
+            protected set
             {
                 if (_boardTempC != value)
                 {
@@ -167,12 +175,12 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private double _boardTempF;
+        protected double _boardTempF;
         [JsonIgnore]
         public double BoardTempF
         {
             get => _boardTempF;
-            private set
+            protected set
             {
                 if (_boardTempF != value)
                 {
@@ -182,12 +190,12 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private string _version;
+        protected string _version;
         [JsonIgnore]
         public string Version
         {
             get => _version;
-            private set
+            protected set
             {
                 if (value != _version)
                 {
@@ -197,7 +205,7 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private CanSpeed _baudRate;
+        protected CanSpeed _baudRate;
         public CanSpeed BaudRate
         {
             get { return _baudRate; }
@@ -217,7 +225,7 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private ObservableCollection<Output> _outputs;
+        protected ObservableCollection<Output> _outputs;
         [JsonPropertyName("outputs")]
         public ObservableCollection<Output> Outputs
         {
@@ -232,7 +240,7 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private ObservableCollection<CanInput> _canInputs;
+        protected ObservableCollection<CanInput> _canInputs;
         [JsonPropertyName("canInputs")]
         public ObservableCollection<CanInput> CanInputs
         {
@@ -247,7 +255,7 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private ObservableCollection<VirtualInput> _virtualInputs;
+        protected ObservableCollection<VirtualInput> _virtualInputs;
         [JsonPropertyName("virtualInputs")]
         public ObservableCollection<VirtualInput> VirtualInputs
         {
@@ -262,7 +270,7 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private ObservableCollection<Wiper> _wipers;
+        protected ObservableCollection<Wiper> _wipers;
         [JsonPropertyName("wipers")]
         public ObservableCollection<Wiper> Wipers
         {
@@ -277,7 +285,7 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private ObservableCollection<Flasher> _flashers;
+        protected ObservableCollection<Flasher> _flashers;
         [JsonPropertyName("flashers")]
         public ObservableCollection<Flasher> Flashers
         {
@@ -292,7 +300,7 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private ObservableCollection<StarterDisable> _starterDisable;
+        protected ObservableCollection<StarterDisable> _starterDisable;
         [JsonPropertyName("starterDisable")]
         public ObservableCollection<StarterDisable> StarterDisable
         {
@@ -312,7 +320,7 @@ namespace CanDevices.DingoPdm
             Name = name;
             BaseId = baseId;
             DigitalInputs = new ObservableCollection<Input>();
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < _numDigitalInputs; i++)
             {
                 DigitalInputs.Add(new Input());
                 DigitalInputs[i].Number = i + 1;
@@ -323,21 +331,21 @@ namespace CanDevices.DingoPdm
             BoardTempC = 0;
 
             Outputs = new ObservableCollection<Output>();
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < _numOutputs; i++)
             {
                 Outputs.Add(new Output());
                 Outputs[i].Number = i + 1;
             }
 
             CanInputs = new ObservableCollection<CanInput>();
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i < _numCanInputs; i++)
             {
                 CanInputs.Add(new CanInput());
                 CanInputs[i].Number = i + 1;
             }
 
             VirtualInputs = new ObservableCollection<VirtualInput>();
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < _numVirtualInputs; i++)
             {
                 VirtualInputs.Add(new VirtualInput());
                 VirtualInputs[i].Number = i + 1;
@@ -349,7 +357,7 @@ namespace CanDevices.DingoPdm
             };
 
             Flashers = new ObservableCollection<Flasher>();
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < _numFlashers; i++)
             {
                 Flashers.Add(new Flasher());
                 Flashers[i].Number = i + 1;
@@ -411,12 +419,13 @@ namespace CanDevices.DingoPdm
             return true;
         }
 
-        private void ReadMessage0(byte[] data)
+        protected void ReadMessage0(byte[] data)
         {
             DigitalInputs[0].State = Convert.ToBoolean(data[0] & 0x01);
             DigitalInputs[1].State = Convert.ToBoolean((data[0] >> 1) & 0x01);
 
-            DeviceState = (DeviceState)(data[1]);
+            DeviceState = (DeviceState)(data[1] & 0x0F);
+            _pdmType = (data[1] >> 4) & 0x0F;
 
             TotalCurrent = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
             BatteryVoltage = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
@@ -425,7 +434,7 @@ namespace CanDevices.DingoPdm
 
         }
 
-        private void ReadMessage1(byte[] data)
+        protected void ReadMessage1(byte[] data)
         {
             Outputs[0].Current = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
             Outputs[1].Current = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
@@ -433,7 +442,7 @@ namespace CanDevices.DingoPdm
             Outputs[3].Current = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
         }
 
-        private void ReadMessage2(byte[] data)
+        protected virtual void ReadMessage2(byte[] data)
         {
             Outputs[4].Current = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
             Outputs[5].Current = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
@@ -441,7 +450,7 @@ namespace CanDevices.DingoPdm
             Outputs[7].Current = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
         }
 
-        private void ReadMessage3(byte[] data)
+        protected virtual void ReadMessage3(byte[] data)
         {
             Outputs[0].State = (OutState)((data[0] & 0x0F));
             Outputs[1].State = (OutState)(data[0] >> 4);
@@ -468,7 +477,7 @@ namespace CanDevices.DingoPdm
             Flashers[3].InputValue = Convert.ToBoolean((data[6] >> 7) & 0x01);
         }
 
-        private void ReadMessage4(byte[] data)
+        protected virtual void ReadMessage4(byte[] data)
         {
             Outputs[0].ResetCount = data[0];
             Outputs[1].ResetCount = data[1];
@@ -480,7 +489,7 @@ namespace CanDevices.DingoPdm
             Outputs[7].ResetCount = data[7];
         }
 
-        private void ReadMessage5(byte[] data)
+        protected void ReadMessage5(byte[] data)
         {
             CanInputs[0].Value = data[0] & 0x01;
             CanInputs[1].Value = (data[0] >> 1) & 0x01;
@@ -538,7 +547,7 @@ namespace CanDevices.DingoPdm
         }
 
 
-        private void ReadSettingsResponse(byte[] data, List<CanDeviceResponse> queue)
+        protected void ReadSettingsResponse(byte[] data, List<CanDeviceResponse> queue)
         {
             //Response is lowercase version of set/get prefix
             MessagePrefix prefix = (MessagePrefix)Char.ToUpper(Convert.ToChar(data[0]));
@@ -586,7 +595,7 @@ namespace CanDevices.DingoPdm
                 case MessagePrefix.Input:
                     index = (data[1] & 0xF0) >> 4;
                     
-                    if (index >= 0 && index < 2)
+                    if (index >= 0 && index < _numDigitalInputs)
                     {
                         DigitalInputs[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
                         DigitalInputs[index].InvertInput = Convert.ToBoolean((data[1] & 0x08) >> 3);
@@ -611,7 +620,7 @@ namespace CanDevices.DingoPdm
                 case MessagePrefix.Output:
                     index = (data[1] & 0xF0) >> 4;
                     
-                    if (index >= 0 && index < 8)
+                    if (index >= 0 && index < _numOutputs)
                     {
                         Outputs[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
                         Outputs[index].Input = (VarMap)(data[2]);
@@ -639,7 +648,7 @@ namespace CanDevices.DingoPdm
                 case MessagePrefix.VirtualInput:
                     index = data[2];
                     
-                    if (index >= 0 && index < 16)
+                    if (index >= 0 && index < _numVirtualInputs)
                     {
                         VirtualInputs[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
                         VirtualInputs[index].Not0 = Convert.ToBoolean((data[1] & 0x02) >> 1);
@@ -672,7 +681,7 @@ namespace CanDevices.DingoPdm
                 case MessagePrefix.Flasher:
                     index = (data[1] & 0xF0) >> 4;
                     
-                    if (index >= 0 && index < 16)
+                    if (index >= 0 && index < _numFlashers)
                     {
                         Flashers[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
                         Flashers[index].Single = Convert.ToBoolean((data[1] & 0x02) >> 1);
@@ -788,7 +797,7 @@ namespace CanDevices.DingoPdm
 
                 case MessagePrefix.CANInput:
                     index = data[2];
-                    if (index >= 0 && index < 32)
+                    if (index >= 0 && index < _numCanInputs)
                     {
                         CanInputs[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
                         CanInputs[index].Mode = (InputMode)((data[1] & 0x06) >> 1);
@@ -866,7 +875,7 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private void ReadInfoWarnErrorMessage(byte[] data)
+        protected void ReadInfoWarnErrorMessage(byte[] data)
         {
             //Response is lowercase version of set/get prefix
             MessagePrefix prefix = (MessagePrefix)Char.ToUpper(Convert.ToChar(data[0]));
@@ -925,7 +934,7 @@ namespace CanDevices.DingoPdm
             });
 
             //Inputs
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < _numDigitalInputs; i++)
             {
                 msgs.Add(new CanDeviceResponse
                 {
@@ -944,7 +953,7 @@ namespace CanDevices.DingoPdm
             }
 
             //Outputs
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < _numOutputs; i++)
             {
                 msgs.Add(new CanDeviceResponse
                 {
@@ -963,7 +972,7 @@ namespace CanDevices.DingoPdm
             }
 
             //Virtual inputs
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < _numVirtualInputs; i++)
             {
                 msgs.Add(new CanDeviceResponse
                 {
@@ -982,7 +991,7 @@ namespace CanDevices.DingoPdm
             }
 
             //Flashers
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < _numFlashers; i++)
             {
                 msgs.Add(new CanDeviceResponse
                 {
@@ -1001,7 +1010,7 @@ namespace CanDevices.DingoPdm
             }
 
             //CAN inputs
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i < _numCanInputs; i++)
             {
                 msgs.Add(new CanDeviceResponse
                 {
@@ -1408,7 +1417,7 @@ namespace CanDevices.DingoPdm
             };
         }
 
-        private bool CheckVersion(int major, int minor, int build)
+        protected bool CheckVersion(int major, int minor, int build)
         {
             if (major > _minMajorVersion)
                 return true;

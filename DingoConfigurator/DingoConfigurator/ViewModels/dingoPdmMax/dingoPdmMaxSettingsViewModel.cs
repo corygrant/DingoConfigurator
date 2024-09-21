@@ -7,30 +7,10 @@ using System.Threading.Tasks;
 
 namespace DingoConfigurator.ViewModels
 {
-    public class dingoPdmMaxSettingsViewModel : ViewModelBase
+    public class dingoPdmMaxSettingsViewModel : DingoPdmSettingsViewModel
     {
-        private MainViewModel _vm;
-        private dingoPdmMaxCan _pdm;
-        public dingoPdmMaxCan Pdm { get { return _pdm; } }
-
-        public dingoPdmMaxSettingsViewModel(MainViewModel vm)
+        public dingoPdmMaxSettingsViewModel(MainViewModel vm) : base(vm)
         {
-            _vm = vm;
-
-            _pdm = (dingoPdmMaxCan)_vm.SelectedCanDevice;
-
-            _pdm.PropertyChanged += _pdm_PropertyChanged;
-        }
-
-        private void _pdm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            OnPropertyChanged(e.PropertyName);
-        }
-
-        public override void Dispose()
-        {
-            _pdm.PropertyChanged -= _pdm_PropertyChanged;
-            base.Dispose();
         }
     }
 }

@@ -84,16 +84,8 @@
     <Compile Include="CanMsgLog\CanMsgLog.cs" />
     <Compile Include="CanMsgLog\CanMsgLogData.cs" />
     <Compile Include="DingoDash\DingoDashCan.cs" />
-    <Compile Include="dingoPdmMax\CanInput.cs" />
     <Compile Include="dingoPdmMax\dingoPdmMaxCan.cs" />
     <Compile Include="dingoPdmMax\dingoPdmMaxPlot.cs" />
-    <Compile Include="dingoPdmMax\Enums.cs" />
-    <Compile Include="dingoPdmMax\Flasher.cs" />
-    <Compile Include="dingoPdmMax\Input.cs" />
-    <Compile Include="dingoPdmMax\Output.cs" />
-    <Compile Include="dingoPdmMax\StarterDisable.cs" />
-    <Compile Include="dingoPdmMax\VirtualInput.cs" />
-    <Compile Include="dingoPdmMax\Wiper.cs" />
     <Compile Include="DingoPdm\DingoPdmCan.cs" />
     <Compile Include="DingoPdm\CanInput.cs" />
     <Compile Include="DingoPdm\DingoPdmPlot.cs" />

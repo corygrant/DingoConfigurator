@@ -148,6 +148,7 @@
     <Compile Include="Views\DingoDash\DingoDashView.xaml.cs">
       <DependentUpon>DingoDashView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\dingoPdmMax\Converters.cs" />
     <Compile Include="Views\dingoPdmMax\dingoPdmMaxPlotsView.xaml.cs">
       <DependentUpon>dingoPdmMaxPlotsView.xaml</DependentUpon>
     </Compile>

@@ -279,14 +279,14 @@ namespace DingoConfigurator
 
             if (e.NewValue.GetType() == typeof(dingoPdmMaxPlot))
             {
-                DingoPdmPlot plot = (DingoPdmPlot)e.NewValue;
+                dingoPdmMaxPlot plot = (dingoPdmMaxPlot)e.NewValue;
 
                 if (plot.CanDevice.GetType() == typeof(dingoPdmMaxCan))
                 {
                     if (plot.Name.Equals("Plots"))
                     {
                         SelectedCanDevice = (dingoPdmMaxCan)plot.CanDevice;
-                        CurrentViewModel = new DingoPdmPlotsViewModel(this);
+                        CurrentViewModel = new dingoPdmMaxPlotsViewModel(this);
                     }
 
                     SelectedDeviceToAdd = Devices.dingoPDMMax;
@@ -432,7 +432,8 @@ namespace DingoConfigurator
             return _canComms.Connected &&
                 (SelectedCanDevice != null) &&
                 (SelectedCanDevice.IsConnected) &&
-                (SelectedCanDevice.GetType() == typeof(DingoPdmCan));
+                (SelectedCanDevice.GetType() == typeof(DingoPdmCan) ||
+                (SelectedCanDevice.GetType() == typeof(dingoPdmMaxCan)));
         }
 
         private void ReadConfirm(object parameter)
@@ -462,7 +463,8 @@ namespace DingoConfigurator
             return _canComms.Connected && 
                 (SelectedCanDevice != null) && 
                 (SelectedCanDevice.IsConnected) &&
-                (SelectedCanDevice.GetType() == typeof(DingoPdmCan));
+                (SelectedCanDevice.GetType() == typeof(DingoPdmCan) ||
+                (SelectedCanDevice.GetType() == typeof(dingoPdmMaxCan)));
         }
 
         private void Burn(object parameter)
@@ -475,7 +477,8 @@ namespace DingoConfigurator
             return _canComms.Connected &&
                 (SelectedCanDevice != null) &&
                 (SelectedCanDevice.IsConnected) &&
-                (SelectedCanDevice.GetType() == typeof(DingoPdmCan));
+                (SelectedCanDevice.GetType() == typeof(DingoPdmCan) ||
+                (SelectedCanDevice.GetType() == typeof(dingoPdmMaxCan)));
         }
 
         private void Sleep(object parameter)
@@ -492,7 +495,8 @@ namespace DingoConfigurator
             return _canComms.Connected &&
                 (SelectedCan.Name != "USB") &&
                 (SelectedCanDevice != null) &&
-                (SelectedCanDevice.GetType() == typeof(DingoPdmCan));
+                (SelectedCanDevice.GetType() == typeof(DingoPdmCan) ||
+                (SelectedCanDevice.GetType() == typeof(dingoPdmMaxCan)));
         }
 
         private void FwUpdate(object parameter)
@@ -630,6 +634,7 @@ namespace DingoConfigurator
             ConfigFileName = Path.GetFullPath(_settingsPath);
 
             ConfigFile.Save(_settingsPath, ConfigFile.CollectionToConfig(_canComms.CanDevices));
+            ConfigFileOpen = true;
         }
 
         private bool CanSaveAsConfigFile(object parameter)
