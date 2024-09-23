@@ -3,6 +3,7 @@ using CanDevices.CanBoard;
 using CanDevices.CanMsgLog;
 using CanDevices.DingoDash;
 using CanDevices.DingoPdm;
+using CanDevices.dingoPdmMax;
 using CanDevices.SoftButtonBox;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace DingoConfigurator.Config
     public class DevicesConfig
     {
         public List<DingoPdmCan> pdm { get; set; }
+        public List<dingoPdmMaxCan> pdmMax { get; set; }
         public List<CanBoardCan> canBoard { get; set; }
         public List<DingoDashCan> dash { get; set; }
         public List<SoftButtonBox> sbb { get; set; }
@@ -24,6 +26,7 @@ namespace DingoConfigurator.Config
         public DevicesConfig()
         {
             pdm = new List<DingoPdmCan>();
+            pdmMax = new List<dingoPdmMaxCan>();
             canBoard = new List<CanBoardCan>();
             dash = new List<DingoDashCan>();
             sbb = new List<SoftButtonBox>();
@@ -38,7 +41,11 @@ namespace DingoConfigurator.Config
             DevicesConfig config = new DevicesConfig();
             foreach (var device in devices)
             {
-                if (device is DingoPdmCan)
+                if (device is dingoPdmMaxCan)
+                {
+                    config.pdmMax.Add((dingoPdmMaxCan)device);
+                }
+                else if (device is DingoPdmCan)
                 {
                     config.pdm.Add((DingoPdmCan)device);
                 }
@@ -68,6 +75,10 @@ namespace DingoConfigurator.Config
             foreach (var pdm in config.pdm)
             {
                 devices.Add(pdm);
+            }
+            foreach (var pdmMax in config.pdmMax)
+            {
+                devices.Add(pdmMax);
             }
             foreach (var dash in config.dash)
             {
