@@ -34,7 +34,9 @@ namespace CommsHandler
 
         private System.Timers.Timer _checkConnectionTimer = new System.Timers.Timer(1000);
 
-        private int _sleepTime = 5;
+        private int _sleepTime = 1;
+        private const int _maxReceiveAttempts = 20;
+        private const bool _displayRetryWarnings = false;
 
         private ObservableCollection<ICanDevice> _canDevices;
         public ObservableCollection<ICanDevice> CanDevices
@@ -97,13 +99,13 @@ namespace CommsHandler
             {
                 case "USB2CAN":
                     _can = new CanInterfaces.USB2CAN();
-                    _sleepTime = 20;
+                    _sleepTime = 1;
                     break;
 
                 case "PCAN":
                     _can = new CanInterfaces.PCAN();
                     port = "USBBUS1";
-                    _sleepTime = 20;
+                    _sleepTime = 5;
                     break;
 
                 case "USB":
@@ -158,7 +160,7 @@ namespace CommsHandler
                                 _can.Write(msg.Data);
                                 ProcessMessage(msg.Data);//Catch with CanMsgLog
                                 
-                                msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
+                                msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 10, 10);
 
                                 Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
                             }
@@ -381,11 +383,13 @@ namespace CommsHandler
                 return;
             }
             
-            if(msg.ReceiveAttempts < 4)
+            if(msg.ReceiveAttempts < _maxReceiveAttempts)
             {
-                Logger.Warn($"No response {msg.MsgDescription}");
                 _can.Write(msg.Data);
                 msg.ReceiveAttempts++;
+
+                if (_displayRetryWarnings)
+                    Logger.Warn($"No response {msg.MsgDescription}, {msg.ReceiveAttempts} attempts");
             }
             else
             {

@@ -427,27 +427,27 @@ namespace CanDevices.DingoPdm
             DeviceState = (DeviceState)(data[1] & 0x0F);
             _pdmType = (data[1] >> 4) & 0x0F;
 
-            TotalCurrent = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
-            BatteryVoltage = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
-            BoardTempC = Math.Round(Convert.ToDouble((data[6] << 8) + data[7]));
+            TotalCurrent = Convert.ToDouble(((data[3] << 8) + data[2]) / 10.0);
+            BatteryVoltage = Convert.ToDouble(((data[5] << 8) + data[4]) / 10.0);
+            BoardTempC = Math.Round(Convert.ToDouble((data[7] << 8) + data[6]));
             BoardTempF = Math.Round(BoardTempC * 1.8 + 32);
 
         }
 
         protected void ReadMessage1(byte[] data)
         {
-            Outputs[0].Current = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
-            Outputs[1].Current = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
-            Outputs[2].Current = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
-            Outputs[3].Current = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
+            Outputs[0].Current = Convert.ToDouble(((data[1] << 8) + data[0]) / 10.0);
+            Outputs[1].Current = Convert.ToDouble(((data[3] << 8) + data[2]) / 10.0);
+            Outputs[2].Current = Convert.ToDouble(((data[5] << 8) + data[4]) / 10.0);
+            Outputs[3].Current = Convert.ToDouble(((data[7] << 8) + data[6]) / 10.0);
         }
 
         protected virtual void ReadMessage2(byte[] data)
         {
-            Outputs[4].Current = Convert.ToDouble(((data[0] << 8) + data[1]) / 10.0);
-            Outputs[5].Current = Convert.ToDouble(((data[2] << 8) + data[3]) / 10.0);
-            Outputs[6].Current = Convert.ToDouble(((data[4] << 8) + data[5]) / 10.0);
-            Outputs[7].Current = Convert.ToDouble(((data[6] << 8) + data[7]) / 10.0);
+            Outputs[4].Current = Convert.ToDouble(((data[1] << 8) + data[0]) / 10.0);
+            Outputs[5].Current = Convert.ToDouble(((data[3] << 8) + data[2]) / 10.0);
+            Outputs[6].Current = Convert.ToDouble(((data[5] << 8) + data[4]) / 10.0);
+            Outputs[7].Current = Convert.ToDouble(((data[7] << 8) + data[6]) / 10.0);
         }
 
         protected virtual void ReadMessage3(byte[] data)
@@ -466,15 +466,16 @@ namespace CanDevices.DingoPdm
             Wipers[0].State = (WiperState)(data[5] >> 4);
             Wipers[0].Speed = (WiperSpeed)(data[5] & 0x0F);
 
-            Flashers[0].Value = Convert.ToBoolean(data[6] & 0x01) && Flashers[0].Enabled && Flashers[0].InputValue;
-            Flashers[1].Value = Convert.ToBoolean((data[6] >> 1) & 0x01) && Flashers[1].Enabled && Flashers[1].InputValue;
-            Flashers[2].Value = Convert.ToBoolean((data[6] >> 2) & 0x01) && Flashers[2].Enabled && Flashers[2].InputValue;
-            Flashers[3].Value = Convert.ToBoolean((data[6] >> 3) & 0x01) && Flashers[3].Enabled && Flashers[3].InputValue;
+            Flashers[0].Value = Convert.ToBoolean(data[6] & 0x01) && Flashers[0].Enabled;
+            Flashers[1].Value = Convert.ToBoolean((data[6] >> 1) & 0x01) && Flashers[1].Enabled;
+            Flashers[2].Value = Convert.ToBoolean((data[6] >> 2) & 0x01) && Flashers[2].Enabled;
+            Flashers[3].Value = Convert.ToBoolean((data[6] >> 3) & 0x01) && Flashers[3].Enabled;
 
-            Flashers[0].InputValue = Convert.ToBoolean((data[6] >> 4) & 0x01);
-            Flashers[1].InputValue = Convert.ToBoolean((data[6] >> 5) & 0x01);
-            Flashers[2].InputValue = Convert.ToBoolean((data[6] >> 6) & 0x01);
-            Flashers[3].InputValue = Convert.ToBoolean((data[6] >> 7) & 0x01);
+            //TODO: remove Inputvalue from Flasher. It is not used
+            //Flashers[0].InputValue = Convert.ToBoolean((data[6] >> 4) & 0x01);
+            //Flashers[1].InputValue = Convert.ToBoolean((data[6] >> 5) & 0x01);
+            //Flashers[2].InputValue = Convert.ToBoolean((data[6] >> 6) & 0x01);
+            //Flashers[3].InputValue = Convert.ToBoolean((data[6] >> 7) & 0x01);
         }
 
         protected virtual void ReadMessage4(byte[] data)

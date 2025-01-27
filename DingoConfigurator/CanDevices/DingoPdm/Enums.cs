@@ -9,11 +9,8 @@ namespace CanDevices.DingoPdm
 
     public enum DeviceState
     {
-        PowerOn,
-        Starting,
         Run,
         Sleep,
-        Wakeup,
         OverTemp,
         Error
     }
