@@ -266,10 +266,6 @@
       <Project>{7f95c67b-6fe7-427a-95ab-2d39e6fe9186}</Project>
       <Name>CommsHandler</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PCAN\PCAN.csproj">
-      <Project>{1f1c8f99-4ec0-4fb6-9dae-0df649699b6f}</Project>
-      <Name>PCAN</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\canboard_0.png" />

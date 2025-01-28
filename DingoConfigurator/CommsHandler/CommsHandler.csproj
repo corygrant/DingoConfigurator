@@ -60,10 +60,6 @@
       <Project>{2179ebc6-1aa3-4da3-96f1-50fceb1fffa7}</Project>
       <Name>CanInterfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PCAN\PCAN.csproj">
-      <Project>{1f1c8f99-4ec0-4fb6-9dae-0df649699b6f}</Project>
-      <Name>PCAN</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

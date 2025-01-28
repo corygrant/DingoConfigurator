@@ -9,7 +9,6 @@ using CanDevices.DingoPdm;
 using CanDevices.CanBoard;
 using CanDevices.DingoDash;
 using CanDevices.CanMsgLog;
-using PCAN;
 using System.Runtime.InteropServices;
 using CanDevices.SoftButtonBox;
 using System.Management;
@@ -31,6 +30,7 @@ namespace CommsHandler
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         private string _port;
+        private bool _isSerial = false;
 
         private System.Timers.Timer _checkConnectionTimer = new System.Timers.Timer(1000);
 
@@ -58,7 +58,7 @@ namespace CommsHandler
 
             _checkConnectionTimer.Elapsed += (sender, e) =>
             {
-                if (!IsPortConnected(_port))
+                if (!IsPortConnected(_port) && _isSerial)
                 {
                     Logger.Warn("CAN disconnected");
                     Disconnect();
@@ -99,17 +99,19 @@ namespace CommsHandler
             {
                 case "USB2CAN":
                     _can = new CanInterfaces.USB2CAN();
+                    _isSerial = true;
                     _sleepTime = 1;
                     break;
 
                 case "PCAN":
                     _can = new CanInterfaces.PCAN();
-                    port = "USBBUS1";
+                    _isSerial = false;
                     _sleepTime = 5;
                     break;
 
                 case "USB":
                     _can = new CanInterfaces.USB();
+                    _isSerial = true;
                     _sleepTime = 5;
                     break;
             }

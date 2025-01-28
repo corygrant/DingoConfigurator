@@ -796,7 +796,87 @@
       ]
     }
   ],
-  "canBoard": [],
+  "pdmMax": [],
+  "canBoard": [
+    {
+      "name": "CANBoard",
+      "baseId": 1648,
+      "analogIn": [
+        {
+          "number": 1,
+          "name": null
+        },
+        {
+          "number": 2,
+          "name": null
+        },
+        {
+          "number": 3,
+          "name": null
+        },
+        {
+          "number": 4,
+          "name": null
+        },
+        {
+          "number": 5,
+          "name": null
+        }
+      ],
+      "digitalIn": [
+        {
+          "number": 1,
+          "name": null
+        },
+        {
+          "number": 2,
+          "name": null
+        },
+        {
+          "number": 3,
+          "name": null
+        },
+        {
+          "number": 4,
+          "name": null
+        },
+        {
+          "number": 5,
+          "name": null
+        },
+        {
+          "number": 6,
+          "name": null
+        },
+        {
+          "number": 7,
+          "name": null
+        },
+        {
+          "number": 8,
+          "name": null
+        }
+      ],
+      "digitalOut": [
+        {
+          "number": 1,
+          "name": null
+        },
+        {
+          "number": 2,
+          "name": null
+        },
+        {
+          "number": 3,
+          "name": null
+        },
+        {
+          "number": 4,
+          "name": null
+        }
+      ]
+    }
+  ],
   "dash": [],
   "sbb": [],
   "log": [
