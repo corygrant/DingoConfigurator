@@ -10,6 +10,7 @@ namespace CanInterfaces
     public interface ICanInterface
     {
         bool Init(string port, CanInterfaceBaudRate baud);
+        void Disconnect();
         bool Start();
         bool Stop();
         bool Write(CanInterfaceData canData);

@@ -26,16 +26,6 @@ namespace CanInterfaces
             }
         }
 
-        ~USB()
-        {
-            _serial.DataReceived -= _serial_DataReceived;
-            if (_serial == null) return;
-            if (!_serial.IsOpen) return;
-
-            _serial.Close();
-            _serial.Dispose();
-        }
-
         public bool Init(string port, CanInterfaceBaudRate baud)
         {
             try
@@ -52,6 +42,16 @@ namespace CanInterfaces
             }
 
             return true;
+        }
+
+        void ICanInterface.Disconnect()
+        {
+            _serial.DataReceived -= _serial_DataReceived;
+            if (_serial == null) return;
+            if (!_serial.IsOpen) return;
+
+            _serial.Close();
+            _serial.Dispose();
         }
 
         private void _serial_DataReceived(object sender, SerialDataReceivedEventArgs e)

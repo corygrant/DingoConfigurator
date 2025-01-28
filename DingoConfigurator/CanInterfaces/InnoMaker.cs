@@ -59,6 +59,10 @@ namespace CanInterfaces
             throw new NotImplementedException();
         }
 
+        public void Disconnect()
+        {
+            throw new NotImplementedException();
+        }
         public bool Start()
         {
             throw new NotImplementedException();

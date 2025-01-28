@@ -68,8 +68,9 @@ namespace CommsHandler
             
         }
 
-        ~CanCommsHandler()
+        public void Close()
         {
+            if (_can != null) _can.Disconnect();
             _cts.Cancel();
         }
 

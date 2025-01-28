@@ -42,19 +42,6 @@ namespace CanInterfaces
             }
         }
 
-        ~USB2CAN()
-        {
-            if (_serial == null) return;
-            if (!_serial.IsOpen)return;
-
-            byte[] data = new byte[8];
-            data[0] = (byte)'C';
-            _serial.Write(data, 0, 1);
-            _serial.DataReceived -= _serial_DataReceived;
-            _serial.Close();
-            _serial.Dispose();
-        }
-
         public bool Init(string port, CanInterfaceBaudRate baud)
         {
             bitrate = ConvertBitrate(baud);
@@ -77,6 +64,19 @@ namespace CanInterfaces
             }
 
             return true;
+        }
+
+        void ICanInterface.Disconnect()
+        {
+            if (_serial == null) return;
+            if (!_serial.IsOpen) return;
+
+            byte[] data = new byte[8];
+            data[0] = (byte)'C';
+            _serial.Write(data, 0, 1);
+            _serial.DataReceived -= _serial_DataReceived;
+            _serial.Close();
+            _serial.Dispose();
         }
 
         private void _serial_DataReceived(object sender, SerialDataReceivedEventArgs e)

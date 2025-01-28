@@ -130,6 +130,7 @@ namespace DingoConfigurator
         public void WindowClosing()
         {
             _canComms.Disconnect();
+            _canComms.Close();
 
             if (_statusBarTimer != null)
             {

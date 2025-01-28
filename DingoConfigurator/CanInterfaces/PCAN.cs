@@ -38,6 +38,11 @@ namespace CanInterfaces
             return true;
         }
 
+        void ICanInterface.Disconnect()
+        {
+            Stop();
+        }
+
         public bool Start()
         {
             if (_worker == null) return false;
@@ -50,7 +55,6 @@ namespace CanInterfaces
             {
                 return false;
             }
-            
 
             _rxStopwatch = Stopwatch.StartNew();
 
