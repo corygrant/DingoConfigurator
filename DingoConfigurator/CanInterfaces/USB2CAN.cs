@@ -244,12 +244,19 @@ namespace CanInterfaces
             {
                 if (disposing)
                 {
-                    if(_serial != null)
+                    if (_serial != null)
                     {
-                        Stop();
-                        _serial.DataReceived -= _serial_DataReceived;
-                        _serial.Close();
-                        _serial.Dispose();
+                        lock (_serial)
+                        {
+                            if (_serial.IsOpen)
+                            {
+                                Stop();
+                                _serial.DataReceived -= _serial_DataReceived;
+                                _serial.Close();
+                            }
+                            _serial.Dispose();
+                            _serial = null;
+                        }
                     }
                 }
                 _disposed = true;

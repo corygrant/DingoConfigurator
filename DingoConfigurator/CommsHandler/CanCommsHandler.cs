@@ -502,10 +502,28 @@ namespace CommsHandler
             {
                 if (disposing)
                 {
-                    if(_can != null) 
-                    {  
-                        _can.Dispose();
+                    // Stop the timer
+                    _checkConnectionTimer.Stop();
+                    _checkConnectionTimer.Dispose();
+
+                    // Ensure no other threads are using the COM objects
+                    lock (_queue)
+                    {
+                        if (_can != null)
+                        {
+                            _can.DataReceived -= CanDataReceived;
+                            _can.Stop();
+                            _can.Dispose();
+                            _can = null;
+                        }
                     }
+
+                    // Dispose of other managed resources
+                    foreach (var cd in _canDevices)
+                    {
+                        cd.Clear();
+                    }
+                    _canDevices.Clear();
                 }
 
                 _disposed = true;
@@ -517,5 +535,6 @@ namespace CommsHandler
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
     }
 }

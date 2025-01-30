@@ -35,7 +35,7 @@ using System.Reflection;
 
 namespace DingoConfigurator
 {
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : ViewModelBase, IDisposable
     {
         private CanCommsHandler _canComms;
         public CanCommsHandler CanComms { get => _canComms; }
@@ -149,6 +149,7 @@ namespace DingoConfigurator
             Settings.Default.Save();
 
             NLog.LogManager.Shutdown(); // Flush and close down internal threads and timers
+
         }
 
         private ViewModelBase _currentViewModel { get; set; }
@@ -979,6 +980,15 @@ namespace DingoConfigurator
         }
         #endregion
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _canComms.Dispose();
+            }
+            base.Dispose();
+        }
+
     }
 
     #region ComboBox Types
@@ -1009,4 +1019,5 @@ namespace DingoConfigurator
         dingoPDMMax
     }
     #endregion
+
 }
