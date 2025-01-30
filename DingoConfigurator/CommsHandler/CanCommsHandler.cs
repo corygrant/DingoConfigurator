@@ -14,18 +14,17 @@ using CanDevices.SoftButtonBox;
 using System.Management;
 using System.Reflection;
 using CanDevices.dingoPdmMax;
+using System.Collections.Concurrent;
 
 namespace CommsHandler
 {
-    public class CanCommsHandler : NotifyPropertyChangedBase
+    public class CanCommsHandler : NotifyPropertyChangedBase, IDisposable
     {
         private ICanInterface _can;
 
-        private List<CanDeviceResponse> _queue;
+        private ConcurrentDictionary<Guid,CanDeviceResponse> _queue;
 
         public delegate void DataUpdatedHandler(object sender);
-
-        private CancellationTokenSource _cts;
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -37,6 +36,8 @@ namespace CommsHandler
         private int _sleepTime = 1;
         private const int _maxReceiveAttempts = 20;
         private const bool _displayRetryWarnings = false;
+
+        private bool _disposed;
 
         private ObservableCollection<ICanDevice> _canDevices;
         public ObservableCollection<ICanDevice> CanDevices
@@ -52,8 +53,7 @@ namespace CommsHandler
         public CanCommsHandler()
         {
             _canDevices = new ObservableCollection<ICanDevice>();
-            _cts = new CancellationTokenSource();
-            _queue = new List<CanDeviceResponse>();
+            _queue = new ConcurrentDictionary<Guid, CanDeviceResponse>();
             Connected = false;
 
             _checkConnectionTimer.Elapsed += (sender, e) =>
@@ -68,13 +68,9 @@ namespace CommsHandler
             
         }
 
-        public void Close()
-        {
-            if (_can != null) _can.Disconnect();
-            _cts.Cancel();
-        }
-
         private bool _connected;
+        
+
         public bool Connected
         {
             get => _connected;
@@ -134,7 +130,11 @@ namespace CommsHandler
 
         public void Disconnect()
         {
-            if (_can != null) _can.Stop();
+            if (_can != null)
+            {
+                _can.DataReceived -= CanDataReceived;
+                _can.Stop();
+            }
             foreach(var cd in CanDevices)
             {
                 cd.Clear();
@@ -159,7 +159,9 @@ namespace CommsHandler
                             foreach (var msg in msgs)
                             {
                                 msg.DeviceBaseId = cd.BaseId;
-                                _queue.Add(msg);
+                                var qid = Guid.NewGuid();
+                                msg.QueueId = qid; //Store GUID with msg data for use later
+                                _queue.TryAdd(qid, msg);
                                 _can.Write(msg.Data);
                                 ProcessMessage(msg.Data);//Catch with CanMsgLog
                                 
@@ -190,7 +192,9 @@ namespace CommsHandler
                             foreach (var msg in msgs)
                             {
                                 msg.DeviceBaseId = cd.BaseId;
-                                _queue.Add(msg);
+                                var qid = Guid.NewGuid();
+                                msg.QueueId = qid; //Store GUID with msg data for use later
+                                _queue.TryAdd(qid, msg);
                                 _can.Write(msg.Data);
                                 ProcessMessage(msg.Data);//Catch with CanMsgLog
 
@@ -222,7 +226,9 @@ namespace CommsHandler
                                 foreach (var msg in msgs)
                                 {
                                     msg.DeviceBaseId = newId; //Set msg ID to new ID so response is processed properly
-                                    _queue.Add(msg);
+                                    var qid = Guid.NewGuid();
+                                    msg.QueueId = qid; //Store GUID with msg data for use later
+                                    _queue.TryAdd(qid, msg);
                                     if (!_can.Write(msg.Data))
                                     {
                                         Logger.Error("Failed to write to CAN");
@@ -263,7 +269,9 @@ namespace CommsHandler
                             if (msg == null) return;
 
                             msg.DeviceBaseId = cd.BaseId;
-                            _queue.Add(msg);
+                            var qid = Guid.NewGuid();
+                            msg.QueueId = qid; //Store GUID with msg data for use later
+                            _queue.TryAdd(qid, msg); ;
                             _can.Write(msg.Data);
                             ProcessMessage(msg.Data);//Catch with CanMsgLog
 
@@ -290,7 +298,9 @@ namespace CommsHandler
                             if (msg == null) return;
 
                             msg.DeviceBaseId = cd.BaseId;
-                            _queue.Add(msg);
+                            var qid = Guid.NewGuid();
+                            msg.QueueId = qid; //Store GUID with msg data for use later
+                            _queue.TryAdd(qid, msg);
                             _can.Write(msg.Data);
                             ProcessMessage(msg.Data);//Catch with CanMsgLog
 
@@ -382,7 +392,7 @@ namespace CommsHandler
             if (!Connected)
             {
                 msg.TimeSentTimer.Dispose();
-                _queue.Remove(msg);
+                _queue.TryRemove(msg.QueueId, out _);
                 return;
             }
             
@@ -398,7 +408,7 @@ namespace CommsHandler
             {
                 Logger.Error($"No response after 4 attempts {msg.MsgDescription}");
                 msg.TimeSentTimer.Dispose();
-                _queue.Remove(msg);
+                _queue.TryRemove(msg.QueueId, out _);
             }
         }
 
@@ -484,6 +494,28 @@ namespace CommsHandler
                 }
             }
             return false;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    if(_can != null) 
+                    {  
+                        _can.Dispose();
+                    }
+                }
+
+                _disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

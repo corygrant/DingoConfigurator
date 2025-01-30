@@ -50,6 +50,8 @@ namespace CanInterfaces
 
         public uint Can_Err_Ctrl_Tx_Passive = 32u;
 
+        private bool _disposed = false;
+
         public DataReceivedHandler DataReceived { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public int RxTimeDelta => throw new NotImplementedException();
@@ -59,10 +61,6 @@ namespace CanInterfaces
             throw new NotImplementedException();
         }
 
-        public void Disconnect()
-        {
-            throw new NotImplementedException();
-        }
         public bool Start()
         {
             throw new NotImplementedException();
@@ -174,6 +172,24 @@ namespace CanInterfaces
             }
 
             return null;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    
+                }
+                _disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

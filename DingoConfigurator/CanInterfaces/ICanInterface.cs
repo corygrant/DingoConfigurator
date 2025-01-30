@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 namespace CanInterfaces
 {
     public delegate void DataReceivedHandler(object sender, CanDataEventArgs e);
-    public interface ICanInterface
+    public interface ICanInterface : IDisposable
     {
         bool Init(string port, CanInterfaceBaudRate baud);
-        void Disconnect();
         bool Start();
         bool Stop();
         bool Write(CanInterfaceData canData);

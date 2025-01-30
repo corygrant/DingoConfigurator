@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers.Text;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -99,7 +100,7 @@ namespace CanDevices.SoftButtonBox
             return false;
         }
 
-        public bool Read(int id, byte[] data, ref List<CanDeviceResponse> queue)
+        public bool Read(int id, byte[] data, ref ConcurrentDictionary<Guid, CanDeviceResponse> queue)
         {
             if ((id < BaseId) || (id > BaseId + 10)) return false;
 

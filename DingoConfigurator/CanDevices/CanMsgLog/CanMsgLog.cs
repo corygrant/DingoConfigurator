@@ -1,5 +1,6 @@
 ﻿using CanInterfaces;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -178,7 +179,7 @@ namespace CanDevices.CanMsgLog
             return false;
         }
 
-        public bool Read(int id, byte[] data, ref List<CanDeviceResponse> queue)
+        public bool Read(int id, byte[] data, ref ConcurrentDictionary<Guid, CanDeviceResponse> queue)
         {
             _lastRxTime = DateTime.Now;
             UpdateIsConnected();

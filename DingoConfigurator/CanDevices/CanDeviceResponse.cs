@@ -11,6 +11,7 @@ namespace CanDevices
 {
     public class CanDeviceResponse
     {
+        public Guid QueueId { get; set; }
         public CanInterfaceData Data { get; set; }
         public bool Sent { get; set; }
         public bool Received { get; set; }

@@ -33,6 +33,7 @@ namespace CanInterfaces
         private int _rxTimeDelta;
         public int RxTimeDelta { get => _rxTimeDelta;}
         private Stopwatch _rxStopwatch;
+        private bool _disposed = false;
 
         private void OnDataReceived(CanDataEventArgs e)
         {
@@ -64,19 +65,6 @@ namespace CanInterfaces
             }
 
             return true;
-        }
-
-        void ICanInterface.Disconnect()
-        {
-            if (_serial == null) return;
-            if (!_serial.IsOpen) return;
-
-            byte[] data = new byte[8];
-            data[0] = (byte)'C';
-            _serial.Write(data, 0, 1);
-            _serial.DataReceived -= _serial_DataReceived;
-            _serial.Close();
-            _serial.Dispose();
         }
 
         private void _serial_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -248,6 +236,30 @@ namespace CanInterfaces
                 default:
                     return USB2CAN_Bitrate.BITRATE_500K;
             }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    if(_serial != null)
+                    {
+                        Stop();
+                        _serial.DataReceived -= _serial_DataReceived;
+                        _serial.Close();
+                        _serial.Dispose();
+                    }
+                }
+                _disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

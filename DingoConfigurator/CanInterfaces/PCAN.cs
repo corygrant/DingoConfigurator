@@ -16,6 +16,7 @@ namespace CanInterfaces
         private int _rxTimeDelta;
         public int RxTimeDelta { get => _rxTimeDelta; }
         private Stopwatch _rxStopwatch;
+        private bool _disposed = false;
 
         public DataReceivedHandler DataReceived { get; set; }
 
@@ -36,11 +37,6 @@ namespace CanInterfaces
             _worker = new Worker(PcanChannel.Usb01, br);
 
             return true;
-        }
-
-        void ICanInterface.Disconnect()
-        {
-            Stop();
         }
 
         public bool Start()
@@ -126,6 +122,24 @@ namespace CanInterfaces
                 default:
                     return Bitrate.Pcan500;
             }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    //Nothing to do here
+                }
+                _disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace CanDevices
         [JsonIgnore]
         DateTime LastRxTime { get;}
         void UpdateIsConnected();
-        bool Read(int id, byte[] data, ref List<CanDeviceResponse> queue);
+        bool Read(int id, byte[] data, ref ConcurrentDictionary<Guid, CanDeviceResponse> queue);
         void Clear();
         bool IsPriorityMsg(int id);
         bool InIdRange(int id);

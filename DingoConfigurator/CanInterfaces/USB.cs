@@ -15,6 +15,7 @@ namespace CanInterfaces
         private int _rxTimeDelta;
         public int RxTimeDelta { get => _rxTimeDelta; }
         private Stopwatch _rxStopwatch;
+        private bool _disposed = false;
 
         public DataReceivedHandler DataReceived { get; set; }
 
@@ -42,16 +43,6 @@ namespace CanInterfaces
             }
 
             return true;
-        }
-
-        void ICanInterface.Disconnect()
-        {
-            _serial.DataReceived -= _serial_DataReceived;
-            if (_serial == null) return;
-            if (!_serial.IsOpen) return;
-
-            _serial.Close();
-            _serial.Dispose();
         }
 
         private void _serial_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -159,6 +150,28 @@ namespace CanInterfaces
             }
 
             return true;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    if (_serial != null)
+                    {
+                        _serial.Close();
+                        _serial.Dispose();
+                    }
+                }
+                _disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

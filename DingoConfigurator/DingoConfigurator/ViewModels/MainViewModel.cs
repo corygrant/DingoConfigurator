@@ -130,7 +130,7 @@ namespace DingoConfigurator
         public void WindowClosing()
         {
             _canComms.Disconnect();
-            _canComms.Close();
+            _canComms.Dispose();
 
             if (_statusBarTimer != null)
             {
@@ -352,7 +352,7 @@ namespace DingoConfigurator
 
             foreach(var cd in _canComms.CanDevices)
             {
-                _canComms.Wakeup(cd);
+                _ = _canComms.Wakeup(cd);
             }
             
             CanCans = false;
@@ -440,7 +440,7 @@ namespace DingoConfigurator
         private void ReadConfirm(object parameter)
         {
             IsReadConfirmVisible = false;
-            _canComms.Read(SelectedCanDevice);
+            _ = _canComms.Read(SelectedCanDevice);
         }
 
         private bool _isReadConfirmVisible;
@@ -456,7 +456,7 @@ namespace DingoConfigurator
 
         private void Write(object parameter)
         {
-            _canComms.Write(SelectedCanDevice);
+            _= _canComms.Write(SelectedCanDevice);
         }
 
         private bool CanWrite(object parameter)
@@ -470,7 +470,7 @@ namespace DingoConfigurator
 
         private void Burn(object parameter)
         {
-            _canComms.Burn(SelectedCanDevice);
+            _= _canComms.Burn(SelectedCanDevice);
         }
 
         private bool CanBurn(object parameter)
@@ -485,9 +485,9 @@ namespace DingoConfigurator
         private void Sleep(object parameter)
         {
             if(SelectedCanDevice.IsConnected)
-                _canComms.Sleep(SelectedCanDevice);
+                _ = _canComms.Sleep(SelectedCanDevice);
             else
-                _canComms.Wakeup(SelectedCanDevice);
+                _ = _canComms.Wakeup(SelectedCanDevice);
 
         }
 
@@ -517,7 +517,7 @@ namespace DingoConfigurator
         private void FwUpdateConfirm(object parameter)
         {
             IsFwUpdateConfirmVisible = false;
-            _canComms.FwUpdate(SelectedCanDevice);
+            _ = _canComms.FwUpdate(SelectedCanDevice);
             
         }
 
@@ -722,7 +722,7 @@ namespace DingoConfigurator
             if (SelectedCanDevice.GetType() == typeof(CanMsgLog)) return;
             if (SelectedCanDevice.BaseId != DeviceBaseId)
             {
-                _canComms.Update(SelectedCanDevice, DeviceBaseId);
+                _ = _canComms.Update(SelectedCanDevice, DeviceBaseId);
             }
         }
 
