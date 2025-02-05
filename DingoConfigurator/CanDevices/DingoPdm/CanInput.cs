@@ -218,7 +218,7 @@ namespace CanDevices.DingoPdm
         }
     }
 
-    public class MaskValidationRule : ValidationRule
+    public class ArgValidationRule : ValidationRule
     {
         public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
         {
@@ -227,7 +227,7 @@ namespace CanDevices.DingoPdm
             if (input == string.Empty) return new ValidationResult(false, "Entry is required");
             if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
             if (proposedValue < 0.00) return new ValidationResult(false, "Value must be zero or greater");
-            if (proposedValue > 255) return new ValidationResult(false, "Value must less than or equal to 255");
+            if (proposedValue > 65535) return new ValidationResult(false, "Value must less than or equal to 65535");
             return new ValidationResult(true, null);
         }
     }

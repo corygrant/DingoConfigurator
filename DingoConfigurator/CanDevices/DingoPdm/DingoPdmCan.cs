@@ -806,14 +806,14 @@ namespace CanDevices.DingoPdm
                         CanInputs[index].Id = (data[3] << 8) + data[4];
                         CanInputs[index].DLC = (data[5] & 0xF0) >> 4;
                         CanInputs[index].StartingByte = (data[5] & 0x0F);
-                        CanInputs[index].OnVal = data[6];
+                        CanInputs[index].OnVal = (data[6] << 8) + data[7];
 
                         foreach (var msg in queue)
                         {
                             if ((msg.Value.DeviceBaseId == BaseId) &&
                                             ((MessagePrefix)Convert.ToChar(msg.Value.Data.Payload[0]) == MessagePrefix.CANInput))
                             {
-                                if (((msg.Value.Data.Len == 7) && (msg.Value.Data.Payload[2] == index)) ||
+                                if (((msg.Value.Data.Len == 8) && (msg.Value.Data.Payload[2] == index)) ||
                                     ((msg.Value.Data.Len == 2) && (msg.Value.Data.Payload[1] == index)))
                                 {
                                     msg.Value.TimeSentTimer.Dispose();
@@ -1233,7 +1233,7 @@ namespace CanDevices.DingoPdm
                     Data = new CanInterfaceData
                     {
                         Id = id,
-                        Len = 7,
+                        Len = 8,
                         Payload = new byte[] {
                         Convert.ToByte('N'), //Byte 0
                         Convert.ToByte(((Convert.ToByte(canInput.Operator) & 0x0F) << 4) +
@@ -1244,8 +1244,8 @@ namespace CanDevices.DingoPdm
                         Convert.ToByte(canInput.Id & 0x00FF), //Byte 4
                         Convert.ToByte(((canInput.DLC & 0x0F) << 4) +
                                         (canInput.StartingByte & 0x0F)), //Byte 5
-                        Convert.ToByte(canInput.OnVal), //Byte 6 
-                        0 }
+                        Convert.ToByte((canInput.OnVal & 0xFF00) >> 8), //Byte 6 
+                        Convert.ToByte(canInput.OnVal & 0x00FF) } //Byte 7
                     },
                     MsgDescription = $"CANInput{canInput.Number}"
                 });

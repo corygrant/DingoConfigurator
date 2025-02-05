@@ -410,7 +410,7 @@ namespace CommsHandler
             }
             else
             {
-                Logger.Error($"No response after 4 attempts {msg.MsgDescription}");
+                Logger.Error($"No response after {_maxReceiveAttempts} attempts {msg.MsgDescription}");
                 msg.TimeSentTimer.Dispose();
                 _queue.TryRemove(msg.QueueId, out _);
             }

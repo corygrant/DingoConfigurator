@@ -204,7 +204,7 @@
                     <DataGridTextColumn.Binding>
                         <Binding Path="OnVal" UpdateSourceTrigger="LostFocus" ValidatesOnDataErrors="True" ValidatesOnExceptions="True">
                             <Binding.ValidationRules>
-                                <cd:MaskValidationRule />
+                                <cd:ArgValidationRule />
                             </Binding.ValidationRules>
                         </Binding>
                     </DataGridTextColumn.Binding>
