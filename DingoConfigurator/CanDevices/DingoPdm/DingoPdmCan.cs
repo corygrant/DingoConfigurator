@@ -882,18 +882,16 @@ namespace CanDevices.DingoPdm
             MessagePrefix prefix = (MessagePrefix)Char.ToUpper(Convert.ToChar(data[0]));
             MessageSrc src = (MessageSrc)data[1];
 
-            int index = 0;
-
             switch (prefix)
             {
                 case MessagePrefix.Info:
-                    Logger.Info($"{Name} ID: {BaseId}, Src: {src} {data[2]} {data[3]} {data[4]}");
+                    Logger.Info($"{Name} ID: {BaseId}, Src: {src} {((data[3] << 8) + data[2])} {((data[5] << 8) + data[4])} {((data[7] << 8) + data[6])}");
                     break;
                 case MessagePrefix.Warning:
-                    Logger.Warn($"{Name} ID: {BaseId}, Src: {src} {data[2]} {data[3]} {data[4]}");
+                    Logger.Warn($"{Name} ID: {BaseId}, Src: {src} {((data[3] << 8) + data[2])} {((data[5] << 8) + data[4])} {((data[7] << 8) + data[6])}");
                     break;
                 case MessagePrefix.Error:
-                    Logger.Error($"{Name} ID: {BaseId}, Src: {src} {data[2]} {data[3]} {data[4]}");
+                    Logger.Error($"{Name} ID: {BaseId}, Src: {src} {((data[3] << 8) + data[2])} {((data[5] << 8) + data[4])} {((data[7] << 8) + data[6])}");
                     break;
             }
         }

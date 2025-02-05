@@ -34,6 +34,7 @@ namespace CommsHandler
         private System.Timers.Timer _checkConnectionTimer = new System.Timers.Timer(1000);
 
         private int _sleepTime = 1;
+        private int _msgTimeout = 10;
         private const int _maxReceiveAttempts = 20;
         private const bool _displayRetryWarnings = false;
 
@@ -97,19 +98,22 @@ namespace CommsHandler
                 case "USB2CAN":
                     _can = new CanInterfaces.USB2CAN();
                     _isSerial = true;
-                    _sleepTime = 1;
+                    _sleepTime = 1; //ms
+                    _msgTimeout = 10; //ms
                     break;
 
                 case "PCAN":
                     _can = new CanInterfaces.PCAN();
                     _isSerial = false;
-                    _sleepTime = 5;
+                    _sleepTime = 5; //ms
+                    _msgTimeout = 10; //ms
                     break;
 
                 case "USB":
                     _can = new CanInterfaces.USB();
                     _isSerial = true;
-                    _sleepTime = 5;
+                    _sleepTime = 5; //ms
+                    _msgTimeout = 10; //ms
                     break;
             }
 
@@ -165,7 +169,7 @@ namespace CommsHandler
                                 _can.Write(msg.Data);
                                 ProcessMessage(msg.Data);//Catch with CanMsgLog
                                 
-                                msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 10, 10);
+                                msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout, _msgTimeout);
 
                                 Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
                             }
@@ -198,7 +202,7 @@ namespace CommsHandler
                                 _can.Write(msg.Data);
                                 ProcessMessage(msg.Data);//Catch with CanMsgLog
 
-                                msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
+                                msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout, _msgTimeout);
 
                                 Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
                             }
@@ -236,7 +240,7 @@ namespace CommsHandler
                                     }
                                     ProcessMessage(msg.Data);//Catch with CanMsgLog
 
-                                    msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
+                                    msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout, _msgTimeout);
 
                                     Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
                                 }
@@ -275,7 +279,7 @@ namespace CommsHandler
                             _can.Write(msg.Data);
                             ProcessMessage(msg.Data);//Catch with CanMsgLog
 
-                            msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
+                            msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout * 10, _msgTimeout * 10);
 
                             Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
                         }
@@ -304,7 +308,7 @@ namespace CommsHandler
                             _can.Write(msg.Data);
                             ProcessMessage(msg.Data);//Catch with CanMsgLog
 
-                            msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, 1000, 1000);
+                            msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout, _msgTimeout);
 
                             Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
                         }
