@@ -35,7 +35,7 @@
           "resetTime": 3,
           "inrushCurrentLimit": 20,
           "inrushTime": 1,
-          "input": 1
+          "input": 35
         },
         {
           "enabled": true,
@@ -126,13 +126,15 @@
         {
           "name": "",
           "number": 1,
-          "enabled": false,
-          "id": 0,
+          "enabled": true,
+          "id": 533,
           "lowByte": 0,
           "highByte": 0,
-          "operator": 3,
-          "onVal": 0,
-          "mode": 1
+          "startingByte": 0,
+          "dlc": 1,
+          "operator": 0,
+          "onVal": 100,
+          "mode": 0
         },
         {
           "name": "",
@@ -141,6 +143,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -152,6 +156,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -163,6 +169,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -174,6 +182,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -185,6 +195,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -196,6 +208,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -207,6 +221,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -218,6 +234,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -229,6 +247,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -240,6 +260,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -251,6 +273,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -262,6 +286,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -273,6 +299,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -284,6 +312,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -295,6 +325,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -306,6 +338,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -317,6 +351,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -328,6 +364,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -339,6 +377,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -350,6 +390,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -361,6 +403,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -372,6 +416,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -383,6 +429,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -394,6 +442,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -405,6 +455,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -416,6 +468,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -427,6 +481,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -438,6 +494,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -449,6 +507,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -460,6 +520,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -471,6 +533,8 @@
           "id": 0,
           "lowByte": 0,
           "highByte": 0,
+          "startingByte": 0,
+          "dlc": 0,
           "operator": 3,
           "onVal": 0,
           "mode": 1
@@ -480,12 +544,12 @@
         {
           "name": "",
           "number": 1,
-          "enabled": false,
+          "enabled": true,
           "not0": false,
-          "var0": 0,
+          "var0": 1,
           "cond0": 0,
           "not1": false,
-          "var1": 0,
+          "var1": 61,
           "cond1": 1,
           "not2": false,
           "var2": 0,
@@ -742,9 +806,9 @@
         {
           "name": "Hazards",
           "number": 1,
-          "enabled": false,
+          "enabled": true,
           "single": false,
-          "input": 0,
+          "input": 65,
           "inputValue": false,
           "onTime": 0.5,
           "offTime": 0.5

@@ -151,9 +151,9 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="L Byte" Width="70" MinWidth="70" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTextColumn Header="Start Byte" Width="70" MinWidth="70" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                     <DataGridTextColumn.Binding>
-                        <Binding Path="LowByte" UpdateSourceTrigger="LostFocus" ValidatesOnDataErrors="True" ValidatesOnExceptions="True">
+                        <Binding Path="StartingByte" UpdateSourceTrigger="LostFocus" ValidatesOnDataErrors="True" ValidatesOnExceptions="True">
                             <Binding.ValidationRules>
                                 <cd:ByteValidationRule />
                             </Binding.ValidationRules>
@@ -168,9 +168,9 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="H Byte" Width="80" MinWidth="80" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTextColumn Header="# Bytes" Width="80" MinWidth="80" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                     <DataGridTextColumn.Binding>
-                        <Binding Path="HighByte" UpdateSourceTrigger="LostFocus" ValidatesOnDataErrors="True" ValidatesOnExceptions="True">
+                        <Binding Path="DLC" UpdateSourceTrigger="LostFocus" ValidatesOnDataErrors="True" ValidatesOnExceptions="True">
                             <Binding.ValidationRules>
                                 <cd:ByteValidationRule />
                             </Binding.ValidationRules>
@@ -200,7 +200,7 @@
                         <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
                     </DataGridTemplateColumn.CellStyle>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Mask" Width="70" MinWidth="70" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTextColumn Header="Arg" Width="70" MinWidth="70" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                     <DataGridTextColumn.Binding>
                         <Binding Path="OnVal" UpdateSourceTrigger="LostFocus" ValidatesOnDataErrors="True" ValidatesOnExceptions="True">
                             <Binding.ValidationRules>

@@ -804,8 +804,8 @@ namespace CanDevices.DingoPdm
                         CanInputs[index].Mode = (InputMode)((data[1] & 0x06) >> 1);
                         CanInputs[index].Operator = (Operator)((data[1] & 0xF0) >> 4);
                         CanInputs[index].Id = (data[3] << 8) + data[4];
-                        CanInputs[index].HighByte = (data[5] & 0xF0) >> 4;
-                        CanInputs[index].LowByte = (data[5] & 0x0F);
+                        CanInputs[index].DLC = (data[5] & 0xF0) >> 4;
+                        CanInputs[index].StartingByte = (data[5] & 0x0F);
                         CanInputs[index].OnVal = data[6];
 
                         foreach (var msg in queue)
@@ -1242,8 +1242,8 @@ namespace CanDevices.DingoPdm
                         Convert.ToByte(canInput.Number - 1), //Byte 2
                         Convert.ToByte((canInput.Id & 0xFF00) >> 8), //Byte 3
                         Convert.ToByte(canInput.Id & 0x00FF), //Byte 4
-                        Convert.ToByte(((canInput.HighByte & 0x0F) << 4) +
-                        (canInput.LowByte & 0x0F)), //Byte 5
+                        Convert.ToByte(((canInput.DLC & 0x0F) << 4) +
+                                        (canInput.StartingByte & 0x0F)), //Byte 5
                         Convert.ToByte(canInput.OnVal), //Byte 6 
                         0 }
                     },

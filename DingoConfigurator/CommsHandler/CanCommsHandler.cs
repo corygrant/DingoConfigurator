@@ -279,7 +279,7 @@ namespace CommsHandler
                             _can.Write(msg.Data);
                             ProcessMessage(msg.Data);//Catch with CanMsgLog
 
-                            msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout * 10, _msgTimeout * 10);
+                            msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout * 10, _msgTimeout * 10); //Check for burn slower
 
                             Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
                         }

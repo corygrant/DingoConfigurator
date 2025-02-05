@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 using System.Windows.Controls;
 
 namespace CanDevices.DingoPdm
@@ -82,6 +83,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _lowByte;
+        [Obsolete]
         [JsonPropertyName("lowByte")]
         public int LowByte
         {
@@ -97,6 +99,7 @@ namespace CanDevices.DingoPdm
         }
 
         private int _highByte;
+        [Obsolete]
         [JsonPropertyName("highByte")]
         public int HighByte
         {
@@ -107,6 +110,36 @@ namespace CanDevices.DingoPdm
                 {
                     _highByte = value;
                     OnPropertyChanged(nameof(HighByte));
+                }
+            }
+        }
+
+        private int _startingByte;
+        [JsonPropertyName("startingByte")]
+        public int StartingByte
+        {
+            get => _startingByte;
+            set
+            {
+                if (_startingByte != value)
+                {
+                    _startingByte = value;
+                    OnPropertyChanged(nameof(StartingByte));
+                }
+            }
+        }
+
+        private int _dlc;
+        [JsonPropertyName("dlc")]
+        public int DLC
+        {
+            get => _dlc;
+            set
+            {
+                if (_dlc != value)
+                {
+                    _dlc = value;
+                    OnPropertyChanged(nameof(DLC));
                 }
             }
         }
