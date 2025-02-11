@@ -88,7 +88,7 @@ namespace CanDevices.DingoDash
          
         }
 
-        public bool Read(int id, byte[] data, ref ConcurrentDictionary<Guid, CanDeviceResponse> queue)
+        public bool Read(int id, byte[] data, ref ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)
         {
             if ((id < BaseId) || (id > BaseId + 10)) return false;
 

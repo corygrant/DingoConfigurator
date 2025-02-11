@@ -1,5 +1,4 @@
-﻿using CanDevices.DingoPdm;
-using CanInterfaces;
+﻿using CanInterfaces;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -62,7 +61,7 @@ namespace CanDevices
         
         }
 
-        public bool Read(int id, byte[] data, ref ConcurrentDictionary<Guid,CanDeviceResponse> queue)
+        public bool Read(int id, byte[] data, ref ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)
         {
             return true;
         }

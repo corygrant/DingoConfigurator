@@ -390,7 +390,7 @@ namespace CanDevices.DingoPdm
             return (id >= BaseId) && (id <= BaseId + 31) ;
         }
 
-        public bool Read(int id, byte[] data, ref ConcurrentDictionary<Guid, CanDeviceResponse> queue)
+        public bool Read(int id, byte[] data, ref ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)
         {
             if ((id < BaseId) || (id > BaseId + 31)) 
                 return false;
@@ -548,12 +548,15 @@ namespace CanDevices.DingoPdm
         }
 
 
-        protected void ReadSettingsResponse(byte[] data, ConcurrentDictionary<Guid, CanDeviceResponse> queue)
+        protected void ReadSettingsResponse(byte[] data, ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)
         {
             //Response is lowercase version of set/get prefix
             MessagePrefix prefix = (MessagePrefix)Char.ToUpper(Convert.ToChar(data[0]));
 
             int index = 0;
+
+            var key = (BaseId, (int)prefix, 0);
+            CanDeviceResponse response;
 
             switch (prefix)
             {
@@ -565,32 +568,24 @@ namespace CanDevices.DingoPdm
                         Logger.Error($"{Name} ID: {BaseId}, Firmware needs to be updated. V{_minMajorVersion}.{_minMinorVersion}.{_minBuildVersion} or greater");
                     }
 
-                    foreach(var msg in queue)
+                    key = (BaseId, (int)MessagePrefix.Version, 0);
+                    if(queue.TryRemove(key, out response))
                     {
-                        if((msg.Value.DeviceBaseId == BaseId) &&
-                                        ((MessagePrefix)Convert.ToChar(msg.Value.Data.Payload[0]) == MessagePrefix.Version))
-                        {
-                            msg.Value.TimeSentTimer.Dispose();
-                            queue.TryRemove(msg.Key, out _);
-                            break;
-                        }
+                        response.TimeSentTimer.Dispose();
                     }
+
                     break;
 
                 case MessagePrefix.CAN:
                     BaseId = (data[2] << 8) + data[3];
                     BaudRate = (CanSpeed)((data[1] & 0xF0)>>4);
 
-                    foreach (var msg in queue)
+                    key = (BaseId, (int)MessagePrefix.CAN, 0);
+                    if (queue.TryRemove(key, out response))
                     {
-                        if ((msg.Value.DeviceBaseId == BaseId) &&
-                                        ((MessagePrefix)Convert.ToChar(msg.Value.Data.Payload[0]) == MessagePrefix.CAN))
-                        {
-                            msg.Value.TimeSentTimer.Dispose();
-                            queue.TryRemove(msg.Key, out _);
-                            break;
-                        }
+                        response.TimeSentTimer.Dispose();
                     }
+
                     break;
 
                 case MessagePrefix.Input:
@@ -603,19 +598,14 @@ namespace CanDevices.DingoPdm
                         DigitalInputs[index].Mode = (InputMode)((data[1] & 0x06) >> 1);
                         DigitalInputs[index].DebounceTime = data[2] * 10;
                         DigitalInputs[index].Pull = (InputPull)(data[3] & 0x03);
-                    }
 
-                    foreach (var msg in queue)
-                    {
-                        if((msg.Value.DeviceBaseId == BaseId) &&
-                                        ((MessagePrefix)Convert.ToChar(msg.Value.Data.Payload[0]) == MessagePrefix.Input) &&
-                                        ((msg.Value.Data.Payload[1] & 0xF0) >> 4) == index)
+                        key = (BaseId, (int)MessagePrefix.Input, index);
+                        if (queue.TryRemove(key, out response))
                         {
-                            msg.Value.TimeSentTimer.Dispose();
-                            queue.TryRemove(msg.Key, out _);
-                            break;
+                            response.TimeSentTimer.Dispose();
                         }
                     }
+
                     break;
 
                 case MessagePrefix.Output:
@@ -631,19 +621,14 @@ namespace CanDevices.DingoPdm
                         Outputs[index].ResetTime = data[5] / 10.0;
                         Outputs[index].InrushCurrentLimit = data[6];
                         Outputs[index].InrushTime = data[7] / 10.0;
-                    }
 
-                    foreach (var msg in queue)
-                    {
-                        if ((msg.Value.DeviceBaseId == BaseId) &&
-                                        ((MessagePrefix)Convert.ToChar(msg.Value.Data.Payload[0]) == MessagePrefix.Output) &&
-                                        ((msg.Value.Data.Payload[1] & 0xF0) >> 4) == index)
+                        key = (BaseId, (int)MessagePrefix.Output, index);
+                        if (queue.TryRemove(key, out response))
                         {
-                            msg.Value.TimeSentTimer.Dispose();
-                            queue.TryRemove(msg.Key, out _);
-                            break;
+                            response.TimeSentTimer.Dispose();
                         }
                     }
+
                     break;
 
                 case MessagePrefix.VirtualInput:
@@ -661,22 +646,14 @@ namespace CanDevices.DingoPdm
                         VirtualInputs[index].Mode = (InputMode)((data[6] & 0xC0) >> 6);
                         VirtualInputs[index].Cond0 = (Conditional)(data[6] & 0x03);
                         VirtualInputs[index].Cond1 = (Conditional)((data[6] & 0x0C) >> 2);
-                    }
 
-                    foreach (var msg in queue)
-                    {
-                        if ((msg.Value.DeviceBaseId == BaseId) &&
-                                        ((MessagePrefix)Convert.ToChar(msg.Value.Data.Payload[0]) == MessagePrefix.VirtualInput))
+                        key = (BaseId, (int)MessagePrefix.VirtualInput, index);
+                        if (queue.TryRemove(key, out response))
                         {
-                            if (((msg.Value.Data.Len == 7) && (msg.Value.Data.Payload[2] == index)) ||
-                                    ((msg.Value.Data.Len == 2) && (msg.Value.Data.Payload[1] == index)))
-                            {
-                                msg.Value.TimeSentTimer.Dispose();
-                                queue.TryRemove(msg.Key, out _);
-                                break;
-                            }
+                            response.TimeSentTimer.Dispose();
                         }
                     }
+
                     break;
 
                 case MessagePrefix.Flasher:
@@ -689,19 +666,14 @@ namespace CanDevices.DingoPdm
                         Flashers[index].Input = (VarMap)(data[2]);
                         Flashers[index].OnTime = data[4] / 10.0;
                         Flashers[index].OffTime = data[5] / 10.0;
-                    }
 
-                    foreach (var msg in queue)
-                    {
-                        if ((msg.Value.DeviceBaseId == BaseId) &&
-                                        ((MessagePrefix)Convert.ToChar(msg.Value.Data.Payload[0]) == MessagePrefix.Flasher) &&
-                                        ((msg.Value.Data.Payload[1] & 0xF0) >> 4) == index)
+                        key = (BaseId, (int)MessagePrefix.Flasher, index);
+                        if (queue.TryRemove(key, out response))
                         {
-                            msg.Value.TimeSentTimer.Dispose();
-                            queue.TryRemove(msg.Key, out _);
-                            break;
+                            response.TimeSentTimer.Dispose();
                         }
                     }
+
                     break;
 
                 case MessagePrefix.Wiper:
@@ -716,16 +688,12 @@ namespace CanDevices.DingoPdm
                     Wipers[0].ParkInput = (VarMap)data[6];
                     Wipers[0].WashInput = (VarMap)data[7];
 
-                    foreach (var msg in queue)
+                    key = (BaseId, (int)MessagePrefix.Wiper, 0);
+                    if (queue.TryRemove(key, out response))
                     {
-                        if ((msg.Value.DeviceBaseId == BaseId) &&
-                                        ((MessagePrefix)Convert.ToChar(msg.Value.Data.Payload[0]) == MessagePrefix.Wiper))
-                        {
-                            msg.Value.TimeSentTimer.Dispose();
-                            queue.TryRemove(msg.Key, out _);
-                            break;
-                        }
+                        response.TimeSentTimer.Dispose();
                     }
+
                     break;
 
                 case MessagePrefix.WiperSpeed:
@@ -740,16 +708,12 @@ namespace CanDevices.DingoPdm
                     Wipers[0].SpeedMap[6] = (WiperSpeed)(data[6] & 0x0F);
                     Wipers[0].SpeedMap[7] = (WiperSpeed)((data[6] & 0xF0) >> 4);
 
-                    foreach (var msg in queue)
+                    key = (BaseId, (int)MessagePrefix.WiperSpeed, 0);
+                    if (queue.TryRemove(key, out response))
                     {
-                        if ((msg.Value.DeviceBaseId == BaseId) &&
-                                        ((MessagePrefix)Convert.ToChar(msg.Value.Data.Payload[0]) == MessagePrefix.WiperSpeed))
-                        {
-                            msg.Value.TimeSentTimer.Dispose();
-                            queue.TryRemove(msg.Key, out _);
-                            break;
-                        }
+                        response.TimeSentTimer.Dispose();
                     }
+
                     break;
 
                 case MessagePrefix.WiperDelay:
@@ -760,16 +724,12 @@ namespace CanDevices.DingoPdm
                     Wipers[0].IntermitTime[4] = data[5] / 10.0;
                     Wipers[0].IntermitTime[5] = data[6] / 10.0;
 
-                    foreach (var msg in queue)
+                    key = (BaseId, (int)MessagePrefix.WiperDelay, 0);
+                    if (queue.TryRemove(key, out response))
                     {
-                        if ((msg.Value.DeviceBaseId == BaseId) &&
-                                        ((MessagePrefix)Convert.ToChar(msg.Value.Data.Payload[0]) == MessagePrefix.WiperDelay))
-                        {
-                            msg.Value.TimeSentTimer.Dispose();
-                            queue.TryRemove(msg.Key, out _);
-                            break;
-                        }
+                        response.TimeSentTimer.Dispose();
                     }
+
                     break;
 
                 case MessagePrefix.StarterDisable:
@@ -784,16 +744,12 @@ namespace CanDevices.DingoPdm
                     StarterDisable[0].Output7 = Convert.ToBoolean((data[3] & 0x40) >> 6);
                     StarterDisable[0].Output8 = Convert.ToBoolean((data[3] & 0x80) >> 7);
 
-                    foreach (var msg in queue)
+                    key = (BaseId, (int)MessagePrefix.StarterDisable, 0);
+                    if (queue.TryRemove(key, out response))
                     {
-                        if ((msg.Value.DeviceBaseId == BaseId) &&
-                                        ((MessagePrefix)Convert.ToChar(msg.Value.Data.Payload[0]) == MessagePrefix.StarterDisable))
-                        {
-                            msg.Value.TimeSentTimer.Dispose();
-                            queue.TryRemove(msg.Key, out _);
-                            break;
-                        }
+                        response.TimeSentTimer.Dispose();
                     }
+
                     break;
 
                 case MessagePrefix.CANInput:
@@ -808,21 +764,13 @@ namespace CanDevices.DingoPdm
                         CanInputs[index].StartingByte = (data[5] & 0x0F);
                         CanInputs[index].OnVal = (data[6] << 8) + data[7];
 
-                        foreach (var msg in queue)
+                        key = (BaseId, (int)MessagePrefix.CANInput, index);
+                        if (queue.TryRemove(key, out response))
                         {
-                            if ((msg.Value.DeviceBaseId == BaseId) &&
-                                            ((MessagePrefix)Convert.ToChar(msg.Value.Data.Payload[0]) == MessagePrefix.CANInput))
-                            {
-                                if (((msg.Value.Data.Len == 8) && (msg.Value.Data.Payload[2] == index)) ||
-                                    ((msg.Value.Data.Len == 2) && (msg.Value.Data.Payload[1] == index)))
-                                {
-                                    msg.Value.TimeSentTimer.Dispose();
-                                    queue.TryRemove(msg.Key, out _);
-                                    break;
-                                }
-                            }
+                            response.TimeSentTimer.Dispose();
                         }
                     }
+
                     break;
 
                 case MessagePrefix.Burn:
@@ -830,15 +778,10 @@ namespace CanDevices.DingoPdm
                     {
                         Logger.Info($"{Name} ID: {BaseId}, Burn Successful");
 
-                        foreach (var msg in queue)
+                        key = (BaseId, (int)MessagePrefix.Burn, 0);
+                        if (queue.TryRemove(key, out response))
                         {
-                            if ((msg.Value.DeviceBaseId == BaseId) &&
-                                            ((MessagePrefix)Convert.ToChar(msg.Value.Data.Payload[0]) == MessagePrefix.Burn))
-                            {
-                                msg.Value.TimeSentTimer.Dispose();
-                                queue.TryRemove(msg.Key, out _);
-                                break;
-                            }
+                            response.TimeSentTimer.Dispose();
                         }
                     }
 
@@ -853,15 +796,10 @@ namespace CanDevices.DingoPdm
                     {
                         Logger.Info($"{Name} ID: {BaseId}, Sleep Successful");
 
-                        foreach (var msg in queue)
+                        key = (BaseId, (int)MessagePrefix.Sleep, 0);
+                        if (queue.TryRemove(key, out response))
                         {
-                            if ((msg.Value.DeviceBaseId == BaseId) &&
-                                            ((MessagePrefix)Convert.ToChar(msg.Value.Data.Payload[0]) == MessagePrefix.Sleep))
-                            {
-                                msg.Value.TimeSentTimer.Dispose();
-                                queue.TryRemove(msg.Key, out _);
-                                break;
-                            }
+                            response.TimeSentTimer.Dispose();
                         }
                     }
 
@@ -909,11 +847,13 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
+                Prefix = (int)MessagePrefix.Version,
+                Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = id,
                     Len = 1,
-                    Payload = new byte[] { Convert.ToByte('V'), 0, 0, 0, 0, 0, 0, 0 }
+                    Payload = new byte[] { Convert.ToByte(MessagePrefix.Version), 0, 0, 0, 0, 0, 0, 0 }
                 },
                 MsgDescription="Version"
             });
@@ -923,11 +863,13 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
+                Prefix = (int)MessagePrefix.CAN,
+                Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = id,
                     Len = 1,
-                    Payload = new byte[] { Convert.ToByte('C'), 0, 0, 0, 0, 0, 0, 0 }
+                    Payload = new byte[] { Convert.ToByte(MessagePrefix.CAN), 0, 0, 0, 0, 0, 0, 0 }
                 },
                 MsgDescription="CANSettings"
             });
@@ -939,11 +881,13 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
+                    Prefix = (int)MessagePrefix.Input,
+                    Index = i,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 2,
-                        Payload = new byte[] { Convert.ToByte('I'),
+                        Payload = new byte[] { Convert.ToByte(MessagePrefix.Input),
                         Convert.ToByte((i & 0x0F) << 4),
                         0, 0, 0, 0, 0, 0 }
                     },
@@ -958,11 +902,13 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
+                    Prefix = (int)MessagePrefix.Output,
+                    Index = i,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 2,
-                        Payload = new byte[] { Convert.ToByte('O'),
+                        Payload = new byte[] { Convert.ToByte(MessagePrefix.Output),
                         Convert.ToByte((i & 0x0F) << 4),
                         0, 0, 0, 0, 0, 0 }
                     },
@@ -977,11 +923,13 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
+                    Prefix = (int)MessagePrefix.VirtualInput,
+                    Index = i,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 2,
-                        Payload = new byte[] { Convert.ToByte('U'),
+                        Payload = new byte[] { Convert.ToByte(MessagePrefix.VirtualInput),
                         Convert.ToByte(i),
                         0, 0, 0, 0, 0, 0 }
                     },
@@ -996,11 +944,13 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
+                    Prefix = (int)MessagePrefix.Flasher,
+                    Index = i,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 2,
-                        Payload = new byte[] { Convert.ToByte('H'),
+                        Payload = new byte[] { Convert.ToByte(MessagePrefix.Flasher),
                         Convert.ToByte((i & 0x0F) << 4),
                         0, 0, 0, 0, 0, 0 }
                     },
@@ -1015,11 +965,13 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
+                    Prefix = (int)MessagePrefix.CANInput,
+                    Index = i,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 2,
-                        Payload = new byte[] { Convert.ToByte('N'),
+                        Payload = new byte[] { Convert.ToByte(MessagePrefix.CANInput),
                         Convert.ToByte(i),
                         0, 0, 0, 0, 0, 0 }
                     },
@@ -1032,11 +984,13 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
+                Prefix = (int)MessagePrefix.Wiper,
+                Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = id,
                     Len = 1,
-                    Payload = new byte[] { Convert.ToByte('W'), 0, 0, 0, 0, 0, 0, 0 }
+                    Payload = new byte[] { Convert.ToByte(MessagePrefix.Wiper), 0, 0, 0, 0, 0, 0, 0 }
                 },
                 MsgDescription = "Wiper"
             });
@@ -1046,11 +1000,13 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
+                Prefix = (int)MessagePrefix.WiperSpeed,
+                Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = id,
                     Len = 1,
-                    Payload = new byte[] { Convert.ToByte('P'), 0, 0, 0, 0, 0, 0, 0 }
+                    Payload = new byte[] { Convert.ToByte(MessagePrefix.WiperSpeed), 0, 0, 0, 0, 0, 0, 0 }
                 },
                 MsgDescription = "WiperSpeed"
             });
@@ -1060,11 +1016,13 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
+                Prefix = (int)MessagePrefix.WiperDelay,
+                Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = id,
                     Len = 1,
-                    Payload = new byte[] { Convert.ToByte('Y'), 0, 0, 0, 0, 0, 0, 0 }
+                    Payload = new byte[] { Convert.ToByte(MessagePrefix.WiperDelay), 0, 0, 0, 0, 0, 0, 0 }
                 },
                 MsgDescription = "WiperDelay"
             });
@@ -1074,11 +1032,13 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
+                Prefix = (int)MessagePrefix.StarterDisable,
+                Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = id,
                     Len = 1,
-                    Payload = new byte[] { Convert.ToByte('D'), 0, 0, 0, 0, 0, 0, 0 }
+                    Payload = new byte[] { Convert.ToByte(MessagePrefix.StarterDisable), 0, 0, 0, 0, 0, 0, 0 }
                 },
                 MsgDescription = "StarterDisable"
             });
@@ -1099,12 +1059,14 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
+                Prefix = (int)MessagePrefix.CAN,
+                Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = id,
                     Len = 5,
                     Payload = new byte[] {
-                    Convert.ToByte('C'), //Byte 0
+                    Convert.ToByte(MessagePrefix.CAN), //Byte 0
                     Convert.ToByte((Convert.ToByte(BaudRate) << 4) +
                     (0x03)), //Byte 1
                     Convert.ToByte((BaseId & 0xFF00) >> 8), //Byte 2
@@ -1122,12 +1084,14 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
+                    Prefix = (int)MessagePrefix.Input,
+                    Index = input.Number - 1,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 4,
                         Payload = new byte[] {
-                        Convert.ToByte('I'), //Byte 0
+                        Convert.ToByte(MessagePrefix.Input), //Byte 0
                         Convert.ToByte((((input.Number - 1) & 0x0F) << 4) +
                         ((Convert.ToByte(input.InvertInput) & 0x01) << 3) +
                         ((Convert.ToByte(input.Mode) & 0x03) << 1) +
@@ -1147,12 +1111,14 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
+                    Prefix = (int)MessagePrefix.Output,
+                    Index = output.Number - 1,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 8,
                         Payload = new byte[] {
-                        Convert.ToByte('O'), //Byte 0
+                        Convert.ToByte(MessagePrefix.Output), //Byte 0
                         Convert.ToByte((((output.Number - 1) & 0x0F) << 4) +
                         (Convert.ToByte(output.Enabled) & 0x01)), //Byte 1
                         Convert.ToByte(output.Input), //Byte 2
@@ -1174,12 +1140,14 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
+                    Prefix = (int)MessagePrefix.VirtualInput,
+                    Index = virtInput.Number - 1,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 7,
                         Payload = new byte[] {
-                        Convert.ToByte('U'), //Byte 0
+                        Convert.ToByte(MessagePrefix.VirtualInput), //Byte 0
                         Convert.ToByte((Convert.ToByte(virtInput.Not2) << 3) +
                         (Convert.ToByte(virtInput.Not1) << 2) +
                         (Convert.ToByte(virtInput.Not0) << 1) +
@@ -1204,12 +1172,14 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
+                    Prefix = (int)MessagePrefix.Flasher,
+                    Index = flash.Number - 1,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 6,
                         Payload = new byte[] {
-                        Convert.ToByte('H'), //Byte 0
+                        Convert.ToByte(MessagePrefix.Flasher), //Byte 0
                         Convert.ToByte((((flash.Number - 1) & 0x0F) << 4) +
                         (Convert.ToByte(flash.Single) << 1) +
                         (Convert.ToByte(flash.Enabled))), //Byte 1
@@ -1230,12 +1200,14 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
+                    Prefix = (int)MessagePrefix.CANInput,
+                    Index = canInput.Number - 1,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 8,
                         Payload = new byte[] {
-                        Convert.ToByte('N'), //Byte 0
+                        Convert.ToByte(MessagePrefix.CANInput), //Byte 0
                         Convert.ToByte(((Convert.ToByte(canInput.Operator) & 0x0F) << 4) +
                         ((Convert.ToByte(canInput.Mode) & 0x03) << 1) +
                         (Convert.ToByte(canInput.Enabled) & 0x01)), //Byte 1
@@ -1256,12 +1228,14 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
+                Prefix = (int)MessagePrefix.Wiper,
+                Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = id,
                     Len = 8,
                     Payload = new byte[] {
-                    Convert.ToByte('W'), //Byte 0 
+                    Convert.ToByte(MessagePrefix.Wiper), //Byte 0 
                     Convert.ToByte(((Convert.ToByte(Wipers[0].WashWipeCycles) & 0x0F) << 4) +
                     ((Convert.ToByte(Wipers[0].ParkStopLevel) & 0x01) << 3) +
                     ((Convert.ToByte(Wipers[0].Mode) & 0x03) << 1) +
@@ -1281,12 +1255,14 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
+                Prefix = (int)MessagePrefix.WiperSpeed,
+                Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = id,
                     Len = 7,
                     Payload = new byte[] {
-                    Convert.ToByte('P'), //Byte 0 
+                    Convert.ToByte(MessagePrefix.WiperSpeed), //Byte 0 
                     Convert.ToByte(Wipers[0].SwipeInput), //Byte 1
                     Convert.ToByte(Wipers[0].SpeedInput), //Byte 2
 
@@ -1309,12 +1285,14 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
+                Prefix = (int)MessagePrefix.WiperDelay,
+                Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = id,
                     Len = 7,
                     Payload = new byte[] {
-                    Convert.ToByte('Y'), //Byte 0 
+                    Convert.ToByte(MessagePrefix.WiperDelay), //Byte 0 
                     Convert.ToByte(Wipers[0].IntermitTime[0] * 10), //Byte 1
                     Convert.ToByte(Wipers[0].IntermitTime[1] * 10), //Byte 2
                     Convert.ToByte(Wipers[0].IntermitTime[2] * 10), //Byte 3
@@ -1331,12 +1309,14 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
+                Prefix = (int)MessagePrefix.StarterDisable,
+                Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = id,
                     Len = 4,
                     Payload = new byte[] {
-                    Convert.ToByte('D'), //Byte 0 
+                    Convert.ToByte(MessagePrefix.StarterDisable), //Byte 0 
                     Convert.ToByte(Convert.ToByte(StarterDisable[0].Enabled) & 0x01), //Byte 1
                     Convert.ToByte(StarterDisable[0].Input), //Byte 2
                     Convert.ToByte(((Convert.ToByte(StarterDisable[0].Output8) & 0x01) << 7) +
@@ -1365,12 +1345,14 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
+                Prefix = (int)MessagePrefix.CAN,
+                Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = id,
                     Len = 5,
                     Payload = new byte[] {
-                    Convert.ToByte('C'), //Byte 0
+                    Convert.ToByte(MessagePrefix.CAN), //Byte 0
                     Convert.ToByte((Convert.ToByte(BaudRate) << 4) +
                     (0x03)), //Byte 1
                     Convert.ToByte((newId & 0xFF00) >> 8), //Byte 2
@@ -1390,11 +1372,13 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
+                Prefix = (int)MessagePrefix.Burn,
+                Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = BaseId - 1,
                     Len = 4,
-                    Payload = new byte[] { Convert.ToByte('B'), 1, 3, 8, 0, 0, 0, 0 }
+                    Payload = new byte[] { Convert.ToByte(MessagePrefix.Burn), 1, 3, 8, 0, 0, 0, 0 }
                 },
                 MsgDescription = "Burn Settings"
             };
@@ -1406,6 +1390,8 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
+                Prefix = (int)MessagePrefix.Sleep,
+                Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = BaseId - 1,

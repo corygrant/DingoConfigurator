@@ -22,7 +22,7 @@ namespace CommsHandler
     {
         private ICanInterface _can;
 
-        private ConcurrentDictionary<Guid,CanDeviceResponse> _queue;
+        private ConcurrentDictionary<(int BaseId, int Prefix, int Index),CanDeviceResponse> _queue;
 
         public delegate void DataUpdatedHandler(object sender);
 
@@ -54,7 +54,7 @@ namespace CommsHandler
         public CanCommsHandler()
         {
             _canDevices = new ObservableCollection<ICanDevice>();
-            _queue = new ConcurrentDictionary<Guid, CanDeviceResponse>();
+            _queue = new ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse>();
             Connected = false;
 
             _checkConnectionTimer.Elapsed += (sender, e) =>
@@ -163,9 +163,8 @@ namespace CommsHandler
                             foreach (var msg in msgs)
                             {
                                 msg.DeviceBaseId = cd.BaseId;
-                                var qid = Guid.NewGuid();
-                                msg.QueueId = qid; //Store GUID with msg data for use later
-                                _queue.TryAdd(qid, msg);
+                                var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
+                                _queue.TryAdd(key, msg);
                                 _can.Write(msg.Data);
                                 ProcessMessage(msg.Data);//Catch with CanMsgLog
                                 
@@ -196,9 +195,8 @@ namespace CommsHandler
                             foreach (var msg in msgs)
                             {
                                 msg.DeviceBaseId = cd.BaseId;
-                                var qid = Guid.NewGuid();
-                                msg.QueueId = qid; //Store GUID with msg data for use later
-                                _queue.TryAdd(qid, msg);
+                                var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
+                                _queue.TryAdd(key, msg);
                                 _can.Write(msg.Data);
                                 ProcessMessage(msg.Data);//Catch with CanMsgLog
 
@@ -230,9 +228,8 @@ namespace CommsHandler
                                 foreach (var msg in msgs)
                                 {
                                     msg.DeviceBaseId = newId; //Set msg ID to new ID so response is processed properly
-                                    var qid = Guid.NewGuid();
-                                    msg.QueueId = qid; //Store GUID with msg data for use later
-                                    _queue.TryAdd(qid, msg);
+                                    var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
+                                    _queue.TryAdd(key, msg);
                                     if (!_can.Write(msg.Data))
                                     {
                                         Logger.Error("Failed to write to CAN");
@@ -273,9 +270,8 @@ namespace CommsHandler
                             if (msg == null) return;
 
                             msg.DeviceBaseId = cd.BaseId;
-                            var qid = Guid.NewGuid();
-                            msg.QueueId = qid; //Store GUID with msg data for use later
-                            _queue.TryAdd(qid, msg); ;
+                            var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
+                            _queue.TryAdd(key, msg);
                             _can.Write(msg.Data);
                             ProcessMessage(msg.Data);//Catch with CanMsgLog
 
@@ -302,9 +298,8 @@ namespace CommsHandler
                             if (msg == null) return;
 
                             msg.DeviceBaseId = cd.BaseId;
-                            var qid = Guid.NewGuid();
-                            msg.QueueId = qid; //Store GUID with msg data for use later
-                            _queue.TryAdd(qid, msg);
+                            var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
+                            _queue.TryAdd(key, msg);
                             _can.Write(msg.Data);
                             ProcessMessage(msg.Data);//Catch with CanMsgLog
 
@@ -327,8 +322,6 @@ namespace CommsHandler
                     {
                         var msg = new CanDeviceResponse
                         {
-                            Sent = false,
-                            Received = false,
                             Data = new CanInterfaceData
                             {
                                 Id = canDevice.BaseId - 1,
@@ -338,6 +331,7 @@ namespace CommsHandler
                             MsgDescription = "Wake Request"
                         };
 
+                        //No response needed, don't add to queue
                         msg.DeviceBaseId = cd.BaseId;
                         _can.Write(msg.Data);
                     }
@@ -355,8 +349,6 @@ namespace CommsHandler
                     {
                         var msg = new CanDeviceResponse
                         {
-                            Sent = false,
-                            Received = false,
                             Data = new CanInterfaceData
                             {
                                 Id = canDevice.BaseId - 1,
@@ -366,6 +358,7 @@ namespace CommsHandler
                             MsgDescription = "Fw Update Request"
                         };
 
+                        //No response needed, don't add to queue
                         msg.DeviceBaseId = cd.BaseId;
                         _can.Write(msg.Data);
                     }
@@ -396,7 +389,8 @@ namespace CommsHandler
             if (!Connected)
             {
                 msg.TimeSentTimer.Dispose();
-                _queue.TryRemove(msg.QueueId, out _);
+                var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
+                _queue.TryRemove(key, out _);
                 return;
             }
             
@@ -412,7 +406,8 @@ namespace CommsHandler
             {
                 Logger.Error($"No response after {_maxReceiveAttempts} attempts {msg.MsgDescription}");
                 msg.TimeSentTimer.Dispose();
-                _queue.TryRemove(msg.QueueId, out _);
+                var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
+                _queue.TryRemove(key, out _);
             }
         }
 

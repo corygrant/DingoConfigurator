@@ -32,7 +32,8 @@ namespace CanDevices.DingoPdm
         CANInput = 'N',
         Info = 'F',
         Warning = 'R',
-        Error = 'E'
+        Error = 'E',
+        Wake = '!'
     }
 
     public enum MessageSrc
