@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace CanDevices.DingoPdm
 {
@@ -151,6 +152,48 @@ namespace CanDevices.DingoPdm
                     OnPropertyChanged(nameof(Output8));
                 }
             }
+        }
+
+        public static byte[] Request()
+        {
+            byte[] data = new byte[8];
+            data[0] = Convert.ToByte(MessagePrefix.StarterDisable);
+            return data;
+        }
+
+        public bool Receive(byte[] data)
+        {
+            if (data.Length != 4) return false;
+
+            Enabled = Convert.ToBoolean(data[1] & 0x01);
+            Input = (VarMap)(data[2]);
+            Output1 = Convert.ToBoolean(data[3] & 0x01);
+            Output2 = Convert.ToBoolean((data[3] & 0x02) >> 1);
+            Output3 = Convert.ToBoolean((data[3] & 0x04) >> 2);
+            Output4 = Convert.ToBoolean((data[3] & 0x08) >> 3);
+            Output5 = Convert.ToBoolean((data[3] & 0x10) >> 4);
+            Output6 = Convert.ToBoolean((data[3] & 0x20) >> 5);
+            Output7 = Convert.ToBoolean((data[3] & 0x40) >> 6);
+            Output8 = Convert.ToBoolean((data[3] & 0x80) >> 7);
+
+            return true;
+        }
+
+        public byte[] Write()
+        {
+            byte[] data = new byte[8];
+            data[0] = Convert.ToByte(MessagePrefix.StarterDisable);
+            data[1] = Convert.ToByte(Convert.ToByte(Enabled) & 0x01);
+            data[2] = Convert.ToByte(Input);
+            data[3] = Convert.ToByte(((Convert.ToByte(Output8) & 0x01) << 7) +
+                      ((Convert.ToByte(Output7) & 0x01) << 6) +
+                      ((Convert.ToByte(Output6) & 0x01) << 5) +
+                      ((Convert.ToByte(Output5) & 0x01) << 4) +
+                      ((Convert.ToByte(Output4) & 0x01) << 3) +
+                      ((Convert.ToByte(Output3) & 0x01) << 2) +
+                      ((Convert.ToByte(Output2) & 0x01) << 1) +
+                      (Convert.ToByte(Output1) & 0x01));
+            return data;
         }
     }
 }

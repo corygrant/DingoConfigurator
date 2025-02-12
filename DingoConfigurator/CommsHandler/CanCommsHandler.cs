@@ -163,13 +163,12 @@ namespace CommsHandler
                             foreach (var msg in msgs)
                             {
                                 msg.DeviceBaseId = cd.BaseId;
+                                msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout, _msgTimeout);
                                 var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
                                 _queue.TryAdd(key, msg);
                                 _can.Write(msg.Data);
                                 ProcessMessage(msg.Data);//Catch with CanMsgLog
                                 
-                                msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout, _msgTimeout);
-
                                 Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
                             }
                             msgs.Clear();
@@ -195,12 +194,11 @@ namespace CommsHandler
                             foreach (var msg in msgs)
                             {
                                 msg.DeviceBaseId = cd.BaseId;
+                                msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout, _msgTimeout);
                                 var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
                                 _queue.TryAdd(key, msg);
                                 _can.Write(msg.Data);
                                 ProcessMessage(msg.Data);//Catch with CanMsgLog
-
-                                msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout, _msgTimeout);
 
                                 Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
                             }
@@ -228,6 +226,7 @@ namespace CommsHandler
                                 foreach (var msg in msgs)
                                 {
                                     msg.DeviceBaseId = newId; //Set msg ID to new ID so response is processed properly
+                                    msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout, _msgTimeout);
                                     var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
                                     _queue.TryAdd(key, msg);
                                     if (!_can.Write(msg.Data))
@@ -236,8 +235,6 @@ namespace CommsHandler
                                         Disconnect();
                                     }
                                     ProcessMessage(msg.Data);//Catch with CanMsgLog
-
-                                    msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout, _msgTimeout);
 
                                     Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
                                 }
@@ -270,12 +267,12 @@ namespace CommsHandler
                             if (msg == null) return;
 
                             msg.DeviceBaseId = cd.BaseId;
+                            msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout * 10, _msgTimeout * 10); //Check for burn slower
                             var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
                             _queue.TryAdd(key, msg);
                             _can.Write(msg.Data);
                             ProcessMessage(msg.Data);//Catch with CanMsgLog
 
-                            msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout * 10, _msgTimeout * 10); //Check for burn slower
 
                             Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
                         }
@@ -298,12 +295,11 @@ namespace CommsHandler
                             if (msg == null) return;
 
                             msg.DeviceBaseId = cd.BaseId;
+                            msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout, _msgTimeout);
                             var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
                             _queue.TryAdd(key, msg);
                             _can.Write(msg.Data);
                             ProcessMessage(msg.Data);//Catch with CanMsgLog
-
-                            msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout, _msgTimeout);
 
                             Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
                         }
@@ -388,7 +384,7 @@ namespace CommsHandler
 
             if (!Connected)
             {
-                msg.TimeSentTimer.Dispose();
+                msg.TimeSentTimer?.Dispose();
                 var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
                 _queue.TryRemove(key, out _);
                 return;
@@ -405,7 +401,7 @@ namespace CommsHandler
             else
             {
                 Logger.Error($"No response after {_maxReceiveAttempts} attempts {msg.MsgDescription}");
-                msg.TimeSentTimer.Dispose();
+                msg.TimeSentTimer?.Dispose();
                 var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
                 _queue.TryRemove(key, out _);
             }

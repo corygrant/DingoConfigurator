@@ -1,4 +1,7 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Reflection;
+using System.Security.Policy;
+using System.Text.Json.Serialization;
 using System.Windows.Controls;
 
 namespace CanDevices.DingoPdm
@@ -138,6 +141,41 @@ namespace CanDevices.DingoPdm
                     OnPropertyChanged(nameof(OffTime));
                 }
             }
+        }
+
+        public static byte[] Request(int index)
+        {
+            byte[] data = new byte[8];
+            data[0] = Convert.ToByte(MessagePrefix.Flashers);
+            data[1] = Convert.ToByte((index & 0x0F) << 4);
+            return data;
+        }
+
+        public bool Receive(byte[] data)
+        {
+            if (data.Length != 6) return false;
+
+            Enabled = Convert.ToBoolean(data[1] & 0x01);
+            Single = Convert.ToBoolean((data[1] & 0x02) >> 1);
+            Input = (VarMap)(data[2]);
+            OnTime = data[4] / 10.0;
+            OffTime = data[5] / 10.0;
+
+            return true;
+        }
+
+        public byte[] Write()
+        {
+            byte[] data = new byte[8];
+            data[0] = Convert.ToByte(MessagePrefix.Flashers);
+            data[1] = Convert.ToByte((((Number - 1) & 0x0F) << 4) +
+                      (Convert.ToByte(Single) << 1) +
+                      (Convert.ToByte(Enabled)));
+            data[2] = Convert.ToByte(Input);
+            data[3] = 0;
+            data[4] = Convert.ToByte(OnTime * 10);
+            data[5] = Convert.ToByte(OffTime * 10);
+            return data;
         }
     }
 

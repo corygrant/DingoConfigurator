@@ -17,19 +17,31 @@ namespace CanDevices.DingoPdm
 
     public enum MessagePrefix
     {
-        Burn = 'B',
-        Sleep = 'Q',
-        Version = 'V',
-        CAN = 'C',
-        Input = 'I',
-        Output = 'O',
-        VirtualInput = 'U',
-        Flasher = 'H',
-        Wiper = 'W',
-        WiperSpeed = 'P',
-        WiperDelay = 'Y',
-        StarterDisable = 'D',
-        CANInput = 'N',
+        Null = 0,
+        Can = 1,
+        Inputs = 5,
+        //InputsName = 6, //Future use
+        Outputs = 10,
+        //OutputsName = 11, //Future use
+        VirtualInputs = 15,
+        //VirtualInputsName = 16, //Future use
+        Wiper = 20,
+        WiperSpeed = 21,
+        WiperDelays = 22,
+        Flashers = 25,
+        //FlashersName = 26, //Future use
+        StarterDisable = 30,
+        CanInputs = 35,
+        CanInputsId = 36,
+        //CanInputsName = 37, //Future use
+        Version = 120,
+        Sleep = 121,
+        Bootloader = 125,
+        BurnSettings = 127
+    }
+
+    public enum MessageType
+    {
         Info = 'F',
         Warning = 'R',
         Error = 'E',

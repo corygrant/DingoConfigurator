@@ -1,4 +1,7 @@
-﻿using System.Text.Json.Serialization;
+﻿using CanDevices.CanBoard;
+using System;
+using System.Reflection;
+using System.Text.Json.Serialization;
 using System.Windows.Controls;
 
 namespace CanDevices.DingoPdm
@@ -198,6 +201,46 @@ namespace CanDevices.DingoPdm
                     OnPropertyChanged(nameof(Input));
                 }
             }
+        }
+
+        public static byte[] Request(int index)
+        {
+            byte[] data = new byte[8];
+            data[0] = Convert.ToByte(MessagePrefix.Outputs);
+            data[1] = Convert.ToByte((index & 0x0F) << 4);
+            return data;
+        }
+
+        public bool Receive(byte[] data)
+        {
+            if (data.Length != 8) return false;
+
+            Enabled = Convert.ToBoolean(data[1] & 0x01);
+            Input = (VarMap)(data[2]);
+            CurrentLimit = data[3];
+            ResetCountLimit = (data[4] & 0xF0) >> 4;
+            ResetMode = (ResetMode)(data[4] & 0x0F);
+            ResetTime = data[5] / 10.0;
+            InrushCurrentLimit = data[6];
+            InrushTime = data[7] / 10.0;
+
+            return true;
+        }
+
+        public byte[] Write()
+        {
+            byte[] data = new byte[8];
+            data[0] = Convert.ToByte(MessagePrefix.Outputs);
+            data[1] = Convert.ToByte((((Number - 1) & 0x0F) << 4) +
+                      (Convert.ToByte(Enabled) & 0x01));
+            data[2] = Convert.ToByte(Input);
+            data[3] = Convert.ToByte(CurrentLimit);
+            data[4] = Convert.ToByte((Convert.ToByte(ResetCountLimit) << 4) +
+                      (Convert.ToByte(ResetMode) & 0x0F));
+            data[5] = Convert.ToByte(ResetTime * 10);
+            data[6] = Convert.ToByte(InrushCurrentLimit);
+            data[7] = Convert.ToByte(InrushTime * 10);
+            return data;
         }
 
     }

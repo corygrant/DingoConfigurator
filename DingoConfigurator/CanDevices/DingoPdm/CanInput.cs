@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Windows.Controls;
 
@@ -187,6 +188,46 @@ namespace CanDevices.DingoPdm
                     OnPropertyChanged(nameof(Mode));
                 }
             }
+        }
+
+        public static byte[] Request(int index)
+        {
+            byte[] data = new byte[8];
+            data[0] = Convert.ToByte(MessagePrefix.CanInputs);
+            data[1] = Convert.ToByte(index);
+            return data;
+        }
+
+        public bool Receive(byte[] data)
+        {
+            if (data.Length != 8) return false;
+
+            Enabled = Convert.ToBoolean(data[1] & 0x01);
+            Mode = (InputMode)((data[1] & 0x06) >> 1);
+            Operator = (Operator)((data[1] & 0xF0) >> 4);
+            Id = (data[3] << 8) + data[4];
+            DLC = (data[5] & 0xF0) >> 4;
+            StartingByte = (data[5] & 0x0F);
+            OnVal = (data[6] << 8) + data[7];
+
+            return true;
+        }
+
+        public byte[] Write()
+        {
+            byte[] data = new byte[8];
+            data[0] = Convert.ToByte(MessagePrefix.CanInputs);
+            data[1] = Convert.ToByte(((Convert.ToByte(Operator) & 0x0F) << 4) +
+                      ((Convert.ToByte(Mode) & 0x03) << 1) +
+                      (Convert.ToByte(Enabled) & 0x01));
+            data[2] = Convert.ToByte(Number - 1);
+            data[3] = Convert.ToByte((Id & 0xFF00) >> 8);
+            data[4] = Convert.ToByte(Id & 0x00FF);
+            data[5] = Convert.ToByte(((DLC & 0x0F) << 4) +
+                      (Convert.ToByte(StartingByte) & 0x0F));
+            data[6] = Convert.ToByte((OnVal & 0xFF00) >> 8); 
+            data[7] = Convert.ToByte(OnVal & 0x00FF);
+            return data;
         }
     }
 

@@ -18,7 +18,7 @@ namespace CanDevices.DingoPdm
     {
         protected virtual int _minMajorVersion { get; } = 0;
         protected virtual int _minMinorVersion { get; } = 4;
-        protected virtual int _minBuildVersion { get; } = 0;
+        protected virtual int _minBuildVersion { get; } = 1;
 
         protected virtual int _numDigitalInputs { get; } = 2;
         protected virtual int _numOutputs { get; } = 8;
@@ -550,11 +550,15 @@ namespace CanDevices.DingoPdm
 
         protected void ReadSettingsResponse(byte[] data, ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)
         {
-            //Response is lowercase version of set/get prefix
-            MessagePrefix prefix = (MessagePrefix)Char.ToUpper(Convert.ToChar(data[0]));
+            //Response is prefix + 128
+            if (data[0] < 128)
+                return;
+                
+            var prefix = (MessagePrefix)(data[0] - 128);
 
             int index = 0;
 
+            //Vars used below
             var key = (BaseId, (int)prefix, 0);
             CanDeviceResponse response;
 
@@ -569,219 +573,179 @@ namespace CanDevices.DingoPdm
                     }
 
                     key = (BaseId, (int)MessagePrefix.Version, 0);
-                    if(queue.TryRemove(key, out response))
+                    if (queue.TryGetValue(key, out response))
                     {
-                        response.TimeSentTimer.Dispose();
+                        response.TimeSentTimer?.Dispose();
+                        queue.TryRemove(key, out _);
                     }
 
                     break;
 
-                case MessagePrefix.CAN:
+                case MessagePrefix.Can:
                     BaseId = (data[2] << 8) + data[3];
                     BaudRate = (CanSpeed)((data[1] & 0xF0)>>4);
 
-                    key = (BaseId, (int)MessagePrefix.CAN, 0);
-                    if (queue.TryRemove(key, out response))
+                    key = (BaseId, (int)MessagePrefix.Can, 0);
+                    if (queue.TryGetValue(key, out response))
                     {
-                        response.TimeSentTimer.Dispose();
+                        response.TimeSentTimer?.Dispose();
+                        queue.TryRemove(key, out _);
                     }
 
                     break;
 
-                case MessagePrefix.Input:
+                case MessagePrefix.Inputs:
                     index = (data[1] & 0xF0) >> 4;
                     
                     if (index >= 0 && index < _numDigitalInputs)
                     {
-                        DigitalInputs[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
-                        DigitalInputs[index].InvertInput = Convert.ToBoolean((data[1] & 0x08) >> 3);
-                        DigitalInputs[index].Mode = (InputMode)((data[1] & 0x06) >> 1);
-                        DigitalInputs[index].DebounceTime = data[2] * 10;
-                        DigitalInputs[index].Pull = (InputPull)(data[3] & 0x03);
-
-                        key = (BaseId, (int)MessagePrefix.Input, index);
-                        if (queue.TryRemove(key, out response))
+                        if (DigitalInputs[index].Receive(data))
                         {
-                            response.TimeSentTimer.Dispose();
+                            key = (BaseId, (int)MessagePrefix.Inputs, index);
+                            if (queue.TryGetValue(key, out response))
+                            {
+                                response.TimeSentTimer?.Dispose();
+                                queue.TryRemove(key, out _);
+                            }
                         }
                     }
 
                     break;
 
-                case MessagePrefix.Output:
+                case MessagePrefix.Outputs:
                     index = (data[1] & 0xF0) >> 4;
                     
                     if (index >= 0 && index < _numOutputs)
                     {
-                        Outputs[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
-                        Outputs[index].Input = (VarMap)(data[2]);
-                        Outputs[index].CurrentLimit = data[3];
-                        Outputs[index].ResetCountLimit = (data[4] & 0xF0) >> 4;
-                        Outputs[index].ResetMode = (ResetMode)(data[4] & 0x0F);
-                        Outputs[index].ResetTime = data[5] / 10.0;
-                        Outputs[index].InrushCurrentLimit = data[6];
-                        Outputs[index].InrushTime = data[7] / 10.0;
-
-                        key = (BaseId, (int)MessagePrefix.Output, index);
-                        if (queue.TryRemove(key, out response))
+                        if (Outputs[index].Receive(data))
                         {
-                            response.TimeSentTimer.Dispose();
+                            key = (BaseId, (int)MessagePrefix.Outputs, index);
+                            if (queue.TryGetValue(key, out response))
+                            {
+                                response.TimeSentTimer?.Dispose();
+                                queue.TryRemove(key, out _);
+                            }
                         }
                     }
 
                     break;
 
-                case MessagePrefix.VirtualInput:
+                case MessagePrefix.VirtualInputs:
                     index = data[2];
                     
                     if (index >= 0 && index < _numVirtualInputs)
                     {
-                        VirtualInputs[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
-                        VirtualInputs[index].Not0 = Convert.ToBoolean((data[1] & 0x02) >> 1);
-                        VirtualInputs[index].Not1 = Convert.ToBoolean((data[1] & 0x04) >> 2);
-                        VirtualInputs[index].Not2 = Convert.ToBoolean((data[1] & 0x08) >> 3);
-                        VirtualInputs[index].Var0 = (VarMap)data[3];
-                        VirtualInputs[index].Var1 = (VarMap)data[4];
-                        VirtualInputs[index].Var2 = (VarMap)data[5];
-                        VirtualInputs[index].Mode = (InputMode)((data[6] & 0xC0) >> 6);
-                        VirtualInputs[index].Cond0 = (Conditional)(data[6] & 0x03);
-                        VirtualInputs[index].Cond1 = (Conditional)((data[6] & 0x0C) >> 2);
-
-                        key = (BaseId, (int)MessagePrefix.VirtualInput, index);
-                        if (queue.TryRemove(key, out response))
+                        if (VirtualInputs[index].Receive(data))
                         {
-                            response.TimeSentTimer.Dispose();
+                            key = (BaseId, (int)MessagePrefix.VirtualInputs, index);
+                            if (queue.TryGetValue(key, out response))
+                            {
+                                response.TimeSentTimer?.Dispose();
+                                queue.TryRemove(key, out _);
+                            }
                         }
                     }
 
                     break;
 
-                case MessagePrefix.Flasher:
+                case MessagePrefix.Flashers:
                     index = (data[1] & 0xF0) >> 4;
                     
                     if (index >= 0 && index < _numFlashers)
                     {
-                        Flashers[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
-                        Flashers[index].Single = Convert.ToBoolean((data[1] & 0x02) >> 1);
-                        Flashers[index].Input = (VarMap)(data[2]);
-                        Flashers[index].OnTime = data[4] / 10.0;
-                        Flashers[index].OffTime = data[5] / 10.0;
-
-                        key = (BaseId, (int)MessagePrefix.Flasher, index);
-                        if (queue.TryRemove(key, out response))
+                        if (Flashers[index].Receive(data))
                         {
-                            response.TimeSentTimer.Dispose();
+                            key = (BaseId, (int)MessagePrefix.Flashers, index);
+                            if (queue.TryGetValue(key, out response))
+                            {
+                                response.TimeSentTimer?.Dispose();
+                                queue.TryRemove(key, out _);
+                            }
                         }
                     }
 
                     break;
 
                 case MessagePrefix.Wiper:
-                    Wipers[0].Enabled = Convert.ToBoolean(data[1] & 0x01);
-                    Wipers[0].Mode = (WiperMode)((data[1] & 0x03) >> 1);
-                    Wipers[0].ParkStopLevel = Convert.ToBoolean((data[1] & 0x08) >> 3);
-                    Wipers[0].WashWipeCycles = (data[1] & 0xF0) >> 4;
-                    Wipers[0].SlowInput = (VarMap)data[2];
-                    Wipers[0].FastInput = (VarMap)data[3];
-                    Wipers[0].InterInput = (VarMap)data[4];
-                    Wipers[0].OnInput = (VarMap)data[5];
-                    Wipers[0].ParkInput = (VarMap)data[6];
-                    Wipers[0].WashInput = (VarMap)data[7];
-
-                    key = (BaseId, (int)MessagePrefix.Wiper, 0);
-                    if (queue.TryRemove(key, out response))
+                    if (Wipers[0].Receive(data))
                     {
-                        response.TimeSentTimer.Dispose();
-                    }
-
-                    break;
-
-                case MessagePrefix.WiperSpeed:
-                    Wipers[0].SwipeInput = (VarMap)data[1];
-                    Wipers[0].SpeedInput = (VarMap)data[2];
-                    Wipers[0].SpeedMap[0] = (WiperSpeed)(data[3] & 0x0F);
-                    Wipers[0].SpeedMap[1] = (WiperSpeed)((data[3] & 0xF0) >> 4);
-                    Wipers[0].SpeedMap[2] = (WiperSpeed)(data[4] & 0x0F);
-                    Wipers[0].SpeedMap[3] = (WiperSpeed)((data[4] & 0xF0) >> 4);
-                    Wipers[0].SpeedMap[4] = (WiperSpeed)(data[5] & 0x0F);
-                    Wipers[0].SpeedMap[5] = (WiperSpeed)((data[5] & 0xF0) >> 4);
-                    Wipers[0].SpeedMap[6] = (WiperSpeed)(data[6] & 0x0F);
-                    Wipers[0].SpeedMap[7] = (WiperSpeed)((data[6] & 0xF0) >> 4);
-
-                    key = (BaseId, (int)MessagePrefix.WiperSpeed, 0);
-                    if (queue.TryRemove(key, out response))
-                    {
-                        response.TimeSentTimer.Dispose();
-                    }
-
-                    break;
-
-                case MessagePrefix.WiperDelay:
-                    Wipers[0].IntermitTime[0] = data[1] / 10.0;
-                    Wipers[0].IntermitTime[1] = data[2] / 10.0;
-                    Wipers[0].IntermitTime[2] = data[3] / 10.0;
-                    Wipers[0].IntermitTime[3] = data[4] / 10.0;
-                    Wipers[0].IntermitTime[4] = data[5] / 10.0;
-                    Wipers[0].IntermitTime[5] = data[6] / 10.0;
-
-                    key = (BaseId, (int)MessagePrefix.WiperDelay, 0);
-                    if (queue.TryRemove(key, out response))
-                    {
-                        response.TimeSentTimer.Dispose();
-                    }
-
-                    break;
-
-                case MessagePrefix.StarterDisable:
-                    StarterDisable[0].Enabled = Convert.ToBoolean(data[1] & 0x01);
-                    StarterDisable[0].Input = (VarMap)(data[2]);
-                    StarterDisable[0].Output1 = Convert.ToBoolean(data[3] & 0x01);
-                    StarterDisable[0].Output2 = Convert.ToBoolean((data[3] & 0x02) >> 1);
-                    StarterDisable[0].Output3 = Convert.ToBoolean((data[3] & 0x04) >> 2);
-                    StarterDisable[0].Output4 = Convert.ToBoolean((data[3] & 0x08) >> 3);
-                    StarterDisable[0].Output5 = Convert.ToBoolean((data[3] & 0x10) >> 4);
-                    StarterDisable[0].Output6 = Convert.ToBoolean((data[3] & 0x20) >> 5);
-                    StarterDisable[0].Output7 = Convert.ToBoolean((data[3] & 0x40) >> 6);
-                    StarterDisable[0].Output8 = Convert.ToBoolean((data[3] & 0x80) >> 7);
-
-                    key = (BaseId, (int)MessagePrefix.StarterDisable, 0);
-                    if (queue.TryRemove(key, out response))
-                    {
-                        response.TimeSentTimer.Dispose();
-                    }
-
-                    break;
-
-                case MessagePrefix.CANInput:
-                    index = data[2];
-                    if (index >= 0 && index < _numCanInputs)
-                    {
-                        CanInputs[index].Enabled = Convert.ToBoolean(data[1] & 0x01);
-                        CanInputs[index].Mode = (InputMode)((data[1] & 0x06) >> 1);
-                        CanInputs[index].Operator = (Operator)((data[1] & 0xF0) >> 4);
-                        CanInputs[index].Id = (data[3] << 8) + data[4];
-                        CanInputs[index].DLC = (data[5] & 0xF0) >> 4;
-                        CanInputs[index].StartingByte = (data[5] & 0x0F);
-                        CanInputs[index].OnVal = (data[6] << 8) + data[7];
-
-                        key = (BaseId, (int)MessagePrefix.CANInput, index);
-                        if (queue.TryRemove(key, out response))
+                        key = (BaseId, (int)MessagePrefix.Wiper, 0);
+                        if (queue.TryGetValue(key, out response))
                         {
-                            response.TimeSentTimer.Dispose();
+                            response.TimeSentTimer?.Dispose();
+                            queue.TryRemove(key, out _);
                         }
                     }
 
                     break;
 
-                case MessagePrefix.Burn:
+                case MessagePrefix.WiperSpeed:
+                    if (Wipers[0].ReceiveSpeed(data))
+                    {
+                        key = (BaseId, (int)MessagePrefix.WiperSpeed, 0);
+                        if (queue.TryGetValue(key, out response))
+                        {
+                            response.TimeSentTimer?.Dispose();
+                            queue.TryRemove(key, out _);
+                        }
+                    }
+
+                    break;
+
+                case MessagePrefix.WiperDelays:
+                    if (Wipers[0].ReceiveDelays(data))
+                    {
+                        key = (BaseId, (int)MessagePrefix.WiperDelays, 0);
+                        if (queue.TryGetValue(key, out response))
+                        {
+                            response.TimeSentTimer?.Dispose();
+                            queue.TryRemove(key, out _);
+                        }
+                    }
+
+                    break;
+
+                case MessagePrefix.StarterDisable:
+                    
+                    if (StarterDisable[0].Receive(data))
+                    {
+                        key = (BaseId, (int)MessagePrefix.StarterDisable, 0);
+                        if (queue.TryGetValue(key, out response))
+                        {
+                            response.TimeSentTimer?.Dispose();
+                            queue.TryRemove(key, out _);
+                        }
+                    }
+
+                    break;
+
+                case MessagePrefix.CanInputs:
+                    index = data[2];
+                    if (index >= 0 && index < _numCanInputs)
+                    {
+                        if(CanInputs[index].Receive(data))
+                        {
+                            key = (BaseId, (int)MessagePrefix.CanInputs, index);
+                            if (queue.TryGetValue(key, out response))
+                            {
+                                response.TimeSentTimer?.Dispose();
+                                queue.TryRemove(key, out _);
+                            }
+                        }
+                    }
+
+                    break;
+
+                case MessagePrefix.BurnSettings:
                     if (data[1] == 1) //Successful burn
                     {
                         Logger.Info($"{Name} ID: {BaseId}, Burn Successful");
 
-                        key = (BaseId, (int)MessagePrefix.Burn, 0);
-                        if (queue.TryRemove(key, out response))
+                        key = (BaseId, (int)MessagePrefix.BurnSettings, 0);
+                        if (queue.TryGetValue(key, out response))
                         {
-                            response.TimeSentTimer.Dispose();
+                            response.TimeSentTimer?.Dispose();
+                            queue.TryRemove(key, out _);
                         }
                     }
 
@@ -797,9 +761,10 @@ namespace CanDevices.DingoPdm
                         Logger.Info($"{Name} ID: {BaseId}, Sleep Successful");
 
                         key = (BaseId, (int)MessagePrefix.Sleep, 0);
-                        if (queue.TryRemove(key, out response))
+                        if (queue.TryGetValue(key, out response))
                         {
-                            response.TimeSentTimer.Dispose();
+                            response.TimeSentTimer?.Dispose();
+                            queue.TryRemove(key, out _);
                         }
                     }
 
@@ -817,18 +782,18 @@ namespace CanDevices.DingoPdm
         protected void ReadInfoWarnErrorMessage(byte[] data)
         {
             //Response is lowercase version of set/get prefix
-            MessagePrefix prefix = (MessagePrefix)Char.ToUpper(Convert.ToChar(data[0]));
+            MessageType type = (MessageType)Char.ToUpper(Convert.ToChar(data[0]));
             MessageSrc src = (MessageSrc)data[1];
 
-            switch (prefix)
+            switch (type)
             {
-                case MessagePrefix.Info:
+                case MessageType.Info:
                     Logger.Info($"{Name} ID: {BaseId}, Src: {src} {((data[3] << 8) + data[2])} {((data[5] << 8) + data[4])} {((data[7] << 8) + data[6])}");
                     break;
-                case MessagePrefix.Warning:
+                case MessageType.Warning:
                     Logger.Warn($"{Name} ID: {BaseId}, Src: {src} {((data[3] << 8) + data[2])} {((data[5] << 8) + data[4])} {((data[7] << 8) + data[6])}");
                     break;
-                case MessagePrefix.Error:
+                case MessageType.Error:
                     Logger.Error($"{Name} ID: {BaseId}, Src: {src} {((data[3] << 8) + data[2])} {((data[5] << 8) + data[4])} {((data[7] << 8) + data[6])}");
                     break;
             }
@@ -863,13 +828,13 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
-                Prefix = (int)MessagePrefix.CAN,
+                Prefix = (int)MessagePrefix.Can,
                 Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = id,
                     Len = 1,
-                    Payload = new byte[] { Convert.ToByte(MessagePrefix.CAN), 0, 0, 0, 0, 0, 0, 0 }
+                    Payload = new byte[] { Convert.ToByte(MessagePrefix.Can), 0, 0, 0, 0, 0, 0, 0 }
                 },
                 MsgDescription="CANSettings"
             });
@@ -881,15 +846,13 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
-                    Prefix = (int)MessagePrefix.Input,
+                    Prefix = (int)MessagePrefix.Inputs,
                     Index = i,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 2,
-                        Payload = new byte[] { Convert.ToByte(MessagePrefix.Input),
-                        Convert.ToByte((i & 0x0F) << 4),
-                        0, 0, 0, 0, 0, 0 }
+                        Payload = Input.Request(i)
                     },
                     MsgDescription=$"Input{i + 1}"
                 });
@@ -902,15 +865,13 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
-                    Prefix = (int)MessagePrefix.Output,
+                    Prefix = (int)MessagePrefix.Outputs,
                     Index = i,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 2,
-                        Payload = new byte[] { Convert.ToByte(MessagePrefix.Output),
-                        Convert.ToByte((i & 0x0F) << 4),
-                        0, 0, 0, 0, 0, 0 }
+                        Payload = Output.Request(i)
                     },
                     MsgDescription = $"Output{i + 1}"
                 });
@@ -923,15 +884,13 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
-                    Prefix = (int)MessagePrefix.VirtualInput,
+                    Prefix = (int)MessagePrefix.VirtualInputs,
                     Index = i,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 2,
-                        Payload = new byte[] { Convert.ToByte(MessagePrefix.VirtualInput),
-                        Convert.ToByte(i),
-                        0, 0, 0, 0, 0, 0 }
+                        Payload = VirtualInput.Request(i)
                     },
                     MsgDescription = $"VirtualInput{i + 1}"
                 });
@@ -944,15 +903,13 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
-                    Prefix = (int)MessagePrefix.Flasher,
+                    Prefix = (int)MessagePrefix.Flashers,
                     Index = i,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 2,
-                        Payload = new byte[] { Convert.ToByte(MessagePrefix.Flasher),
-                        Convert.ToByte((i & 0x0F) << 4),
-                        0, 0, 0, 0, 0, 0 }
+                        Payload = Flasher.Request(i)
                     },
                     MsgDescription = $"Flasher{i + 1}"
                 });
@@ -965,15 +922,13 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
-                    Prefix = (int)MessagePrefix.CANInput,
+                    Prefix = (int)MessagePrefix.CanInputs,
                     Index = i,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 2,
-                        Payload = new byte[] { Convert.ToByte(MessagePrefix.CANInput),
-                        Convert.ToByte(i),
-                        0, 0, 0, 0, 0, 0 }
+                        Payload = CanInput.Request(i)
                     },
                     MsgDescription = $"CANInput{i + 1}"
                 });
@@ -990,7 +945,7 @@ namespace CanDevices.DingoPdm
                 {
                     Id = id,
                     Len = 1,
-                    Payload = new byte[] { Convert.ToByte(MessagePrefix.Wiper), 0, 0, 0, 0, 0, 0, 0 }
+                    Payload = Wiper.Request()
                 },
                 MsgDescription = "Wiper"
             });
@@ -1006,7 +961,7 @@ namespace CanDevices.DingoPdm
                 {
                     Id = id,
                     Len = 1,
-                    Payload = new byte[] { Convert.ToByte(MessagePrefix.WiperSpeed), 0, 0, 0, 0, 0, 0, 0 }
+                    Payload = Wiper.RequestSpeed()
                 },
                 MsgDescription = "WiperSpeed"
             });
@@ -1016,13 +971,13 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
-                Prefix = (int)MessagePrefix.WiperDelay,
+                Prefix = (int)MessagePrefix.WiperDelays,
                 Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = id,
                     Len = 1,
-                    Payload = new byte[] { Convert.ToByte(MessagePrefix.WiperDelay), 0, 0, 0, 0, 0, 0, 0 }
+                    Payload = Wiper.RequestDelays()
                 },
                 MsgDescription = "WiperDelay"
             });
@@ -1038,7 +993,7 @@ namespace CanDevices.DingoPdm
                 {
                     Id = id,
                     Len = 1,
-                    Payload = new byte[] { Convert.ToByte(MessagePrefix.StarterDisable), 0, 0, 0, 0, 0, 0, 0 }
+                    Payload = CanDevices.DingoPdm.StarterDisable.Request()
                 },
                 MsgDescription = "StarterDisable"
             });
@@ -1059,14 +1014,14 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
-                Prefix = (int)MessagePrefix.CAN,
+                Prefix = (int)MessagePrefix.Can,
                 Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = id,
                     Len = 5,
                     Payload = new byte[] {
-                    Convert.ToByte(MessagePrefix.CAN), //Byte 0
+                    Convert.ToByte(MessagePrefix.Can), //Byte 0
                     Convert.ToByte((Convert.ToByte(BaudRate) << 4) +
                     (0x03)), //Byte 1
                     Convert.ToByte((BaseId & 0xFF00) >> 8), //Byte 2
@@ -1084,21 +1039,13 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
-                    Prefix = (int)MessagePrefix.Input,
+                    Prefix = (int)MessagePrefix.Inputs,
                     Index = input.Number - 1,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 4,
-                        Payload = new byte[] {
-                        Convert.ToByte(MessagePrefix.Input), //Byte 0
-                        Convert.ToByte((((input.Number - 1) & 0x0F) << 4) +
-                        ((Convert.ToByte(input.InvertInput) & 0x01) << 3) +
-                        ((Convert.ToByte(input.Mode) & 0x03) << 1) +
-                        (Convert.ToByte(input.Enabled) & 0x01)), //Byte 1
-                        (Convert.ToByte(input.DebounceTime / 10)), //Byte 2
-                        Convert.ToByte(input.Pull), //Byte 3
-                        0, 0, 0, 0 }
+                        Payload = DigitalInputs[input.Number - 1].Write()
                     },
                     MsgDescription = $"Input{input.Number}"
                 });
@@ -1111,23 +1058,13 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
-                    Prefix = (int)MessagePrefix.Output,
+                    Prefix = (int)MessagePrefix.Outputs,
                     Index = output.Number - 1,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 8,
-                        Payload = new byte[] {
-                        Convert.ToByte(MessagePrefix.Output), //Byte 0
-                        Convert.ToByte((((output.Number - 1) & 0x0F) << 4) +
-                        (Convert.ToByte(output.Enabled) & 0x01)), //Byte 1
-                        Convert.ToByte(output.Input), //Byte 2
-                        Convert.ToByte(output.CurrentLimit), //Byte 3 
-                        Convert.ToByte((Convert.ToByte(output.ResetCountLimit) << 4) +
-                        (Convert.ToByte(output.ResetMode) & 0x0F)), //Byte 4
-                        Convert.ToByte(output.ResetTime * 10), //Byte 5
-                        Convert.ToByte(output.InrushCurrentLimit), //Byte 6 
-                        Convert.ToByte(output.InrushTime * 10) } //Byte 7
+                        Payload = Outputs[output.Number - 1].Write()
                     },
                     MsgDescription = $"Output{output.Number}"
                 });
@@ -1140,26 +1077,13 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
-                    Prefix = (int)MessagePrefix.VirtualInput,
+                    Prefix = (int)MessagePrefix.VirtualInputs,
                     Index = virtInput.Number - 1,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 7,
-                        Payload = new byte[] {
-                        Convert.ToByte(MessagePrefix.VirtualInput), //Byte 0
-                        Convert.ToByte((Convert.ToByte(virtInput.Not2) << 3) +
-                        (Convert.ToByte(virtInput.Not1) << 2) +
-                        (Convert.ToByte(virtInput.Not0) << 1) +
-                        Convert.ToByte(virtInput.Enabled)), //Byte 1
-                        Convert.ToByte(virtInput.Number - 1), //Byte 2 
-                        Convert.ToByte(virtInput.Var0), //Byte 3
-                        Convert.ToByte(virtInput.Var1), //Byte 4
-                        Convert.ToByte(virtInput.Var2), //Byte 5
-                        Convert.ToByte(((Convert.ToByte(virtInput.Mode) & 0x03) << 0x06) +
-                        ((Convert.ToByte(virtInput.Cond1) & 0x03) << 2) +
-                        (Convert.ToByte(virtInput.Cond0) & 0x03)), //Byte 6
-                        0 }
+                        Payload = VirtualInputs[virtInput.Number - 1].Write()
                     },
                     MsgDescription = $"VirtualInput{virtInput.Number}"
                 });
@@ -1172,22 +1096,13 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
-                    Prefix = (int)MessagePrefix.Flasher,
+                    Prefix = (int)MessagePrefix.Flashers,
                     Index = flash.Number - 1,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 6,
-                        Payload = new byte[] {
-                        Convert.ToByte(MessagePrefix.Flasher), //Byte 0
-                        Convert.ToByte((((flash.Number - 1) & 0x0F) << 4) +
-                        (Convert.ToByte(flash.Single) << 1) +
-                        (Convert.ToByte(flash.Enabled))), //Byte 1
-                        Convert.ToByte(flash.Input), //Byte 2
-                        0,
-                        Convert.ToByte(flash.OnTime * 10), //Byte 4
-                        Convert.ToByte(flash.OffTime * 10), //Byte 5
-                        0, 0 }
+                        Payload = Flashers[flash.Number - 1].Write()
                     },
                     MsgDescription = $"Flasher{flash.Number}"
                 });
@@ -1200,24 +1115,14 @@ namespace CanDevices.DingoPdm
                 {
                     Sent = false,
                     Received = false,
-                    Prefix = (int)MessagePrefix.CANInput,
+                    Prefix = (int)MessagePrefix.CanInputs,
                     Index = canInput.Number - 1,
                     Data = new CanInterfaceData
                     {
                         Id = id,
                         Len = 8,
-                        Payload = new byte[] {
-                        Convert.ToByte(MessagePrefix.CANInput), //Byte 0
-                        Convert.ToByte(((Convert.ToByte(canInput.Operator) & 0x0F) << 4) +
-                        ((Convert.ToByte(canInput.Mode) & 0x03) << 1) +
-                        (Convert.ToByte(canInput.Enabled) & 0x01)), //Byte 1
-                        Convert.ToByte(canInput.Number - 1), //Byte 2
-                        Convert.ToByte((canInput.Id & 0xFF00) >> 8), //Byte 3
-                        Convert.ToByte(canInput.Id & 0x00FF), //Byte 4
-                        Convert.ToByte(((canInput.DLC & 0x0F) << 4) +
-                                        (canInput.StartingByte & 0x0F)), //Byte 5
-                        Convert.ToByte((canInput.OnVal & 0xFF00) >> 8), //Byte 6 
-                        Convert.ToByte(canInput.OnVal & 0x00FF) } //Byte 7
+                        Payload = CanInputs[canInput.Number - 1].Write()
+
                     },
                     MsgDescription = $"CANInput{canInput.Number}"
                 });
@@ -1234,18 +1139,7 @@ namespace CanDevices.DingoPdm
                 {
                     Id = id,
                     Len = 8,
-                    Payload = new byte[] {
-                    Convert.ToByte(MessagePrefix.Wiper), //Byte 0 
-                    Convert.ToByte(((Convert.ToByte(Wipers[0].WashWipeCycles) & 0x0F) << 4) +
-                    ((Convert.ToByte(Wipers[0].ParkStopLevel) & 0x01) << 3) +
-                    ((Convert.ToByte(Wipers[0].Mode) & 0x03) << 1) +
-                    (Convert.ToByte(Wipers[0].Enabled) & 0x01)), //Byte 1
-                    Convert.ToByte(Wipers[0].SlowInput), //Byte 2
-                    Convert.ToByte(Wipers[0].FastInput), //Byte 3
-                    Convert.ToByte(Wipers[0].InterInput), //Byte 4
-                    Convert.ToByte(Wipers[0].OnInput), //Byte 5
-                    Convert.ToByte(Wipers[0].ParkInput), //Byte 6
-                    Convert.ToByte(Wipers[0].WashInput) } //Byte 7
+                    Payload = Wipers[0].Write()
                 },
                 MsgDescription = "Wiper"
             });
@@ -1261,21 +1155,7 @@ namespace CanDevices.DingoPdm
                 {
                     Id = id,
                     Len = 7,
-                    Payload = new byte[] {
-                    Convert.ToByte(MessagePrefix.WiperSpeed), //Byte 0 
-                    Convert.ToByte(Wipers[0].SwipeInput), //Byte 1
-                    Convert.ToByte(Wipers[0].SpeedInput), //Byte 2
-
-                    Convert.ToByte(((Convert.ToByte(Wipers[0].SpeedMap[1]) & 0x0F) << 4) +
-                    (Convert.ToByte(Wipers[0].SpeedMap[0]) & 0x0F)), //Byte 3
-                    Convert.ToByte(((Convert.ToByte(Wipers[0].SpeedMap[3]) & 0x0F) << 4) +
-                    (Convert.ToByte(Wipers[0].SpeedMap[2]) & 0x0F)), //Byte 4
-                    Convert.ToByte(((Convert.ToByte(Wipers[0].SpeedMap[4]) & 0x0F) << 4) +
-                    (Convert.ToByte(Wipers[0].SpeedMap[5]) & 0x0F)), //Byte 5
-                    Convert.ToByte(((Convert.ToByte(Wipers[0].SpeedMap[7]) & 0x0F) << 4) +
-                    (Convert.ToByte(Wipers[0].SpeedMap[6]) & 0x0F)), //Byte 6
-                    
-                    0 }
+                    Payload = Wipers[0].WriteSpeed()
                 },
                 MsgDescription = "WiperSpeed"
             }) ;
@@ -1285,21 +1165,13 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
-                Prefix = (int)MessagePrefix.WiperDelay,
+                Prefix = (int)MessagePrefix.WiperDelays,
                 Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = id,
                     Len = 7,
-                    Payload = new byte[] {
-                    Convert.ToByte(MessagePrefix.WiperDelay), //Byte 0 
-                    Convert.ToByte(Wipers[0].IntermitTime[0] * 10), //Byte 1
-                    Convert.ToByte(Wipers[0].IntermitTime[1] * 10), //Byte 2
-                    Convert.ToByte(Wipers[0].IntermitTime[2] * 10), //Byte 3
-                    Convert.ToByte(Wipers[0].IntermitTime[3] * 10), //Byte 4
-                    Convert.ToByte(Wipers[0].IntermitTime[4] * 10), //Byte 5
-                    Convert.ToByte(Wipers[0].IntermitTime[5] * 10), //Byte 6
-                    0 }
+                    Payload = Wipers[0].WriteDelays()
                 },
                 MsgDescription = "WiperDelay"
             });
@@ -1315,19 +1187,7 @@ namespace CanDevices.DingoPdm
                 {
                     Id = id,
                     Len = 4,
-                    Payload = new byte[] {
-                    Convert.ToByte(MessagePrefix.StarterDisable), //Byte 0 
-                    Convert.ToByte(Convert.ToByte(StarterDisable[0].Enabled) & 0x01), //Byte 1
-                    Convert.ToByte(StarterDisable[0].Input), //Byte 2
-                    Convert.ToByte(((Convert.ToByte(StarterDisable[0].Output8) & 0x01) << 7) +
-                    ((Convert.ToByte(StarterDisable[0].Output7) & 0x01) << 6) +
-                    ((Convert.ToByte(StarterDisable[0].Output6) & 0x01) << 5) +
-                    ((Convert.ToByte(StarterDisable[0].Output5) & 0x01) << 4) +
-                    ((Convert.ToByte(StarterDisable[0].Output4) & 0x01) << 3) +
-                    ((Convert.ToByte(StarterDisable[0].Output3) & 0x01) << 2) +
-                    ((Convert.ToByte(StarterDisable[0].Output2) & 0x01) << 1) +
-                    (Convert.ToByte(StarterDisable[0].Output1) & 0x01)), //Byte 3
-                    0, 0, 0, 0 }
+                    Payload = StarterDisable[0].Write()
                 },
                 MsgDescription = "StarterDisable"
             });
@@ -1345,14 +1205,14 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
-                Prefix = (int)MessagePrefix.CAN,
+                Prefix = (int)MessagePrefix.Can,
                 Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = id,
                     Len = 5,
                     Payload = new byte[] {
-                    Convert.ToByte(MessagePrefix.CAN), //Byte 0
+                    Convert.ToByte(MessagePrefix.Can), //Byte 0
                     Convert.ToByte((Convert.ToByte(BaudRate) << 4) +
                     (0x03)), //Byte 1
                     Convert.ToByte((newId & 0xFF00) >> 8), //Byte 2
@@ -1372,13 +1232,13 @@ namespace CanDevices.DingoPdm
             {
                 Sent = false,
                 Received = false,
-                Prefix = (int)MessagePrefix.Burn,
+                Prefix = (int)MessagePrefix.BurnSettings,
                 Index = 0,
                 Data = new CanInterfaceData
                 {
                     Id = BaseId - 1,
                     Len = 4,
-                    Payload = new byte[] { Convert.ToByte(MessagePrefix.Burn), 1, 3, 8, 0, 0, 0, 0 }
+                    Payload = new byte[] { Convert.ToByte(MessagePrefix.BurnSettings), 1, 3, 8, 0, 0, 0, 0 }
                 },
                 MsgDescription = "Burn Settings"
             };
