@@ -720,12 +720,29 @@ namespace CanDevices.DingoPdm
                     break;
 
                 case MessagePrefix.CanInputs:
-                    index = data[2];
+                    index = data[1];
                     if (index >= 0 && index < _numCanInputs)
                     {
                         if(CanInputs[index].Receive(data))
                         {
                             key = (BaseId, (int)MessagePrefix.CanInputs, index);
+                            if (queue.TryGetValue(key, out response))
+                            {
+                                response.TimeSentTimer?.Dispose();
+                                queue.TryRemove(key, out _);
+                            }
+                        }
+                    }
+
+                    break;
+
+                case MessagePrefix.CanInputsId:
+                    index = data[1];
+                    if (index >= 0 && index < _numCanInputs)
+                    {
+                        if (CanInputs[index].ReceiveId(data))
+                        {
+                            key = (BaseId, (int)MessagePrefix.CanInputsId, index);
                             if (queue.TryGetValue(key, out response))
                             {
                                 response.TimeSentTimer?.Dispose();
@@ -934,6 +951,25 @@ namespace CanDevices.DingoPdm
                 });
             }
 
+            //CAN inputs ID
+            for (int i = 0; i < _numCanInputs; i++)
+            {
+                msgs.Add(new CanDeviceResponse
+                {
+                    Sent = false,
+                    Received = false,
+                    Prefix = (int)MessagePrefix.CanInputsId,
+                    Index = i,
+                    Data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = 2,
+                        Payload = CanInput.RequestId(i)
+                    },
+                    MsgDescription = $"CANInputId{i + 1}"
+                });
+            }
+
             //Wiper
             msgs.Add(new CanDeviceResponse
             {
@@ -1120,11 +1156,31 @@ namespace CanDevices.DingoPdm
                     Data = new CanInterfaceData
                     {
                         Id = id,
-                        Len = 8,
+                        Len = 7,
                         Payload = CanInputs[canInput.Number - 1].Write()
 
                     },
                     MsgDescription = $"CANInput{canInput.Number}"
+                });
+            }
+
+            //CAN inputs ID
+            foreach (var canInput in CanInputs)
+            {
+                msgs.Add(new CanDeviceResponse
+                {
+                    Sent = false,
+                    Received = false,
+                    Prefix = (int)MessagePrefix.CanInputsId,
+                    Index = canInput.Number - 1,
+                    Data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = 8,
+                        Payload = CanInputs[canInput.Number - 1].WriteId()
+
+                    },
+                    MsgDescription = $"CANInputId{canInput.Number}"
                 });
             }
 
