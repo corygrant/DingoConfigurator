@@ -89,6 +89,8 @@
     <Compile Include="DingoDash\DingoDashCan.cs" />
     <Compile Include="dingoPdmMax\dingoPdmMaxCan.cs" />
     <Compile Include="dingoPdmMax\dingoPdmMaxPlot.cs" />
+    <Compile Include="DingoPdm\Condition.cs" />
+    <Compile Include="DingoPdm\Counter.cs" />
     <Compile Include="DingoPdm\DingoPdmCan.cs" />
     <Compile Include="DingoPdm\CanInput.cs" />
     <Compile Include="DingoPdm\DingoPdmPlot.cs" />

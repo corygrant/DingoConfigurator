@@ -590,7 +590,7 @@
                           VerticalAlignment="Top"
                           CanContentScroll="True">
                 <ContentControl Content="{Binding CurrentViewModel}"
-                                MaxHeight="1500"/>
+                                MaxHeight="3000"/>
             </ScrollViewer>
         </Grid>
         <GridSplitter Grid.Row="3"

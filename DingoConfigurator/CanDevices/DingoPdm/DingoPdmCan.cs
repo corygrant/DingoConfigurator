@@ -25,8 +25,10 @@ namespace CanDevices.DingoPdm
         protected virtual int _numCanInputs { get; } = 32;
         protected virtual int _numVirtualInputs { get; } = 16;
         protected virtual int _numFlashers { get; } = 4;
+		protected virtual int _numCounters { get; } = 4;
+		protected virtual int _numConditions { get; } = 32;
 
-        protected static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+		protected static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         protected int _pdmType;
 
@@ -315,7 +317,37 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        public DingoPdmCan(string name, int baseId)
+		protected ObservableCollection<Counter> _counters;
+		[JsonPropertyName("counters")]
+		public ObservableCollection<Counter> Counters
+		{
+			get => _counters;
+			set
+			{
+				if (value != _counters)
+				{
+					_counters = value;
+					OnPropertyChanged(nameof(Counters));
+				}
+			}
+		}
+
+		protected ObservableCollection<Condition> _conditions;
+		[JsonPropertyName("conditions")]
+		public ObservableCollection<Condition> Conditions
+		{
+			get => _conditions;
+			set
+			{
+				if (value != _conditions)
+				{
+					_conditions = value;
+					OnPropertyChanged(nameof(Conditions));
+				}
+			}
+		}
+
+		public DingoPdmCan(string name, int baseId)
         {
             Name = name;
             BaseId = baseId;
@@ -368,7 +400,21 @@ namespace CanDevices.DingoPdm
                 new StarterDisable()
             };
 
-            SubPages.Add(new CanDeviceSub("Settings", this));
+			Counters = new ObservableCollection<Counter>();
+			for (int i = 0; i < _numCounters; i++)
+			{
+				Counters.Add(new Counter());
+				Counters[i].Number = i + 1;
+			}
+
+			Conditions = new ObservableCollection<Condition>();
+			for (int i = 0; i < _numConditions; i++)
+			{
+				Conditions.Add(new Condition());
+				Conditions[i].Number = i + 1;
+			}
+
+			SubPages.Add(new CanDeviceSub("Settings", this));
             SubPages.Add(new DingoPdmPlot("Plots", this));
         }
 

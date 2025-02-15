@@ -33,8 +33,12 @@ namespace CanDevices.DingoPdm
         StarterDisable = 30,
         CanInputs = 35,
         CanInputsId = 36,
-        //CanInputsName = 37, //Future use
-        Version = 120,
+		//CanInputsName = 37, //Future use
+		Counter = 40,
+		//CountersName = 41, //Future use
+		Conditions = 45,
+		//ConditionsName = 46, //Future use
+		Version = 120,
         Sleep = 121,
         Bootloader = 125,
         BurnSettings = 127
@@ -177,7 +181,43 @@ namespace CanDevices.DingoPdm
         Flasher2,
         Flasher3,
         Flasher4,
-        AlwaysOn
+        Counter1,
+        Counter2,
+        Counter3,
+        Counter4,
+        Condition1,
+		Condition2,
+		Condition3,
+		Condition4,
+		Condition5,
+		Condition6,
+		Condition7,
+		Condition8,
+		Condition9,
+		Condition10,
+		Condition11,
+		Condition12,
+		Condition13,
+		Condition14,
+		Condition15,
+		Condition16,
+		Condition17,
+		Condition18,
+		Condition19,
+		Condition20,
+		Condition21,
+		Condition22,
+		Condition23,
+		Condition24,
+		Condition25,
+		Condition26,
+		Condition27,
+		Condition28,
+		Condition29,
+		Condition30,
+		Condition31,
+		Condition32,
+		AlwaysOn
     }
 
 
@@ -191,7 +231,6 @@ namespace CanDevices.DingoPdm
 
     public enum InputMode
     {
-        Num,
         Momentary,
         Latching
     }
@@ -203,6 +242,13 @@ namespace CanDevices.DingoPdm
         PullDown
     }
 
+    public enum  InputEdge
+    {
+        Rising,
+        Falling,
+        Both
+    }
+
     public enum Conditional
     {
         And,
@@ -212,12 +258,15 @@ namespace CanDevices.DingoPdm
 
     public enum Operator
     {
-        Equal,
-        GreaterThan,
-        LessThan,
-        BitwiseAnd,
-        BitwiseNand
-    }
+		Equal,
+		NotEqual,
+		GreaterThan,
+		LessThan,
+		GreaterThanOrEqual,
+		LessThanOrEqual,
+		BitwiseAnd,
+		BitwiseNand
+	}
 
     public enum ResetMode
     {
