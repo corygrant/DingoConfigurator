@@ -89,19 +89,20 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" MinHeight="100"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto" MinHeight="80" MaxHeight="80"/>
+            <RowDefinition Height="Auto" MinHeight="80"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto" MinHeight="60" MaxHeight="60"/>
+            <RowDefinition Height="Auto" MinHeight="60"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto" MinHeight="60" MaxHeight="60"/>
+            <RowDefinition Height="Auto" MinHeight="60"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto" MinHeight="50" MaxHeight="160"/>
+            <RowDefinition Height="Auto" MinHeight="50"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto" MinHeight="60" MaxHeight="60"/>
+            <RowDefinition Height="Auto" MinHeight="60"/>
 			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto" MinHeight="60" MaxHeight="60"/>
+			<RowDefinition Height="Auto" MinHeight="60"/>
 			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto" MinHeight="160" MaxHeight="160"/>
+			<RowDefinition Height="Auto" MinHeight="160"/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
         <DataGrid AutoGenerateColumns="False"
                   ItemsSource="{Binding Pdm.CanInputs}"
@@ -1253,6 +1254,13 @@
 						</Style>
 					</DataGridTextColumn.ElementStyle>
 				</DataGridTextColumn>
+				<DataGridTextColumn Header="Count" Binding="{Binding Value}" IsReadOnly="True" Width="70" MinWidth="70" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+					<DataGridTextColumn.ElementStyle>
+						<Style TargetType="TextBlock">
+							<Setter Property="HorizontalAlignment" Value="Center" />
+						</Style>
+					</DataGridTextColumn.ElementStyle>
+				</DataGridTextColumn>
 				<DataGridCheckBoxColumn Header="En" Binding="{Binding Enabled, UpdateSourceTrigger=PropertyChanged}" Width="50" MinWidth="50" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
 					<DataGridCheckBoxColumn.CellStyle>
 						<Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
@@ -1263,7 +1271,7 @@
 						</Style>
 					</DataGridCheckBoxColumn.ElementStyle>
 				</DataGridCheckBoxColumn>
-				<DataGridTextColumn Header="Min Count" Width="70" MinWidth="70" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+				<DataGridTextColumn Header="Min Count" Width="80" MinWidth="80" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
 					<DataGridTextColumn.Binding>
 						<Binding Path="MinCount" UpdateSourceTrigger="LostFocus" ValidatesOnDataErrors="True" ValidatesOnExceptions="True">
 							<Binding.ValidationRules>
@@ -1280,7 +1288,7 @@
 						</Style>
 					</DataGridTextColumn.ElementStyle>
 				</DataGridTextColumn>
-				<DataGridTextColumn Header="Max Count" Width="70" MinWidth="70" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+				<DataGridTextColumn Header="Max Count" Width="80" MinWidth="80" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
 					<DataGridTextColumn.Binding>
 						<Binding Path="MaxCount" UpdateSourceTrigger="LostFocus" ValidatesOnDataErrors="True" ValidatesOnExceptions="True">
 							<Binding.ValidationRules>
@@ -1297,6 +1305,16 @@
 						</Style>
 					</DataGridTextColumn.ElementStyle>
 				</DataGridTextColumn>
+				<DataGridCheckBoxColumn Header="Wrap Around" Binding="{Binding WrapAround, UpdateSourceTrigger=PropertyChanged}" Width="100" MinWidth="100" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+					<DataGridCheckBoxColumn.CellStyle>
+						<Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+					</DataGridCheckBoxColumn.CellStyle>
+					<DataGridCheckBoxColumn.ElementStyle>
+						<Style TargetType="CheckBox">
+							<Setter Property="HorizontalAlignment" Value="Center" />
+						</Style>
+					</DataGridCheckBoxColumn.ElementStyle>
+				</DataGridCheckBoxColumn>
 				<DataGridTemplateColumn  Header="Inc Input" 
                          Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
 					<DataGridTemplateColumn.CellTemplate>
@@ -1389,5 +1407,110 @@
 				</DataGridTemplateColumn>
 			</DataGrid.Columns>
 		</DataGrid>
+
+		<GridSplitter     Grid.Row="15"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Center"
+          Background="White" 
+          ShowsPreview="True"
+          Height="3"/>
+
+		<DataGrid AutoGenerateColumns="False"
+                  ItemsSource="{Binding Pdm.Conditions}"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="False"
+                  Grid.Row="16">
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="Condition" Binding="{Binding Number}" IsReadOnly="True" Width="100" MinWidth="100" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+					<DataGridTextColumn.ElementStyle>
+						<Style TargetType="TextBlock">
+							<Setter Property="HorizontalAlignment" Value="Center" />
+						</Style>
+					</DataGridTextColumn.ElementStyle>
+				</DataGridTextColumn>
+				<DataGridTextColumn Header="Name" Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Width="150" MinWidth="150" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+					<DataGridTextColumn.CellStyle>
+						<Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+					</DataGridTextColumn.CellStyle>
+					<DataGridTextColumn.ElementStyle>
+						<Style TargetType="TextBlock">
+							<Setter Property="HorizontalAlignment" Value="Center" />
+						</Style>
+					</DataGridTextColumn.ElementStyle>
+				</DataGridTextColumn>
+				<DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True" Width="70" MinWidth="70" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+					<DataGridTextColumn.ElementStyle>
+						<Style TargetType="TextBlock">
+							<Setter Property="HorizontalAlignment" Value="Center" />
+						</Style>
+					</DataGridTextColumn.ElementStyle>
+				</DataGridTextColumn>
+				<DataGridCheckBoxColumn Header="En" Binding="{Binding Enabled, UpdateSourceTrigger=PropertyChanged}" Width="50" MinWidth="50" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+					<DataGridCheckBoxColumn.CellStyle>
+						<Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+					</DataGridCheckBoxColumn.CellStyle>
+					<DataGridCheckBoxColumn.ElementStyle>
+						<Style TargetType="CheckBox">
+							<Setter Property="HorizontalAlignment" Value="Center" />
+						</Style>
+					</DataGridCheckBoxColumn.ElementStyle>
+				</DataGridCheckBoxColumn>
+				<DataGridTemplateColumn  Header="Input" 
+                                         Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<ComboBox HorizontalContentAlignment="Center"
+                                      ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
+                                      SelectedValue="{Binding Input, UpdateSourceTrigger=PropertyChanged}"
+                                      BorderThickness="0">          
+							</ComboBox>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+					<DataGridTemplateColumn.CellStyle>
+						<Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+					</DataGridTemplateColumn.CellStyle>
+				</DataGridTemplateColumn>
+				<DataGridTemplateColumn  Header="Operator" 
+                         Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<ComboBox HorizontalContentAlignment="Center"
+                      ItemsSource="{Binding Source={StaticResource OperatorEnumDataSource}, Mode=OneWay}" 
+                      SelectedValue="{Binding Operator, UpdateSourceTrigger=PropertyChanged}"
+                      BorderThickness="0">
+							</ComboBox>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+					<DataGridTemplateColumn.CellStyle>
+						<Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+					</DataGridTemplateColumn.CellStyle>
+				</DataGridTemplateColumn>
+				<DataGridTextColumn Header="Arg" Width="80" MinWidth="80" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+					<DataGridTextColumn.Binding>
+						<Binding Path="Arg" UpdateSourceTrigger="LostFocus" ValidatesOnDataErrors="True" ValidatesOnExceptions="True">
+							<Binding.ValidationRules>
+								<cd:ArgValidationRule />
+							</Binding.ValidationRules>
+						</Binding>
+					</DataGridTextColumn.Binding>
+					<DataGridTextColumn.CellStyle>
+						<Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+					</DataGridTextColumn.CellStyle>
+					<DataGridTextColumn.ElementStyle>
+						<Style TargetType="TextBlock">
+							<Setter Property="HorizontalAlignment" Value="Center" />
+						</Style>
+					</DataGridTextColumn.ElementStyle>
+				</DataGridTextColumn>
+			</DataGrid.Columns>
+		</DataGrid>
+
+		<GridSplitter Grid.Row="17"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      Background="White" 
+                      ShowsPreview="True"
+                      Height="3"/>
 	</Grid>
 </UserControl>

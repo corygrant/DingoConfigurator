@@ -18,7 +18,7 @@ namespace CanDevices.DingoPdm
     {
         protected virtual int _minMajorVersion { get; } = 0;
         protected virtual int _minMinorVersion { get; } = 4;
-        protected virtual int _minBuildVersion { get; } = 1;
+        protected virtual int _minBuildVersion { get; } = 3;
 
         protected virtual int _numDigitalInputs { get; } = 2;
         protected virtual int _numOutputs { get; } = 8;
@@ -447,8 +447,9 @@ namespace CanDevices.DingoPdm
             if (id == BaseId + 3) ReadMessage3(data);
             if (id == BaseId + 4) ReadMessage4(data);
             if (id == BaseId + 5) ReadMessage5(data);
+			if (id == BaseId + 6) ReadMessage6(data);
 
-            if (id == BaseId + 30)
+			if (id == BaseId + 30)
             {
                 ReadSettingsResponse(data, queue);
             }
@@ -593,8 +594,51 @@ namespace CanDevices.DingoPdm
             VirtualInputs[15].Value = (data[5] >> 7) & 0x01;
         }
 
+		protected void ReadMessage6(byte[] data)
+		{
+			Counters[0].Value = data[0];
+			Counters[1].Value = data[1];
+			Counters[2].Value = data[2];
+			Counters[3].Value = data[3];
 
-        protected void ReadSettingsResponse(byte[] data, ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)
+			Conditions[0].Value = data[4] & 0x01;
+			Conditions[1].Value = (data[4] >> 1) & 0x01;
+			Conditions[2].Value = (data[4] >> 2) & 0x01;
+			Conditions[3].Value = (data[4] >> 3) & 0x01;
+			Conditions[4].Value = (data[4] >> 4) & 0x01;
+			Conditions[5].Value = (data[4] >> 5) & 0x01;
+			Conditions[6].Value = (data[4] >> 6) & 0x01;
+			Conditions[7].Value = (data[4] >> 7) & 0x01;
+
+			Conditions[8].Value = data[5] & 0x01;
+			Conditions[9].Value = (data[5] >> 1) & 0x01;
+			Conditions[10].Value = (data[5] >> 2) & 0x01;
+			Conditions[11].Value = (data[5] >> 3) & 0x01;
+			Conditions[12].Value = (data[5] >> 4) & 0x01;
+			Conditions[13].Value = (data[5] >> 5) & 0x01;
+			Conditions[14].Value = (data[5] >> 6) & 0x01;
+			Conditions[15].Value = (data[5] >> 7) & 0x01;
+
+			Conditions[16].Value = data[6] & 0x01;
+			Conditions[17].Value = (data[6] >> 1) & 0x01;
+			Conditions[18].Value = (data[6] >> 2) & 0x01;
+			Conditions[19].Value = (data[6] >> 3) & 0x01;
+			Conditions[20].Value = (data[6] >> 4) & 0x01;
+			Conditions[21].Value = (data[6] >> 5) & 0x01;
+			Conditions[22].Value = (data[6] >> 6) & 0x01;
+			Conditions[23].Value = (data[6] >> 7) & 0x01;
+
+			Conditions[24].Value = data[7] & 0x01;
+			Conditions[25].Value = (data[7] >> 1) & 0x01;
+			Conditions[26].Value = (data[7] >> 2) & 0x01;
+			Conditions[27].Value = (data[7] >> 3) & 0x01;
+			Conditions[28].Value = (data[7] >> 4) & 0x01;
+			Conditions[29].Value = (data[7] >> 5) & 0x01;
+			Conditions[30].Value = (data[7] >> 6) & 0x01;
+			Conditions[31].Value = (data[7] >> 7) & 0x01;
+		}
+
+		protected void ReadSettingsResponse(byte[] data, ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)
         {
             //Response is prefix + 128
             if (data[0] < 128)
@@ -799,7 +843,41 @@ namespace CanDevices.DingoPdm
 
                     break;
 
-                case MessagePrefix.BurnSettings:
+                case MessagePrefix.Counter:
+					index = data[1];
+					if (index >= 0 && index < _numCounters)
+					{
+						if (Counters[index].Receive(data))
+						{
+							key = (BaseId, (int)MessagePrefix.Counter, index);
+							if (queue.TryGetValue(key, out response))
+							{
+								response.TimeSentTimer?.Dispose();
+								queue.TryRemove(key, out _);
+							}
+						}
+					}
+
+					break;
+
+				case MessagePrefix.Conditions:
+					index = data[1];
+					if (index >= 0 && index < _numConditions)
+					{
+						if (Conditions[index].Receive(data))
+						{
+							key = (BaseId, (int)MessagePrefix.Conditions, index);
+							if (queue.TryGetValue(key, out response))
+							{
+								response.TimeSentTimer?.Dispose();
+								queue.TryRemove(key, out _);
+							}
+						}
+					}
+
+					break;
+
+				case MessagePrefix.BurnSettings:
                     if (data[1] == 1) //Successful burn
                     {
                         Logger.Info($"{Name} ID: {BaseId}, Burn Successful");
@@ -1080,7 +1158,45 @@ namespace CanDevices.DingoPdm
                 MsgDescription = "StarterDisable"
             });
 
-            return msgs;
+			//Counter
+			for (int i = 0; i < _numCounters; i++)
+			{
+				msgs.Add(new CanDeviceResponse
+				{
+					Sent = false,
+					Received = false,
+					Prefix = (int)MessagePrefix.Counter,
+					Index = i,
+					Data = new CanInterfaceData
+					{
+						Id = id,
+						Len = 2,
+						Payload = Counter.Request(i)
+					},
+					MsgDescription = $"Counter{i + 1}"
+				});
+			}
+
+			//Condition
+			for (int i = 0; i < _numConditions; i++)
+			{
+				msgs.Add(new CanDeviceResponse
+				{
+					Sent = false,
+					Received = false,
+					Prefix = (int)MessagePrefix.Conditions,
+					Index = i,
+					Data = new CanInterfaceData
+					{
+						Id = id,
+						Len = 2,
+						Payload = Condition.Request(i)
+					},
+					MsgDescription = $"Condition{i + 1}"
+				});
+			}
+
+			return msgs;
         }
 
         public List<CanDeviceResponse> GetDownloadMessages()
@@ -1294,7 +1410,47 @@ namespace CanDevices.DingoPdm
                 MsgDescription = "StarterDisable"
             });
 
-            return msgs;
+			//Counter
+			foreach (var counter in Counters)
+			{
+				msgs.Add(new CanDeviceResponse
+				{
+					Sent = false,
+					Received = false,
+					Prefix = (int)MessagePrefix.Counter,
+					Index = counter.Number - 1,
+					Data = new CanInterfaceData
+					{
+						Id = id,
+						Len = 8,
+						Payload = Counters[counter.Number - 1].Write()
+
+					},
+					MsgDescription = $"Counter{counter.Number}"
+				});
+			}
+
+			//Condition
+			foreach (var condition in Conditions)
+			{
+				msgs.Add(new CanDeviceResponse
+				{
+					Sent = false,
+					Received = false,
+					Prefix = (int)MessagePrefix.Conditions,
+					Index = condition.Number - 1,
+					Data = new CanInterfaceData
+					{
+						Id = id,
+						Len = 6,
+						Payload = Conditions[condition.Number - 1].Write()
+
+					},
+					MsgDescription = $"Condition{condition.Number}"
+				});
+			}
+
+			return msgs;
         }
 
         public List<CanDeviceResponse> GetUpdateMessages(int newId)
