@@ -36,13 +36,14 @@
           "inrushCurrentLimit": 20,
           "inrushTime": 1,
           "input": 1,
-          "pwmEnabled": false,
+          "pwmEnabled": true,
           "softStartEnabled": false,
-          "variableDutyCycle": false,
-          "dutyCycleInput": 0,
-          "pwmFrequency": 400,
-          "softStartRampTime": 0,
-          "dutyCycleDenominator": 0
+          "variableDutyCycle": true,
+          "dutyCycleInput": 39,
+          "fixedDutyCycle": 60,
+          "pwmFrequency": 100,
+          "softStartRampTime": 500,
+          "dutyCycleDenominator": 10
         },
         {
           "enabled": true,
@@ -58,10 +59,11 @@
           "pwmEnabled": false,
           "softStartEnabled": false,
           "variableDutyCycle": false,
-          "dutyCycleInput": 0,
-          "pwmFrequency": 0,
-          "softStartRampTime": 0,
-          "dutyCycleDenominator": 0
+          "dutyCycleInput": 35,
+          "fixedDutyCycle": 50,
+          "pwmFrequency": 100,
+          "softStartRampTime": 500,
+          "dutyCycleDenominator": 100
         },
         {
           "enabled": true,
@@ -77,10 +79,11 @@
           "pwmEnabled": false,
           "softStartEnabled": false,
           "variableDutyCycle": false,
-          "dutyCycleInput": 0,
-          "pwmFrequency": 0,
-          "softStartRampTime": 0,
-          "dutyCycleDenominator": 0
+          "dutyCycleInput": 35,
+          "fixedDutyCycle": 50,
+          "pwmFrequency": 100,
+          "softStartRampTime": 500,
+          "dutyCycleDenominator": 100
         },
         {
           "enabled": true,
@@ -96,10 +99,11 @@
           "pwmEnabled": false,
           "softStartEnabled": false,
           "variableDutyCycle": false,
-          "dutyCycleInput": 0,
-          "pwmFrequency": 0,
-          "softStartRampTime": 0,
-          "dutyCycleDenominator": 0
+          "dutyCycleInput": 35,
+          "fixedDutyCycle": 50,
+          "pwmFrequency": 100,
+          "softStartRampTime": 500,
+          "dutyCycleDenominator": 100
         },
         {
           "enabled": true,
@@ -115,10 +119,11 @@
           "pwmEnabled": false,
           "softStartEnabled": false,
           "variableDutyCycle": false,
-          "dutyCycleInput": 0,
-          "pwmFrequency": 0,
-          "softStartRampTime": 0,
-          "dutyCycleDenominator": 0
+          "dutyCycleInput": 35,
+          "fixedDutyCycle": 50,
+          "pwmFrequency": 100,
+          "softStartRampTime": 500,
+          "dutyCycleDenominator": 100
         },
         {
           "enabled": true,
@@ -134,10 +139,11 @@
           "pwmEnabled": false,
           "softStartEnabled": false,
           "variableDutyCycle": false,
-          "dutyCycleInput": 0,
-          "pwmFrequency": 0,
-          "softStartRampTime": 0,
-          "dutyCycleDenominator": 0
+          "dutyCycleInput": 35,
+          "fixedDutyCycle": 50,
+          "pwmFrequency": 100,
+          "softStartRampTime": 500,
+          "dutyCycleDenominator": 100
         },
         {
           "enabled": true,
@@ -153,10 +159,11 @@
           "pwmEnabled": false,
           "softStartEnabled": false,
           "variableDutyCycle": false,
-          "dutyCycleInput": 0,
-          "pwmFrequency": 0,
-          "softStartRampTime": 0,
-          "dutyCycleDenominator": 0
+          "dutyCycleInput": 35,
+          "fixedDutyCycle": 50,
+          "pwmFrequency": 100,
+          "softStartRampTime": 500,
+          "dutyCycleDenominator": 100
         },
         {
           "enabled": true,
@@ -172,10 +179,11 @@
           "pwmEnabled": false,
           "softStartEnabled": false,
           "variableDutyCycle": false,
-          "dutyCycleInput": 0,
-          "pwmFrequency": 0,
-          "softStartRampTime": 0,
-          "dutyCycleDenominator": 0
+          "dutyCycleInput": 35,
+          "fixedDutyCycle": 50,
+          "pwmFrequency": 100,
+          "softStartRampTime": 500,
+          "dutyCycleDenominator": 100
         }
       ],
       "canInputs": [
@@ -244,19 +252,19 @@
           "mode": 0
         },
         {
-          "name": "",
+          "name": "DutyCycleTest",
           "number": 5,
-          "enabled": false,
+          "enabled": true,
           "timeoutEnabled": false,
           "timeout": 0,
           "ide": false,
-          "id": 0,
+          "id": 500,
           "lowByte": 0,
           "highByte": 0,
           "startingByte": 0,
-          "dlc": 0,
-          "operator": 3,
-          "onVal": 0,
+          "dlc": 2,
+          "operator": 0,
+          "onVal": 500,
           "mode": 0
         },
         {
@@ -939,8 +947,8 @@
             4,
             5,
             6,
-            8,
             7,
+            8,
             1,
             2
           ],

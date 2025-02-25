@@ -233,7 +233,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridCheckBoxColumn Header="En"
+                <DataGridCheckBoxColumn Header="Enable"
                                         Binding="{Binding Enabled, UpdateSourceTrigger=PropertyChanged}"
                                         Width="50"
                                         MinWidth="50"
@@ -546,7 +546,7 @@
               ItemsSource="{Binding Pdm.Outputs}"
               Grid.Row="4">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="PWM"
+                <DataGridTextColumn Header="Output&#x0a;PWM"
                             Binding="{Binding Number}"
                             IsReadOnly="True"
                             Width="80"
@@ -559,7 +559,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridCheckBoxColumn Header="En"
+                <DataGridCheckBoxColumn Header="PWM&#x0a;Enable"
                                 Binding="{Binding PwmEnabled, UpdateSourceTrigger=PropertyChanged}"
                                 Width="50"
                                 MinWidth="50"
@@ -610,7 +610,7 @@
                         <DataTemplate>
                             <ComboBox HorizontalContentAlignment="Center"
                               ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
-                              SelectedValue="{Binding Input, UpdateSourceTrigger=PropertyChanged}"
+                              SelectedValue="{Binding DutyCycleInput, UpdateSourceTrigger=PropertyChanged}"
                               BorderThickness="0">
                             </ComboBox>
                         </DataTemplate>
@@ -619,6 +619,28 @@
                         <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
                     </DataGridTemplateColumn.CellStyle>
                 </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Fixed DC [%]" 
+                                    Width="100" MinWidth="100" 
+                                    HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                    <DataGridTextColumn.Binding>
+                        <Binding Path="FixedDutyCycle" UpdateSourceTrigger="LostFocus" ValidatesOnDataErrors="True" ValidatesOnExceptions="True">
+                            <Binding.ValidationRules>
+                                <cd:DutyCycleValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </DataGridTextColumn.Binding>
+                    <DataGridTextColumn.EditingElementStyle>
+                        <Style BasedOn="{StaticResource ValidationErrorTextBoxStyle}" TargetType="TextBox"/>
+                    </DataGridTextColumn.EditingElementStyle>
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="Duty Cycle [%]"
                             Binding="{Binding CurrentDutyCycle}"
                             IsReadOnly="True"
@@ -632,7 +654,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Power [W]"
+                <DataGridTextColumn Header="Est. Current [A]"
                                     Binding="{Binding CalculatedPower}"
                                     IsReadOnly="True"
                                     Width="100"
@@ -741,7 +763,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridCheckBoxColumn Header="En"
+                <DataGridCheckBoxColumn Header="Enable"
                                         Binding="{Binding Enabled, UpdateSourceTrigger=PropertyChanged}"
                                         Width="50"
                                         MinWidth="50"

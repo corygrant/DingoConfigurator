@@ -18,7 +18,7 @@ namespace CanDevices.DingoPdm
     {
         protected virtual int _minMajorVersion { get; } = 0;
         protected virtual int _minMinorVersion { get; } = 4;
-        protected virtual int _minBuildVersion { get; } = 4;
+        protected virtual int _minBuildVersion { get; } = 5;
 
         protected virtual int _numDigitalInputs { get; } = 2;
         protected virtual int _numOutputs { get; } = 8;
@@ -416,6 +416,7 @@ namespace CanDevices.DingoPdm
 
 			SubPages.Add(new CanDeviceSub("Settings", this));
             SubPages.Add(new DingoPdmPlot("Plots", this));
+
         }
 
         public void UpdateIsConnected()
@@ -805,6 +806,24 @@ namespace CanDevices.DingoPdm
 
                     break;
 
+                case MessagePrefix.OutputsPwm:
+                    index = (data[1] & 0xF0) >> 4;
+
+                    if (index >= 0 && index < _numOutputs)
+                    {
+                        if (Outputs[index].ReceivePwm(data))
+                        {
+                            key = (BaseId, (int)MessagePrefix.OutputsPwm, index);
+                            if (queue.TryGetValue(key, out response))
+                            {
+                                response.TimeSentTimer?.Dispose();
+                                queue.TryRemove(key, out _);
+                            }
+                        }
+                    }
+
+                    break;
+
                 case MessagePrefix.VirtualInputs:
                     index = data[2];
                     
@@ -1103,6 +1122,25 @@ namespace CanDevices.DingoPdm
                 });
             }
 
+            //Outputs PWM
+            for (int i = 0; i < _numOutputs; i++)
+            {
+                msgs.Add(new CanDeviceResponse
+                {
+                    Sent = false,
+                    Received = false,
+                    Prefix = (int)MessagePrefix.OutputsPwm,
+                    Index = i,
+                    Data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = 2,
+                        Payload = Output.RequestPwm(i)
+                    },
+                    MsgDescription = $"OutputPwm{i + 1}"
+                });
+            }
+
             //Virtual inputs
             for (int i = 0; i < _numVirtualInputs; i++)
             {
@@ -1353,8 +1391,27 @@ namespace CanDevices.DingoPdm
                 });
             }
 
+            //Outputs PWM
+            foreach (var output in Outputs)
+            {
+                msgs.Add(new CanDeviceResponse
+                {
+                    Sent = false,
+                    Received = false,
+                    Prefix = (int)MessagePrefix.OutputsPwm,
+                    Index = output.Number - 1,
+                    Data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = 8,
+                        Payload = Outputs[output.Number - 1].WritePwm()
+                    },
+                    MsgDescription = $"OutputPwm{output.Number}"
+                });
+            }
+
             //Virtual inputs
-            foreach(var virtInput in VirtualInputs)
+            foreach (var virtInput in VirtualInputs)
             {
                 msgs.Add(new CanDeviceResponse
                 {
