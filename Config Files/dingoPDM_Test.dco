@@ -9,7 +9,7 @@
           "name": "Outputs on",
           "number": 1,
           "invertInput": true,
-          "mode": 1,
+          "mode": 0,
           "debounceTime": 20,
           "pull": 1
         },
@@ -35,31 +35,52 @@
           "resetTime": 3,
           "inrushCurrentLimit": 20,
           "inrushTime": 1,
-          "input": 35
+          "input": 1,
+          "pwmEnabled": false,
+          "softStartEnabled": false,
+          "variableDutyCycle": false,
+          "dutyCycleInput": 0,
+          "pwmFrequency": 400,
+          "softStartRampTime": 0,
+          "dutyCycleDenominator": 0
         },
         {
           "enabled": true,
           "name": "",
           "number": 2,
-          "currentLimit": 13,
+          "currentLimit": 14,
           "resetCountLimit": 3,
           "resetMode": 2,
           "resetTime": 3,
           "inrushCurrentLimit": 20,
           "inrushTime": 1,
-          "input": 1
+          "input": 1,
+          "pwmEnabled": false,
+          "softStartEnabled": false,
+          "variableDutyCycle": false,
+          "dutyCycleInput": 0,
+          "pwmFrequency": 0,
+          "softStartRampTime": 0,
+          "dutyCycleDenominator": 0
         },
         {
           "enabled": true,
           "name": "",
           "number": 3,
-          "currentLimit": 9,
+          "currentLimit": 10,
           "resetCountLimit": 3,
           "resetMode": 2,
           "resetTime": 3,
           "inrushCurrentLimit": 12,
           "inrushTime": 1,
-          "input": 1
+          "input": 1,
+          "pwmEnabled": false,
+          "softStartEnabled": false,
+          "variableDutyCycle": false,
+          "dutyCycleInput": 0,
+          "pwmFrequency": 0,
+          "softStartRampTime": 0,
+          "dutyCycleDenominator": 0
         },
         {
           "enabled": true,
@@ -71,7 +92,14 @@
           "resetTime": 3,
           "inrushCurrentLimit": 12,
           "inrushTime": 1,
-          "input": 1
+          "input": 1,
+          "pwmEnabled": false,
+          "softStartEnabled": false,
+          "variableDutyCycle": false,
+          "dutyCycleInput": 0,
+          "pwmFrequency": 0,
+          "softStartRampTime": 0,
+          "dutyCycleDenominator": 0
         },
         {
           "enabled": true,
@@ -83,7 +111,14 @@
           "resetTime": 3,
           "inrushCurrentLimit": 12,
           "inrushTime": 1,
-          "input": 1
+          "input": 1,
+          "pwmEnabled": false,
+          "softStartEnabled": false,
+          "variableDutyCycle": false,
+          "dutyCycleInput": 0,
+          "pwmFrequency": 0,
+          "softStartRampTime": 0,
+          "dutyCycleDenominator": 0
         },
         {
           "enabled": true,
@@ -95,7 +130,14 @@
           "resetTime": 3,
           "inrushCurrentLimit": 12,
           "inrushTime": 1,
-          "input": 1
+          "input": 1,
+          "pwmEnabled": false,
+          "softStartEnabled": false,
+          "variableDutyCycle": false,
+          "dutyCycleInput": 0,
+          "pwmFrequency": 0,
+          "softStartRampTime": 0,
+          "dutyCycleDenominator": 0
         },
         {
           "enabled": true,
@@ -107,7 +149,14 @@
           "resetTime": 3,
           "inrushCurrentLimit": 12,
           "inrushTime": 1,
-          "input": 1
+          "input": 1,
+          "pwmEnabled": false,
+          "softStartEnabled": false,
+          "variableDutyCycle": false,
+          "dutyCycleInput": 0,
+          "pwmFrequency": 0,
+          "softStartRampTime": 0,
+          "dutyCycleDenominator": 0
         },
         {
           "enabled": true,
@@ -119,7 +168,14 @@
           "resetTime": 3,
           "inrushCurrentLimit": 12,
           "inrushTime": 1,
-          "input": 1
+          "input": 1,
+          "pwmEnabled": false,
+          "softStartEnabled": false,
+          "variableDutyCycle": false,
+          "dutyCycleInput": 0,
+          "pwmFrequency": 0,
+          "softStartRampTime": 0,
+          "dutyCycleDenominator": 0
         }
       ],
       "canInputs": [
@@ -153,7 +209,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": "",
@@ -169,7 +225,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": "",
@@ -185,7 +241,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": "",
@@ -201,7 +257,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": "",
@@ -217,7 +273,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": "",
@@ -233,7 +289,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": "",
@@ -249,7 +305,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": "",
@@ -265,7 +321,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": "",
@@ -281,7 +337,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": "",
@@ -297,7 +353,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": "",
@@ -313,7 +369,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -329,7 +385,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -345,7 +401,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -361,7 +417,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -377,7 +433,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -393,7 +449,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -409,7 +465,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -425,7 +481,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -441,7 +497,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -457,7 +513,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -473,7 +529,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -489,7 +545,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -505,7 +561,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -521,7 +577,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -537,7 +593,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -553,7 +609,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -569,7 +625,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -585,7 +641,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -601,7 +657,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -617,7 +673,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -633,7 +689,7 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 1
+          "mode": 0
         }
       ],
       "virtualInputs": [
@@ -643,13 +699,13 @@
           "enabled": true,
           "not0": false,
           "var0": 1,
-          "cond0": 0,
+          "cond0": 1,
           "not1": false,
-          "var1": 61,
+          "var1": 2,
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -663,7 +719,7 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -677,7 +733,7 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -691,7 +747,7 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -705,7 +761,7 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -719,7 +775,7 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -733,7 +789,7 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -747,7 +803,7 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -761,7 +817,7 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -775,7 +831,7 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -789,7 +845,7 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -803,7 +859,7 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -817,7 +873,7 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -831,7 +887,7 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -845,7 +901,7 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 1
+          "mode": 0
         },
         {
           "name": null,
@@ -859,7 +915,7 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 1
+          "mode": 0
         }
       ],
       "wipers": [

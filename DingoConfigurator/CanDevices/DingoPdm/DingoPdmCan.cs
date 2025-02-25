@@ -18,7 +18,7 @@ namespace CanDevices.DingoPdm
     {
         protected virtual int _minMajorVersion { get; } = 0;
         protected virtual int _minMinorVersion { get; } = 4;
-        protected virtual int _minBuildVersion { get; } = 3;
+        protected virtual int _minBuildVersion { get; } = 4;
 
         protected virtual int _numDigitalInputs { get; } = 2;
         protected virtual int _numOutputs { get; } = 8;
@@ -448,8 +448,17 @@ namespace CanDevices.DingoPdm
             if (id == BaseId + 4) ReadMessage4(data);
             if (id == BaseId + 5) ReadMessage5(data);
 			if (id == BaseId + 6) ReadMessage6(data);
+            if (id == BaseId + 7) ReadMessage7(data);
+            if (id == BaseId + 8) ReadMessage8(data);
+            if (id == BaseId + 9) ReadMessage9(data);
+            if (id == BaseId + 10) ReadMessage10(data);
+            if (id == BaseId + 11) ReadMessage11(data);
+            if (id == BaseId + 12) ReadMessage12(data);
+            if (id == BaseId + 13) ReadMessage13(data);
+            if (id == BaseId + 14) ReadMessage14(data);
+            if (id == BaseId + 15) ReadMessage15(data);
 
-			if (id == BaseId + 30)
+            if (id == BaseId + 30)
             {
                 ReadSettingsResponse(data, queue);
             }
@@ -539,41 +548,41 @@ namespace CanDevices.DingoPdm
 
         protected void ReadMessage5(byte[] data)
         {
-            CanInputs[0].Value = data[0] & 0x01;
-            CanInputs[1].Value = (data[0] >> 1) & 0x01;
-            CanInputs[2].Value = (data[0] >> 2) & 0x01;
-            CanInputs[3].Value = (data[0] >> 3) & 0x01;
-            CanInputs[4].Value = (data[0] >> 4) & 0x01;
-            CanInputs[5].Value = (data[0] >> 5) & 0x01;
-            CanInputs[6].Value = (data[0] >> 6) & 0x01;
-            CanInputs[7].Value = (data[0] >> 7) & 0x01;
+            CanInputs[0].Output = Convert.ToBoolean(data[0] & 0x01);
+            CanInputs[1].Output = Convert.ToBoolean((data[0] >> 1) & 0x01);
+            CanInputs[2].Output = Convert.ToBoolean((data[0] >> 2) & 0x01);
+            CanInputs[3].Output = Convert.ToBoolean((data[0] >> 3) & 0x01);
+            CanInputs[4].Output = Convert.ToBoolean((data[0] >> 4) & 0x01);
+            CanInputs[5].Output = Convert.ToBoolean((data[0] >> 5) & 0x01);
+            CanInputs[6].Output = Convert.ToBoolean((data[0] >> 6) & 0x01);
+            CanInputs[7].Output = Convert.ToBoolean((data[0] >> 7) & 0x01);
 
-            CanInputs[8].Value = data[1] & 0x01;
-            CanInputs[9].Value = (data[1] >> 1) & 0x01;
-            CanInputs[10].Value = (data[1] >> 2) & 0x01;
-            CanInputs[11].Value = (data[1] >> 3) & 0x01;
-            CanInputs[12].Value = (data[1] >> 4) & 0x01;
-            CanInputs[13].Value = (data[1] >> 5) & 0x01;
-            CanInputs[14].Value = (data[1] >> 6) & 0x01;
-            CanInputs[15].Value = (data[1] >> 7) & 0x01;
-
-            CanInputs[16].Value = data[2] & 0x01;
-            CanInputs[17].Value = (data[2] >> 1) & 0x01;
-            CanInputs[18].Value = (data[2] >> 2) & 0x01;
-            CanInputs[19].Value = (data[2] >> 3) & 0x01;
-            CanInputs[20].Value = (data[2] >> 4) & 0x01;
-            CanInputs[21].Value = (data[2] >> 5) & 0x01;
-            CanInputs[22].Value = (data[2] >> 6) & 0x01;
-            CanInputs[23].Value = (data[2] >> 7) & 0x01;
-
-            CanInputs[24].Value = data[3] & 0x01;
-            CanInputs[25].Value = (data[3] >> 1) & 0x01;
-            CanInputs[26].Value = (data[3] >> 2) & 0x01;
-            CanInputs[27].Value = (data[3] >> 3) & 0x01;
-            CanInputs[28].Value = (data[3] >> 4) & 0x01;
-            CanInputs[29].Value = (data[3] >> 5) & 0x01;
-            CanInputs[30].Value = (data[3] >> 6) & 0x01;
-            CanInputs[31].Value = (data[3] >> 7) & 0x01;
+            CanInputs[8].Output  = Convert.ToBoolean(data[1] & 0x01);
+            CanInputs[9].Output  = Convert.ToBoolean((data[1] >> 1) & 0x01);
+            CanInputs[10].Output = Convert.ToBoolean((data[1] >> 2) & 0x01);
+            CanInputs[11].Output = Convert.ToBoolean((data[1] >> 3) & 0x01);
+            CanInputs[12].Output = Convert.ToBoolean((data[1] >> 4) & 0x01);
+            CanInputs[13].Output = Convert.ToBoolean((data[1] >> 5) & 0x01);
+            CanInputs[14].Output = Convert.ToBoolean((data[1] >> 6) & 0x01);
+            CanInputs[15].Output = Convert.ToBoolean((data[1] >> 7) & 0x01);
+                                   
+            CanInputs[16].Output = Convert.ToBoolean(data[2] & 0x01);
+            CanInputs[17].Output = Convert.ToBoolean((data[2] >> 1) & 0x01);
+            CanInputs[18].Output = Convert.ToBoolean((data[2] >> 2) & 0x01);
+            CanInputs[19].Output = Convert.ToBoolean((data[2] >> 3) & 0x01);
+            CanInputs[20].Output = Convert.ToBoolean((data[2] >> 4) & 0x01);
+            CanInputs[21].Output = Convert.ToBoolean((data[2] >> 5) & 0x01);
+            CanInputs[22].Output = Convert.ToBoolean((data[2] >> 6) & 0x01);
+            CanInputs[23].Output = Convert.ToBoolean((data[2] >> 7) & 0x01);
+                                  
+            CanInputs[24].Output = Convert.ToBoolean(data[3] & 0x01);
+            CanInputs[25].Output = Convert.ToBoolean((data[3] >> 1) & 0x01);
+            CanInputs[26].Output = Convert.ToBoolean((data[3] >> 2) & 0x01);
+            CanInputs[27].Output = Convert.ToBoolean((data[3] >> 3) & 0x01);
+            CanInputs[28].Output = Convert.ToBoolean((data[3] >> 4) & 0x01);
+            CanInputs[29].Output = Convert.ToBoolean((data[3] >> 5) & 0x01);
+            CanInputs[30].Output = Convert.ToBoolean((data[3] >> 6) & 0x01);
+            CanInputs[31].Output = Convert.ToBoolean((data[3] >> 7) & 0x01);
 
             VirtualInputs[0].Value = data[4] & 0x01;
             VirtualInputs[1].Value = (data[4] >> 1) & 0x01;
@@ -638,7 +647,83 @@ namespace CanDevices.DingoPdm
 			Conditions[31].Value = (data[7] >> 7) & 0x01;
 		}
 
-		protected void ReadSettingsResponse(byte[] data, ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)
+        protected void ReadMessage7(byte[] data)
+        {
+            CanInputs[0].Value = Convert.ToInt16((data[1] << 8) + data[0]);
+            CanInputs[1].Value = Convert.ToInt16((data[3] << 8) + data[2]);
+            CanInputs[2].Value = Convert.ToInt16((data[5] << 8) + data[4]);
+            CanInputs[3].Value = Convert.ToInt16((data[7] << 8) + data[6]);
+        }
+
+        protected void ReadMessage8(byte[] data)
+        {
+            CanInputs[4].Value = Convert.ToInt16((data[1] << 8) + data[0]);
+            CanInputs[5].Value = Convert.ToInt16((data[3] << 8) + data[2]);
+            CanInputs[6].Value = Convert.ToInt16((data[5] << 8) + data[4]);
+            CanInputs[7].Value = Convert.ToInt16((data[7] << 8) + data[6]);
+        }
+
+        protected void ReadMessage9(byte[] data)
+        {
+            CanInputs[8].Value = Convert.ToInt16((data[1] << 8) + data[0]);
+            CanInputs[9].Value = Convert.ToInt16((data[3] << 8) + data[2]);
+            CanInputs[10].Value = Convert.ToInt16((data[5] << 8) + data[4]);
+            CanInputs[11].Value = Convert.ToInt16((data[7] << 8) + data[6]);
+        }
+
+        protected void ReadMessage10(byte[] data)
+        {
+            CanInputs[12].Value = Convert.ToInt16((data[1] << 8) + data[0]);
+            CanInputs[13].Value = Convert.ToInt16((data[3] << 8) + data[2]);
+            CanInputs[14].Value = Convert.ToInt16((data[5] << 8) + data[4]);
+            CanInputs[15].Value = Convert.ToInt16((data[7] << 8) + data[6]);
+        }
+
+        protected void ReadMessage11(byte[] data)
+        {
+            CanInputs[16].Value = Convert.ToInt16((data[1] << 8) + data[0]);
+            CanInputs[17].Value = Convert.ToInt16((data[3] << 8) + data[2]);
+            CanInputs[18].Value = Convert.ToInt16((data[5] << 8) + data[4]);
+            CanInputs[19].Value = Convert.ToInt16((data[7] << 8) + data[6]);
+        }
+
+        protected void ReadMessage12(byte[] data)
+        {
+            CanInputs[20].Value = Convert.ToInt16((data[1] << 8) + data[0]);
+            CanInputs[21].Value = Convert.ToInt16((data[3] << 8) + data[2]);
+            CanInputs[22].Value = Convert.ToInt16((data[5] << 8) + data[4]);
+            CanInputs[23].Value = Convert.ToInt16((data[7] << 8) + data[6]);
+        }
+
+        protected void ReadMessage13(byte[] data)
+        {
+            CanInputs[24].Value = Convert.ToInt16((data[1] << 8) + data[0]);
+            CanInputs[25].Value = Convert.ToInt16((data[3] << 8) + data[2]);
+            CanInputs[26].Value = Convert.ToInt16((data[5] << 8) + data[4]);
+            CanInputs[27].Value = Convert.ToInt16((data[7] << 8) + data[6]);
+        }
+
+        protected void ReadMessage14(byte[] data)
+        {
+            CanInputs[28].Value = Convert.ToInt16((data[1] << 8) + data[0]);
+            CanInputs[29].Value = Convert.ToInt16((data[3] << 8) + data[2]);
+            CanInputs[30].Value = Convert.ToInt16((data[5] << 8) + data[4]);
+            CanInputs[31].Value = Convert.ToInt16((data[7] << 8) + data[6]);
+        }
+
+        protected void ReadMessage15(byte[] data)
+        {
+            Outputs[0].CurrentDutyCycle = data[0];
+            Outputs[1].CurrentDutyCycle = data[1];
+            Outputs[2].CurrentDutyCycle = data[2];
+            Outputs[3].CurrentDutyCycle = data[3];
+            Outputs[4].CurrentDutyCycle = data[4];
+            Outputs[5].CurrentDutyCycle = data[5];
+            Outputs[6].CurrentDutyCycle = data[6];
+            Outputs[7].CurrentDutyCycle = data[7];
+        }
+
+        protected void ReadSettingsResponse(byte[] data, ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)
         {
             //Response is prefix + 128
             if (data[0] < 128)
@@ -1554,7 +1639,7 @@ namespace CanDevices.DingoPdm
 
             foreach(var canInput in CanInputs)
             {
-                canInput.Value = 0;
+                canInput.Output = false;
             }
         }
     }

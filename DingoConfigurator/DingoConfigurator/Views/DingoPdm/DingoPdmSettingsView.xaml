@@ -129,7 +129,34 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Result" Binding="{Binding Value}" IsReadOnly="True" Width="70" MinWidth="70" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTemplateColumn Header="Result" IsReadOnly="True" Width="70" MinWidth="70" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Ellipse Name="StatusEllipse"
+                                    Height="15"
+                                    Width="15"
+                                    Fill="Lime">           
+                                <Ellipse.Style>
+                                    <Style TargetType="{x:Type Ellipse}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Output}"
+                                                        Value="True">
+                                                <Setter Property="Opacity"
+                                                        Value="1.0" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Output}"
+                                                            Value="False">
+                                                <Setter Property="Opacity"
+                                                            Value="0.1" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True" Width="70" MinWidth="70" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -321,13 +348,33 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Result" Binding="{Binding Value}" IsReadOnly="True" Width="70" MinWidth="70" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
+                <DataGridTemplateColumn Header="Result" IsReadOnly="True" Width="70" MinWidth="70" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Ellipse Name="StatusEllipse"
+                                    Height="15"
+                                    Width="15"
+                                    Fill="Lime">
+                                <Ellipse.Style>
+                                    <Style TargetType="{x:Type Ellipse}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Value}"
+                                                        Value="True">
+                                                <Setter Property="Opacity"
+                                                        Value="1.0" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Value}"
+                                                        Value="False">
+                                                <Setter Property="Opacity"
+                                                        Value="0.1" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridCheckBoxColumn Header="En" Binding="{Binding Enabled, UpdateSourceTrigger=PropertyChanged}" Width="50" MinWidth="50" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                     <DataGridCheckBoxColumn.CellStyle>
                         <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>

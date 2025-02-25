@@ -331,12 +331,12 @@ namespace DingoConfigurator.ViewModels
 
                     if ((i >= 10) && (i < 42))
                     {
-                        val = Convert.ToInt16(_pdm.CanInputs[i - 10].Value);
+                        val = Convert.ToInt16(_pdm.CanInputs[i - 10].Output);
                     }
 
                     if ((i >= 42) && (i < 58))
                     {
-                        val = Convert.ToInt16(_pdm.CanInputs[i - 42].Value);
+                        val = Convert.ToInt16(_pdm.VirtualInputs[i - 42].Value);
                     }
                 }
 

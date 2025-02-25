@@ -38,6 +38,21 @@ namespace CanDevices.DingoPdm
             }
         }
 
+        private bool _output;
+        [JsonIgnore]
+        public bool Output
+        {
+            get => _output;
+            set
+            {
+                if (_output != value)
+                {
+                    _output = value;
+                    OnPropertyChanged(nameof(Output));
+                }
+            }
+        }
+
         private int _value;
         [JsonIgnore]
         public int Value
@@ -343,7 +358,7 @@ namespace CanDevices.DingoPdm
             if (input == string.Empty) return new ValidationResult(false, "Entry is required");
             if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
             if (proposedValue < 0.00) return new ValidationResult(false, "Value must be zero or greater");
-            if (proposedValue > 8) return new ValidationResult(false, "Value must less than or equal to 8");
+            if (proposedValue > 2) return new ValidationResult(false, "Value must less than or equal to 2");
             return new ValidationResult(true, null);
         }
     }

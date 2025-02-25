@@ -203,6 +203,147 @@ namespace CanDevices.DingoPdm
             }
         }
 
+        private bool _pwmEnabled;
+        [JsonPropertyName("pwmEnabled")]
+        public bool PwmEnabled
+        {
+            get => _pwmEnabled;
+            set
+            {
+                if (value != _pwmEnabled)
+                {
+                    _pwmEnabled = value;
+                    OnPropertyChanged(nameof(PwmEnabled));
+                }
+            }
+        }
+
+        private bool _softStartEnabled;
+        [JsonPropertyName("softStartEnabled")]
+        public bool SoftStartEnabled
+        {
+            get => _softStartEnabled;
+            set
+            {
+                if (value != _softStartEnabled)
+                {
+                    _softStartEnabled = value;
+                    OnPropertyChanged(nameof(SoftStartEnabled));
+                }
+            }
+        }
+
+        private bool _variableDutyCycle;
+        [JsonPropertyName("variableDutyCycle")]
+        public bool VariableDutyCycle
+        {
+            get => _variableDutyCycle;
+            set
+            {
+                if (value != _variableDutyCycle)
+                {
+                    _variableDutyCycle = value;
+                    OnPropertyChanged(nameof(VariableDutyCycle));
+                }
+            }
+        }
+
+        private int _dutyCycleInput;
+        [JsonPropertyName("dutyCycleInput")]
+        public int DutyCycleInput
+        {
+            get => _dutyCycleInput;
+            set
+            {
+                if (value != _dutyCycleInput)
+                {
+                    _dutyCycleInput = value;
+                    OnPropertyChanged(nameof(DutyCycleInput));
+                }
+            }
+        }
+
+        private int _pwmFrequency;
+        [JsonPropertyName("pwmFrequency")]
+        public int PwmFrequency
+        {
+            get => _pwmFrequency;
+            set
+            {
+                if (value != _pwmFrequency)
+                {
+                    _pwmFrequency = value;
+                    OnPropertyChanged(nameof(PwmFrequency));
+                }
+            }
+        }
+
+        private int _softStartRampTime;
+        [JsonPropertyName("softStartRampTime")]
+        public int SoftStartRampTime
+        {
+            get => _softStartRampTime;
+            set
+            {
+                if (value != _softStartRampTime)
+                {
+                    _softStartRampTime = value;
+                    OnPropertyChanged(nameof(SoftStartRampTime));
+                }
+            }
+        }
+
+        private int _dutyCycleDenominator;
+        [JsonPropertyName("dutyCycleDenominator")]
+        public int DutyCycleDenominator
+        {
+            get => _dutyCycleDenominator;
+            set
+            {
+                if (value != _dutyCycleDenominator)
+                {
+                    _dutyCycleDenominator = value;
+                    OnPropertyChanged(nameof(DutyCycleDenominator));
+                }
+            }
+        }
+
+        private double _currentDutyCycle;
+        [JsonIgnore]
+        public double CurrentDutyCycle
+        {
+            get => _currentDutyCycle;
+            set
+            {
+                if (value != _currentDutyCycle)
+                {
+                    _currentDutyCycle = value;
+                    CalculatedPower = CalcPower(CurrentDutyCycle);
+                    OnPropertyChanged(nameof(CurrentDutyCycle));
+                }
+            }
+        }
+
+        private double _calculatedPower;
+        [JsonIgnore]
+        public double CalculatedPower
+        {
+            get => _calculatedPower;
+            set
+            {
+                if (value != _calculatedPower)
+                {
+                    _calculatedPower = value;
+                    OnPropertyChanged(nameof(CalculatedPower));
+                }
+            }
+        }
+
+        private double CalcPower(double dc)
+        {
+            return (dc / 100) * Current;
+        }
+
         public static byte[] Request(int index)
         {
             byte[] data = new byte[8];
@@ -311,6 +452,48 @@ namespace CanDevices.DingoPdm
             if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
             if (proposedValue < 0.00) return new ValidationResult(false, "Value must be zero or greater");
             if (proposedValue > 25.50) return new ValidationResult(false, "Value must less than or equal to 25.5");
+            return new ValidationResult(true, null);
+        }
+    }
+
+    public class FrequencyValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
+        {
+            double proposedValue;
+            string input = value.ToString();
+            if (input == string.Empty) return new ValidationResult(false, "Entry is required");
+            if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
+            if (proposedValue < 1) return new ValidationResult(false, "Value must be 1 or greater");
+            if (proposedValue > 400) return new ValidationResult(false, "Value must less than or equal to 400");
+            return new ValidationResult(true, null);
+        }
+    }
+
+    public class SoftStartTimeValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
+        {
+            double proposedValue;
+            string input = value.ToString();
+            if (input == string.Empty) return new ValidationResult(false, "Entry is required");
+            if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
+            if (proposedValue < 1) return new ValidationResult(false, "Value must be 1 or greater");
+            if (proposedValue > 1000) return new ValidationResult(false, "Value must less than or equal to 1000");
+            return new ValidationResult(true, null);
+        }
+    }
+
+    public class DutyCycleDenomValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
+        {
+            double proposedValue;
+            string input = value.ToString();
+            if (input == string.Empty) return new ValidationResult(false, "Entry is required");
+            if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
+            if (proposedValue < 1) return new ValidationResult(false, "Value must be 1 or greater");
+            if (proposedValue > 100) return new ValidationResult(false, "Value must less than or equal to 100");
             return new ValidationResult(true, null);
         }
     }
