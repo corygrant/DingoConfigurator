@@ -108,6 +108,17 @@ namespace DingoConfigurator.ViewModels
                 series.Title = $"O{i}: {_pdm.Outputs[i].Name} Current";
             }
 
+            foreach (var output in _pdm.Outputs)
+            {
+                CurrentOutputPlotModel.Series.Add(new LineSeries());
+            }
+
+            for (int i = 0; i < _pdm.Outputs.Count; i++)
+            {
+                LineSeries series = (LineSeries)CurrentOutputPlotModel.Series[i + _pdm.Outputs.Count];
+                series.Title = $"O{i}: {_pdm.Outputs[i].Name} Calc Current";
+            }
+
 
             StatePlotModel = new PlotModel
             {
@@ -284,7 +295,7 @@ namespace DingoConfigurator.ViewModels
             _lastBatteryTimeZoomMin = BatteryPlotModel.Axes[1].ActualMinimum;
             _lastBatteryTimeZoomMax = BatteryPlotModel.Axes[1].ActualMaximum;
 
-            for (int i = 0; i < CurrentOutputPlotModel.Series.Count; i++)
+            for (int i = 0; i < _pdm.Outputs.Count; i++)
             {
 
                 LineSeries series = (LineSeries)CurrentOutputPlotModel.Series[i];
@@ -298,6 +309,31 @@ namespace DingoConfigurator.ViewModels
                 else
                 {
                     val = _pdm.Outputs[i].Current;
+                }
+
+                series.Points.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), val));
+                //if (series.Points.Count > 10000)
+                // {
+                //     series.Points.RemoveAt(0);
+                // }
+            }
+
+            for (int i = 0; i < _pdm.Outputs.Count; i++)
+            {
+
+                LineSeries series = (LineSeries)CurrentOutputPlotModel.Series[i + _pdm.Outputs.Count];
+                if (series == null) return;
+
+                series.LineStyle = LineStyle.Dot;
+
+                double val;
+                if (!_pdm.IsConnected)
+                {
+                    val = 0;
+                }
+                else
+                {
+                    val = _pdm.Outputs[i].CalculatedPower;
                 }
 
                 series.Points.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), val));
