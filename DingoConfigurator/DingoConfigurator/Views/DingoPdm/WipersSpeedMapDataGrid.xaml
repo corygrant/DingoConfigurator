@@ -1,0 +1,146 @@
+﻿<UserControl x:Class="DingoConfigurator.Views.WipersSpeedMapDataGrid"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DingoConfigurator.Views"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:cd="clr-namespace:CanDevices.DingoPdm;assembly=CanDevices"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="1080">
+    <DataGrid AutoGenerateColumns="False"
+          ItemsSource="{Binding Pdm.Wipers}"
+          CanUserAddRows="False"
+          CanUserDeleteRows="False"
+          CanUserSortColumns="False">
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="Wiper Speed Map" IsReadOnly="True" Width="130" MinWidth="130" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+            <DataGridTemplateColumn  Header="Speed 0" 
+                                 Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <ComboBox HorizontalContentAlignment="Center"
+                              ItemsSource="{Binding Source={StaticResource WiperSpeedEnumDataSource}, Mode=OneWay}" 
+                              SelectedValue="{Binding SpeedMap[0], UpdateSourceTrigger=PropertyChanged}"
+                              BorderThickness="0">
+                        </ComboBox>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn.CellStyle>
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+                </DataGridTemplateColumn.CellStyle>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn  Header="Speed 1" 
+                                 Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <ComboBox HorizontalContentAlignment="Center"
+                              ItemsSource="{Binding Source={StaticResource WiperSpeedEnumDataSource}, Mode=OneWay}" 
+                              SelectedValue="{Binding SpeedMap[1], UpdateSourceTrigger=PropertyChanged}"
+                              BorderThickness="0">
+                        </ComboBox>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn.CellStyle>
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+                </DataGridTemplateColumn.CellStyle>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn  Header="Speed 2" 
+                                 Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <ComboBox HorizontalContentAlignment="Center"
+                              ItemsSource="{Binding Source={StaticResource WiperSpeedEnumDataSource}, Mode=OneWay}" 
+                              SelectedValue="{Binding SpeedMap[2], UpdateSourceTrigger=PropertyChanged}"
+                              BorderThickness="0">
+                        </ComboBox>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn.CellStyle>
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+                </DataGridTemplateColumn.CellStyle>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn  Header="Speed 3" 
+                 Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <ComboBox HorizontalContentAlignment="Center"
+              ItemsSource="{Binding Source={StaticResource WiperSpeedEnumDataSource}, Mode=OneWay}" 
+              SelectedValue="{Binding SpeedMap[3], UpdateSourceTrigger=PropertyChanged}"
+                              BorderThickness="0">
+                        </ComboBox>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn.CellStyle>
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+                </DataGridTemplateColumn.CellStyle>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn  Header="Speed 4" 
+                 Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <ComboBox HorizontalContentAlignment="Center"
+              ItemsSource="{Binding Source={StaticResource WiperSpeedEnumDataSource}, Mode=OneWay}" 
+              SelectedValue="{Binding SpeedMap[4], UpdateSourceTrigger=PropertyChanged}"
+                              BorderThickness="0">
+                        </ComboBox>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn.CellStyle>
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+                </DataGridTemplateColumn.CellStyle>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn  Header="Speed 5" 
+                 Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <ComboBox HorizontalContentAlignment="Center"
+              ItemsSource="{Binding Source={StaticResource WiperSpeedEnumDataSource}, Mode=OneWay}" 
+              SelectedValue="{Binding SpeedMap[5], UpdateSourceTrigger=PropertyChanged}"
+                              BorderThickness="0">
+                        </ComboBox>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn.CellStyle>
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+                </DataGridTemplateColumn.CellStyle>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn  Header="Speed 6" 
+                 Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <ComboBox HorizontalContentAlignment="Center"
+              ItemsSource="{Binding Source={StaticResource WiperSpeedEnumDataSource}, Mode=OneWay}" 
+              SelectedValue="{Binding SpeedMap[6], UpdateSourceTrigger=PropertyChanged}"
+                              BorderThickness="0">
+                        </ComboBox>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn.CellStyle>
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+                </DataGridTemplateColumn.CellStyle>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn  Header="Speed 7" 
+                 Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <ComboBox HorizontalContentAlignment="Center"
+              ItemsSource="{Binding Source={StaticResource WiperSpeedEnumDataSource}, Mode=OneWay}" 
+              SelectedValue="{Binding SpeedMap[7], UpdateSourceTrigger=PropertyChanged}"
+                              BorderThickness="0">
+                        </ComboBox>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn.CellStyle>
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+                </DataGridTemplateColumn.CellStyle>
+            </DataGridTemplateColumn>
+        </DataGrid.Columns>
+    </DataGrid>
+</UserControl>

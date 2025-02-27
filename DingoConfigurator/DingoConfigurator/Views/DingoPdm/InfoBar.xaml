@@ -1,0 +1,138 @@
+﻿<UserControl x:Class="DingoConfigurator.Views.InfoBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DingoConfigurator.Views"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:cd="clr-namespace:CanDevices.DingoPdm;assembly=CanDevices"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="1080">
+    <Grid Grid.Row="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0"
+               Grid.Column="0"
+               Text="CAN Base ID"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Right"
+               Padding="5" />
+        <TextBox Grid.Row="0"
+             Grid.Column="1"
+             Padding="5"
+             Margin="5"
+             MinWidth="50"
+             MaxWidth="100"
+             HorizontalAlignment="Left"
+             HorizontalContentAlignment="Center"
+             IsReadOnly="True"
+             Text="{Binding Pdm.BaseId, Mode=OneWay}" />
+
+        <TextBlock Grid.Row="0"
+               Grid.Column="2"
+               Text="Total Current [A]"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Right"
+               Padding="5" />
+        <TextBox Grid.Row="0"
+             Grid.Column="3"
+             Padding="5"
+             Margin="5"
+             MinWidth="50"
+             MaxWidth="100"
+             HorizontalAlignment="Left"
+             HorizontalContentAlignment="Center"
+             IsReadOnly="True"
+             Text="{Binding Pdm.TotalCurrent, Mode=OneWay}" />
+
+        <TextBlock Grid.Row="1"
+               Grid.Column="0"
+               Text="Battery Voltage [V]"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Right"
+               Padding="5" />
+        <TextBox Grid.Row="1"
+             Grid.Column="1"
+             Padding="5"
+             Margin="5"
+             MinWidth="50"
+             MaxWidth="100"
+             HorizontalAlignment="Left"
+             HorizontalContentAlignment="Center"
+             IsReadOnly="True"
+             Text="{Binding Pdm.BatteryVoltage, Mode=OneWay}" />
+
+        <TextBlock Grid.Row="1"
+               Grid.Column="2"
+               Text="Board Temperature [°F]"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Right"
+               Padding="5" />
+        <TextBox Grid.Row="1"
+             Grid.Column="3"
+             Padding="5"
+             Margin="5"
+             MinWidth="50"
+             MaxWidth="100"
+             HorizontalAlignment="Left"
+             HorizontalContentAlignment="Center"
+             IsReadOnly="True"
+             Text="{Binding Pdm.BoardTempF, Mode=OneWay}" />
+        <TextBlock Grid.Row="0"
+               Grid.Column="4"
+               Text="FW Version"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Right"
+               Padding="5" />
+        <TextBox Grid.Row="0"
+             Grid.Column="5"
+             Padding="5"
+             Margin="5"
+             MinWidth="100"
+             MaxWidth="100"
+             HorizontalAlignment="Left"
+             HorizontalContentAlignment="Center"
+             IsReadOnly="True"
+             Text="{Binding Pdm.Version, Mode=OneWay}" />
+        <TextBlock Grid.Row="1"
+               Grid.Column="4"
+               Text="Device State"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Right"
+               Padding="5" />
+        <TextBox Grid.Row="1"
+             Grid.Column="5"
+             Padding="5"
+             Margin="5"
+             MinWidth="100"
+             MaxWidth="100"
+             HorizontalAlignment="Left"
+             HorizontalContentAlignment="Center"
+             IsReadOnly="True"
+             Text="{Binding Pdm.DeviceState, Mode=OneWay}" />
+        <TextBlock Grid.Row="0"
+               Grid.Column="6"
+               Text="Baud rate"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Right"
+               Padding="5" />
+        <ComboBox Grid.Row="0"
+              Grid.Column="7"
+              Width="120"
+              Margin="5 5 5 5"
+              ItemsSource="{Binding Path=Pdm.BaudRates}"
+              SelectedItem="{Binding Path=Pdm.BaudRate}"/>
+    </Grid>
+</UserControl>
