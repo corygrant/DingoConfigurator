@@ -90,6 +90,11 @@ namespace CanDevices.SoftButtonBox
             return null;
         }
 
+        public CanDeviceResponse GetVersionMessage()
+        {
+            return null;
+        }
+
         public bool InIdRange(int id)
         {
             return (id >= BaseId) && (id <= BaseId + 10);

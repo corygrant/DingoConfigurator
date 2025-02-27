@@ -1662,6 +1662,24 @@ namespace CanDevices.DingoPdm
             };
         }
 
+        public CanDeviceResponse GetVersionMessage()
+        {
+            return new CanDeviceResponse
+            {
+                Sent = false,
+                Received = false,
+                Prefix = (int)MessagePrefix.Version,
+                Index = 0,
+                Data = new CanInterfaceData
+                {
+                    Id = BaseId - 1,
+                    Len = 1,
+                    Payload = new byte[] { Convert.ToByte(MessagePrefix.Version), 0, 0, 0, 0, 0, 0, 0 }
+                },
+                MsgDescription = "Version"
+            };
+        }
+
         protected bool CheckVersion(int major, int minor, int build)
         {
             if (major > _minMajorVersion)

@@ -130,5 +130,10 @@ namespace CanDevices.DingoDash
         {
             return null;
         }
+
+        public CanDeviceResponse GetVersionMessage()
+        {
+            return null;
+        }
     }
 }

@@ -169,6 +169,11 @@ namespace CanDevices.CanMsgLog
             return null;
         }
 
+        public CanDeviceResponse GetVersionMessage()
+        {
+            return null;
+        }
+
         public bool InIdRange(int id)
         {
             return true;

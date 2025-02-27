@@ -51,12 +51,18 @@ namespace CanInterfaces
             if (ser == null) return;
             if (!ser.IsOpen) return;
 
-            foreach (var raw in ser.ReadExisting().Split('\r'))
+            var rawData = ser.ReadExisting();
+            //if (rawData.Length != 22) 
+            //    return;
+
+            foreach (var raw in rawData.Split('\r'))
             {
 
                 if (raw.Length >= 5) //'t' msg is always at least 5 bytes long (t + ID ID ID + DLC)
                 {
                     if (raw.Substring(0, 1) != "t") return;
+                    if (raw.Substring(1).Contains("t")) 
+                        return; //If there is another 't' in the message, it is invalid
 
                     _rxTimeDelta = Convert.ToInt32(_rxStopwatch.ElapsedMilliseconds);
                     _rxStopwatch.Restart();

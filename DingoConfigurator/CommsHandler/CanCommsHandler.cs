@@ -128,8 +128,7 @@ namespace CommsHandler
 
             _checkConnectionTimer.Start();
 
-            //TODO: Need to ask before uploading
-            //Upload(null);
+            _ = GetVersion(null);
         }
 
         public void Disconnect()
@@ -349,7 +348,7 @@ namespace CommsHandler
                             {
                                 Id = canDevice.BaseId - 1,
                                 Len = 6,
-                                Payload = new byte[] { Convert.ToByte('~'), 0x42, 0x4F, 0x4F, 0x54, 0x4C, 0, 0 }
+                                Payload = new byte[] { Convert.ToByte(MessagePrefix.Bootloader), (byte)'B', (byte)'O', (byte)'O', (byte)'T', (byte)'L', 0, 0 }
                             },
                             MsgDescription = "Fw Update Request"
                         };
@@ -357,6 +356,33 @@ namespace CommsHandler
                         //No response needed, don't add to queue
                         msg.DeviceBaseId = cd.BaseId;
                         _can.Write(msg.Data);
+                    }
+                }
+            });
+        }
+
+        public async Task GetVersion(ICanDevice canDevice)
+        {
+            await Task.Run(() =>
+            {
+                foreach (var cd in _canDevices)
+                {
+                    if ((canDevice == null) || canDevice.Equals(cd))
+                    {
+                        if (cd.IsConnected)
+                        {
+                            var msg = cd.GetVersionMessage();
+                            if (msg == null) return;
+
+                            msg.DeviceBaseId = cd.BaseId;
+                            msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout, _msgTimeout);
+                            var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
+                            _queue.TryAdd(key, msg);
+                            _can.Write(msg.Data);
+                            ProcessMessage(msg.Data);//Catch with CanMsgLog
+
+                            Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
+                        }
                     }
                 }
             });

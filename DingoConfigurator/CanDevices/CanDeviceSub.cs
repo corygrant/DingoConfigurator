@@ -99,5 +99,10 @@ namespace CanDevices
         {
             return null;
         }
+        public CanDeviceResponse GetVersionMessage()
+        {
+            return null;
+        }
+
     }
 }

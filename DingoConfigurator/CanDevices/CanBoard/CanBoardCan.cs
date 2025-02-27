@@ -294,5 +294,10 @@ namespace CanDevices.CanBoard
         {
             return null;
         }
+
+        public CanDeviceResponse GetVersionMessage()
+        {
+            return null;
+        }
     }
 }
