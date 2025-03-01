@@ -18,7 +18,7 @@ namespace CanDevices.DingoPdm
     {
         protected virtual int _minMajorVersion { get; } = 0;
         protected virtual int _minMinorVersion { get; } = 4;
-        protected virtual int _minBuildVersion { get; } = 5;
+        protected virtual int _minBuildVersion { get; } = 6;
 
         protected virtual int _numDigitalInputs { get; } = 2;
         protected virtual int _numOutputs { get; } = 8;
