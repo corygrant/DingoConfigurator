@@ -18,7 +18,7 @@ namespace CanDevices.DingoPdm
     {
         protected virtual int _minMajorVersion { get; } = 0;
         protected virtual int _minMinorVersion { get; } = 4;
-        protected virtual int _minBuildVersion { get; } = 6;
+        protected virtual int _minBuildVersion { get; } = 7;
 
         protected virtual int _numDigitalInputs { get; } = 2;
         protected virtual int _numOutputs { get; } = 8;
@@ -547,7 +547,7 @@ namespace CanDevices.DingoPdm
             Outputs[7].ResetCount = data[7];
         }
 
-        protected void ReadMessage5(byte[] data)
+        protected virtual void ReadMessage5(byte[] data)
         {
             CanInputs[0].Output = Convert.ToBoolean(data[0] & 0x01);
             CanInputs[1].Output = Convert.ToBoolean((data[0] >> 1) & 0x01);
@@ -604,7 +604,7 @@ namespace CanDevices.DingoPdm
             VirtualInputs[15].Value = (data[5] >> 7) & 0x01;
         }
 
-		protected void ReadMessage6(byte[] data)
+        protected virtual void ReadMessage6(byte[] data)
 		{
 			Counters[0].Value = data[0];
 			Counters[1].Value = data[1];
@@ -648,7 +648,7 @@ namespace CanDevices.DingoPdm
 			Conditions[31].Value = (data[7] >> 7) & 0x01;
 		}
 
-        protected void ReadMessage7(byte[] data)
+        protected virtual void ReadMessage7(byte[] data)
         {
             CanInputs[0].Value = Convert.ToInt16((data[1] << 8) + data[0]);
             CanInputs[1].Value = Convert.ToInt16((data[3] << 8) + data[2]);
@@ -656,7 +656,7 @@ namespace CanDevices.DingoPdm
             CanInputs[3].Value = Convert.ToInt16((data[7] << 8) + data[6]);
         }
 
-        protected void ReadMessage8(byte[] data)
+        protected virtual void ReadMessage8(byte[] data)
         {
             CanInputs[4].Value = Convert.ToInt16((data[1] << 8) + data[0]);
             CanInputs[5].Value = Convert.ToInt16((data[3] << 8) + data[2]);
@@ -664,7 +664,7 @@ namespace CanDevices.DingoPdm
             CanInputs[7].Value = Convert.ToInt16((data[7] << 8) + data[6]);
         }
 
-        protected void ReadMessage9(byte[] data)
+        protected virtual void ReadMessage9(byte[] data)
         {
             CanInputs[8].Value = Convert.ToInt16((data[1] << 8) + data[0]);
             CanInputs[9].Value = Convert.ToInt16((data[3] << 8) + data[2]);
@@ -672,7 +672,7 @@ namespace CanDevices.DingoPdm
             CanInputs[11].Value = Convert.ToInt16((data[7] << 8) + data[6]);
         }
 
-        protected void ReadMessage10(byte[] data)
+        protected virtual void ReadMessage10(byte[] data)
         {
             CanInputs[12].Value = Convert.ToInt16((data[1] << 8) + data[0]);
             CanInputs[13].Value = Convert.ToInt16((data[3] << 8) + data[2]);
@@ -680,7 +680,7 @@ namespace CanDevices.DingoPdm
             CanInputs[15].Value = Convert.ToInt16((data[7] << 8) + data[6]);
         }
 
-        protected void ReadMessage11(byte[] data)
+        protected virtual void ReadMessage11(byte[] data)
         {
             CanInputs[16].Value = Convert.ToInt16((data[1] << 8) + data[0]);
             CanInputs[17].Value = Convert.ToInt16((data[3] << 8) + data[2]);
@@ -688,7 +688,7 @@ namespace CanDevices.DingoPdm
             CanInputs[19].Value = Convert.ToInt16((data[7] << 8) + data[6]);
         }
 
-        protected void ReadMessage12(byte[] data)
+        protected virtual void ReadMessage12(byte[] data)
         {
             CanInputs[20].Value = Convert.ToInt16((data[1] << 8) + data[0]);
             CanInputs[21].Value = Convert.ToInt16((data[3] << 8) + data[2]);
@@ -696,7 +696,7 @@ namespace CanDevices.DingoPdm
             CanInputs[23].Value = Convert.ToInt16((data[7] << 8) + data[6]);
         }
 
-        protected void ReadMessage13(byte[] data)
+        protected virtual void ReadMessage13(byte[] data)
         {
             CanInputs[24].Value = Convert.ToInt16((data[1] << 8) + data[0]);
             CanInputs[25].Value = Convert.ToInt16((data[3] << 8) + data[2]);
@@ -704,7 +704,7 @@ namespace CanDevices.DingoPdm
             CanInputs[27].Value = Convert.ToInt16((data[7] << 8) + data[6]);
         }
 
-        protected void ReadMessage14(byte[] data)
+        protected virtual void ReadMessage14(byte[] data)
         {
             CanInputs[28].Value = Convert.ToInt16((data[1] << 8) + data[0]);
             CanInputs[29].Value = Convert.ToInt16((data[3] << 8) + data[2]);
@@ -712,7 +712,7 @@ namespace CanDevices.DingoPdm
             CanInputs[31].Value = Convert.ToInt16((data[7] << 8) + data[6]);
         }
 
-        protected void ReadMessage15(byte[] data)
+        protected virtual void ReadMessage15(byte[] data)
         {
             Outputs[0].CurrentDutyCycle = data[0];
             Outputs[1].CurrentDutyCycle = data[1];
