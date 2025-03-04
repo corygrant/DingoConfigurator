@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DingoConfigurator.Views
+namespace DingoConfigurator.Views.DingoPdm
 {
     /// <summary>
     /// Interaction logic for CountersDataGrid.xaml

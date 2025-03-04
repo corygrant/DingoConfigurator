@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DingoConfigurator.Views
+namespace DingoConfigurator.Views.DingoDash
 {
     /// <summary>
     /// Interaction logic for DingoDashView.xaml
