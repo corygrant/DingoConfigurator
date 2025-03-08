@@ -36,9 +36,9 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private int _value;
+        private bool _value;
         [JsonIgnore]
-        public int Value
+        public bool Value
         {
             get => _value;
             set

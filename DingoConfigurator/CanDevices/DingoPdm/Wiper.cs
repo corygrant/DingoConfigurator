@@ -325,7 +325,7 @@ namespace CanDevices.DingoPdm
             if (data.Length != 8) return false;
 
             Enabled = Convert.ToBoolean(data[1] & 0x01);
-            Mode = (WiperMode)((data[1] & 0x03) >> 1);
+            Mode = (WiperMode)((data[1] & 0x06) >> 1);
             ParkStopLevel = Convert.ToBoolean((data[1] & 0x08) >> 3);
             WashWipeCycles = (data[1] & 0xF0) >> 4;
             SlowInput = (VarMap)data[2];

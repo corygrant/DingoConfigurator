@@ -24,29 +24,20 @@
                     </Style>
                 </DataGridCheckBoxColumn.ElementStyle>
             </DataGridCheckBoxColumn>
-            <DataGridComboBoxColumn Header="State" 
-                                IsReadOnly="True"
-                                ItemsSource="{Binding Source={StaticResource WiperStateEnumDataSource}, Mode=OneWay}" 
-                                SelectedItemBinding="{Binding State, Mode=TwoWay}"
-                                Width="100" MinWidth="100" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
-                <DataGridComboBoxColumn.CellStyle>
-                    <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
-                </DataGridComboBoxColumn.CellStyle>
-            </DataGridComboBoxColumn>
-            <DataGridTemplateColumn  Header="Speed" 
-                                 Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
-                <DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate>
-                        <ComboBox HorizontalContentAlignment="Center"
-                              ItemsSource="{Binding Source={StaticResource WiperSpeedEnumDataSource}, Mode=OneWay}" 
-                              SelectedValue="{Binding Speed, UpdateSourceTrigger=PropertyChanged}">
-                        </ComboBox>
-                    </DataTemplate>
-                </DataGridTemplateColumn.CellTemplate>
-                <DataGridTemplateColumn.CellStyle>
-                    <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
-                </DataGridTemplateColumn.CellStyle>
-            </DataGridTemplateColumn>
+            <DataGridTextColumn Header="State" Binding="{Binding State}" IsReadOnly="True" Width="70" MinWidth="70" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="Speed" Binding="{Binding Speed}" IsReadOnly="True" Width="70" MinWidth="70" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
             <DataGridTemplateColumn Header="Slow" IsReadOnly="True" Width="70" MinWidth="70" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>

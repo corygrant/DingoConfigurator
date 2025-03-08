@@ -585,23 +585,23 @@ namespace CanDevices.DingoPdm
             CanInputs[30].Output = Convert.ToBoolean((data[3] >> 6) & 0x01);
             CanInputs[31].Output = Convert.ToBoolean((data[3] >> 7) & 0x01);
 
-            VirtualInputs[0].Value = data[4] & 0x01;
-            VirtualInputs[1].Value = (data[4] >> 1) & 0x01;
-            VirtualInputs[2].Value = (data[4] >> 2) & 0x01;
-            VirtualInputs[3].Value = (data[4] >> 3) & 0x01;
-            VirtualInputs[4].Value = (data[4] >> 4) & 0x01;
-            VirtualInputs[5].Value = (data[4] >> 5) & 0x01;
-            VirtualInputs[6].Value = (data[4] >> 6) & 0x01;
-            VirtualInputs[7].Value = (data[4] >> 7) & 0x01;
+            VirtualInputs[0].Value = Convert.ToBoolean(data[4] & 0x01);
+            VirtualInputs[1].Value = Convert.ToBoolean((data[4] >> 1) & 0x01);
+            VirtualInputs[2].Value = Convert.ToBoolean((data[4] >> 2) & 0x01);
+            VirtualInputs[3].Value = Convert.ToBoolean((data[4] >> 3) & 0x01);
+            VirtualInputs[4].Value = Convert.ToBoolean((data[4] >> 4) & 0x01);
+            VirtualInputs[5].Value = Convert.ToBoolean((data[4] >> 5) & 0x01);
+            VirtualInputs[6].Value = Convert.ToBoolean((data[4] >> 6) & 0x01);
+            VirtualInputs[7].Value = Convert.ToBoolean((data[4] >> 7) & 0x01);
 
-            VirtualInputs[8].Value = data[5] & 0x01;
-            VirtualInputs[9].Value = (data[5] >> 1) & 0x01;
-            VirtualInputs[10].Value = (data[5] >> 2) & 0x01;
-            VirtualInputs[11].Value = (data[5] >> 3) & 0x01;
-            VirtualInputs[12].Value = (data[5] >> 4) & 0x01;
-            VirtualInputs[13].Value = (data[5] >> 5) & 0x01;
-            VirtualInputs[14].Value = (data[5] >> 6) & 0x01;
-            VirtualInputs[15].Value = (data[5] >> 7) & 0x01;
+            VirtualInputs[8].Value = Convert.ToBoolean(data[5] & 0x01);
+            VirtualInputs[9].Value = Convert.ToBoolean((data[5] >> 1) & 0x01);
+            VirtualInputs[10].Value = Convert.ToBoolean((data[5] >> 2) & 0x01);
+            VirtualInputs[11].Value = Convert.ToBoolean((data[5] >> 3) & 0x01);
+            VirtualInputs[12].Value = Convert.ToBoolean((data[5] >> 4) & 0x01);
+            VirtualInputs[13].Value = Convert.ToBoolean((data[5] >> 5) & 0x01);
+            VirtualInputs[14].Value = Convert.ToBoolean((data[5] >> 6) & 0x01);
+            VirtualInputs[15].Value = Convert.ToBoolean((data[5] >> 7) & 0x01);
         }
 
         protected virtual void ReadMessage6(byte[] data)
@@ -1709,7 +1709,7 @@ namespace CanDevices.DingoPdm
 
             foreach(var input in VirtualInputs)
             {
-                input.Value = 0;
+                input.Value = false;
             }
 
             foreach(var canInput in CanInputs)
