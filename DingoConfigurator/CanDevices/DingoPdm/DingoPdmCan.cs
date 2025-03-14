@@ -18,7 +18,7 @@ namespace CanDevices.DingoPdm
     {
         protected virtual int _minMajorVersion { get; } = 0;
         protected virtual int _minMinorVersion { get; } = 4;
-        protected virtual int _minBuildVersion { get; } = 7;
+        protected virtual int _minBuildVersion { get; } = 10;
 
         protected virtual int _numDigitalInputs { get; } = 2;
         protected virtual int _numOutputs { get; } = 8;
@@ -203,6 +203,34 @@ namespace CanDevices.DingoPdm
                 {
                     _version = value;
                     OnPropertyChanged(nameof(Version));
+                }
+            }
+        }
+
+        protected bool _sleepEnabled;
+        public bool SleepEnabled
+        {
+            get => _sleepEnabled;
+            set
+            {
+                if (_sleepEnabled != value)
+                {
+                    _sleepEnabled = value;
+                    OnPropertyChanged(nameof(SleepEnabled));
+                }
+            }
+        }
+
+        protected bool _canFiltersEnabled;
+        public bool CanFiltersEnabled
+        {
+            get => _canFiltersEnabled;
+            set
+            {
+                if (_canFiltersEnabled != value)
+                {
+                    _canFiltersEnabled = value;
+                    OnPropertyChanged(nameof(CanFiltersEnabled));
                 }
             }
         }
@@ -758,6 +786,8 @@ namespace CanDevices.DingoPdm
                     break;
 
                 case MessagePrefix.Can:
+                    SleepEnabled = Convert.ToBoolean(data[1] & 0x01);
+                    CanFiltersEnabled = Convert.ToBoolean((data[1] >> 1) & 0x01);
                     BaseId = (data[2] << 8) + data[3];
                     BaudRate = (CanSpeed)((data[1] & 0xF0)>>4);
 
@@ -1340,15 +1370,15 @@ namespace CanDevices.DingoPdm
                 Data = new CanInterfaceData
                 {
                     Id = id,
-                    Len = 5,
+                    Len = 4,
                     Payload = new byte[] {
                     Convert.ToByte(MessagePrefix.Can), //Byte 0
-                    Convert.ToByte((Convert.ToByte(BaudRate) << 4) +
-                    (0x03)), //Byte 1
+                    Convert.ToByte(Convert.ToByte(SleepEnabled) + 
+                    (Convert.ToByte(CanFiltersEnabled) << 1) + 
+                    ((Convert.ToByte(BaudRate) & 0x0F) << 4)),
                     Convert.ToByte((BaseId & 0xFF00) >> 8), //Byte 2
                     Convert.ToByte(BaseId & 0x00FF), //Byte 3
-                    Convert.ToByte(5), //Byte 4
-                    0, 0, 0 }
+                    0, 0, 0, 0 }
                 },
                 MsgDescription = "CANSettings"
             });
@@ -1610,15 +1640,15 @@ namespace CanDevices.DingoPdm
                 Data = new CanInterfaceData
                 {
                     Id = id,
-                    Len = 5,
+                    Len = 4,
                     Payload = new byte[] {
                     Convert.ToByte(MessagePrefix.Can), //Byte 0
-                    Convert.ToByte((Convert.ToByte(BaudRate) << 4) +
-                    (0x03)), //Byte 1
-                    Convert.ToByte((newId & 0xFF00) >> 8), //Byte 2
-                    Convert.ToByte(newId & 0x00FF), //Byte 3
-                    Convert.ToByte(5), //Byte 4
-                    0, 0, 0 }
+                    Convert.ToByte(Convert.ToByte(SleepEnabled) +
+                    (Convert.ToByte(CanFiltersEnabled) << 1) +
+                    ((Convert.ToByte(BaudRate) & 0x0F) << 4)),
+                    Convert.ToByte((BaseId & 0xFF00) >> 8), //Byte 2
+                    Convert.ToByte(BaseId & 0x00FF), //Byte 3
+                    0, 0, 0, 0 }
                 },
                 MsgDescription = "CANSettings"
             });
@@ -1655,8 +1685,8 @@ namespace CanDevices.DingoPdm
                 Data = new CanInterfaceData
                 {
                     Id = BaseId - 1,
-                    Len = 4,
-                    Payload = new byte[] { Convert.ToByte('Q'), Convert.ToByte('U'), Convert.ToByte('I'), Convert.ToByte('T'), 0, 0, 0, 0 }
+                    Len = 5,
+                    Payload = new byte[] { Convert.ToByte(MessagePrefix.Sleep), Convert.ToByte('Q'), Convert.ToByte('U'), Convert.ToByte('I'), Convert.ToByte('T'), 0, 0, 0 }
                 },
                 MsgDescription = "Sleep Request"
             };
