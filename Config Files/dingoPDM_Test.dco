@@ -23,6 +23,8 @@
           "pull": 1
         }
       ],
+      "SleepEnabled": true,
+      "CanFiltersEnabled": true,
       "BaudRate": 1,
       "outputs": [
         {
@@ -318,7 +320,7 @@
         {
           "name": "InterIn",
           "number": 9,
-          "enabled": true,
+          "enabled": false,
           "timeoutEnabled": false,
           "timeout": 0,
           "ide": false,
@@ -334,7 +336,7 @@
         {
           "name": "SlowIn",
           "number": 10,
-          "enabled": true,
+          "enabled": false,
           "timeoutEnabled": false,
           "timeout": 0,
           "ide": false,
@@ -350,7 +352,7 @@
         {
           "name": "FastIn",
           "number": 11,
-          "enabled": true,
+          "enabled": false,
           "timeoutEnabled": false,
           "timeout": 0,
           "ide": false,
@@ -366,7 +368,7 @@
         {
           "name": "SwipeIn",
           "number": 12,
-          "enabled": true,
+          "enabled": false,
           "timeoutEnabled": false,
           "timeout": 0,
           "ide": false,
@@ -382,7 +384,7 @@
         {
           "name": "WashIn",
           "number": 13,
-          "enabled": true,
+          "enabled": false,
           "timeoutEnabled": false,
           "timeout": 0,
           "ide": false,
@@ -398,7 +400,7 @@
         {
           "name": "CountUp",
           "number": 14,
-          "enabled": true,
+          "enabled": false,
           "timeoutEnabled": false,
           "timeout": 0,
           "ide": false,
@@ -414,7 +416,7 @@
         {
           "name": "CountDown",
           "number": 15,
-          "enabled": true,
+          "enabled": false,
           "timeoutEnabled": false,
           "timeout": 0,
           "ide": false,
@@ -430,7 +432,7 @@
         {
           "name": "ResetCount",
           "number": 16,
-          "enabled": true,
+          "enabled": false,
           "timeoutEnabled": false,
           "timeout": 0,
           "ide": false,
@@ -446,7 +448,7 @@
         {
           "name": "OnSw",
           "number": 17,
-          "enabled": true,
+          "enabled": false,
           "timeoutEnabled": false,
           "timeout": 0,
           "ide": false,

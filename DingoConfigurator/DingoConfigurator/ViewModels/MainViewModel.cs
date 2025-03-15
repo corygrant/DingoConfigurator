@@ -258,7 +258,7 @@ namespace DingoConfigurator
             if (e.NewValue.GetType() == typeof(dingoPdmMaxCan))
             {
                 SelectedCanDevice = (dingoPdmMaxCan)e.NewValue;
-                CurrentViewModel = new dingoPdmMaxViewModel(this);
+                CurrentViewModel = new DingoPdmViewModel(this);
                 SelectedDeviceToAdd = Devices.dingoPDMMax;
             }
 
@@ -271,7 +271,7 @@ namespace DingoConfigurator
                     if (sub.Name.Equals("Settings"))
                     {
                         SelectedCanDevice = (dingoPdmMaxCan)sub.CanDevice;
-                        CurrentViewModel = new dingoPdmMaxSettingsViewModel(this);
+                        CurrentViewModel = new DingoPdmSettingsViewModel(this);
                     }
 
                     SelectedDeviceToAdd = Devices.dingoPDMMax;
