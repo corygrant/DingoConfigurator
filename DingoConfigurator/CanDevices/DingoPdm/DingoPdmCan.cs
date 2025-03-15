@@ -1646,8 +1646,8 @@ namespace CanDevices.DingoPdm
                     Convert.ToByte(Convert.ToByte(SleepEnabled) +
                     (Convert.ToByte(CanFiltersEnabled) << 1) +
                     ((Convert.ToByte(BaudRate) & 0x0F) << 4)),
-                    Convert.ToByte((BaseId & 0xFF00) >> 8), //Byte 2
-                    Convert.ToByte(BaseId & 0x00FF), //Byte 3
+                    Convert.ToByte((newId & 0xFF00) >> 8), //Byte 2
+                    Convert.ToByte(newId & 0x00FF), //Byte 3
                     0, 0, 0, 0 }
                 },
                 MsgDescription = "CANSettings"
