@@ -3,7 +3,7 @@
   "pdmMax": [
     {
       "name": "PDM-Max",
-      "baseId": 1000,
+      "baseId": 2000,
       "digitalInputs": [
         {
           "enabled": true,
@@ -24,8 +24,8 @@
           "pull": 1
         }
       ],
-      "SleepEnabled": false,
-      "CanFiltersEnabled": false,
+      "SleepEnabled": true,
+      "CanFiltersEnabled": true,
       "BaudRate": 1,
       "outputs": [
         {
@@ -114,8 +114,8 @@
           "name": null,
           "number": 1,
           "enabled": false,
-          "timeoutEnabled": true,
-          "timeout": 2,
+          "timeoutEnabled": false,
+          "timeout": 0.20000000000000001,
           "ide": false,
           "id": 0,
           "lowByte": 0,

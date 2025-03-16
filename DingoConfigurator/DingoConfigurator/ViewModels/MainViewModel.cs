@@ -512,7 +512,8 @@ namespace DingoConfigurator
                 SelectedCan.Name.Equals("USB") &&
                 (SelectedCanDevice != null) &&
                 (SelectedCanDevice.IsConnected) &&
-                (SelectedCanDevice.GetType() == typeof(DingoPdmCan));
+                (SelectedCanDevice.GetType() == typeof(DingoPdmCan) ||
+                (SelectedCanDevice.GetType() == typeof(dingoPdmMaxCan)));
         }
 
         private void FwUpdateConfirm(object parameter)
