@@ -69,7 +69,7 @@
             </CollectionViewSource>
         </ResourceDictionary>
     </Window.Resources>
-    <md:DialogHost Identifier="RootDialogHost" Placement="MousePoint">
+    <md:DialogHost Identifier="RootDialogHost" Placement="MousePoint" CloseOnClickAway="True">
         <md:DialogHost.DialogContent>
             <ContentControl Content="{Binding DialogContent}" />
         </md:DialogHost.DialogContent>
