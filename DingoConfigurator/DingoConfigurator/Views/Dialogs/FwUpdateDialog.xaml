@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="DingoConfigurator.Views.Dialogs.FwUpdateDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Border BorderThickness="2" BorderBrush="Lime">
+        <StackPanel>
+            <TextBlock Text="Enter firmware update (bootloader)?" Margin="5"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Yes" Command="{Binding FwUpdateBtnConfirmCmd}" Margin="5"/>
+                <Button Content="No" Command="{Binding CancelConfirmCmd}" Margin="5"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

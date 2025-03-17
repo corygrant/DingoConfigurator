@@ -5,6 +5,7 @@
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:local="clr-namespace:DingoConfigurator"
                  xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                 xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
                  xmlns:cd="clr-namespace:CanDevices;assembly=CanDevices"
                  xmlns:pdm="clr-namespace:CanDevices.DingoPdm;assembly=CanDevices"
                  xmlns:pdmMax="clr-namespace:CanDevices.dingoPdmMax;assembly=CanDevices"
@@ -68,7 +69,11 @@
             </CollectionViewSource>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid>
+    <md:DialogHost Identifier="RootDialogHost" Placement="MousePoint">
+        <md:DialogHost.DialogContent>
+            <ContentControl Content="{Binding DialogContent}" />
+        </md:DialogHost.DialogContent>
+        <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -81,25 +86,10 @@
             <ToolBar Band="1"
                      BandIndex="1">
                 <Button Command="{Binding NewBtnCmd}"
+                        Content="New"
+                        x:Name="NewButton"
                         ToolTip="Clear devices and start a new configuration (CTRL+N)"
-                        ToolTipService.ShowOnDisabled="True">
-                    <StackPanel>
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <Run Text="New"/>
-                        </TextBlock>
-                        <Popup IsOpen="{Binding IsConfirmNewConfigFileVisible}" Placement="Right">
-                            <Border BorderThickness="2" BorderBrush="Lime">
-                                <StackPanel>
-                                    <TextBlock Text="Clear all devices?" Margin="5"/>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button Content="Yes" Command="{Binding NewBtnConfirmCmd}" Margin="5"/>
-                                        <Button Content="No" Command="{Binding CancelConfirmCmd}" Margin="5"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </Border>
-                        </Popup>
-                    </StackPanel>
-                </Button>
+                        ToolTipService.ShowOnDisabled="True"/>
                 <Button Content="Open"
                         Command="{Binding OpenBtnCmd}" 
                         ToolTip="Open an existing configuration file (.json) (CTRL+O)"
@@ -154,25 +144,10 @@
             <ToolBar Band="1"
                      BandIndex="3">
                 <Button Command="{Binding ReadBtnCmd}"
+                        Content="Read"
+                        x:Name="ReadButton"
                         ToolTip="Read settings from the selected device (CTRL+R)"
-                        ToolTipService.ShowOnDisabled="True">
-                    <StackPanel>
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <Run Text="Read"/>
-                        </TextBlock>
-                        <Popup IsOpen="{Binding IsReadConfirmVisible}" Placement="Right">
-                            <Border BorderThickness="2" BorderBrush="Lime">
-                                <StackPanel>
-                                    <TextBlock Text="Overwrite all values?" Margin="5"/>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button Content="Yes" Command="{Binding ReadBtnConfirmCmd}" Margin="5"/>
-                                        <Button Content="No" Command="{Binding CancelConfirmCmd}" Margin="5"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </Border>
-                        </Popup>
-                    </StackPanel>
-                </Button>
+                        ToolTipService.ShowOnDisabled="True"/>
                 <Button Content="Write"
                         Command="{Binding WriteBtnCmd}"
                         ToolTip="Write settings to the selected device (CTRL+W)"
@@ -186,25 +161,10 @@
                         ToolTip="Set the device to sleep mode (will auto wakeup on CAN or digital input)"
                         ToolTipService.ShowOnDisabled="True" />
                 <Button Command="{Binding FwUpdateBtnCmd}"
+                        Content="FwUpdate"
+                        x:Name="FwUpdateButton"
                         ToolTip="Enter bootloader to update firmware"
-                        ToolTipService.ShowOnDisabled="True">
-                    <StackPanel>
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <Run Text="FwUpdate"/>
-                        </TextBlock>
-                        <Popup IsOpen="{Binding IsFwUpdateConfirmVisible}" Placement="Right">
-                            <Border BorderThickness="2" BorderBrush="Lime">
-                                <StackPanel>
-                                    <TextBlock Text="Enter firmware update (bootloader)?" Margin="5"/>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button Content="Yes" Command="{Binding FwUpdateBtnConfirmCmd}" Margin="5"/>
-                                        <Button Content="No" Command="{Binding CancelConfirmCmd}" Margin="5"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </Border>
-                        </Popup>
-                    </StackPanel>
-                </Button>
+                        ToolTipService.ShowOnDisabled="True"/>
             </ToolBar>
         </ToolBarTray>
 
@@ -708,5 +668,8 @@
                 <TextBlock Text="{Binding Path=Version, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
             </StatusBarItem>
         </StatusBar>
+        
+        
     </Grid>
+    </md:DialogHost>
 </Window>

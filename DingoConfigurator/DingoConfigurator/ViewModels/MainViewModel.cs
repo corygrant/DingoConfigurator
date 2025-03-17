@@ -30,6 +30,8 @@ using Microsoft.Win32;
 using System.Management;
 using System.Text.RegularExpressions;
 using System.Reflection;
+using DingoConfigurator.Views.Dialogs;
+using MaterialDesignThemes.Wpf;
 
 //Add another CanDevices list that holds the online value
 
@@ -424,9 +426,10 @@ namespace DingoConfigurator
             return match.Success ? match.Groups[1].Value : string.Empty;
         }
 
-        private void Read(object parameter)
+        private async void Read(object parameter)
         {
-            IsReadConfirmVisible = true;
+            DialogContent = new ReadConfirmDialog();
+            await DialogHost.Show(DialogContent, "RootDialogHost");
         }
 
         private bool CanRead(object parameter)
@@ -440,19 +443,8 @@ namespace DingoConfigurator
 
         private void ReadConfirm(object parameter)
         {
-            IsReadConfirmVisible = false;
+            CloseDialog();
             _ = _canComms.Read(SelectedCanDevice);
-        }
-
-        private bool _isReadConfirmVisible;
-        public bool IsReadConfirmVisible
-        {
-            get => _isReadConfirmVisible;
-            set
-            {
-                _isReadConfirmVisible = value;
-                OnPropertyChanged(nameof(IsReadConfirmVisible));
-            }
         }
 
         private void Write(object parameter)
@@ -501,9 +493,10 @@ namespace DingoConfigurator
                 (SelectedCanDevice.GetType() == typeof(dingoPdmMaxCan)));
         }
 
-        private void FwUpdate(object parameter)
+        private async void FwUpdate(object parameter)
         {
-            IsFwUpdateConfirmVisible = true;
+            DialogContent = new FwUpdateDialog();
+            await DialogHost.Show(DialogContent, "RootDialogHost");
         }
 
         private bool CanFwUpdate(object parameter)
@@ -518,27 +511,17 @@ namespace DingoConfigurator
 
         private void FwUpdateConfirm(object parameter)
         {
-            IsFwUpdateConfirmVisible = false;
+            CloseDialog();
             _ = _canComms.FwUpdate(SelectedCanDevice);
             
         }
 
-        private bool _isFwUpdateConfirmVisible;
-        public bool IsFwUpdateConfirmVisible
-        {
-            get => _isFwUpdateConfirmVisible;
-            set
-            {
-                _isFwUpdateConfirmVisible = value;
-                OnPropertyChanged(nameof(IsFwUpdateConfirmVisible));
-            }
-        }
-
         private bool ConfigFileOpen { get; set; }
 
-        private void NewConfigFile(object parameter)
+        private async void NewConfigFile(object parameter)
         {
-            IsConfirmNewConfigFileVisible = true;
+            DialogContent = new NewConfigDialog();
+            await DialogHost.Show(DialogContent, "RootDialogHost");
         }
 
         private bool CanNewConfigFile(object parameter)
@@ -546,20 +529,10 @@ namespace DingoConfigurator
             return (_canComms.CanDevices.Count > 0);
         }
 
-        private bool _isConfirmNewConfigFileVisible;
-        public bool IsConfirmNewConfigFileVisible
-        {
-            get => _isConfirmNewConfigFileVisible;
-            set
-            {
-                _isConfirmNewConfigFileVisible = value;
-                OnPropertyChanged(nameof(IsConfirmNewConfigFileVisible));
-            }
-        }
-
+       
         private void NewConfigFileConfirm(object parameter)
         {
-            IsConfirmNewConfigFileVisible = false;
+            CloseDialog();
 
             //Clear devices
             _canComms.Disconnect();
@@ -572,13 +545,17 @@ namespace DingoConfigurator
 
         private void CancelConfirm(object parameter)
         {
-            IsConfirmNewConfigFileVisible = false;
-            IsReadConfirmVisible = false;
+            CloseDialog();
         }
 
         private bool CanCancelConfirm(object parameter)
         {
             return true;
+        }
+
+        private void CloseDialog()
+        {
+            DialogHost.Close("RootDialogHost");
         }
 
         private void OpenConfigFile(object parameter)
@@ -749,6 +726,18 @@ namespace DingoConfigurator
         }
 
         #endregion
+
+        private object _dialogContent;
+
+        public object DialogContent
+        {
+            get => _dialogContent;
+            set
+            {
+                _dialogContent = value;
+                OnPropertyChanged(nameof(DialogContent));
+            }
+        }
 
         #region Combobox
         private ObservableCollection<ComboBoxCanInterfaces> _cans;
