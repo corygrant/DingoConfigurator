@@ -514,7 +514,7 @@ namespace CanDevices.DingoPdm
 
             TotalCurrent = Convert.ToDouble(((data[3] << 8) + data[2]) / 10.0);
             BatteryVoltage = Convert.ToDouble(((data[5] << 8) + data[4]) / 10.0);
-            BoardTempC = Math.Round(Convert.ToDouble((data[7] << 8) + data[6]));
+            BoardTempC = (Math.Round(Convert.ToDouble((data[7] << 8) + data[6]))) / 10.0;
             BoardTempF = Math.Round(BoardTempC * 1.8 + 32);
 
         }
