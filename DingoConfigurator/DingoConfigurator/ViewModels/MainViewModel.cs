@@ -267,6 +267,17 @@ namespace DingoConfigurator
                     SelectedDeviceToAdd = Devices.dingoPDM;
                 }
 
+                if (plot.CanDevice.GetType() == typeof(dingoPdmMaxCan))
+                {
+                    if (plot.Name.Equals("Plots"))
+                    {
+                        SelectedCanDevice = (dingoPdmMaxCan)plot.CanDevice;
+                        CurrentViewModel = new DingoPdmPlotsViewModel(this);
+                    }
+
+                    SelectedDeviceToAdd = Devices.dingoPDMMax;
+                }
+
             }
 
 
@@ -294,22 +305,6 @@ namespace DingoConfigurator
 
             }
 
-            if (e.NewValue.GetType() == typeof(dingoPdmMaxPlot))
-            {
-                dingoPdmMaxPlot plot = (dingoPdmMaxPlot)e.NewValue;
-
-                if (plot.CanDevice.GetType() == typeof(dingoPdmMaxCan))
-                {
-                    if (plot.Name.Equals("Plots"))
-                    {
-                        SelectedCanDevice = (dingoPdmMaxCan)plot.CanDevice;
-                        CurrentViewModel = new dingoPdmMaxPlotsViewModel(this);
-                    }
-
-                    SelectedDeviceToAdd = Devices.dingoPDMMax;
-                }
-
-            }
 
             if (e.NewValue.GetType() == typeof(CanBoardCan))
             {

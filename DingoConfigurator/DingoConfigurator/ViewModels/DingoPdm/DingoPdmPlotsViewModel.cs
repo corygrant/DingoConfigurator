@@ -97,6 +97,8 @@ namespace DingoConfigurator.ViewModels
             {
                 batteryTimeAxis.AxisChanged += TimeAxis_AxisChanged;
             }
+
+            CurrentOutputPlot.UpdateTimeAxisZoom(0.0, 60.0);
         }
 
         private void TimeAxis_AxisChanged(object sender, AxisChangedEventArgs e)
