@@ -1,9 +1,13 @@
 ﻿using CanDevices.DingoPdm;
+using DingoConfigurator.ViewModels.DingoPdm.Plots;
 using OxyPlot;
 using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,247 +21,196 @@ namespace DingoConfigurator.ViewModels
         private DingoPdmCan _pdm;
         public DingoPdmCan Pdm { get { return _pdm; } }
 
-        public PlotModel CurrentOutputPlotModel
-        {
-            get;
-            private set;
-        }
+        public CurrentOutputPlot CurrentOutputPlot { get; private set; }
+        public StatePlot StatePlot { get; private set; }
+        public BatteryPlot BatteryPlot { get; private set; }
 
-        private double _lastCurrentOutputTimeZoomMin = 0;
-        private double _lastCurrentOutputTimeZoomMax = 60;
-
-        public PlotModel StatePlotModel
-        {
-            get;
-            private set;
-        }
-
-        private double _lastStateTimeZoomMin = 0;
-        private double _lastStateTimeZoomMax = 60;
-
-        public PlotModel BatteryPlotModel
-        {
-            get;
-            private set;
-        }
-
-        private double _lastBatteryTimeZoomMin = 0;
-        private double _lastBatteryTimeZoomMax = 60;
 
         private Timer _timer;
-
         private DateTime _zeroTime;
+        private bool _isZoomUpdating;
 
         public DingoPdmPlotsViewModel(MainViewModel vm)
         {
             _vm = vm;
 
             _pdm = (DingoPdmCan)_vm.SelectedCanDevice;
-
+       
             _pdm.PropertyChanged += _pdm_PropertyChanged;
 
-            CurrentOutputPlotModel = new PlotModel
+            CurrentOutputPlot = new CurrentOutputPlot();
+            StatePlot = new StatePlot();
+            BatteryPlot = new BatteryPlot();
+
+            InitPlotEvents();
+            InitSeries();
+            InitPlots();
+            InitTimer();
+        }
+
+        private void InitPlotEvents()
+        {
+            foreach(var output in _pdm.Outputs)
+                output.PropertyChanged += PlotVar_PropertyChanged;
+
+            foreach (var input in _pdm.DigitalInputs)
+                input.PropertyChanged += PlotVar_PropertyChanged;
+
+            foreach (var input in _pdm.CanInputs)
+                input.PropertyChanged += PlotVar_PropertyChanged;
+
+            foreach (var input in _pdm.VirtualInputs)
+                input.PropertyChanged += PlotVar_PropertyChanged;
+
+        }
+
+        private void PlotVar_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if ((e.PropertyName == nameof(Output.Plot)) ||
+                (e.PropertyName == nameof(Input.Plot)) ||
+                (e.PropertyName == nameof(CanInput.Plot)) ||
+                (e.PropertyName == nameof(VirtualInput.Plot)))
             {
-                Title = "Current Output",
-                TextColor = OxyColors.White,
-                TitleColor = OxyColors.White,
-                PlotAreaBorderColor = OxyColors.White
-            };
+                InitSeries();
+            }
+        }
 
-            var currentAxis = new LinearAxis
+        private void InitPlots()
+        {
+            //AxisChanged event to be deprecated, but it hasn't been yet
+            //https://github.com/oxyplot/oxyplot/issues/111
+
+            var currentTimeAxis = CurrentOutputPlot.PlotModel.Axes.FirstOrDefault(a => a.Key == "Time");
+            if (currentTimeAxis != null)
             {
-                Position = AxisPosition.Left,
-                Title = "Current",
-                TitleColor = OxyColors.White,
-                TextColor = OxyColors.White,
-                TicklineColor = OxyColors.White,
-                MajorGridlineColor = OxyColors.White,
-                MinorGridlineColor = OxyColors.White,
-                AbsoluteMinimum = -0.001,
-                Unit = "A",
-            };
-
-            currentAxis.Zoom(0.0, 25.0);
-
-            var currentTimeAxis = new LinearAxis
-            {
-                Position = AxisPosition.Bottom,
-                Title = "Time",
-                TitleColor = OxyColors.White,
-                TextColor = OxyColors.White,
-                TicklineColor = OxyColors.White,
-                MajorGridlineColor = OxyColors.White,
-                MinorGridlineColor = OxyColors.White,
-                AbsoluteMinimum = 0,
-                Unit = "s"
-            };
-
-            currentTimeAxis.Zoom(0.0, 60.0);
-
-            CurrentOutputPlotModel.Axes.Add(currentAxis);
-            CurrentOutputPlotModel.Axes.Add(currentTimeAxis);
-
-            foreach (var output in _pdm.Outputs)
-            {
-                CurrentOutputPlotModel.Series.Add(new LineSeries());
+                currentTimeAxis.AxisChanged += TimeAxis_AxisChanged;
             }
 
-            for (int i = 0; i < _pdm.Outputs.Count; i++)
+            var stateTimeAxis = StatePlot.PlotModel.Axes.FirstOrDefault(a => a.Key == "Time");
+            if (stateTimeAxis != null)
             {
-                LineSeries series = (LineSeries)CurrentOutputPlotModel.Series[i];
-                series.Title = $"O{i}: {_pdm.Outputs[i].Name} Current";
+                stateTimeAxis.AxisChanged += TimeAxis_AxisChanged;
             }
 
-            foreach (var output in _pdm.Outputs)
+            var batteryTimeAxis = BatteryPlot.PlotModel.Axes.FirstOrDefault(a => a.Key == "Time");
+            if (batteryTimeAxis != null)
             {
-                CurrentOutputPlotModel.Series.Add(new LineSeries());
+                batteryTimeAxis.AxisChanged += TimeAxis_AxisChanged;
+            }
+        }
+
+        private void TimeAxis_AxisChanged(object sender, AxisChangedEventArgs e)
+        {
+            if(_isZoomUpdating) return;
+
+            _isZoomUpdating = true;
+
+            if (sender is Axis axis)
+            {
+                double minimum = axis.ActualMinimum;
+                double maximum = axis.ActualMaximum;
+
+                if (axis.PlotModel == CurrentOutputPlot.PlotModel)
+                {
+                    StatePlot.UpdateTimeAxisZoom(minimum, maximum);
+                    BatteryPlot.UpdateTimeAxisZoom(minimum, maximum);
+                }
+                else if (axis.PlotModel == StatePlot.PlotModel)
+                {
+                    CurrentOutputPlot.UpdateTimeAxisZoom(minimum, maximum);
+                    BatteryPlot.UpdateTimeAxisZoom(minimum, maximum);
+                }
+                else if (axis.PlotModel == BatteryPlot.PlotModel)
+                {
+                    CurrentOutputPlot.UpdateTimeAxisZoom(minimum, maximum);
+                    StatePlot.UpdateTimeAxisZoom(minimum, maximum);
+                }
             }
 
-            for (int i = 0; i < _pdm.Outputs.Count; i++)
-            {
-                LineSeries series = (LineSeries)CurrentOutputPlotModel.Series[i + _pdm.Outputs.Count];
-                series.Title = $"O{i}: {_pdm.Outputs[i].Name} Calc Current";
-            }
+            _isZoomUpdating = false;
+        }
 
-
-            StatePlotModel = new PlotModel
-            {
-                Title = "States",
-                TextColor = OxyColors.White,
-                TitleColor = OxyColors.White,
-                PlotAreaBorderColor = OxyColors.White,
-
-            };
-
-            var stateAxis = new LinearAxis
-            {
-                Position = AxisPosition.Left,
-                Title = "State",
-                TitleColor = OxyColors.White,
-                TextColor = OxyColors.Transparent,
-                TicklineColor = OxyColors.Transparent,
-                MajorGridlineColor = OxyColors.White,
-                MinorGridlineColor = OxyColors.Transparent,
-                AbsoluteMinimum = 0.0,
-                AbsoluteMaximum = 1.2,
-            };
-            stateAxis.Zoom(0.0, 1.2);
-            stateAxis.IsZoomEnabled = false;
-
-            var stateTimeAxis = new LinearAxis
-            {
-                Position = AxisPosition.Bottom,
-                Title = "Time",
-                TitleColor = OxyColors.White,
-                TextColor = OxyColors.White,
-                TicklineColor = OxyColors.White,
-                MajorGridlineColor = OxyColors.White,
-                MinorGridlineColor = OxyColors.White,
-                AbsoluteMinimum = 0,
-                Unit = "s"
-            };
-            stateTimeAxis.Zoom(0.0, 60.0);
-
-            StatePlotModel.Axes.Add(stateAxis);
-            StatePlotModel.Axes.Add(stateTimeAxis);
-
-            foreach (var output in _pdm.Outputs)
-            {
-                StatePlotModel.Series.Add(new LineSeries());
-            }
-
-            for (int i = 0; i < _pdm.Outputs.Count; i++)
-            {
-                LineSeries series = (LineSeries)StatePlotModel.Series[i];
-                series.Title = $"O{i}: {_pdm.Outputs[i].Name} State";
-            }
-
-            foreach (var digInput in _pdm.DigitalInputs)
-            {
-                StatePlotModel.Series.Add(new LineSeries());
-            }
-
-            for (int i = 0; i < _pdm.DigitalInputs.Count; i++)
-            {
-                LineSeries series = (LineSeries)StatePlotModel.Series[8 + i];
-                series.Title = $"I{i}: {_pdm.DigitalInputs[i].Name}";
-            }
-
-            foreach (var canInput in _pdm.CanInputs)
-            {
-                StatePlotModel.Series.Add(new LineSeries());
-            }
-
-            for (int i = 0; i < _pdm.CanInputs.Count; i++)
-            {
-                LineSeries series = (LineSeries)StatePlotModel.Series[10 + i];
-                series.Title = $"CI{i}: {_pdm.CanInputs[i].Name}";
-            }
-
-            foreach (var virtInput in _pdm.VirtualInputs)
-            {
-                StatePlotModel.Series.Add(new LineSeries());
-            }
-
-            for (int i = 0; i < _pdm.VirtualInputs.Count; i++)
-            {
-                LineSeries series = (LineSeries)StatePlotModel.Series[42 + i];
-                series.Title = $"VI{i}: {_pdm.VirtualInputs[i].Name}";
-            }
-
-            BatteryPlotModel = new PlotModel
-            {
-                Title = "Battery Voltage",
-                TextColor = OxyColors.White,
-                TitleColor = OxyColors.White,
-                PlotAreaBorderColor = OxyColors.White,
-
-            };
-
-            var batteryAxis = new LinearAxis
-            {
-                Position = AxisPosition.Left,
-                Title = "Battery Voltage",
-                TitleColor = OxyColors.White,
-                TextColor = OxyColors.White,
-                TicklineColor = OxyColors.White,
-                MajorGridlineColor = OxyColors.White,
-                MinorGridlineColor = OxyColors.White,
-                AbsoluteMinimum = 0.0,
-                Unit = "V"
-            };
-            batteryAxis.Zoom(0.0, 20.0);
-
-            var batteryTimeAxis = new LinearAxis
-            {
-                Position = AxisPosition.Bottom,
-                Title = "Time",
-                TitleColor = OxyColors.White,
-                TextColor = OxyColors.White,
-                TicklineColor = OxyColors.White,
-                MajorGridlineColor = OxyColors.White,
-                MinorGridlineColor = OxyColors.White,
-                AbsoluteMinimum = 0,
-                Unit = "s"
-            };
-            batteryTimeAxis.Zoom(0.0, 60.0);
-
-            BatteryPlotModel.Axes.Add(batteryAxis);
-            BatteryPlotModel.Axes.Add(batteryTimeAxis);
-
-            BatteryPlotModel.Series.Add(new LineSeries());
-            BatteryPlotModel.Series[0].Title = "Battery Voltage";
-
+        private void InitTimer()
+        {
             _zeroTime = DateTime.Now;
-
             _timer = new Timer(100);
             _timer.AutoReset = true;
             _timer.Enabled = true;
             _timer.Elapsed += Timer_Elapsed;
         }
 
+        private void OnPdmConnected()
+        {
+            if(_timer.Enabled == false)
+            {
+                _timer.Start();
+            }
+        }
+
+        private void OnPdmDisconnected()
+        {
+            _timer.Stop();
+        }
+
+        private void ClearData()
+        {
+            CurrentOutputPlot.ClearData();
+            StatePlot.ClearData();
+            BatteryPlot.ClearData();
+
+            CurrentOutputPlot.UpdateTimeAxisZoom(0.0, 60.0);
+            StatePlot.UpdateTimeAxisZoom(0.0, 60.0);
+            BatteryPlot.UpdateTimeAxisZoom(0.0, 60.0);
+        }
+
+        private void InitSeries()
+        {
+            for (int i = 0; i < _pdm.Outputs.Count; i++)
+            {
+                if (!_pdm.Outputs[i].Plot) continue;
+
+                CurrentOutputPlot.AddSeries($"O{i}", $"O{i}: {_pdm.Outputs[i].Name}");
+                StatePlot.AddSeries($"O{i}", $"O{i}: {_pdm.Outputs[i].Name}");
+
+                if (_pdm.Outputs[i].PwmEnabled)
+                    CurrentOutputPlot.AddSeries($"OC{i}", $"O{i} Calc: {_pdm.Outputs[i].Name}", LineStyle.Dot);
+            }
+
+            for (int i = 0; i < _pdm.DigitalInputs.Count; i++)
+            {
+                if (!_pdm.DigitalInputs[i].Plot) continue;
+                StatePlot.AddSeries($"I{i}", $"I{i}: {_pdm.DigitalInputs[i].Name}");
+            }
+
+            for (int i = 0; i < _pdm.CanInputs.Count; i++)
+            {
+                if (!_pdm.CanInputs[i].Plot) continue;
+                StatePlot.AddSeries($"CI{i}", $"CI{i}: {_pdm.CanInputs[i].Name}");
+            }
+
+            for (int i = 0; i < _pdm.VirtualInputs.Count; i++)
+            {
+                if (!_pdm.VirtualInputs[i].Plot) continue;
+                StatePlot.AddSeries($"VI{i}", $"VI{i}: {_pdm.VirtualInputs[i].Name}");
+            }
+
+            BatteryPlot.AddSeries("Battery", "Battery Voltage");
+        }
+
         private void _pdm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            if (e.PropertyName == nameof(DingoPdmCan.IsConnected))
+            {
+                if (!_pdm.IsConnected)
+                {
+                    OnPdmDisconnected();
+                }
+                else
+                {
+                    OnPdmConnected();
+                }
+            }
+
             OnPropertyChanged(e.PropertyName);
         }
 
@@ -265,143 +218,43 @@ namespace DingoConfigurator.ViewModels
         {
             if (_pdm == null) return;
 
-            if ((_lastCurrentOutputTimeZoomMin != CurrentOutputPlotModel.Axes[1].ActualMinimum) ||
-                (_lastCurrentOutputTimeZoomMax != CurrentOutputPlotModel.Axes[1].ActualMaximum))
-            {
-                StatePlotModel.Axes[1].Zoom(CurrentOutputPlotModel.Axes[1].ActualMinimum, CurrentOutputPlotModel.Axes[1].ActualMaximum);
-                BatteryPlotModel.Axes[1].Zoom(CurrentOutputPlotModel.Axes[1].ActualMinimum, CurrentOutputPlotModel.Axes[1].ActualMaximum);
-            }
-
-            if ((_lastStateTimeZoomMin != StatePlotModel.Axes[1].ActualMinimum) ||
-                (_lastStateTimeZoomMax != StatePlotModel.Axes[1].ActualMaximum))
-            {
-                CurrentOutputPlotModel.Axes[1].Zoom(StatePlotModel.Axes[1].ActualMinimum, StatePlotModel.Axes[1].ActualMaximum);
-                BatteryPlotModel.Axes[1].Zoom(StatePlotModel.Axes[1].ActualMinimum, StatePlotModel.Axes[1].ActualMaximum);
-            }
-
-            if ((_lastBatteryTimeZoomMin != BatteryPlotModel.Axes[1].ActualMinimum) ||
-                (_lastBatteryTimeZoomMax != BatteryPlotModel.Axes[1].ActualMaximum))
-            {
-                CurrentOutputPlotModel.Axes[1].Zoom(BatteryPlotModel.Axes[1].ActualMinimum, BatteryPlotModel.Axes[1].ActualMaximum);
-                StatePlotModel.Axes[1].Zoom(BatteryPlotModel.Axes[1].ActualMinimum, BatteryPlotModel.Axes[1].ActualMaximum);
-            }
-
-            _lastCurrentOutputTimeZoomMin = CurrentOutputPlotModel.Axes[1].ActualMinimum;
-            _lastCurrentOutputTimeZoomMax = CurrentOutputPlotModel.Axes[1].ActualMaximum;
-
-            _lastStateTimeZoomMin = StatePlotModel.Axes[1].ActualMinimum;
-            _lastStateTimeZoomMax = StatePlotModel.Axes[1].ActualMaximum;
-
-            _lastBatteryTimeZoomMin = BatteryPlotModel.Axes[1].ActualMinimum;
-            _lastBatteryTimeZoomMax = BatteryPlotModel.Axes[1].ActualMaximum;
-
             for (int i = 0; i < _pdm.Outputs.Count; i++)
             {
-
-                LineSeries series = (LineSeries)CurrentOutputPlotModel.Series[i];
-                if (series == null) return;
-
-                double val;
-                if (!_pdm.IsConnected)
-                {
-                    val = 0;
-                }
-                else
-                {
-                    val = _pdm.Outputs[i].Current;
-                }
-
-                series.Points.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), val));
-                //if (series.Points.Count > 10000)
-                // {
-                //     series.Points.RemoveAt(0);
-                // }
+                if(!_pdm.Outputs[i].Plot) continue;
+                CurrentOutputPlot.AddPoint($"O{i}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? _pdm.Outputs[i].Current : 0);
+                CurrentOutputPlot.AddPoint($"OC{i}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? _pdm.Outputs[i].CalculatedPower : 0);
+                StatePlot.AddPoint($"O{i}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? Convert.ToInt16(_pdm.Outputs[i].State == OutState.On) : 0);
             }
 
-            for (int i = 0; i < _pdm.Outputs.Count; i++)
+            for (int i = 0; i < _pdm.DigitalInputs.Count; i++)
             {
-
-                LineSeries series = (LineSeries)CurrentOutputPlotModel.Series[i + _pdm.Outputs.Count];
-                if (series == null) return;
-
-                series.LineStyle = LineStyle.Dot;
-
-                double val;
-                if (!_pdm.IsConnected)
-                {
-                    val = 0;
-                }
-                else
-                {
-                    val = _pdm.Outputs[i].CalculatedPower;
-                }
-
-                series.Points.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), val));
-                //if (series.Points.Count > 10000)
-                // {
-                //     series.Points.RemoveAt(0);
-                // }
+                if(!_pdm.DigitalInputs[i].Plot) continue;
+                StatePlot.AddPoint($"I{i}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? Convert.ToInt16(_pdm.DigitalInputs[i].State) : 0);
             }
 
-            for (int i = 0; i < StatePlotModel.Series.Count; i++)
+            for (int i = 0; i < _pdm.CanInputs.Count; i++)
             {
-                LineSeries series = (LineSeries)StatePlotModel.Series[i];
-                if (series == null) return;
-
-                int val = 0;
-                if (!_pdm.IsConnected)
-                {
-                    val = 0;
-                }
-                else
-                {
-                    if ((i >= 0) && (i < 8))
-                    {
-                        val = Convert.ToInt16(_pdm.Outputs[i].State == OutState.On);
-                    }
-
-                    if ((i >= 8) && (i < 10))
-                    {
-                        val = Convert.ToInt16(_pdm.DigitalInputs[i - 8].State);
-                    }
-
-                    if ((i >= 10) && (i < 42))
-                    {
-                        val = Convert.ToInt16(_pdm.CanInputs[i - 10].Output);
-                    }
-
-                    if ((i >= 42) && (i < 58))
-                    {
-                        val = Convert.ToInt16(_pdm.VirtualInputs[i - 42].Value);
-                    }
-                }
-
-                series.Points.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), val));
-                // if (series.Points.Count > 10000)
-                // {
-                //      series.Points.RemoveAt(0);
-                // }
+                if (!_pdm.CanInputs[i].Plot) continue;
+                StatePlot.AddPoint($"CI{i}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? _pdm.CanInputs[i].Value : 0);
             }
 
-            LineSeries battSeries = (LineSeries)BatteryPlotModel.Series[0];
-            if (battSeries != null)
+            for (int i = 0; i < _pdm.VirtualInputs.Count; i++)
             {
-                battSeries.Points.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.BatteryVoltage));
-                // if (battSeries.Points.Count > 10000)
-                //  {
-                //      battSeries.Points.RemoveAt(0);
-                //  }
+                if (!_pdm.VirtualInputs[i].Plot) continue;
+                StatePlot.AddPoint($"VI{i}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? Convert.ToInt16(_pdm.VirtualInputs[i].Value) : 0);
             }
 
-            CurrentOutputPlotModel.InvalidatePlot(true);
-            StatePlotModel.InvalidatePlot(true);
-            BatteryPlotModel.InvalidatePlot(true);
+            BatteryPlot.AddPoint("Battery", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.BatteryVoltage);
+
+            CurrentOutputPlot.Refresh();
+            StatePlot.Refresh();
+            BatteryPlot.Refresh();
         }
 
         public override void Dispose()
         {
-            _timer.Stop();
-            _pdm.PropertyChanged -= _pdm_PropertyChanged;
+            //_timer.Stop();
+            //_pdm.PropertyChanged -= _pdm_PropertyChanged;
             base.Dispose();
         }
     }

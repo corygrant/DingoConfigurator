@@ -48,6 +48,19 @@ namespace DingoConfigurator
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private static DingoPdmPlotsViewModel _dingoPdmPlotsViewModel;
+        public DingoPdmPlotsViewModel DingoPdmPlotsViewModel
+        {
+            get
+            {
+                if (_dingoPdmPlotsViewModel == null)
+                {
+                    _dingoPdmPlotsViewModel = new DingoPdmPlotsViewModel(this);
+                }
+                return _dingoPdmPlotsViewModel;
+            }
+        }
+
         public MainViewModel()
         {
             Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -248,7 +261,7 @@ namespace DingoConfigurator
                     if (plot.Name.Equals("Plots"))
                     {
                         SelectedCanDevice = (DingoPdmCan)plot.CanDevice;
-                        CurrentViewModel = new DingoPdmPlotsViewModel(this);
+                        CurrentViewModel = DingoPdmPlotsViewModel;
                     }
 
                     SelectedDeviceToAdd = Devices.dingoPDM;

@@ -18,7 +18,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <oxy:PlotView Grid.Row="0"
-                      Model="{Binding CurrentOutputPlotModel}"
+                      Model="{Binding CurrentOutputPlot.PlotModel}"
                       MinHeight="220"
                       Background="Transparent">
             <oxy:PlotView.DefaultTrackerTemplate>
@@ -43,7 +43,7 @@
                   Height="3"/>
         
         <oxy:PlotView Grid.Row="2"
-                      Model="{Binding StatePlotModel}"
+                      Model="{Binding StatePlot.PlotModel}"
                       MinHeight="220"
                       Background="Transparent">
             <oxy:PlotView.DefaultTrackerTemplate>
@@ -68,7 +68,7 @@
                   Height="3"/>
         
         <oxy:PlotView Grid.Row="4"
-                      Model="{Binding BatteryPlotModel}"
+                      Model="{Binding BatteryPlot.PlotModel}"
                       MinHeight="220"
                       Background="Transparent">
             <oxy:PlotView.DefaultTrackerTemplate>

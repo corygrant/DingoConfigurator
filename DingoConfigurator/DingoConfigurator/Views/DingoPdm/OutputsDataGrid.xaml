@@ -278,8 +278,8 @@
                 </DataGridTextColumn.CellStyle>
             </DataGridTextColumn>
             <DataGridTextColumn Header="Inrush&#x0a;Limit [A]"
-                            Width="90"
-                            MinWidth="90"
+                            Width="70"
+                            MinWidth="70"
                             HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTextColumn.Binding>
                     <Binding Path="InrushCurrentLimit" UpdateSourceTrigger="LostFocus" ValidatesOnDataErrors="True" ValidatesOnExceptions="True">
@@ -301,8 +301,8 @@
                 </DataGridTextColumn.CellStyle>
             </DataGridTextColumn>
             <DataGridTextColumn Header="Inrush&#x0a;Time [s]"
-                            Width="100"
-                            MinWidth="100"
+                            Width="70"
+                            MinWidth="70"
                             HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTextColumn.Binding>
                     <Binding Path="InrushTime" UpdateSourceTrigger="LostFocus" ValidatesOnDataErrors="True" ValidatesOnExceptions="True">
@@ -323,6 +323,21 @@
                     <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
                 </DataGridTextColumn.CellStyle>
             </DataGridTextColumn>
+            <DataGridCheckBoxColumn Header="Plot"
+                                    Binding="{Binding Plot, UpdateSourceTrigger=PropertyChanged}"
+                                    Width="70"
+                                    MinWidth="70"
+                                    HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridCheckBoxColumn.CellStyle>
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+                </DataGridCheckBoxColumn.CellStyle>
+                <DataGridCheckBoxColumn.ElementStyle>
+                    <Style TargetType="CheckBox">
+                        <Setter Property="HorizontalAlignment"
+                                Value="Center" />
+                    </Style>
+                </DataGridCheckBoxColumn.ElementStyle>
+            </DataGridCheckBoxColumn>
         </DataGrid.Columns>
     </DataGrid>
 </UserControl>
