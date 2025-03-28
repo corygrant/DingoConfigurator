@@ -12,7 +12,7 @@ namespace DingoConfigurator.ViewModels.DingoPdm.Plots
     {
         public StatePlot() : base("State", true)
         {
-            AddAxis("Value", AxisPosition.Left, "State", "", 0.0, 1.2);
+            AddAxis("Value", AxisPosition.Left, "State", "", 0.0);
             AddAxis("Time", AxisPosition.Bottom, "Time", "s", 0);
         }
     }

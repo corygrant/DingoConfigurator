@@ -1,17 +1,15 @@
 ﻿using CanDevices.DingoPdm;
 using DingoConfigurator.ViewModels.DingoPdm.Plots;
+using NLog;
 using OxyPlot;
 using OxyPlot.Axes;
-using OxyPlot.Legends;
-using OxyPlot.Series;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Forms;
+using System.Windows.Input;
 
 namespace DingoConfigurator.ViewModels
 {
@@ -26,7 +24,7 @@ namespace DingoConfigurator.ViewModels
         public BatteryPlot BatteryPlot { get; private set; }
 
 
-        private Timer _timer;
+        private System.Timers.Timer _timer;
         private DateTime _zeroTime;
         private bool _isZoomUpdating;
 
@@ -41,6 +39,9 @@ namespace DingoConfigurator.ViewModels
             CurrentOutputPlot = new CurrentOutputPlot();
             StatePlot = new StatePlot();
             BatteryPlot = new BatteryPlot();
+
+            ClearBtnCmd = new RelayCommand(ClearBtn, CanClearBtn);
+            ExportBtnCmd = new RelayCommand(ExportBtn, CanExportBtn);
 
             InitPlotEvents();
             InitSeries();
@@ -62,6 +63,15 @@ namespace DingoConfigurator.ViewModels
             foreach (var input in _pdm.VirtualInputs)
                 input.PropertyChanged += PlotVar_PropertyChanged;
 
+            foreach (var cond in _pdm.Conditions)
+                cond.PropertyChanged += PlotVar_PropertyChanged;
+
+            foreach (var counter in _pdm.Counters)
+                counter.PropertyChanged += PlotVar_PropertyChanged;
+
+            foreach (var flasher in _pdm.Flashers)
+                flasher.PropertyChanged += PlotVar_PropertyChanged;
+
         }
 
         private void PlotVar_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -69,7 +79,10 @@ namespace DingoConfigurator.ViewModels
             if ((e.PropertyName == nameof(Output.Plot)) ||
                 (e.PropertyName == nameof(Input.Plot)) ||
                 (e.PropertyName == nameof(CanInput.Plot)) ||
-                (e.PropertyName == nameof(VirtualInput.Plot)))
+                (e.PropertyName == nameof(VirtualInput.Plot)) ||
+                (e.PropertyName == nameof(Condition.Plot)) ||
+                (e.PropertyName == nameof(Counter.Plot)) ||
+                (e.PropertyName == nameof(Flasher.Plot)))
             {
                 InitSeries();
             }
@@ -135,7 +148,7 @@ namespace DingoConfigurator.ViewModels
         private void InitTimer()
         {
             _zeroTime = DateTime.Now;
-            _timer = new Timer(100);
+            _timer = new System.Timers.Timer(100);
             _timer.AutoReset = true;
             _timer.Enabled = true;
             _timer.Elapsed += Timer_Elapsed;
@@ -156,6 +169,8 @@ namespace DingoConfigurator.ViewModels
 
         private void ClearData()
         {
+            _timer.Stop();
+
             CurrentOutputPlot.ClearData();
             StatePlot.ClearData();
             BatteryPlot.ClearData();
@@ -163,37 +178,96 @@ namespace DingoConfigurator.ViewModels
             CurrentOutputPlot.UpdateTimeAxisZoom(0.0, 60.0);
             StatePlot.UpdateTimeAxisZoom(0.0, 60.0);
             BatteryPlot.UpdateTimeAxisZoom(0.0, 60.0);
+
+            BatteryPlot.ResetValueZoom();
+
+            _zeroTime = DateTime.Now;
+
+            _timer.Start();
         }
 
         private void InitSeries()
         {
-            for (int i = 0; i < _pdm.Outputs.Count; i++)
+            foreach(var output in _pdm.Outputs)
             {
-                if (!_pdm.Outputs[i].Plot) continue;
+                if (!output.Plot)
+                {
+                    CurrentOutputPlot.RemoveSeries($"O{output.Number}");
+                    CurrentOutputPlot.RemoveSeries($"OC{output.Number}");
+                    continue;
+                }
 
-                CurrentOutputPlot.AddSeries($"O{i}", $"O{i}: {_pdm.Outputs[i].Name}");
-                StatePlot.AddSeries($"O{i}", $"O{i}: {_pdm.Outputs[i].Name}");
+                CurrentOutputPlot.AddSeries($"O{output.Number}", $"O{output.Number}: {output.Name}");
+                StatePlot.AddSeries($"O{output.Number}", $"O{output.Number} :  {output.Name}");
 
-                if (_pdm.Outputs[i].PwmEnabled)
-                    CurrentOutputPlot.AddSeries($"OC{i}", $"O{i} Calc: {_pdm.Outputs[i].Name}", LineStyle.Dot);
+                if (output.PwmEnabled)
+                    CurrentOutputPlot.AddSeries($"OC{output.Number}", $"O{output.Number} Calc: {output.Name}", LineStyle.Dot);
             }
 
-            for (int i = 0; i < _pdm.DigitalInputs.Count; i++)
+            foreach(var input in _pdm.DigitalInputs)
             {
-                if (!_pdm.DigitalInputs[i].Plot) continue;
-                StatePlot.AddSeries($"I{i}", $"I{i}: {_pdm.DigitalInputs[i].Name}");
+                if (!input.Plot)
+                {
+                    StatePlot.RemoveSeries($"I{input.Number}");
+                    continue;
+                }
+                
+                StatePlot.AddSeries($"I{input.Number}", $"I{input.Number}: {input.Name}");
             }
 
-            for (int i = 0; i < _pdm.CanInputs.Count; i++)
+            foreach(var input in _pdm.CanInputs)
             {
-                if (!_pdm.CanInputs[i].Plot) continue;
-                StatePlot.AddSeries($"CI{i}", $"CI{i}: {_pdm.CanInputs[i].Name}");
+                if (!input.Plot)
+                {
+                    StatePlot.RemoveSeries($"CI{input.Number}");
+                    continue;
+                }
+
+                StatePlot.AddSeries($"CI{input.Number}", $"CI{input.Number}: {input.Name}");
             }
 
-            for (int i = 0; i < _pdm.VirtualInputs.Count; i++)
+            foreach (var input in _pdm.VirtualInputs)
             {
-                if (!_pdm.VirtualInputs[i].Plot) continue;
-                StatePlot.AddSeries($"VI{i}", $"VI{i}: {_pdm.VirtualInputs[i].Name}");
+                if (!input.Plot)
+                {
+                    StatePlot.RemoveSeries($"VI{input.Number}");
+                    continue;
+                }
+
+                StatePlot.AddSeries($"VI{input.Number}", $"VI{input.Number}: {input.Name}");
+            }
+
+            foreach (var cond in _pdm.Conditions)
+            {
+                if (!cond.Plot)
+                {
+                    StatePlot.RemoveSeries($"CON{cond.Number}");
+                    continue;
+                }
+                
+                StatePlot.AddSeries($"CON{cond.Number}", $"CON{cond.Number}: {cond.Name}");
+            }
+
+            foreach (var counter in _pdm.Counters)
+            {
+                if (!counter.Plot)
+                {
+                    StatePlot.RemoveSeries($"CNT{counter.Number}");
+                    continue;
+                }
+
+                StatePlot.AddSeries($"CNT{counter.Number}", $"CNT{counter.Number}: {counter.Name}");
+            }
+
+            foreach (var flasher in _pdm.Flashers)
+            {
+                if (!flasher.Plot)
+                {
+                    StatePlot.RemoveSeries($"FLS{flasher.Number}");
+                    continue;
+                }
+                
+                StatePlot.AddSeries($"FLS{flasher.Number}", $"FLS{flasher.Number}: {flasher.Name}");
             }
 
             BatteryPlot.AddSeries("Battery", "Battery Voltage");
@@ -220,30 +294,48 @@ namespace DingoConfigurator.ViewModels
         {
             if (_pdm == null) return;
 
-            for (int i = 0; i < _pdm.Outputs.Count; i++)
+            foreach(var output in _pdm.Outputs)
             {
-                if(!_pdm.Outputs[i].Plot) continue;
-                CurrentOutputPlot.AddPoint($"O{i}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? _pdm.Outputs[i].Current : 0);
-                CurrentOutputPlot.AddPoint($"OC{i}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? _pdm.Outputs[i].CalculatedPower : 0);
-                StatePlot.AddPoint($"O{i}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? Convert.ToInt16(_pdm.Outputs[i].State == OutState.On) : 0);
+                if(!output.Plot) continue;
+                CurrentOutputPlot.AddPoint($"O{output.Number}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? output.Current : 0);
+                CurrentOutputPlot.AddPoint($"OC{output.Number}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? output.CalculatedPower : 0);
+                StatePlot.AddPoint($"O{output.Number}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? Convert.ToInt16(output.State == OutState.On) : 0);
             }
 
-            for (int i = 0; i < _pdm.DigitalInputs.Count; i++)
+            foreach(var input in _pdm.DigitalInputs)
             {
-                if(!_pdm.DigitalInputs[i].Plot) continue;
-                StatePlot.AddPoint($"I{i}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? Convert.ToInt16(_pdm.DigitalInputs[i].State) : 0);
+                if (!input.Plot) continue;
+                StatePlot.AddPoint($"I{input.Number}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? Convert.ToInt16(input.State) : 0);
             }
 
-            for (int i = 0; i < _pdm.CanInputs.Count; i++)
+            foreach(var input in _pdm.CanInputs)
             {
-                if (!_pdm.CanInputs[i].Plot) continue;
-                StatePlot.AddPoint($"CI{i}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? _pdm.CanInputs[i].Value : 0);
+                if (!input.Plot) continue;
+                StatePlot.AddPoint($"CI{input.Number}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? input.Value : 0);
             }
 
-            for (int i = 0; i < _pdm.VirtualInputs.Count; i++)
+            foreach (var input in _pdm.VirtualInputs)
             {
-                if (!_pdm.VirtualInputs[i].Plot) continue;
-                StatePlot.AddPoint($"VI{i}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? Convert.ToInt16(_pdm.VirtualInputs[i].Value) : 0);
+                if (!input.Plot) continue;
+                StatePlot.AddPoint($"VI{input.Number}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? Convert.ToInt16(input.Value) : 0);
+            }
+
+            foreach(var cond in _pdm.Conditions)
+            {
+                if (!cond.Plot) continue;
+                StatePlot.AddPoint($"CON{cond.Number}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? Convert.ToInt16(cond.Value) : 0);
+            }
+
+            foreach (var counter in _pdm.Counters)
+            {
+                if (!counter.Plot) continue;
+                StatePlot.AddPoint($"CNT{counter.Number}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? counter.Value : 0);
+            }
+
+            foreach (var flasher in _pdm.Flashers)
+            {
+                if (!flasher.Plot) continue;
+                StatePlot.AddPoint($"FLS{flasher.Number}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? Convert.ToInt16(flasher.Value) : 0);
             }
 
             BatteryPlot.AddPoint("Battery", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.BatteryVoltage);
@@ -253,10 +345,38 @@ namespace DingoConfigurator.ViewModels
             BatteryPlot.Refresh();
         }
 
+        public void ClearBtn(object parameter)
+        {
+            ClearData();
+        }
+
+        public bool CanClearBtn(object parameter)
+        {
+            return true;
+        }
+
+        public void ExportBtn(object parameter)
+        {
+            var folderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            //folderDialog.RootFolder = ;
+            if (folderDialog.ShowDialog() != DialogResult.OK) return;
+
+            var path = folderDialog.SelectedPath;
+            CurrentOutputPlot.Export(Path.GetFullPath(path));
+            StatePlot.Export(Path.GetFullPath(path));
+            BatteryPlot.Export(Path.GetFullPath(path));
+        }
+
+        public bool CanExportBtn(object parameter)
+        {
+            return true;
+        }
+
+        public ICommand ClearBtnCmd { get; set; }
+        public ICommand ExportBtnCmd { get; set; }
+
         public override void Dispose()
         {
-            //_timer.Stop();
-            //_pdm.PropertyChanged -= _pdm_PropertyChanged;
             base.Dispose();
         }
     }
