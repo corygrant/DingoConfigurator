@@ -2,7 +2,6 @@
 using CanDevices.DingoPdm;
 using CanDevices.dingoPdmMax;
 using CanDevices.CanBoard;
-using CanDevices.DingoDash;
 using CanInterfaces;
 using DingoConfigurator.Config;
 using DingoConfigurator.Properties;
@@ -11,29 +10,22 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.IO.Ports;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Collections.Concurrent;
-using System.Diagnostics;
 using CommsHandler;
 using CanDevices.CanMsgLog;
 using CanDevices.SoftButtonBox;
-using Microsoft.Win32;
 using System.Management;
 using System.Text.RegularExpressions;
 using System.Reflection;
 using DingoConfigurator.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
-
-//Add another CanDevices list that holds the online value
+using CanDevices.DingoDash;
 
 namespace DingoConfigurator
 {
@@ -48,18 +40,10 @@ namespace DingoConfigurator
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private static DingoPdmPlotsViewModel _dingoPdmPlotsViewModel;
-        public DingoPdmPlotsViewModel DingoPdmPlotsViewModel
-        {
-            get
-            {
-                if (_dingoPdmPlotsViewModel == null)
-                {
-                    _dingoPdmPlotsViewModel = new DingoPdmPlotsViewModel(this);
-                }
-                return _dingoPdmPlotsViewModel;
-            }
-        }
+        //Use dictionary to store viewmodels for each device
+        //This way we can keep track of them and dispose of them when needed
+        //Improves performance and keeps values (like plots) when switching between devices
+        private Dictionary<ICanDevice, Dictionary<string, ViewModelBase>> _deviceViewModels = new Dictionary<ICanDevice, Dictionary<string, ViewModelBase>>();
 
         public MainViewModel()
         {
@@ -67,7 +51,7 @@ namespace DingoConfigurator
 
 
             _canComms = new CanCommsHandler();
-            _canComms.PropertyChanged += _canComms_PropertyChanged  ;
+            _canComms.PropertyChanged += _canComms_PropertyChanged;
 
 
             RefreshComPorts(null);
@@ -92,7 +76,7 @@ namespace DingoConfigurator
                 SelectedCan = Cans.First(x => x.Name == "USB2CAN");
             }
             string comPort = Settings.Default.ComPort;
-            if(!String.IsNullOrEmpty(comPort))
+            if (!String.IsNullOrEmpty(comPort))
             {
                 SelectedComPort = ComPorts.FirstOrDefault(x => x.Equals(comPort));
             }
@@ -129,9 +113,9 @@ namespace DingoConfigurator
 
         private void _canComms_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == "Connected")
+            if (e.PropertyName == "Connected")
             {
-                if(!_canComms.Connected)
+                if (!_canComms.Connected)
                 {
                     CanCans = true;
                     CanComPorts = !SelectedCan.Name.Equals("PCAN");
@@ -168,11 +152,13 @@ namespace DingoConfigurator
         }
 
         private ViewModelBase _currentViewModel { get; set; }
-        public ViewModelBase CurrentViewModel {
+        public ViewModelBase CurrentViewModel
+        {
             get => _currentViewModel;
-            set { 
+            set
+            {
                 _currentViewModel?.Dispose();
-                _currentViewModel= value;
+                _currentViewModel = value;
                 OnPropertyChanged(nameof(CurrentViewModel));
             }
         }
@@ -213,7 +199,7 @@ namespace DingoConfigurator
         public ICanDevice SelectedCanDevice { get; set; }
 
         #region TreeView
-        
+
 
         internal void Cans_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -228,111 +214,91 @@ namespace DingoConfigurator
         {
             if (e.NewValue == null) return;
 
-            if(e.NewValue.GetType() == typeof(DingoPdmCan))
+            var newValue = e.NewValue;
+            var newValueType = newValue.GetType();
+
+            if (newValueType == typeof(DingoPdmCan))
             {
-                SelectedCanDevice = (DingoPdmCan)e.NewValue;
-                CurrentViewModel= new DingoPdmViewModel(this);
+                var device = (DingoPdmCan)newValue;
+                SelectedCanDevice = device;
+                CurrentViewModel = _deviceViewModels[device]["Main"];
                 SelectedDeviceToAdd = Devices.dingoPDM;
             }
 
-            if(e.NewValue.GetType() == typeof(CanDeviceSub))
+            if (newValueType == typeof(dingoPdmMaxCan))
             {
-                CanDeviceSub sub = (CanDeviceSub)e.NewValue;
-
-                if(sub.CanDevice.GetType() == typeof(DingoPdmCan))
-                {
-                    if (sub.Name.Equals("Settings"))
-                    {
-                        SelectedCanDevice = (DingoPdmCan)sub.CanDevice;
-                        CurrentViewModel = new DingoPdmSettingsViewModel(this);
-                    }
-
-                    SelectedDeviceToAdd = Devices.dingoPDM;
-                }
-
-            }
-
-            if (e.NewValue.GetType() == typeof(DingoPdmPlot))
-            {
-                DingoPdmPlot plot = (DingoPdmPlot)e.NewValue;
-
-                if (plot.CanDevice.GetType() == typeof(DingoPdmCan))
-                {
-                    if (plot.Name.Equals("Plots"))
-                    {
-                        SelectedCanDevice = (DingoPdmCan)plot.CanDevice;
-                        CurrentViewModel = DingoPdmPlotsViewModel;
-                    }
-
-                    SelectedDeviceToAdd = Devices.dingoPDM;
-                }
-
-                if (plot.CanDevice.GetType() == typeof(dingoPdmMaxCan))
-                {
-                    if (plot.Name.Equals("Plots"))
-                    {
-                        SelectedCanDevice = (dingoPdmMaxCan)plot.CanDevice;
-                        CurrentViewModel = new DingoPdmPlotsViewModel(this);
-                    }
-
-                    SelectedDeviceToAdd = Devices.dingoPDMMax;
-                }
-
-            }
-
-
-            if (e.NewValue.GetType() == typeof(dingoPdmMaxCan))
-            {
-                SelectedCanDevice = (dingoPdmMaxCan)e.NewValue;
-                CurrentViewModel = new DingoPdmViewModel(this);
+                var device = (dingoPdmMaxCan)newValue;
+                SelectedCanDevice = device;
+                CurrentViewModel = _deviceViewModels[device]["Main"];
                 SelectedDeviceToAdd = Devices.dingoPDMMax;
             }
 
-            if (e.NewValue.GetType() == typeof(CanDeviceSub))
+            if (newValueType == typeof(CanDeviceSub))
             {
-                CanDeviceSub sub = (CanDeviceSub)e.NewValue;
+                var sub = (CanDeviceSub)newValue;
 
-                if (sub.CanDevice.GetType() == typeof(dingoPdmMaxCan))
+                if ((sub.CanDevice.GetType() == typeof(DingoPdmCan)) && sub.Name.Equals("Settings"))
                 {
-                    if (sub.Name.Equals("Settings"))
-                    {
-                        SelectedCanDevice = (dingoPdmMaxCan)sub.CanDevice;
-                        CurrentViewModel = new DingoPdmSettingsViewModel(this);
-                    }
-
-                    SelectedDeviceToAdd = Devices.dingoPDMMax;
+                    var device = (DingoPdmCan)sub.CanDevice;
+                    SelectedCanDevice = device;
+                    CurrentViewModel = _deviceViewModels[device]["Settings"];
+                    SelectedDeviceToAdd = Devices.dingoPDM;
                 }
 
+                if ((sub.CanDevice.GetType() == typeof(dingoPdmMaxCan)) && sub.Name.Equals("Settings"))
+                {
+                    var device = (dingoPdmMaxCan)sub.CanDevice;
+                    SelectedCanDevice = device;
+                    CurrentViewModel = _deviceViewModels[device]["Settings"];
+                    SelectedDeviceToAdd = Devices.dingoPDMMax;
+                }
             }
 
-
-            if (e.NewValue.GetType() == typeof(CanBoardCan))
+            if (newValueType == typeof(DingoPdmPlot))
             {
-                SelectedCanDevice = (CanBoardCan)e.NewValue;
-                CurrentViewModel = new CanBoardViewModel(this);
+                var plot = (DingoPdmPlot)newValue;
+
+                if (plot.Name.Equals("Plots"))
+                {
+                    if (plot.CanDevice.GetType() == typeof(DingoPdmCan))
+                    {
+                        var device = (DingoPdmCan)plot.CanDevice;
+                        SelectedCanDevice = device;
+                        CurrentViewModel = _deviceViewModels[device]["Plots"];
+                        SelectedDeviceToAdd = Devices.dingoPDM;
+                    }
+
+                    if (plot.CanDevice.GetType() == typeof(dingoPdmMaxCan))
+                    {
+                        var device = (dingoPdmMaxCan)plot.CanDevice;
+                        SelectedCanDevice = device;
+                        CurrentViewModel = _deviceViewModels[device]["Plots"];
+                        SelectedDeviceToAdd = Devices.dingoPDMMax;
+                    }
+                }
+            }
+
+            if (newValueType == typeof(CanBoardCan))
+            {
+                var device = (CanBoardCan)newValue;
+                SelectedCanDevice = device;
+                CurrentViewModel = _deviceViewModels[device]["Main"];
                 SelectedDeviceToAdd = Devices.CANBoard;
             }
 
-            /*
-            if (e.NewValue.GetType() == typeof(DingoDashCan))
+            if (newValueType == typeof(CanMsgLog))
             {
-                SelectedCanDevice = (DingoDashCan)e.NewValue;
-                CurrentViewModel = new DingoDashViewModel(this);
-                SelectedDeviceToAdd = Devices.DingoDash;
-            }
-            */
-
-            if (e.NewValue.GetType() == typeof(CanMsgLog))
-            {
-                SelectedCanDevice =(CanMsgLog)e.NewValue;
-                CurrentViewModel = new CanMsgLogViewModel(this);
+                var device = (CanMsgLog)newValue;
+                SelectedCanDevice = device;
+                CurrentViewModel = _deviceViewModels[device]["Main"];
                 SelectedDeviceToAdd = Devices.CanMsgLog;
             }
 
-            if (e.NewValue.GetType() == typeof(SoftButtonBox))
+            if (newValueType == typeof(SoftButtonBox))
             {
-                SelectedCanDevice = (SoftButtonBox)e.NewValue;
-                CurrentViewModel = new SoftButtonBoxViewModel(this);
+                var device = (SoftButtonBox)newValue;
+                SelectedCanDevice = device;
+                CurrentViewModel = _deviceViewModels[device]["Main"];
                 SelectedDeviceToAdd = Devices.SoftButtonBox;
             }
 
@@ -347,25 +313,26 @@ namespace DingoConfigurator
                 DeviceBaseId = 0;
             }
         }
+
+        private void SetSelectedDevice(ICanDevice device, ViewModelBase viewModel, Devices selectedDevice)
+        {
+            SelectedCanDevice = device;
+            CurrentViewModel = viewModel;
+            SelectedDeviceToAdd = selectedDevice;
+        }
         #endregion
 
         #region Commands
         private void Connect(object parameter)
         {
-            if (SelectedCan.Name.Equals("PCAN"))
-            {
-                _canComms.Connect(SelectedCan.Name, string.Empty, SelectedBaudRate);
-            }
-            else
-            {
-                _canComms.Connect(SelectedCan.Name, ExtractComPort(SelectedComPort), SelectedBaudRate);
-            }
+            var port = SelectedCan.Name.Equals("PCAN") ? string.Empty : ExtractComPort(SelectedComPort);
+            _canComms.Connect(SelectedCan.Name, port, SelectedBaudRate);
 
-            foreach(var cd in _canComms.CanDevices)
+            foreach (var cd in _canComms.CanDevices)
             {
                 _ = _canComms.Wakeup(cd);
             }
-            
+
             CanCans = false;
             CanComPorts = false;
             CanBaudRates = false;
@@ -377,10 +344,10 @@ namespace DingoConfigurator
             _statusBarTimer.Enabled = true;
         }
 
-        
+
         private bool CanConnect(object parameter)
         {
-            return !_canComms.Connected && 
+            return !_canComms.Connected &&
                     (_canComms.CanDevices.Count > 0) &&
                     ((CanComPorts && (SelectedComPort != null)) ||
                     !CanComPorts);
@@ -457,13 +424,13 @@ namespace DingoConfigurator
 
         private void Write(object parameter)
         {
-            _= _canComms.Write(SelectedCanDevice);
+            _ = _canComms.Write(SelectedCanDevice);
         }
 
         private bool CanWrite(object parameter)
         {
-            return _canComms.Connected && 
-                (SelectedCanDevice != null) && 
+            return _canComms.Connected &&
+                (SelectedCanDevice != null) &&
                 (SelectedCanDevice.IsConnected) &&
                 (SelectedCanDevice.GetType() == typeof(DingoPdmCan) ||
                 (SelectedCanDevice.GetType() == typeof(dingoPdmMaxCan)));
@@ -471,7 +438,7 @@ namespace DingoConfigurator
 
         private void Burn(object parameter)
         {
-            _= _canComms.Burn(SelectedCanDevice);
+            _ = _canComms.Burn(SelectedCanDevice);
         }
 
         private bool CanBurn(object parameter)
@@ -485,7 +452,7 @@ namespace DingoConfigurator
 
         private void Sleep(object parameter)
         {
-            if(SelectedCanDevice.IsConnected)
+            if (SelectedCanDevice.IsConnected)
                 _ = _canComms.Sleep(SelectedCanDevice);
             else
                 _ = _canComms.Wakeup(SelectedCanDevice);
@@ -521,7 +488,7 @@ namespace DingoConfigurator
         {
             CloseDialog();
             _ = _canComms.FwUpdate(SelectedCanDevice);
-            
+
         }
 
         private bool ConfigFileOpen { get; set; }
@@ -537,7 +504,7 @@ namespace DingoConfigurator
             return (_canComms.CanDevices.Count > 0);
         }
 
-       
+
         private void NewConfigFileConfirm(object parameter)
         {
             CloseDialog();
@@ -574,13 +541,16 @@ namespace DingoConfigurator
             openFileDialog.InitialDirectory = _settingsPath;
             if (openFileDialog.ShowDialog() != DialogResult.OK) return;
 
-            if (Path.GetExtension(openFileDialog.FileName).ToLower() != ".dco") return;
+            if (Path.GetExtension(openFileDialog.FileName).ToLower() != ".dco")
+            {
+                Logger.Error($"Selected file: {openFileDialog.FileName} is not a .dco file");
+                return;
+            }
 
             _canComms.Disconnect();
             _canComms.CanDevices.Clear();
             CurrentViewModel = null;
 
-            
             OpenFile(openFileDialog.FileName);
         }
 
@@ -592,7 +562,12 @@ namespace DingoConfigurator
             DevicesConfig devices = new DevicesConfig();
             ConfigFileOpen = ConfigFile.Open(fileName, out devices);
             _canComms.CanDevices = ConfigFile.ConfigToCollection(devices);
-        }   
+
+            foreach(var device in _canComms.CanDevices)
+            {
+                InitViewModel(device);
+            }
+        }
 
         private bool CanOpenConfigFile(object parameter)
         {
@@ -616,7 +591,11 @@ namespace DingoConfigurator
             saveAsFileDialog.InitialDirectory = _settingsPath;
             if (saveAsFileDialog.ShowDialog() != DialogResult.OK) return;
 
-            if (Path.GetExtension(saveAsFileDialog.FileName).ToLower() != ".dco") return;
+            if (Path.GetExtension(saveAsFileDialog.FileName).ToLower() != ".dco")
+            {
+                Logger.Error($"Selected file: {saveAsFileDialog.FileName} is not a .dco file");
+                return;
+            }
 
             _settingsPath = saveAsFileDialog.FileName;
             ConfigFileName = Path.GetFullPath(_settingsPath);
@@ -634,58 +613,117 @@ namespace DingoConfigurator
         {
             if (SelectedDeviceToAdd.Equals(Devices.CanMsgLog))
             {
-                if(DeviceName.Length == 0)
-                {
+                if (DeviceName.Length == 0)
                     DeviceName = "CAN Msg Log";
-                }
-                _canComms.AddCanDevice(typeof(CanMsgLog), DeviceName, 9999);
+
+                var device = (CanMsgLog)_canComms.AddCanDevice(typeof(CanMsgLog), DeviceName, 9999);
+                InitViewModel(device);
+                return;
             }
 
-            if (DeviceBaseId < 1) return;
-            if (DeviceBaseId > 2048) return;
-            if (DeviceName.Length == 0) return;
+            if ((DeviceBaseId < 1) || (DeviceBaseId > 2048))
+            {
+                Logger.Error($"Invalid Base ID: {DeviceBaseId}");
+                return;
+            }
 
             if (SelectedDeviceToAdd.Equals(Devices.dingoPDM))
             {
                 if (DeviceName.Length == 0)
-                {
                     DeviceName = "dingoPDM";
-                }
-                _canComms.AddCanDevice(typeof(DingoPdmCan), DeviceName, DeviceBaseId);
+
+                var device = (DingoPdmCan)_canComms.AddCanDevice(typeof(DingoPdmCan), DeviceName, DeviceBaseId);
+                InitViewModel(device);
+                return;
             }
 
             if (SelectedDeviceToAdd.Equals(Devices.dingoPDMMax))
             {
                 if (DeviceName.Length == 0)
-                {
                     DeviceName = "dingoPDM-Max";
-                }
-                _canComms.AddCanDevice(typeof(dingoPdmMaxCan), DeviceName, DeviceBaseId);
+
+                var device = (dingoPdmMaxCan)_canComms.AddCanDevice(typeof(dingoPdmMaxCan), DeviceName, DeviceBaseId);
+                InitViewModel(device);
+                return;
             }
 
             if (SelectedDeviceToAdd.Equals(Devices.CANBoard))
             {
                 if (DeviceName.Length == 0)
-                {
                     DeviceName = "CAN Board";
-                }
-                _canComms.AddCanDevice(typeof(CanBoardCan), DeviceName, DeviceBaseId);
-            }
 
-            /*
-            if (SelectedDeviceToAdd.Equals(Devices.DingoDash))
-            {
-                _canComms.AddCanDevice(typeof(DingoDashCan), DeviceName, DeviceBaseId);
+                var device = (CanBoardCan)_canComms.AddCanDevice(typeof(CanBoardCan), DeviceName, DeviceBaseId);
+                InitViewModel(device);
+                return;
             }
-            */
 
             if (SelectedDeviceToAdd.Equals(Devices.SoftButtonBox))
             {
                 if (DeviceName.Length == 0)
-                {
                     DeviceName = "Soft Button Box";
-                }
-                _canComms.AddCanDevice(typeof(SoftButtonBox), DeviceName, DeviceBaseId);
+
+                var device = (SoftButtonBox)_canComms.AddCanDevice(typeof(SoftButtonBox), DeviceName, DeviceBaseId);
+                InitViewModel(device);
+                return;
+            }
+        }
+
+        private void InitViewModel(object device)
+        {
+            var devType = device.GetType();
+            if (devType == typeof(DingoPdmCan))
+            {
+                var pdm = (DingoPdmCan)device;
+                SelectedCanDevice = pdm;
+                _deviceViewModels[pdm] = new Dictionary<string, ViewModelBase>
+                {
+                    { "Main", new DingoPdmViewModel(this) },
+                    { "Settings", new DingoPdmSettingsViewModel(this) },
+                    { "Plots", new DingoPdmPlotsViewModel(this) }
+                };
+
+            }
+
+            if (devType == typeof(dingoPdmMaxCan))
+            {
+                var pdmMax = (dingoPdmMaxCan)device;
+                SelectedCanDevice = pdmMax;
+                _deviceViewModels[pdmMax] = new Dictionary<string, ViewModelBase>
+                {
+                    { "Main", new dingoPdmMaxViewModel(this) },
+                    { "Settings", new dingoPdmMaxSettingsViewModel(this) },
+                    { "Plots", new dingoPdmMaxPlotsViewModel(this) }
+                };
+            }
+
+            if (devType == typeof(CanBoardCan))
+            {
+                var board = (CanBoardCan)device;
+                SelectedCanDevice = board;
+                _deviceViewModels[board] = new Dictionary<string, ViewModelBase>
+                {
+                    { "Main", new CanBoardViewModel(this) }
+                };
+            }
+
+            if (devType == typeof(CanMsgLog))
+            {
+                var log = (CanMsgLog)device;
+                SelectedCanDevice = log;
+                _deviceViewModels[log] = new Dictionary<string, ViewModelBase>
+                {
+                    { "Main", new CanMsgLogViewModel(this) }
+                };
+            }
+
+            if (devType == typeof(SoftButtonBox))
+            {
+                var sbb = (SoftButtonBox)device;
+                SelectedCanDevice = sbb;
+                _deviceViewModels[sbb] = new Dictionary<string, ViewModelBase>
+                {
+                    { "Main", new SoftButtonBoxViewModel(this) }
+                };
             }
         }
 
@@ -698,13 +736,13 @@ namespace DingoConfigurator
                 return (match == null);
             }
 
-            return (DeviceName.Length > 0) && (DeviceBaseId > 0) && (DeviceBaseId <= 2048);
+            return (DeviceBaseId > 0) && (DeviceBaseId <= 2048);
         }
 
         private void UpdateDevice(object parameter)
         {
             if (SelectedCanDevice == null) return;
-            
+
             SelectedCanDevice.Name = DeviceName;
             if (SelectedCanDevice.GetType() == typeof(CanMsgLog)) return;
             if (SelectedCanDevice.BaseId != DeviceBaseId)
@@ -776,9 +814,9 @@ namespace DingoConfigurator
         public ObservableCollection<string> ComPorts
         {
             get { return _comPorts; }
-            set 
-            { 
-                _comPorts = value; 
+            set
+            {
+                _comPorts = value;
                 OnPropertyChanged(nameof(ComPorts));
             }
         }
@@ -805,7 +843,8 @@ namespace DingoConfigurator
         public CanInterfaceBaudRate SelectedBaudRate
         {
             get { return _selectedBaudRate; }
-            set { 
+            set
+            {
                 _selectedBaudRate = value;
                 OnPropertyChanged(nameof(SelectedBaudRate));
             }
@@ -863,7 +902,7 @@ namespace DingoConfigurator
         public ICommand ReadBtnConfirmCmd { get; set; }
         public ICommand WriteBtnCmd { get; set; }
         public ICommand BurnBtnCmd { get; set; }
-        public ICommand SleepBtnCmd { get; set;}
+        public ICommand SleepBtnCmd { get; set; }
         public ICommand FwUpdateBtnCmd { get; set; }
         public ICommand FwUpdateBtnConfirmCmd { get; set; }
         public ICommand CancelConfirmCmd { get; set; }
