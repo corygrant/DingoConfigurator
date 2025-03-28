@@ -11,7 +11,8 @@
           "invertInput": true,
           "mode": 0,
           "debounceTime": 20,
-          "pull": 1
+          "pull": 1,
+          "plot": false
         },
         {
           "enabled": true,
@@ -20,7 +21,8 @@
           "invertInput": true,
           "mode": 0,
           "debounceTime": 20,
-          "pull": 1
+          "pull": 1,
+          "plot": false
         }
       ],
       "SleepEnabled": true,
@@ -45,7 +47,8 @@
           "fixedDutyCycle": 60,
           "pwmFrequency": 100,
           "softStartRampTime": 500,
-          "dutyCycleDenominator": 10
+          "dutyCycleDenominator": 10,
+          "plot": true
         },
         {
           "enabled": true,
@@ -65,7 +68,8 @@
           "fixedDutyCycle": 50,
           "pwmFrequency": 100,
           "softStartRampTime": 500,
-          "dutyCycleDenominator": 100
+          "dutyCycleDenominator": 100,
+          "plot": true
         },
         {
           "enabled": true,
@@ -85,7 +89,8 @@
           "fixedDutyCycle": 50,
           "pwmFrequency": 100,
           "softStartRampTime": 500,
-          "dutyCycleDenominator": 100
+          "dutyCycleDenominator": 100,
+          "plot": false
         },
         {
           "enabled": true,
@@ -105,7 +110,8 @@
           "fixedDutyCycle": 50,
           "pwmFrequency": 100,
           "softStartRampTime": 500,
-          "dutyCycleDenominator": 100
+          "dutyCycleDenominator": 100,
+          "plot": false
         },
         {
           "enabled": true,
@@ -125,7 +131,8 @@
           "fixedDutyCycle": 50,
           "pwmFrequency": 100,
           "softStartRampTime": 500,
-          "dutyCycleDenominator": 100
+          "dutyCycleDenominator": 100,
+          "plot": false
         },
         {
           "enabled": true,
@@ -145,7 +152,8 @@
           "fixedDutyCycle": 50,
           "pwmFrequency": 100,
           "softStartRampTime": 500,
-          "dutyCycleDenominator": 100
+          "dutyCycleDenominator": 100,
+          "plot": false
         },
         {
           "enabled": true,
@@ -165,7 +173,8 @@
           "fixedDutyCycle": 50,
           "pwmFrequency": 100,
           "softStartRampTime": 500,
-          "dutyCycleDenominator": 100
+          "dutyCycleDenominator": 100,
+          "plot": false
         },
         {
           "enabled": true,
@@ -185,7 +194,8 @@
           "fixedDutyCycle": 50,
           "pwmFrequency": 100,
           "softStartRampTime": 500,
-          "dutyCycleDenominator": 100
+          "dutyCycleDenominator": 100,
+          "plot": false
         }
       ],
       "canInputs": [
@@ -203,7 +213,8 @@
           "dlc": 2,
           "operator": 1,
           "onVal": 12345,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": "",
@@ -219,7 +230,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": "",
@@ -235,7 +247,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": "",
@@ -251,7 +264,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": "DutyCycleTest",
@@ -267,7 +281,8 @@
           "dlc": 2,
           "operator": 0,
           "onVal": 500,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": "",
@@ -283,7 +298,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": "",
@@ -299,7 +315,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": "",
@@ -315,7 +332,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": "InterIn",
@@ -331,7 +349,8 @@
           "dlc": 1,
           "operator": 6,
           "onVal": 64,
-          "mode": 1
+          "mode": 1,
+          "plot": false
         },
         {
           "name": "SlowIn",
@@ -347,7 +366,8 @@
           "dlc": 1,
           "operator": 6,
           "onVal": 1,
-          "mode": 1
+          "mode": 1,
+          "plot": false
         },
         {
           "name": "FastIn",
@@ -363,7 +383,8 @@
           "dlc": 1,
           "operator": 6,
           "onVal": 2,
-          "mode": 1
+          "mode": 1,
+          "plot": false
         },
         {
           "name": "SwipeIn",
@@ -379,7 +400,8 @@
           "dlc": 1,
           "operator": 6,
           "onVal": 4,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": "WashIn",
@@ -395,7 +417,8 @@
           "dlc": 1,
           "operator": 6,
           "onVal": 8,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": "CountUp",
@@ -411,7 +434,8 @@
           "dlc": 1,
           "operator": 6,
           "onVal": 32,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": "CountDown",
@@ -427,7 +451,8 @@
           "dlc": 1,
           "operator": 6,
           "onVal": 8,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": "ResetCount",
@@ -443,7 +468,8 @@
           "dlc": 1,
           "operator": 6,
           "onVal": 4,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": "OnSw",
@@ -459,7 +485,8 @@
           "dlc": 1,
           "operator": 6,
           "onVal": 16,
-          "mode": 1
+          "mode": 1,
+          "plot": false
         },
         {
           "name": null,
@@ -475,7 +502,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -491,7 +519,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -507,7 +536,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -523,7 +553,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -539,7 +570,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -555,7 +587,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -571,7 +604,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -587,7 +621,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -603,7 +638,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -619,7 +655,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -635,7 +672,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -651,7 +689,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -667,7 +706,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -683,7 +723,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -699,7 +740,8 @@
           "dlc": 0,
           "operator": 3,
           "onVal": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         }
       ],
       "virtualInputs": [
@@ -715,7 +757,8 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -729,7 +772,8 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -743,7 +787,8 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -757,7 +802,8 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -771,7 +817,8 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -785,7 +832,8 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -799,7 +847,8 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -813,7 +862,8 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -827,7 +877,8 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -841,7 +892,8 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -855,7 +907,8 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -869,7 +922,8 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -883,7 +937,8 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -897,7 +952,8 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -911,7 +967,8 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -925,7 +982,8 @@
           "cond1": 1,
           "not2": false,
           "var2": 0,
-          "mode": 0
+          "mode": 0,
+          "plot": false
         }
       ],
       "wipers": [

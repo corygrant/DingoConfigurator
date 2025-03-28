@@ -6,7 +6,7 @@
              xmlns:oxy="http://oxyplot.org/wpf"
              xmlns:local="clr-namespace:DingoConfigurator.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="800" d:DesignWidth="800">
+             d:DesignHeight="800" d:DesignWidth="1024">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" MinHeight="220"/>
@@ -18,7 +18,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <oxy:PlotView Grid.Row="0"
-                      Model="{Binding CurrentOutputPlotModel}"
+                      Model="{Binding CurrentOutputPlot.PlotModel}"
                       MinHeight="220"
                       Background="Transparent">
             <oxy:PlotView.DefaultTrackerTemplate>
@@ -43,7 +43,7 @@
                   Height="3"/>
         
         <oxy:PlotView Grid.Row="2"
-                      Model="{Binding StatePlotModel}"
+                      Model="{Binding StatePlot.PlotModel}"
                       MinHeight="220"
                       Background="Transparent">
             <oxy:PlotView.DefaultTrackerTemplate>
@@ -68,7 +68,7 @@
                   Height="3"/>
         
         <oxy:PlotView Grid.Row="4"
-                      Model="{Binding BatteryPlotModel}"
+                      Model="{Binding BatteryPlot.PlotModel}"
                       MinHeight="220"
                       Background="Transparent">
             <oxy:PlotView.DefaultTrackerTemplate>
@@ -91,6 +91,9 @@
                           ShowsPreview="True"
                           Height="3"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="40" Grid.Row="6">
+            <Button Content="Clear Data"
+                    Command="{Binding ClearBtnCmd}"
+                    ToolTip="Clear all plot data"/>
             <TextBox Grid.Column="0"
                      Margin="20 0 20 0"
                      HorizontalContentAlignment="Center"
@@ -116,6 +119,9 @@
                      HorizontalContentAlignment="Center"
                      IsReadOnly="True"
                      Text="View Data&#x0a;Left Click Hold"/>
+            <Button Content="Export Data"
+                    Command="{Binding ExportBtnCmd}"
+                    ToolTip="Export all plot data"/> 
         </StackPanel>
     </Grid>
 </UserControl>

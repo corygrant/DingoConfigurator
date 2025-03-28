@@ -355,6 +355,21 @@ namespace CanDevices.DingoPdm
             }
         }
 
+        private bool _plot;
+        [JsonPropertyName("plot")]
+        public bool Plot
+        {
+            get => _plot;
+            set
+            {
+                if (_plot != value)
+                {
+                    _plot = value;
+                    OnPropertyChanged(nameof(Plot));
+                }
+            }
+        }
+
         private double CalcPower(double dc)
         {
             return (dc / 100) * Current;

@@ -129,6 +129,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Config\ConfigFile.cs" />
+    <Compile Include="Plots\PlotBase.cs" />
     <Compile Include="ViewModels\CanBoard\CanBoardViewModel.cs" />
     <Compile Include="ViewModels\CanMsgLogViewModel.cs" />
     <Compile Include="ViewModels\dingoPdmMax\dingoPdmMaxPlotsViewModel.cs" />
@@ -136,6 +137,9 @@
     <Compile Include="ViewModels\dingoPdmMax\dingoPdmMaxViewModel.cs" />
     <Compile Include="ViewModels\DingoPdm\DingoPdmPlotsViewModel.cs" />
     <Compile Include="ViewModels\DingoPdm\DingoPdmSettingsViewModel.cs" />
+    <Compile Include="ViewModels\DingoPdm\Plots\BatteryPlot.cs" />
+    <Compile Include="ViewModels\DingoPdm\Plots\CurrentOutputPlot.cs" />
+    <Compile Include="ViewModels\DingoPdm\Plots\StatePlot.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="ViewModels\DingoDash\DingoDashViewModel.cs" />
