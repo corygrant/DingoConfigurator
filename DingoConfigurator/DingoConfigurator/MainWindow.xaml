@@ -182,15 +182,6 @@
                 <DataTemplate DataType="{x:Type vm:DingoPdmPlotsViewModel}">
                     <vw:DingoPdmPlotsView />
                 </DataTemplate>
-                <DataTemplate DataType="{x:Type vm:dingoPdmMaxViewModel}">
-                    <vw:dingoPdmMaxView />
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type vm:dingoPdmMaxSettingsViewModel}">
-                    <vw:dingoPdmMaxSettingsView />
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type vm:dingoPdmMaxPlotsViewModel}">
-                    <vw:dingoPdmMaxPlotsView />
-                </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:CanBoardViewModel}">
                     <vw:CanBoardView />
                 </DataTemplate>

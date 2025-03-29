@@ -8,6 +8,9 @@
              xmlns:cd="clr-namespace:CanDevices.DingoPdm;assembly=CanDevices"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="1080">
+    <UserControl.Resources>
+        <local:VarMapFilterConverter x:Key="VarMapFilterConverter"/>
+    </UserControl.Resources>
     <DataGrid AutoGenerateColumns="False"
           ItemsSource="{Binding Pdm.Conditions}"
           CanUserAddRows="False"
@@ -53,9 +56,14 @@
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <ComboBox HorizontalContentAlignment="Center"
-                              ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
-                              SelectedValue="{Binding Input, UpdateSourceTrigger=PropertyChanged}"
-                              BorderThickness="0">
+                                  SelectedValue="{Binding Input, UpdateSourceTrigger=PropertyChanged}"
+                                  BorderThickness="0">
+                            <ComboBox.ItemsSource>
+                                <MultiBinding Converter="{StaticResource VarMapFilterConverter}">
+                                    <Binding Source="{StaticResource VarMapEnumDataSource}" />
+                                    <Binding RelativeSource="{RelativeSource AncestorType=UserControl}" Path="DataContext" />
+                                </MultiBinding>
+                            </ComboBox.ItemsSource>
                         </ComboBox>
                     </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>

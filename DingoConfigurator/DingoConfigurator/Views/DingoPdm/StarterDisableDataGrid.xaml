@@ -8,6 +8,9 @@
              xmlns:cd="clr-namespace:CanDevices.DingoPdm;assembly=CanDevices"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="1080">
+    <UserControl.Resources>
+        <local:VarMapFilterConverter x:Key="VarMapFilterConverter"/>
+    </UserControl.Resources>
     <DataGrid AutoGenerateColumns="False"
           ItemsSource="{Binding Pdm.StarterDisable}"
           CanUserAddRows="False"
@@ -31,14 +34,26 @@
                     </Style>
                 </DataGridCheckBoxColumn.ElementStyle>
             </DataGridCheckBoxColumn>
-            <DataGridComboBoxColumn Header="Input" 
-                                ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
-                                SelectedItemBinding="{Binding Input, UpdateSourceTrigger=PropertyChanged}"
-                                Width="100" MinWidth="100" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
-                <DataGridComboBoxColumn.CellStyle>
+            <DataGridTemplateColumn  Header="Input"
+                        Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <ComboBox HorizontalContentAlignment="Center"
+                      SelectedValue="{Binding Input, UpdateSourceTrigger=PropertyChanged}"
+                      BorderThickness="0">
+                            <ComboBox.ItemsSource>
+                                <MultiBinding Converter="{StaticResource VarMapFilterConverter}">
+                                    <Binding Source="{StaticResource VarMapEnumDataSource}" />
+                                    <Binding RelativeSource="{RelativeSource AncestorType=UserControl}" Path="DataContext" />
+                                </MultiBinding>
+                            </ComboBox.ItemsSource>
+                        </ComboBox>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn.CellStyle>
                     <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
-                </DataGridComboBoxColumn.CellStyle>
-            </DataGridComboBoxColumn>
+                </DataGridTemplateColumn.CellStyle>
+            </DataGridTemplateColumn>
             <DataGridCheckBoxColumn Header="O1" Binding="{Binding Output1, UpdateSourceTrigger=PropertyChanged}" Width="50" MinWidth="50" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridCheckBoxColumn.CellStyle>
                     <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
