@@ -132,9 +132,6 @@
     <Compile Include="Plots\PlotBase.cs" />
     <Compile Include="ViewModels\CanBoard\CanBoardViewModel.cs" />
     <Compile Include="ViewModels\CanMsgLogViewModel.cs" />
-    <Compile Include="ViewModels\dingoPdmMax\dingoPdmMaxPlotsViewModel.cs" />
-    <Compile Include="ViewModels\dingoPdmMax\dingoPdmMaxSettingsViewModel.cs" />
-    <Compile Include="ViewModels\dingoPdmMax\dingoPdmMaxViewModel.cs" />
     <Compile Include="ViewModels\DingoPdm\DingoPdmPlotsViewModel.cs" />
     <Compile Include="ViewModels\DingoPdm\DingoPdmSettingsViewModel.cs" />
     <Compile Include="ViewModels\DingoPdm\Plots\BatteryPlot.cs" />
@@ -164,22 +161,13 @@
     <Compile Include="Views\DingoDash\DingoDashView.xaml.cs">
       <DependentUpon>DingoDashView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\dingoPdmMax\Converters.cs" />
-    <Compile Include="Views\dingoPdmMax\dingoPdmMaxPlotsView.xaml.cs">
-      <DependentUpon>dingoPdmMaxPlotsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\dingoPdmMax\dingoPdmMaxSettingsView.xaml.cs">
-      <DependentUpon>dingoPdmMaxSettingsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\dingoPdmMax\dingoPdmMaxView.xaml.cs">
-      <DependentUpon>dingoPdmMaxView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\DingoPdm\CanInputsDataGrid.xaml.cs">
       <DependentUpon>CanInputsDataGrid.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DingoPdm\ConditionsDataGrid.xaml.cs">
       <DependentUpon>ConditionsDataGrid.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DingoPdm\Converters.cs" />
     <Compile Include="Views\DingoPdm\CountersDataGrid.xaml.cs">
       <DependentUpon>CountersDataGrid.xaml</DependentUpon>
     </Compile>
@@ -261,18 +249,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\dingoPdmMax\dingoPdmMaxPlotsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\dingoPdmMax\dingoPdmMaxSettingsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\dingoPdmMax\dingoPdmMaxView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\DingoPdm\CanInputsDataGrid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
