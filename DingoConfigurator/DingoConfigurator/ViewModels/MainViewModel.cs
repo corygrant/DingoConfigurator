@@ -690,9 +690,9 @@ namespace DingoConfigurator
                 SelectedCanDevice = pdmMax;
                 _deviceViewModels[pdmMax] = new Dictionary<string, ViewModelBase>
                 {
-                    { "Main", new dingoPdmMaxViewModel(this) },
-                    { "Settings", new dingoPdmMaxSettingsViewModel(this) },
-                    { "Plots", new dingoPdmMaxPlotsViewModel(this) }
+                    { "Main", new DingoPdmViewModel(this) },
+                    { "Settings", new DingoPdmSettingsViewModel(this) },
+                    { "Plots", new DingoPdmPlotsViewModel(this) }
                 };
             }
 
