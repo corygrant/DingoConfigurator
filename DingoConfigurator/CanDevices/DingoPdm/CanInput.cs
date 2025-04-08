@@ -356,10 +356,24 @@ namespace CanDevices.DingoPdm
         {
             double proposedValue;
             string input = value.ToString();
-            if (input == string.Empty) return new ValidationResult(false, "Entry is required");
-            if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
-            if (proposedValue < 0.00) return new ValidationResult(false, "Value must be zero or greater");
-            if (proposedValue > 536870911) return new ValidationResult(false, "Value must less than or equal to 536870911");
+            if (input == string.Empty) return new LoggingValidationResult(new ValidationResult(false, "Entry is required"));
+            if (!double.TryParse(input, out proposedValue)) return new LoggingValidationResult(new ValidationResult(false, "Response is invalid"));
+            if (proposedValue < 0.00) return new LoggingValidationResult(new ValidationResult(false, "Value must be zero or greater"));
+            if (proposedValue > 536870911) return new LoggingValidationResult(new ValidationResult(false, "Value must less than or equal to 536870911"));
+            return new ValidationResult(true, null);
+        }
+    }
+
+    public class StartByteValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
+        {
+            double proposedValue;
+            string input = value.ToString();
+            if (input == string.Empty) return new LoggingValidationResult(new ValidationResult(false, "Entry is required"));
+            if (!double.TryParse(input, out proposedValue)) return new LoggingValidationResult(new ValidationResult(false, "Response is invalid"));
+            if (proposedValue < 0.00) return new LoggingValidationResult(new ValidationResult(false, "Value must be zero or greater"));
+            if (proposedValue > 8) return new LoggingValidationResult(new ValidationResult(false, "Value must less than or equal to 8"));
             return new ValidationResult(true, null);
         }
     }
@@ -370,10 +384,10 @@ namespace CanDevices.DingoPdm
         {
             double proposedValue;
             string input = value.ToString();
-            if (input == string.Empty) return new ValidationResult(false, "Entry is required");
-            if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
-            if (proposedValue < 0.00) return new ValidationResult(false, "Value must be zero or greater");
-            if (proposedValue > 2) return new ValidationResult(false, "Value must less than or equal to 2");
+            if (input == string.Empty) return new LoggingValidationResult(new ValidationResult(false, "Entry is required"));
+            if (!double.TryParse(input, out proposedValue)) return new LoggingValidationResult(new ValidationResult(false, "Response is invalid"));
+            if (proposedValue < 1) return new LoggingValidationResult(new ValidationResult(false, "Value must be greater than 0"));
+            if (proposedValue > 2) return new LoggingValidationResult(new ValidationResult(false, "Value must less than or equal to 2"));
             return new ValidationResult(true, null);
         }
     }
@@ -384,10 +398,10 @@ namespace CanDevices.DingoPdm
         {
             double proposedValue;
             string input = value.ToString();
-            if (input == string.Empty) return new ValidationResult(false, "Entry is required");
-            if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
-            if (proposedValue < 0.00) return new ValidationResult(false, "Value must be zero or greater");
-            if (proposedValue > 65535) return new ValidationResult(false, "Value must less than or equal to 65535");
+            if (input == string.Empty) return new LoggingValidationResult(new ValidationResult(false, "Entry is required"));
+            if (!double.TryParse(input, out proposedValue)) return new LoggingValidationResult(new ValidationResult(false, "Response is invalid"));
+            if (proposedValue < 0.00) return new LoggingValidationResult(new ValidationResult(false, "Value must be zero or greater"));
+            if (proposedValue > 65535) return new LoggingValidationResult(new ValidationResult(false, "Value must less than or equal to 65535"));
             return new ValidationResult(true, null);
         }
     }
@@ -398,10 +412,10 @@ namespace CanDevices.DingoPdm
         {
             double proposedValue;
             string input = value.ToString();
-            if (input == string.Empty) return new ValidationResult(false, "Entry is required");
-            if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
-            if (proposedValue < 0.00) return new ValidationResult(false, "Value must be zero or greater");
-            if (proposedValue > 25.5) return new ValidationResult(false, "Value must less than or equal to 25.5");
+            if (input == string.Empty) return new LoggingValidationResult(new ValidationResult(false, "Entry is required"));
+            if (!double.TryParse(input, out proposedValue)) return new LoggingValidationResult(new ValidationResult(false, "Response is invalid"));
+            if (proposedValue < 0.00) return new LoggingValidationResult(new ValidationResult(false, "Value must be zero or greater"));
+            if (proposedValue > 25.5) return new LoggingValidationResult(new ValidationResult(false, "Value must less than or equal to 25.5"));
             return new ValidationResult(true, null);
         }
     }

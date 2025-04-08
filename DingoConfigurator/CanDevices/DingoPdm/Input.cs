@@ -184,10 +184,10 @@ namespace CanDevices.DingoPdm
         {
             double proposedValue;
             string input = value.ToString();
-            if (input == string.Empty) return new ValidationResult(false, "Entry is required");
-            if (!double.TryParse(input, out proposedValue)) return new ValidationResult(false, "Response is invalid");
-            if (proposedValue < 0.00) return new ValidationResult(false, "Value must be zero or greater");
-            if (proposedValue > 500.00) return new ValidationResult(false, "Value must less than or equal to 500.0");
+            if (input == string.Empty) return new LoggingValidationResult(new ValidationResult(false, "Entry is required"));
+            if (!double.TryParse(input, out proposedValue)) return new LoggingValidationResult(new ValidationResult(false, "Response is invalid"));
+            if (proposedValue < 0.00) return new LoggingValidationResult(new ValidationResult(false, "Value must be zero or greater"));
+            if (proposedValue > 500.00) return new LoggingValidationResult(new ValidationResult(false, "Value must less than or equal to 500.0"));
             return new ValidationResult(true, null);
         }
     }

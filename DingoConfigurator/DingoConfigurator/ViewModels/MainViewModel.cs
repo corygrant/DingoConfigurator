@@ -1057,4 +1057,17 @@ namespace DingoConfigurator
     }
     #endregion
 
+    public class BaseIdValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
+        {
+            double proposedValue;
+            string input = value.ToString();
+            if (input == string.Empty) return new LoggingValidationResult(new ValidationResult(false, "Entry is required"));
+            if (!double.TryParse(input, out proposedValue)) return new LoggingValidationResult(new ValidationResult(false, "Response is invalid"));
+            if (proposedValue < 0.00) return new LoggingValidationResult(new ValidationResult(false, "Value must be zero or greater"));
+            if (proposedValue > 2046) return new LoggingValidationResult(new ValidationResult(false, "Value must less than or equal to 2046"));
+            return new ValidationResult(true, null);
+        }
+    }
 }

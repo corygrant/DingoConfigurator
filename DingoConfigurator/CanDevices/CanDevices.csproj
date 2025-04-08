@@ -103,6 +103,7 @@
     <Compile Include="DingoPdm\VirtualInput.cs" />
     <Compile Include="DingoPdm\Wiper.cs" />
     <Compile Include="ICanDevice.cs" />
+    <Compile Include="LoggingValidationResult.cs" />
     <Compile Include="NotifyPropertyChangedBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SoftButtonBox\SoftButtonBox.cs" />

@@ -55,7 +55,7 @@
                 <DataGridTextColumn.Binding>
                     <Binding Path="MinCount" UpdateSourceTrigger="LostFocus" ValidatesOnDataErrors="True" ValidatesOnExceptions="True">
                         <Binding.ValidationRules>
-                            <cd:ArgValidationRule />
+                            <cd:MinCountValidationRule />
                         </Binding.ValidationRules>
                     </Binding>
                 </DataGridTextColumn.Binding>
@@ -67,12 +67,15 @@
                         <Setter Property="HorizontalAlignment" Value="Center" />
                     </Style>
                 </DataGridTextColumn.ElementStyle>
+                <DataGridTextColumn.EditingElementStyle>
+                    <Style BasedOn="{StaticResource ValidationErrorTextBoxStyle}" TargetType="TextBox"/>
+                </DataGridTextColumn.EditingElementStyle>
             </DataGridTextColumn>
             <DataGridTextColumn Header="Max Count" Width="80" MinWidth="80" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTextColumn.Binding>
                     <Binding Path="MaxCount" UpdateSourceTrigger="LostFocus" ValidatesOnDataErrors="True" ValidatesOnExceptions="True">
                         <Binding.ValidationRules>
-                            <cd:ArgValidationRule />
+                            <cd:MaxCountValidationRule />
                         </Binding.ValidationRules>
                     </Binding>
                 </DataGridTextColumn.Binding>
@@ -84,6 +87,9 @@
                         <Setter Property="HorizontalAlignment" Value="Center" />
                     </Style>
                 </DataGridTextColumn.ElementStyle>
+                <DataGridTextColumn.EditingElementStyle>
+                    <Style BasedOn="{StaticResource ValidationErrorTextBoxStyle}" TargetType="TextBox"/>
+                </DataGridTextColumn.EditingElementStyle>
             </DataGridTextColumn>
             <DataGridCheckBoxColumn Header="Wrap Around" Binding="{Binding WrapAround, UpdateSourceTrigger=PropertyChanged}" Width="100" MinWidth="100" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridCheckBoxColumn.CellStyle>

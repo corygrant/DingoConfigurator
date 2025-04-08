@@ -91,12 +91,15 @@
                         <Setter Property="HorizontalAlignment" Value="Center" />
                     </Style>
                 </DataGridTextColumn.ElementStyle>
+                <DataGridTextColumn.EditingElementStyle>
+                    <Style BasedOn="{StaticResource ValidationErrorTextBoxStyle}" TargetType="TextBox"/>
+                </DataGridTextColumn.EditingElementStyle>
             </DataGridTextColumn>
             <DataGridTextColumn Header="Start Byte" Width="70" MinWidth="70" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTextColumn.Binding>
                     <Binding Path="StartingByte" UpdateSourceTrigger="LostFocus" ValidatesOnDataErrors="True" ValidatesOnExceptions="True">
                         <Binding.ValidationRules>
-                            <cd:ByteValidationRule />
+                            <cd:StartByteValidationRule />
                         </Binding.ValidationRules>
                     </Binding>
                 </DataGridTextColumn.Binding>
@@ -108,6 +111,9 @@
                         <Setter Property="HorizontalAlignment" Value="Center" />
                     </Style>
                 </DataGridTextColumn.ElementStyle>
+                <DataGridTextColumn.EditingElementStyle>
+                    <Style BasedOn="{StaticResource ValidationErrorTextBoxStyle}" TargetType="TextBox"/>
+                </DataGridTextColumn.EditingElementStyle>
             </DataGridTextColumn>
             <DataGridTextColumn Header="# Bytes" Width="80" MinWidth="80" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTextColumn.Binding>
@@ -125,6 +131,9 @@
                         <Setter Property="HorizontalAlignment" Value="Center" />
                     </Style>
                 </DataGridTextColumn.ElementStyle>
+                <DataGridTextColumn.EditingElementStyle>
+                    <Style BasedOn="{StaticResource ValidationErrorTextBoxStyle}" TargetType="TextBox"/>
+                </DataGridTextColumn.EditingElementStyle>
             </DataGridTextColumn>
             <DataGridTemplateColumn  Header="Operator" 
                                  Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
@@ -157,6 +166,9 @@
                         <Setter Property="HorizontalAlignment" Value="Center" />
                     </Style>
                 </DataGridTextColumn.ElementStyle>
+                <DataGridTextColumn.EditingElementStyle>
+                    <Style BasedOn="{StaticResource ValidationErrorTextBoxStyle}" TargetType="TextBox"/>
+                </DataGridTextColumn.EditingElementStyle>
             </DataGridTextColumn>
             <DataGridTemplateColumn  Header="Mode" 
                                 Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
@@ -197,6 +209,9 @@
                 <DataGridTextColumn.CellStyle>
                     <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
                 </DataGridTextColumn.CellStyle>
+                <DataGridTextColumn.EditingElementStyle>
+                    <Style BasedOn="{StaticResource ValidationErrorTextBoxStyle}" TargetType="TextBox"/>
+                </DataGridTextColumn.EditingElementStyle>
                 <DataGridTextColumn.ElementStyle>
                     <Style TargetType="TextBlock">
                         <Setter Property="HorizontalAlignment" Value="Center" />

@@ -281,6 +281,9 @@
                         <Setter Property="HorizontalAlignment" Value="Center" />
                     </Style>
                 </DataGridTextColumn.ElementStyle>
+                <DataGridTextColumn.EditingElementStyle>
+                    <Style BasedOn="{StaticResource ValidationErrorTextBoxStyle}" TargetType="TextBox"/>
+                </DataGridTextColumn.EditingElementStyle>
             </DataGridTextColumn>
         </DataGrid.Columns>
     </DataGrid>

@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace CanDevices.DingoPdm
 {
-    public class Condition : NotifyPropertyChangedBase
+	public class Condition : NotifyPropertyChangedBase
 	{
 		private string _name;
 		[JsonPropertyName("name")]
@@ -114,22 +115,22 @@ namespace CanDevices.DingoPdm
 			}
 		}
 
-        private bool _plot;
-        [JsonPropertyName("plot")]
-        public bool Plot
-        {
-            get => _plot;
-            set
-            {
-                if (_plot != value)
-                {
-                    _plot = value;
-                    OnPropertyChanged(nameof(Plot));
-                }
-            }
-        }
+		private bool _plot;
+		[JsonPropertyName("plot")]
+		public bool Plot
+		{
+			get => _plot;
+			set
+			{
+				if (_plot != value)
+				{
+					_plot = value;
+					OnPropertyChanged(nameof(Plot));
+				}
+			}
+		}
 
-        public static byte[] Request(int index)
+		public static byte[] Request(int index)
 		{
 			byte[] data = new byte[8];
 			data[0] = Convert.ToByte(MessagePrefix.Conditions);
@@ -162,5 +163,20 @@ namespace CanDevices.DingoPdm
 
 			return data;
 		}
+
 	}
+
+    public class ConditionArgValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
+        {
+            double proposedValue;
+            string input = value.ToString();
+            if (input == string.Empty) return new LoggingValidationResult(new ValidationResult(false, "Entry is required"));
+            if (!double.TryParse(input, out proposedValue)) return new LoggingValidationResult(new ValidationResult(false, "Response is invalid"));
+            if (proposedValue < 0.00) return new LoggingValidationResult(new ValidationResult(false, "Value must be zero or greater"));
+            if (proposedValue > 65535) return new LoggingValidationResult(new ValidationResult(false, "Value must less than or equal to 65535"));
+            return new ValidationResult(true, null);
+        }
+    }
 }
