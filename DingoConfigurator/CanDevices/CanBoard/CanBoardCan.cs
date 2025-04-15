@@ -99,7 +99,7 @@ namespace CanDevices.CanBoard
         [JsonPropertyName("digitalIn")]
         public ObservableCollection<DigitalInput> DigitalIn { 
             get => _digitalIn; 
-            private set
+            set
             {
                 if(_digitalIn!= value)
                 {
@@ -112,7 +112,8 @@ namespace CanDevices.CanBoard
         private ObservableCollection<Output> _digitalOut;
         [JsonPropertyName("digitalOut")]
         public ObservableCollection<Output> DigitalOut { 
-            get => _digitalOut; private set
+            get => _digitalOut;
+            set
             {
                 if (_digitalOut != value)
                 {
