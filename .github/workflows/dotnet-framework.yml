@@ -25,12 +25,8 @@ jobs:
     - name: Build solution
       run: msbuild DingoConfigurator\DingoConfigurator.sln -t:rebuild -verbosity:diag -property:Configuration=Release
 
-    - name: Archive build output
-      run: |
-        Compress-Archive -Path DingoConfigurator\DingoConfigurator\bin\Release\* -DestinationPath build_output.zip
-
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: BuildOutput
-        path: build_output.zip
+        name: DingoConfigurator
+        path: DingoConfigurator\DingoConfigurator\bin\Release\
