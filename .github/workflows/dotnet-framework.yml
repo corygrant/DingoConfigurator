@@ -20,5 +20,6 @@ jobs:
       run: nuget restore DingoConfigurator\DingoConfigurator.sln
 
     - name: Build solution
-      run: "C:\Program Files\Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\Bin\MSBuild.exe" DingoConfigurator\DingoConfigurator.sln /p:Configuration=Release
+      run: |
+    "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" DingoConfigurator\DingoConfigurator.sln /p:Configuration=Release
 
