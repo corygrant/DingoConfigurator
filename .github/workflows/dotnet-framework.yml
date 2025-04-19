@@ -19,11 +19,27 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v2
 
+    - name: Find AssemblyInfo.cs
+      id: find_assembly_info
+      run: |
+        # Search for AssemblyInfo.cs in the project
+        $assemblyInfoPath = Get-ChildItem -Path . -Recurse -Filter "AssemblyInfo.cs" | 
+                          Where-Object { $_.FullName -like "*DingoConfigurator*Properties*" } | 
+                          Select-Object -First 1 -ExpandProperty FullName
+        
+        if (-not $assemblyInfoPath) {
+          Write-Error "AssemblyInfo.cs not found in DingoConfigurator project"
+          Get-ChildItem -Path . -Recurse -Filter "*.cs" | Out-Host
+          exit 1
+        }
+        
+        echo "ASSEMBLY_INFO_PATH=$assemblyInfoPath" >> $env:GITHUB_OUTPUT
+        Write-Host "Found AssemblyInfo.cs at: $assemblyInfoPath"
+
     - name: Extract version and commit hash
       id: version_info
       run: |
-        # Get version from AssemblyInfo.cs
-        $content = Get-Content "DingoConfigurator/Properties/AssemblyInfo.cs" -Raw
+        $content = Get-Content "${{ steps.find_assembly_info.outputs.ASSEMBLY_INFO_PATH }}" -Raw
         if ($content -match 'AssemblyVersion\("([\d.]+)"\)') {
           $full_version = $matches[1]
           $commit_hash = "${{ github.sha }}".Substring(0,7)
@@ -39,12 +55,11 @@ jobs:
 
     - name: Update all version metadata
       run: |
-        # Ensure all version attributes match (AssemblyVersion, FileVersion, ProductVersion)
-        $content = Get-Content "DingoConfigurator/Properties/AssemblyInfo.cs" -Raw
+        $content = Get-Content "${{ steps.find_assembly_info.outputs.ASSEMBLY_INFO_PATH }}" -Raw
         $newContent = $content -replace 'Assembly(?:Version|FileVersion|ProductVersion)\(".*?"\)', 
           ('Assembly$1Version("${{ steps.version_info.outputs.VERSION }}")')
-        $newContent | Set-Content "DingoConfigurator/Properties/AssemblyInfo.cs"
-        Write-Host "All version attributes synchronized to ${{ steps.version_info.outputs.VERSION }}"
+        $newContent | Set-Content "${{ steps.find_assembly_info.outputs.ASSEMBLY_INFO_PATH }}"
+        Write-Host "Updated version to ${{ steps.version_info.outputs.VERSION }}"
 
     - name: Restore NuGet packages
       run: nuget restore DingoConfigurator\DingoConfigurator.sln
