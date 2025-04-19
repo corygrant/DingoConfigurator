@@ -23,7 +23,7 @@ jobs:
       id: version_info
       run: |
         # Get exact version from AssemblyInfo.cs
-        $content = Get-Content "Properties/AssemblyInfo.cs" -Raw
+        $content = Get-Content "DingoConfigurator/DingoConfigurator/Properties/AssemblyInfo.cs" -Raw
         if ($content -match 'AssemblyVersion\("([\d.]+)"\)') {
           $full_version = $matches[1]
           $commit_hash = "${{ github.sha }}".Substring(0,7)
@@ -36,15 +36,6 @@ jobs:
           Write-Error "Could not extract version from AssemblyInfo.cs"
           exit 1
         }
-
-    - name: Update all version metadata
-      run: |
-        # Ensure all version attributes match (AssemblyVersion, FileVersion, ProductVersion)
-        $content = Get-Content "DingoConfigurator/Properties/AssemblyInfo.cs" -Raw
-        $newContent = $content -replace 'Assembly(?:Version|FileVersion|ProductVersion)\(".*?"\)', 
-          ('Assembly$1Version("${{ steps.version_info.outputs.VERSION }}")')
-        $newContent | Set-Content "DingoConfigurator/Properties/AssemblyInfo.cs"
-        Write-Host "All version attributes synchronized to ${{ steps.version_info.outputs.VERSION }}"
 
     - name: Restore NuGet packages
       run: nuget restore DingoConfigurator\DingoConfigurator.sln
