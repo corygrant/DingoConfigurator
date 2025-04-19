@@ -19,14 +19,38 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v2
 
+    - name: Extract version and commit hash
+      id: version_info
+      run: |
+        # Get exact version from AssemblyInfo.cs
+        $content = Get-Content "DingoConfigurator/DingoConfigurator/Properties/AssemblyInfo.cs" -Raw
+        if ($content -match 'AssemblyVersion\("([\d.]+)"\)') {
+          $full_version = $matches[1]
+          $commit_hash = "${{ github.sha }}".Substring(0,7)
+          
+          echo "VERSION=$full_version" >> $env:GITHUB_OUTPUT
+          echo "COMMIT_SHORT=$commit_hash" >> $env:GITHUB_OUTPUT
+          echo "ARTIFACT_NAME=DingoConfigurator-$full_version-$commit_hash" >> $env:GITHUB_OUTPUT
+          Write-Host "Detected version: $full_version"
+        } else {
+          Write-Error "Could not extract version from AssemblyInfo.cs"
+          exit 1
+        }
+
     - name: Restore NuGet packages
       run: nuget restore DingoConfigurator\DingoConfigurator.sln
 
     - name: Build solution
       run: msbuild DingoConfigurator\DingoConfigurator.sln -t:rebuild -verbosity:diag -property:Configuration=Release
 
-    - name: Upload artifact
+    - name: Create versioned artifact
+      run: |
+        $zipName = "${{ steps.version_info.outputs.ARTIFACT_NAME }}.zip"
+        Compress-Archive -Path "./DingoConfigurator/DingoConfigurator/bin/Release/*" -DestinationPath "./$zipName"
+        Write-Host "Created artifact: $zipName"
+
+    - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: DingoConfigurator
-        path: DingoConfigurator\DingoConfigurator\bin\Release\
+        name: ${{ steps.version_info.outputs.ARTIFACT_NAME }}
+        path: ./${{ steps.version_info.outputs.ARTIFACT_NAME }}.zip
