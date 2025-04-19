@@ -46,7 +46,7 @@ jobs:
     - name: Create versioned artifact
       run: |
         $zipName = "${{ steps.version_info.outputs.ARTIFACT_NAME }}.zip"
-        Compress-Archive -Path "./DingoConfigurator/bin/Release/*" -DestinationPath "./$zipName"
+        Compress-Archive -Path "./DingoConfigurator/DingoConfigurator/bin/Release/*" -DestinationPath "./$zipName"
         Write-Host "Created artifact: $zipName"
 
     - name: Upload Artifact
