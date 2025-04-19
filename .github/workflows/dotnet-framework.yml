@@ -59,7 +59,7 @@ jobs:
         Write-Host "Created artifact: $zipName"
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ steps.version_info.outputs.ARTIFACT_NAME }}
         path: ./${{ steps.version_info.outputs.ARTIFACT_NAME }}.zip
