@@ -18,7 +18,7 @@ namespace CanDevices.DingoPdm
     {
         protected virtual int _minMajorVersion { get; } = 0;
         protected virtual int _minMinorVersion { get; } = 4;
-        protected virtual int _minBuildVersion { get; } = 12;
+        protected virtual int _minBuildVersion { get; } = 18;
 
         protected virtual int _numDigitalInputs { get; } = 2;
         protected virtual int _numOutputs { get; } = 8;
@@ -678,66 +678,66 @@ namespace CanDevices.DingoPdm
 
         protected virtual void ReadMessage7(byte[] data)
         {
-            CanInputs[0].Value = Convert.ToInt16((data[1] << 8) + data[0]);
-            CanInputs[1].Value = Convert.ToInt16((data[3] << 8) + data[2]);
-            CanInputs[2].Value = Convert.ToInt16((data[5] << 8) + data[4]);
-            CanInputs[3].Value = Convert.ToInt16((data[7] << 8) + data[6]);
+            CanInputs[0].Value = Convert.ToUInt16((data[1] << 8) + data[0]);
+            CanInputs[1].Value = Convert.ToUInt16((data[3] << 8) + data[2]);
+            CanInputs[2].Value = Convert.ToUInt16((data[5] << 8) + data[4]);
+            CanInputs[3].Value = Convert.ToUInt16((data[7] << 8) + data[6]);
         }
 
         protected virtual void ReadMessage8(byte[] data)
         {
-            CanInputs[4].Value = Convert.ToInt16((data[1] << 8) + data[0]);
-            CanInputs[5].Value = Convert.ToInt16((data[3] << 8) + data[2]);
-            CanInputs[6].Value = Convert.ToInt16((data[5] << 8) + data[4]);
-            CanInputs[7].Value = Convert.ToInt16((data[7] << 8) + data[6]);
+            CanInputs[4].Value = Convert.ToUInt16((data[1] << 8) + data[0]);
+            CanInputs[5].Value = Convert.ToUInt16((data[3] << 8) + data[2]);
+            CanInputs[6].Value = Convert.ToUInt16((data[5] << 8) + data[4]);
+            CanInputs[7].Value = Convert.ToUInt16((data[7] << 8) + data[6]);
         }
 
         protected virtual void ReadMessage9(byte[] data)
         {
-            CanInputs[8].Value = Convert.ToInt16((data[1] << 8) + data[0]);
-            CanInputs[9].Value = Convert.ToInt16((data[3] << 8) + data[2]);
-            CanInputs[10].Value = Convert.ToInt16((data[5] << 8) + data[4]);
-            CanInputs[11].Value = Convert.ToInt16((data[7] << 8) + data[6]);
+            CanInputs[8].Value = Convert.ToUInt16((data[1] << 8) + data[0]);
+            CanInputs[9].Value = Convert.ToUInt16((data[3] << 8) + data[2]);
+            CanInputs[10].Value = Convert.ToUInt16((data[5] << 8) + data[4]);
+            CanInputs[11].Value = Convert.ToUInt16((data[7] << 8) + data[6]);
         }
 
         protected virtual void ReadMessage10(byte[] data)
         {
-            CanInputs[12].Value = Convert.ToInt16((data[1] << 8) + data[0]);
-            CanInputs[13].Value = Convert.ToInt16((data[3] << 8) + data[2]);
-            CanInputs[14].Value = Convert.ToInt16((data[5] << 8) + data[4]);
-            CanInputs[15].Value = Convert.ToInt16((data[7] << 8) + data[6]);
+            CanInputs[12].Value = Convert.ToUInt16((data[1] << 8) + data[0]);
+            CanInputs[13].Value = Convert.ToUInt16((data[3] << 8) + data[2]);
+            CanInputs[14].Value = Convert.ToUInt16((data[5] << 8) + data[4]);
+            CanInputs[15].Value = Convert.ToUInt16((data[7] << 8) + data[6]);
         }
 
         protected virtual void ReadMessage11(byte[] data)
         {
-            CanInputs[16].Value = Convert.ToInt16((data[1] << 8) + data[0]);
-            CanInputs[17].Value = Convert.ToInt16((data[3] << 8) + data[2]);
-            CanInputs[18].Value = Convert.ToInt16((data[5] << 8) + data[4]);
-            CanInputs[19].Value = Convert.ToInt16((data[7] << 8) + data[6]);
+            CanInputs[16].Value = Convert.ToUInt16((data[1] << 8) + data[0]);
+            CanInputs[17].Value = Convert.ToUInt16((data[3] << 8) + data[2]);
+            CanInputs[18].Value = Convert.ToUInt16((data[5] << 8) + data[4]);
+            CanInputs[19].Value = Convert.ToUInt16((data[7] << 8) + data[6]);
         }
 
         protected virtual void ReadMessage12(byte[] data)
         {
-            CanInputs[20].Value = Convert.ToInt16((data[1] << 8) + data[0]);
-            CanInputs[21].Value = Convert.ToInt16((data[3] << 8) + data[2]);
-            CanInputs[22].Value = Convert.ToInt16((data[5] << 8) + data[4]);
-            CanInputs[23].Value = Convert.ToInt16((data[7] << 8) + data[6]);
+            CanInputs[20].Value = Convert.ToUInt16((data[1] << 8) + data[0]);
+            CanInputs[21].Value = Convert.ToUInt16((data[3] << 8) + data[2]);
+            CanInputs[22].Value = Convert.ToUInt16((data[5] << 8) + data[4]);
+            CanInputs[23].Value = Convert.ToUInt16((data[7] << 8) + data[6]);
         }
 
         protected virtual void ReadMessage13(byte[] data)
         {
-            CanInputs[24].Value = Convert.ToInt16((data[1] << 8) + data[0]);
-            CanInputs[25].Value = Convert.ToInt16((data[3] << 8) + data[2]);
-            CanInputs[26].Value = Convert.ToInt16((data[5] << 8) + data[4]);
-            CanInputs[27].Value = Convert.ToInt16((data[7] << 8) + data[6]);
+            CanInputs[24].Value = Convert.ToUInt16((data[1] << 8) + data[0]);
+            CanInputs[25].Value = Convert.ToUInt16((data[3] << 8) + data[2]);
+            CanInputs[26].Value = Convert.ToUInt16((data[5] << 8) + data[4]);
+            CanInputs[27].Value = Convert.ToUInt16((data[7] << 8) + data[6]);
         }
 
         protected virtual void ReadMessage14(byte[] data)
         {
-            CanInputs[28].Value = Convert.ToInt16((data[1] << 8) + data[0]);
-            CanInputs[29].Value = Convert.ToInt16((data[3] << 8) + data[2]);
-            CanInputs[30].Value = Convert.ToInt16((data[5] << 8) + data[4]);
-            CanInputs[31].Value = Convert.ToInt16((data[7] << 8) + data[6]);
+            CanInputs[28].Value = Convert.ToUInt16((data[1] << 8) + data[0]);
+            CanInputs[29].Value = Convert.ToUInt16((data[3] << 8) + data[2]);
+            CanInputs[30].Value = Convert.ToUInt16((data[5] << 8) + data[4]);
+            CanInputs[31].Value = Convert.ToUInt16((data[7] << 8) + data[6]);
         }
 
         protected virtual void ReadMessage15(byte[] data)
