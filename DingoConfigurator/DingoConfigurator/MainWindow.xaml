@@ -280,7 +280,13 @@
                                         Height="20"
                                         Margin="2 2 5 2" />
                                     <TextBlock Text="{Binding Name}"
-                                           VerticalAlignment="Center" />
+                                           VerticalAlignment="Center">
+                                    </TextBlock>
+                                    <StackPanel.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Add Keypad"/>
+                                        </ContextMenu>
+                                    </StackPanel.ContextMenu>
                                 </StackPanel>
                                 <HierarchicalDataTemplate.Triggers>
                                     <DataTrigger Binding="{Binding IsConnected}"
