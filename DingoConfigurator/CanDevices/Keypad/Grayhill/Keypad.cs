@@ -9,17 +9,21 @@ namespace CanDevices.Keypad.Grayhill
 {
     public class Keypad : KeypadBase
     {
-        public new void Clear()
+        public Keypad(KeypadModel model)
+        {
+            
+        }
+        public override void Clear()
         {
 
         }
 
-        public new bool InIdRange(int id)
+        public override bool InIdRange(int id)
         {
             return false;
         }
 
-        public new bool Read(int id, byte[] data, ref ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)
+        public override bool Read(int id, byte[] data, ref ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)
         {
             if (!InIdRange(id))
             {

@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 namespace CanDevices.Keypad
 {
-    public enum KeypadBrand
-    {
-        Blink,
-        Grayhill
-    }
 
     public enum KeypadModel
     {

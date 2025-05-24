@@ -9,7 +9,7 @@ using CanDevices.DingoPdm;
 
 namespace CanDevices.Keypad
 {
-    public class KeypadBase : NotifyPropertyChangedBase, IKeypad
+    public abstract class KeypadBase : NotifyPropertyChangedBase, IKeypad
     {
 
         private bool _enabled;
@@ -161,6 +161,22 @@ namespace CanDevices.Keypad
             }
         }
 
+        private KeypadModel _model;
+        [JsonPropertyName("model")]
+        public KeypadModel Model
+        {
+            get => _model;
+            set
+            {
+                if (_model != value)
+                {
+                    _model = value;
+                    ModelUpdate(_model);
+                    OnPropertyChanged(nameof(Model));
+                }
+            }
+        }
+
         protected string _name;
         [JsonPropertyName("name")]
         public string Name
@@ -175,6 +191,7 @@ namespace CanDevices.Keypad
                 }
             }
         }
+
         protected int _baseId;
         [JsonPropertyName("baseId")]
         public int BaseId
@@ -209,57 +226,87 @@ namespace CanDevices.Keypad
             }
         }
 
-        public void Clear()
+        public static KeypadBase Create(KeypadModel model)
+        {
+            switch(model)
+            {
+                case KeypadModel.Blink2Key:
+                case KeypadModel.Blink4Key:
+                case KeypadModel.Blink5Key:
+                case KeypadModel.Blink6Key:
+                case KeypadModel.Blink8Key:
+                case KeypadModel.Blink10Key:
+                case KeypadModel.Blink12Key:
+                case KeypadModel.Blink15Key:
+                case KeypadModel.Blink13Key_2Dial:
+                case KeypadModel.BlinkRacepad:
+                    return new BlinkMarine.Keypad(model);
+                case KeypadModel.Grayhill6Key:
+                case KeypadModel.Grayhill8Key:
+                case KeypadModel.Grayhill15Key:
+                case KeypadModel.Grayhill20Key:
+                    return new Grayhill.Keypad(model);
+                default:
+                    throw new NotImplementedException($"No keypad implementation for model {model}");
+            }
+        }
+
+        protected virtual void ModelUpdate(KeypadModel model)
         {
             throw new NotImplementedException();
         }
 
-        public CanDeviceResponse GetBurnMessage()
-        {
-            return null;
-        }
-
-        public List<CanDeviceResponse> GetDownloadMessages()
-        {
-            return null;
-        }
-
-        public CanDeviceResponse GetSleepMessage()
-        {
-            return null;
-        }
-
-        public List<CanDeviceResponse> GetUpdateMessages(int newId)
-        {
-            return null;
-        }
-
-        public List<CanDeviceResponse> GetUploadMessages()
-        {
-            return null;
-        }
-
-        public CanDeviceResponse GetVersionMessage()
-        {
-            return null;
-        }
-
-        public bool InIdRange(int id)
-        {
-            return false;
-        }
-
-        public bool IsPriorityMsg(int id)
-        {
-            return false;
-        }
-
-        public bool Read(int id, byte[] data, ref ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)
+        public virtual void Clear()
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateIsConnected()
+        public virtual CanDeviceResponse GetBurnMessage()
+        {
+            return null;
+        }
+
+        public virtual List<CanDeviceResponse> GetDownloadMessages()
+        {
+            return null;
+        }
+
+        public virtual CanDeviceResponse GetSleepMessage()
+        {
+            return null;
+        }
+
+        public virtual List<CanDeviceResponse> GetUpdateMessages(int newId)
+        {
+            return null;
+        }
+
+        public virtual List<CanDeviceResponse> GetUploadMessages()
+        {
+            return null;
+        }
+
+        public virtual CanDeviceResponse GetVersionMessage()
+        {
+            return null;
+        }
+
+        public virtual bool InIdRange(int id)
+        {
+            return false;
+        }
+
+        public virtual bool IsPriorityMsg(int id)
+        {
+            return false;
+        }
+
+        public virtual bool Read(int id, byte[] data, ref ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void UpdateIsConnected()
         {
             //Have to use a property set to get OnPropertyChanged to fire
             //Otherwise could be directly in the getter
@@ -267,9 +314,25 @@ namespace CanDevices.Keypad
             IsConnected = timeSpan.TotalMilliseconds < 500;
         }
 
-        public bool SendNewSetting()
+        public virtual bool SendNewSetting()
         {
             throw new NotImplementedException();
         }
+
+        public virtual List<CanDeviceResponse> RequestMsgs(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool Receive(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual List<CanDeviceResponse> WriteMsgs(int id)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

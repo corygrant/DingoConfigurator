@@ -1,4 +1,5 @@
-﻿using CanInterfaces;
+﻿using CanDevices.Keypad;
+using CanInterfaces;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -27,8 +28,11 @@ namespace CanDevices.DingoPdm
         protected virtual int _numFlashers { get; } = 4;
 		protected virtual int _numCounters { get; } = 4;
 		protected virtual int _numConditions { get; } = 32;
+        protected virtual int _numKeypads { get; } = 2;
+        protected virtual int _numKeypadButtons { get; } = 20;
+        protected virtual int _numKeypadDials { get; } = 4;
 
-		protected static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        protected static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         protected int _pdmType;
 
@@ -375,7 +379,22 @@ namespace CanDevices.DingoPdm
 			}
 		}
 
-		public DingoPdmCan(string name, int baseId)
+        protected ObservableCollection<KeypadBase> _keypads;
+        [JsonIgnore]
+        public ObservableCollection<KeypadBase> Keypads
+        {
+            get => _keypads;
+            protected set
+            {
+                if (_keypads != value)
+                {
+                    _keypads = value;
+                    OnPropertyChanged(nameof(Keypads));
+                }
+            }
+        }
+
+        public DingoPdmCan(string name, int baseId)
         {
             Name = name;
             BaseId = baseId;
@@ -442,6 +461,13 @@ namespace CanDevices.DingoPdm
 				Conditions[i].Number = i + 1;
 			}
 
+            Keypads = new ObservableCollection<KeypadBase>();
+            for (int i = 0; i < _numKeypads; i++)
+            {
+                Keypads.Add(KeypadBase.Create(KeypadModel.Blink12Key));
+                Keypads[i].Number = i + 1;
+            }
+
 			SubPages.Add(new CanDeviceSub("Settings", this));
             SubPages.Add(new DingoPdmPlot("Plots", this));
 
@@ -462,11 +488,22 @@ namespace CanDevices.DingoPdm
 
         public bool InIdRange(int id)
         {
+            foreach(var kp in Keypads)
+            {
+                if (kp.InIdRange(id))
+                    return true;
+            }
+
             return (id >= BaseId) && (id <= BaseId + 31) ;
         }
 
         public bool Read(int id, byte[] data, ref ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)
         {
+            foreach (var kp in Keypads)
+            {
+                kp.Read(id, data, ref queue);
+            }
+
             if ((id < BaseId) || (id > BaseId + 31)) 
                 return false;
 
@@ -1349,7 +1386,16 @@ namespace CanDevices.DingoPdm
 				});
 			}
 
-			return msgs;
+            //Keypads
+            for (int i = 0; i < _numKeypads; i++)
+            {
+                foreach(var msg in Keypads[i].RequestMsgs(id))
+                {
+                    msgs.Add(msg);
+                }
+            }
+
+            return msgs;
         }
 
         public List<CanDeviceResponse> GetDownloadMessages()
@@ -1622,7 +1668,15 @@ namespace CanDevices.DingoPdm
 				});
 			}
 
-			return msgs;
+            foreach(var kp in Keypads)
+            {
+                foreach (var msg in kp.WriteMsgs(id))
+                {
+                    msgs.Add(msg);
+                }
+            }
+
+            return msgs;
         }
 
         public List<CanDeviceResponse> GetUpdateMessages(int newId)

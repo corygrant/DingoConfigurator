@@ -10,6 +10,21 @@ namespace CanDevices.Keypad
 {
     public class ButtonBase : NotifyPropertyChangedBase
     {
+        private bool _state;
+        [JsonIgnore]
+        public bool State
+        {
+            get => _state;
+            set
+            {
+                if (_state != value)
+                {
+                    _state = value;
+                    OnPropertyChanged(nameof(State));
+                }
+            }
+        }
+
         private bool _enabled;
         [JsonPropertyName("enabled")]
         public bool Enabled
@@ -113,6 +128,26 @@ namespace CanDevices.Keypad
                     OnPropertyChanged(nameof(FaultVar));
                 }
             }
+        }
+
+        public ButtonBase(int keypadNum, int buttonNum)
+        {
+            KeypadNumber = keypadNum;
+            Number = buttonNum;
+        }
+        public virtual List<CanDeviceResponse> RequestMsgs(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool Receive(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual List<CanDeviceResponse> WriteMsgs(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

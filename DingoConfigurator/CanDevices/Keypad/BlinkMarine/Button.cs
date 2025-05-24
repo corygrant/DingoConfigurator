@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using CanDevices.DingoPdm;
+using CanInterfaces;
 
 namespace CanDevices.Keypad.BlinkMarine
 {
@@ -86,21 +87,109 @@ namespace CanDevices.Keypad.BlinkMarine
             }
         }
 
-        public Button()
+        public Button(int keypadNum, int buttonNum):base(keypadNum, buttonNum)
         {
             _valColors = new BlinkMarineButtonColor[4];
             _blinkingColors = new BlinkMarineButtonColor[4];
         }
 
-        public static byte[] RequestButton(int keypadIndex, int buttonIndex)
+        public override List<CanDeviceResponse> RequestMsgs(int id)
+        {
+            List<CanDeviceResponse> requests = new List<CanDeviceResponse>
+            {
+                new CanDeviceResponse
+                {
+                    Sent = false,
+                    Received = false,
+                    Prefix = Convert.ToInt16(MessagePrefix.Keypad),
+                    Index = Number - 1,
+                    Data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = 2,
+                        Payload = Request()
+                    },
+                    MsgDescription = $"Keypad{Number}"
+                },
+                new CanDeviceResponse
+                {
+                    Sent = false,
+                    Received = false,
+                    Prefix = Convert.ToInt16(MessagePrefix.Keypad),
+                    Index = Number - 1,
+                    Data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = 2,
+                        Payload = RequestLed()
+                    },
+                    MsgDescription = $"Keypad{Number}"
+                }
+            };
+
+            return requests;
+        }
+
+        public override bool Receive(byte[] data)
+        {
+            MessagePrefix prefix = (MessagePrefix)data[0];
+            switch(prefix)
+            {
+                case MessagePrefix.KeypadButton:
+                    return ReceiveButton(data);
+                case MessagePrefix.KeypadButtonLed:
+                    return ReceiveLed(data);
+                default:
+                    return false;
+            }
+        }
+
+        public override List<CanDeviceResponse> WriteMsgs(int id)
+        {
+            List<CanDeviceResponse> requests = new List<CanDeviceResponse>
+            {
+                new CanDeviceResponse
+                {
+                    Sent = false,
+                    Received = false,
+                    Prefix = Convert.ToInt16(MessagePrefix.Keypad),
+                    Index = Number - 1,
+                    Data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = 2,
+                        Payload = Write()
+                    },
+                    MsgDescription = $"Keypad{Number}"
+                },
+                new CanDeviceResponse
+                {
+                    Sent = false,
+                    Received = false,
+                    Prefix = Convert.ToInt16(MessagePrefix.Keypad),
+                    Index = Number - 1,
+                    Data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = 2,
+                        Payload = WriteLed()
+                    },
+                    MsgDescription = $"Keypad{Number}"
+                }
+            };
+
+            return requests;
+        }
+
+        private byte[] Request()
         {
             byte[] data = new byte[8];
             data[0] = Convert.ToByte(MessagePrefix.KeypadButton);
-            data[1] = Convert.ToByte((keypadIndex & 0x07) + (buttonIndex & 0xF8) >> 3);
+            data[1] = Convert.ToByte(((KeypadNumber - 1) & 0x07) + ((Number - 1) & 0xF8) >> 3);
             return data;
         }
 
-        public bool ReceiveButton(byte[] data)
+        private bool ReceiveButton(byte[] data)
         {
             if (data.Length != 8) return false;
 
@@ -117,7 +206,7 @@ namespace CanDevices.Keypad.BlinkMarine
             return true;
         }
 
-        public byte[] WriteButton()
+        private byte[] Write()
         {
             byte[] data = new byte[8];
             data[0] = Convert.ToByte(MessagePrefix.KeypadButton);
@@ -134,15 +223,15 @@ namespace CanDevices.Keypad.BlinkMarine
             return data;
         }
 
-        public static byte[] RequestButtonLed(int keypadIndex, int buttonIndex)
+        private byte[] RequestLed()
         {
             byte[] data = new byte[8];
             data[0] = Convert.ToByte(MessagePrefix.KeypadButtonLed);
-            data[1] = Convert.ToByte((keypadIndex & 0x07) + (buttonIndex & 0xF8) >> 3);
+            data[1] = Convert.ToByte(((KeypadNumber - 1) & 0x07) + ((Number - 1) & 0xF8) >> 3);
             return data;
         }
 
-        public bool ReceiveButtonLed(byte[] data)
+        private bool ReceiveLed(byte[] data)
         {
             if (data.Length != 8) return false;
 
@@ -161,7 +250,7 @@ namespace CanDevices.Keypad.BlinkMarine
             return true;
         }
 
-        public byte[] WriteButtonLed()
+        private byte[] WriteLed()
         {
             byte[] data = new byte[8];
             data[0] = Convert.ToByte(MessagePrefix.KeypadButtonLed);

@@ -106,7 +106,7 @@
     <Compile Include="Keypad\BlinkMarine\Keypad.cs" />
     <Compile Include="Keypad\BlinkMarine\Button.cs" />
     <Compile Include="Keypad\BlinkMarine\Dial.cs" />
-    <Compile Include="Keypad\Button.cs" />
+    <Compile Include="Keypad\ButtonBase.cs" />
     <Compile Include="Keypad\Enums.cs" />
     <Compile Include="Keypad\Grayhill\Keypad.cs" />
     <Compile Include="Keypad\IKeypad.cs" />
