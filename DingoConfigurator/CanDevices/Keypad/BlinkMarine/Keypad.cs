@@ -77,7 +77,7 @@ namespace CanDevices.Keypad.BlinkMarine
         }
 
         
-        public Keypad(KeypadModel model)
+        public Keypad(KeypadModel model, string name, ICanDevice canDevice) : base(name, canDevice)
         {
             BaseId = 0x15;
 

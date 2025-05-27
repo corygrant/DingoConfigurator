@@ -24,15 +24,24 @@ namespace CanDevices
             set => _canDevice = value;
         }
 
-        public int BaseId
+        public virtual int BaseId
         {
             get => CanDevice.BaseId;
             set => BaseId = value;
         } 
 
-        public bool IsConnected
+        private bool _isConnected;
+        public virtual bool IsConnected
         {
             get => CanDevice.IsConnected;
+            protected set
+            {
+                if (_isConnected != value)
+                {
+                    _isConnected = value;
+                    OnPropertyChanged(nameof(IsConnected));
+                }
+            }
         }
 
         public DateTime LastRxTime => CanDevice.LastRxTime;
@@ -43,63 +52,63 @@ namespace CanDevices
             CanDevice = canDevice;
         }
 
-        public void UpdateIsConnected()
+        public virtual void UpdateIsConnected()
         {
         }
 
-        public bool IsPriorityMsg(int id)
+        public virtual bool IsPriorityMsg(int id)
         {
             return false;
         }
-        public bool InIdRange(int id)
+        public virtual bool InIdRange(int id)
         {
             return false;
         }
 
-        public void UpdateView()
+        public virtual void UpdateView()
         {
         
         }
 
-        public bool Read(int id, byte[] data, ref ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)
+        public virtual bool Read(int id, byte[] data, ref ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)
         {
             return true;
         }
 
-        public void Clear()
+        public virtual void Clear()
         {
 
         }
 
-        public void UpdateProperty(string property)
+        public virtual void UpdateProperty(string property)
         {
             OnPropertyChanged(property);
         }
 
-        public List<CanDeviceResponse> GetUploadMessages()
+        public virtual List<CanDeviceResponse> GetUploadMessages()
         {
             return null;
         }
 
-        public List<CanDeviceResponse> GetDownloadMessages()
+        public virtual List<CanDeviceResponse> GetDownloadMessages()
         {
             return null;
         }
-        public List<CanDeviceResponse> GetUpdateMessages(int newId)
-        {
-            return null;
-        }
-
-        public CanDeviceResponse GetBurnMessage()
+        public virtual List<CanDeviceResponse> GetUpdateMessages(int newId)
         {
             return null;
         }
 
-        public CanDeviceResponse GetSleepMessage()
+        public virtual CanDeviceResponse GetBurnMessage()
         {
             return null;
         }
-        public CanDeviceResponse GetVersionMessage()
+
+        public virtual CanDeviceResponse GetSleepMessage()
+        {
+            return null;
+        }
+        public virtual CanDeviceResponse GetVersionMessage()
         {
             return null;
         }

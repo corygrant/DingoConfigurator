@@ -8,6 +8,7 @@ namespace CanDevices.Keypad
 {
     public interface IKeypad : ICanDevice
     {
+
         bool SendNewSetting();
         
     }

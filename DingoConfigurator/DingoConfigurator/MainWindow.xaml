@@ -13,6 +13,8 @@
                  xmlns:dash="clr-namespace:CanDevices.DingoDash;assembly=CanDevices"
                  xmlns:msglog="clr-namespace:CanDevices.CanMsgLog;assembly=CanDevices"
                  xmlns:softbtnbox="clr-namespace:CanDevices.SoftButtonBox;assembly=CanDevices"
+                 xmlns:bm="clr-namespace:CanDevices.Keypad.BlinkMarine;assembly=CanDevices"
+                 xmlns:gh="clr-namespace:CanDevices.Keypad.Grayhill;assembly=CanDevices"
                  xmlns:vm="clr-namespace:DingoConfigurator.ViewModels"
                  xmlns:vw="clr-namespace:DingoConfigurator.Views"
                  xmlns:nlog="clr-namespace:NlogViewer;assembly=NlogViewer"
@@ -182,6 +184,12 @@
                     <DataTemplate DataType="{x:Type vm:DingoPdmPlotsViewModel}">
                         <vw:DingoPdmPlotsView />
                     </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:BlinkMarineViewModel}">
+                        <vw:BlinkMarineView />
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:GrayhillViewModel}">
+                        <vw:GrayhillView />
+                    </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:CanBoardViewModel}">
                         <vw:CanBoardView />
                     </DataTemplate>
@@ -269,6 +277,66 @@
                                         <Setter TargetName="TypeImage"
                                             Property="Source"
                                             Value="Icons\plot_0.png" />
+                                    </DataTrigger>
+                                </HierarchicalDataTemplate.Triggers>
+                            </HierarchicalDataTemplate>
+                            <HierarchicalDataTemplate DataType="{x:Type bm:Keypad}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image x:Name="TypeImage"
+                                           Width="20"
+                                           Height="20"
+                                           Margin="2 2 5 2" />      
+                                    <TextBlock Text="{Binding Name}"
+                                                VerticalAlignment="Center" />
+                                </StackPanel>
+                                <HierarchicalDataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding IsConnected}"
+                                                Value="True">
+                                        <Setter TargetName="TypeImage"
+                                                Property="Opacity"
+                                                Value="1.0" />
+                                        <Setter TargetName="TypeImage"
+                                                Property="Source"
+                                                Value="Icons\keypad_1.png" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsConnected}"
+                                                Value="False">
+                                        <Setter TargetName="TypeImage"
+                                                Property="Opacity"
+                                                Value="0.5" />
+                                        <Setter TargetName="TypeImage"
+                                                Property="Source"
+                                                Value="Icons\keypad_0.png" />
+                                    </DataTrigger>
+                                </HierarchicalDataTemplate.Triggers>
+                            </HierarchicalDataTemplate>
+                            <HierarchicalDataTemplate DataType="{x:Type gh:Keypad}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image x:Name="TypeImage"
+                                                   Width="20"
+                                                   Height="20"
+                                                   Margin="2 2 5 2" />
+                                    <TextBlock Text="{Binding Name}"
+                                                VerticalAlignment="Center" />
+                                </StackPanel>
+                                <HierarchicalDataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding IsConnected}"
+                                                 Value="True">
+                                        <Setter TargetName="TypeImage"
+                                                Property="Opacity"
+                                                Value="1.0" />
+                                        <Setter TargetName="TypeImage"
+                                                Property="Source"
+                                                Value="Icons\keypad_1.png" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsConnected}"
+                                                 Value="False">
+                                        <Setter TargetName="TypeImage"
+                                                Property="Opacity"
+                                                Value="0.5" />
+                                        <Setter TargetName="TypeImage"
+                                                Property="Source"
+                                                Value="Icons\keypad_0.png" />
                                     </DataTrigger>
                                 </HierarchicalDataTemplate.Triggers>
                             </HierarchicalDataTemplate>

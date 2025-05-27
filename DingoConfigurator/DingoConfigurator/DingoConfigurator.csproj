@@ -137,6 +137,8 @@
     <Compile Include="ViewModels\DingoPdm\Plots\BatteryPlot.cs" />
     <Compile Include="ViewModels\DingoPdm\Plots\CurrentOutputPlot.cs" />
     <Compile Include="ViewModels\DingoPdm\Plots\StatePlot.cs" />
+    <Compile Include="ViewModels\Keypad\BlinkMarineViewModel.cs" />
+    <Compile Include="ViewModels\Keypad\GrayhillViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="ViewModels\DingoDash\DingoDashViewModel.cs" />
@@ -209,6 +211,12 @@
     </Compile>
     <Compile Include="Views\DingoPdm\WipersSpeedMapDataGrid.xaml.cs">
       <DependentUpon>WipersSpeedMapDataGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Keypad\BlinkMarineView.xaml.cs">
+      <DependentUpon>BlinkMarineView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Keypad\GrayhillView.xaml.cs">
+      <DependentUpon>GrayhillView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SoftButtonBoxView.xaml.cs">
       <DependentUpon>SoftButtonBoxView.xaml</DependentUpon>
@@ -313,6 +321,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Keypad\BlinkMarineView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Keypad\GrayhillView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SharedResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -400,6 +416,10 @@
   <ItemGroup>
     <Resource Include="Icons\pdm_max_0.png" />
     <Resource Include="Icons\pdm_max_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\keypad_0.png" />
+    <Resource Include="Icons\keypad_1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

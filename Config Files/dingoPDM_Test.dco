@@ -1031,7 +1031,8 @@
           "input": 65,
           "inputValue": false,
           "onTime": 0.5,
-          "offTime": 0.5
+          "offTime": 0.5,
+          "plot": false
         },
         {
           "name": "",
@@ -1041,7 +1042,8 @@
           "input": 0,
           "inputValue": false,
           "onTime": 0.5,
-          "offTime": 0.5
+          "offTime": 0.5,
+          "plot": false
         },
         {
           "name": null,
@@ -1051,7 +1053,8 @@
           "input": 0,
           "inputValue": false,
           "onTime": 0.5,
-          "offTime": 0.5
+          "offTime": 0.5,
+          "plot": false
         },
         {
           "name": null,
@@ -1061,7 +1064,8 @@
           "input": 0,
           "inputValue": false,
           "onTime": 0.5,
-          "offTime": 0.5
+          "offTime": 0.5,
+          "plot": false
         }
       ],
       "starterDisable": [
@@ -1091,7 +1095,8 @@
           "incEdge": 0,
           "decEdge": 0,
           "resetEdge": 0,
-          "wrapAround": true
+          "wrapAround": true,
+          "plot": false
         },
         {
           "name": null,
@@ -1105,7 +1110,8 @@
           "incEdge": 0,
           "decEdge": 0,
           "resetEdge": 0,
-          "wrapAround": false
+          "wrapAround": false,
+          "plot": false
         },
         {
           "name": null,
@@ -1119,7 +1125,8 @@
           "incEdge": 0,
           "decEdge": 0,
           "resetEdge": 0,
-          "wrapAround": false
+          "wrapAround": false,
+          "plot": false
         },
         {
           "name": null,
@@ -1133,7 +1140,8 @@
           "incEdge": 0,
           "decEdge": 0,
           "resetEdge": 0,
-          "wrapAround": false
+          "wrapAround": false,
+          "plot": false
         }
       ],
       "conditions": [
@@ -1143,7 +1151,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1151,7 +1160,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1159,7 +1169,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1167,7 +1178,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1175,7 +1187,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1183,7 +1196,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1191,7 +1205,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1199,7 +1214,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1207,7 +1223,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1215,7 +1232,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1223,7 +1241,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1231,7 +1250,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1239,7 +1259,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1247,7 +1268,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1255,7 +1277,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1263,7 +1286,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1271,7 +1295,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1279,7 +1304,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1287,7 +1313,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1295,7 +1322,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1303,7 +1331,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1311,7 +1340,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1319,7 +1349,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1327,7 +1358,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1335,7 +1367,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1343,7 +1376,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1351,7 +1385,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1359,7 +1394,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1367,7 +1403,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1375,7 +1412,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1383,7 +1421,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         },
         {
           "name": null,
@@ -1391,7 +1430,8 @@
           "enabled": false,
           "input": 0,
           "operator": 0,
-          "arg": 0
+          "arg": 0,
+          "plot": false
         }
       ]
     }

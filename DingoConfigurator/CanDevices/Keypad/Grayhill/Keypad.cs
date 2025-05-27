@@ -9,10 +9,11 @@ namespace CanDevices.Keypad.Grayhill
 {
     public class Keypad : KeypadBase
     {
-        public Keypad(KeypadModel model)
+        public Keypad(KeypadModel model, string name, ICanDevice canDevice) : base(name, canDevice)
         {
-            
+            Model = model;
         }
+
         public override void Clear()
         {
 

@@ -26,6 +26,9 @@ using System.Reflection;
 using DingoConfigurator.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 using CanDevices.DingoDash;
+using DingoConfigurator.ViewModels.Keypad;
+using CanDevices.Keypad;
+using CanDevices.Keypad.BlinkMarine;
 
 namespace DingoConfigurator
 {
@@ -273,6 +276,47 @@ namespace DingoConfigurator
                         var device = (dingoPdmMaxCan)plot.CanDevice;
                         SelectedCanDevice = device;
                         CurrentViewModel = _deviceViewModels[device]["Plots"];
+                        SelectedDeviceToAdd = Devices.dingoPDMMax;
+                    }
+                }
+            }
+
+            if (newValueType == typeof(CanDevices.Keypad.BlinkMarine.Keypad))
+            {
+                var keypad = (CanDevices.Keypad.BlinkMarine.Keypad)newValue;
+
+                if (keypad.Name.Equals("Keypad1"))
+                {
+                    if (keypad.CanDevice.GetType() == typeof(DingoPdmCan))
+                    {
+                        var device = (DingoPdmCan)keypad.CanDevice;
+                        SelectedCanDevice = device;
+                        CurrentViewModel = _deviceViewModels[device]["Keypad1"];
+                        SelectedDeviceToAdd = Devices.dingoPDM;
+                    }
+                    if (keypad.CanDevice.GetType() == typeof(dingoPdmMaxCan))
+                    {
+                        var device = (dingoPdmMaxCan)keypad.CanDevice;
+                        SelectedCanDevice = device;
+                        CurrentViewModel = _deviceViewModels[device]["Keypad1"];
+                        SelectedDeviceToAdd = Devices.dingoPDMMax;
+                    }
+                }
+
+                if (keypad.Name.Equals("Keypad2"))
+                {
+                    if (keypad.CanDevice.GetType() == typeof(DingoPdmCan))
+                    {
+                        var device = (DingoPdmCan)keypad.CanDevice;
+                        SelectedCanDevice = device;
+                        CurrentViewModel = _deviceViewModels[device]["Keypad2"];
+                        SelectedDeviceToAdd = Devices.dingoPDM;
+                    }
+                    if (keypad.CanDevice.GetType() == typeof(dingoPdmMaxCan))
+                    {
+                        var device = (dingoPdmMaxCan)keypad.CanDevice;
+                        SelectedCanDevice = device;
+                        CurrentViewModel = _deviceViewModels[device]["Keypad2"];
                         SelectedDeviceToAdd = Devices.dingoPDMMax;
                     }
                 }
@@ -679,7 +723,9 @@ namespace DingoConfigurator
                 {
                     { "Main", new DingoPdmViewModel(this) },
                     { "Settings", new DingoPdmSettingsViewModel(this) },
-                    { "Plots", new DingoPdmPlotsViewModel(this) }
+                    { "Plots", new DingoPdmPlotsViewModel(this) },
+                    { "Keypad1", new BlinkMarineViewModel(this) },
+                    { "Keypad2", new BlinkMarineViewModel(this) }
                 };
 
             }
@@ -692,7 +738,9 @@ namespace DingoConfigurator
                 {
                     { "Main", new DingoPdmViewModel(this) },
                     { "Settings", new DingoPdmSettingsViewModel(this) },
-                    { "Plots", new DingoPdmPlotsViewModel(this) }
+                    { "Plots", new DingoPdmPlotsViewModel(this) },
+                    { "Keypad", new BlinkMarineViewModel(this) },
+                    { "Keypad2", new BlinkMarineViewModel(this) }
                 };
             }
 

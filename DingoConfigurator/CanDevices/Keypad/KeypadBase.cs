@@ -9,7 +9,7 @@ using CanDevices.DingoPdm;
 
 namespace CanDevices.Keypad
 {
-    public abstract class KeypadBase : NotifyPropertyChangedBase, IKeypad
+    public abstract class KeypadBase : CanDeviceSub
     {
 
         private bool _enabled;
@@ -177,24 +177,9 @@ namespace CanDevices.Keypad
             }
         }
 
-        protected string _name;
-        [JsonPropertyName("name")]
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                if (_name != value)
-                {
-                    _name = value;
-                    OnPropertyChanged(nameof(Name));
-                }
-            }
-        }
-
         protected int _baseId;
         [JsonPropertyName("baseId")]
-        public int BaseId
+        public override int BaseId
         {
             get => _baseId;
             set
@@ -207,16 +192,12 @@ namespace CanDevices.Keypad
             }
         }
 
-        protected DateTime _lastRxTime { get; set; }
-        [JsonIgnore]
-        public DateTime LastRxTime { get => _lastRxTime; }
-
         protected bool _isConnected;
         [JsonIgnore]
-        public bool IsConnected
+        public override bool IsConnected
         {
             get => _isConnected;
-            set
+            protected set
             {
                 if (_isConnected != value)
                 {
@@ -226,7 +207,11 @@ namespace CanDevices.Keypad
             }
         }
 
-        public static KeypadBase Create(KeypadModel model)
+        public KeypadBase(string name, ICanDevice canDevice) : base(name, canDevice)
+        {
+        }
+
+        public static KeypadBase Create(KeypadModel model, string name, ICanDevice canDevice)
         {
             switch(model)
             {
@@ -240,12 +225,12 @@ namespace CanDevices.Keypad
                 case KeypadModel.Blink15Key:
                 case KeypadModel.Blink13Key_2Dial:
                 case KeypadModel.BlinkRacepad:
-                    return new BlinkMarine.Keypad(model);
+                    return new BlinkMarine.Keypad(model, name, canDevice);
                 case KeypadModel.Grayhill6Key:
                 case KeypadModel.Grayhill8Key:
                 case KeypadModel.Grayhill15Key:
                 case KeypadModel.Grayhill20Key:
-                    return new Grayhill.Keypad(model);
+                    return new Grayhill.Keypad(model, name, canDevice);
                 default:
                     throw new NotImplementedException($"No keypad implementation for model {model}");
             }
@@ -256,57 +241,8 @@ namespace CanDevices.Keypad
             throw new NotImplementedException();
         }
 
-        public virtual void Clear()
-        {
-            throw new NotImplementedException();
-        }
 
-        public virtual CanDeviceResponse GetBurnMessage()
-        {
-            return null;
-        }
-
-        public virtual List<CanDeviceResponse> GetDownloadMessages()
-        {
-            return null;
-        }
-
-        public virtual CanDeviceResponse GetSleepMessage()
-        {
-            return null;
-        }
-
-        public virtual List<CanDeviceResponse> GetUpdateMessages(int newId)
-        {
-            return null;
-        }
-
-        public virtual List<CanDeviceResponse> GetUploadMessages()
-        {
-            return null;
-        }
-
-        public virtual CanDeviceResponse GetVersionMessage()
-        {
-            return null;
-        }
-
-        public virtual bool InIdRange(int id)
-        {
-            return false;
-        }
-
-        public virtual bool IsPriorityMsg(int id)
-        {
-            return false;
-        }
-
-        public virtual bool Read(int id, byte[] data, ref ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void UpdateIsConnected()
+        public override void UpdateIsConnected()
         {
             //Have to use a property set to get OnPropertyChanged to fire
             //Otherwise could be directly in the getter

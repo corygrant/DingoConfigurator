@@ -464,13 +464,14 @@ namespace CanDevices.DingoPdm
             Keypads = new ObservableCollection<KeypadBase>();
             for (int i = 0; i < _numKeypads; i++)
             {
-                Keypads.Add(KeypadBase.Create(KeypadModel.Blink12Key));
+                Keypads.Add(KeypadBase.Create(KeypadModel.Blink12Key, $"Keypad{i + 1}", this));
                 Keypads[i].Number = i + 1;
             }
 
 			SubPages.Add(new CanDeviceSub("Settings", this));
             SubPages.Add(new DingoPdmPlot("Plots", this));
-
+            SubPages.Add(Keypads[0]);
+            SubPages.Add(Keypads[1]);
         }
 
         public void UpdateIsConnected()
