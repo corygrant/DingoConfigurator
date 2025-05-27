@@ -12,12 +12,12 @@ using System.Text.Json.Serialization;
 using CanInterfaces;
 using System.Reflection;
 
-namespace CanDevices.Keypad.BlinkMarine
+namespace CanDevices.DingoPdm
 {
-    public class Keypad : KeypadBase
+    public class Keypad : CanDeviceSub
     {
-        private List<BlinkMarine.Button> _buttons;
-        public new List<BlinkMarine.Button> Buttons
+        private List<Button> _buttons;
+        public List<Button> Buttons
         {
             get => _buttons;
             set
@@ -30,8 +30,8 @@ namespace CanDevices.Keypad.BlinkMarine
             }
         }
 
-        private List<BlinkMarine.Dial> _dials;
-        public List<BlinkMarine.Dial> Dials
+        private List<Dial> _dials;
+        public List<Dial> Dials
         {
             get => _dials;
             set
@@ -60,7 +60,191 @@ namespace CanDevices.Keypad.BlinkMarine
 
         private readonly Dictionary<int, Action<byte[]>> _messageHandlers;
 
-        
+        private bool _enabled;
+        [JsonPropertyName("enabled")]
+        public bool Enabled
+        {
+            get => _enabled;
+            set
+            {
+                if (_enabled != value)
+                {
+                    _enabled = value;
+                    OnPropertyChanged(nameof(Enabled));
+                }
+            }
+        }
+
+        private int _number;
+        [JsonPropertyName("number")]
+        public int Number
+        {
+            get => _number;
+            set
+            {
+                if (_number != value)
+                {
+                    _number = value;
+                    OnPropertyChanged(nameof(Number));
+                }
+            }
+        }
+
+        private bool _timeoutEnabled;
+        [JsonPropertyName("timeoutEnabled")]
+        public bool TimeoutEnabled
+        {
+            get => _timeoutEnabled;
+            set
+            {
+                if (_timeoutEnabled != value)
+                {
+                    _timeoutEnabled = value;
+                    OnPropertyChanged(nameof(TimeoutEnabled));
+                }
+            }
+        }
+
+        private int _timeout;
+        [JsonPropertyName("timeout")]
+        public int Timeout
+        {
+            get => _timeout;
+            set
+            {
+                if (_timeout != value)
+                {
+                    _timeout = value;
+                    OnPropertyChanged(nameof(Timeout));
+                }
+            }
+        }
+
+        private int _backlightBrightness;
+        [JsonPropertyName("backlightBrightness")]
+        public int BacklightBrightness
+        {
+            get => _backlightBrightness;
+            set
+            {
+                if (_backlightBrightness != value)
+                {
+                    _backlightBrightness = value;
+                    OnPropertyChanged(nameof(BacklightBrightness));
+                }
+            }
+        }
+
+        private int _buttonBrightness;
+        [JsonPropertyName("buttonBrightness")]
+        public int ButtonBrightness
+        {
+            get => _buttonBrightness;
+            set
+            {
+                if (_buttonBrightness != value)
+                {
+                    _buttonBrightness = value;
+                    OnPropertyChanged(nameof(ButtonBrightness));
+                }
+            }
+        }
+
+        private int _dimBacklightBrightness;
+        [JsonPropertyName("dimBacklightBrightness")]
+        public int DimBacklightBrightness
+        {
+            get => _dimBacklightBrightness;
+            set
+            {
+                if (_dimBacklightBrightness != value)
+                {
+                    _dimBacklightBrightness = value;
+                    OnPropertyChanged(nameof(DimBacklightBrightness));
+                }
+            }
+        }
+
+        private VarMap _dimmingVar;
+        [JsonPropertyName("dimmingVar")]
+        public VarMap DimmingVar
+        {
+            get => _dimmingVar;
+            set
+            {
+                if (_dimmingVar != value)
+                {
+                    _dimmingVar = value;
+                    OnPropertyChanged(nameof(DimmingVar));
+                }
+            }
+        }
+
+        private int _dimButtonBrightness;
+        [JsonPropertyName("dimButtonBrightness")]
+        public int DimButtonBrightness
+        {
+            get => _dimButtonBrightness;
+            set
+            {
+                if (_dimButtonBrightness != value)
+                {
+                    _dimButtonBrightness = value;
+                    OnPropertyChanged(nameof(DimButtonBrightness));
+                }
+            }
+        }
+
+        private KeypadModel _model;
+        [JsonPropertyName("model")]
+        public KeypadModel Model
+        {
+            get => _model;
+            set
+            {
+                if (_model != value)
+                {
+                    _model = value;
+                    ModelUpdate(_model);
+                    OnPropertyChanged(nameof(Model));
+                }
+            }
+        }
+
+        protected int _baseId;
+        [JsonPropertyName("baseId")]
+        public override int BaseId
+        {
+            get => _baseId;
+            set
+            {
+                if (_baseId != value)
+                {
+                    _baseId = value;
+                    OnPropertyChanged(nameof(BaseId));
+                }
+            }
+        }
+
+        protected bool _isConnected;
+        [JsonIgnore]
+        public override bool IsConnected
+        {
+            get => _isConnected;
+            protected set
+            {
+                if (_isConnected != value)
+                {
+                    _isConnected = value;
+                    OnPropertyChanged(nameof(IsConnected));
+                }
+            }
+        }
+
+        protected DateTime _lastRxTime { get; set; }
+        [JsonIgnore]
+        public override DateTime LastRxTime { get => _lastRxTime; }
+
         private BlinkMarineBacklightColor _backlightColor;
         [JsonPropertyName("backlightColor")]
         public BlinkMarineBacklightColor BacklightColor
@@ -81,8 +265,8 @@ namespace CanDevices.Keypad.BlinkMarine
         {
             BaseId = 0x15;
 
-            _buttons = new List<BlinkMarine.Button>();
-            _dials = new List<BlinkMarine.Dial>();
+            _buttons = new List<Button>();
+            _dials = new List<Dial>();
 
             ModelUpdate(model);
 
@@ -103,7 +287,7 @@ namespace CanDevices.Keypad.BlinkMarine
             };
         }
 
-        protected override void ModelUpdate(KeypadModel model)
+        protected void ModelUpdate(KeypadModel model)
         {
             Buttons.Clear();
             Dials.Clear();
@@ -148,13 +332,39 @@ namespace CanDevices.Keypad.BlinkMarine
                     btnCount = 12;
                     dialCount = 4;
                     break;
+                case KeypadModel.Grayhill6Key:
+                    btnCount = 6;
+                    dialCount = 0;
+                    break;
+                case KeypadModel.Grayhill8Key:
+                    btnCount = 8;
+                    dialCount = 0;
+                    break;
+                case KeypadModel.Grayhill15Key:
+                    btnCount = 15;
+                    dialCount = 0;
+                    break;
+                case KeypadModel.Grayhill20Key:
+                    btnCount = 20;
+                    dialCount = 0;
+                    break;
+                default:
+                    throw new NotImplementedException($"No keypad implementation for model {model}");
             }
 
             for (int i = 0; i < btnCount; i++)
-                Buttons.Add(new BlinkMarine.Button(Number, i));
+                Buttons.Add(new Button(Number, i));
 
             for (int i = 0; i < dialCount; i++)
-                Dials.Add(new BlinkMarine.Dial(Number, i + 1));
+                Dials.Add(new Dial(Number, i + 1));
+        }
+
+        public override void UpdateIsConnected()
+        {
+            //Have to use a property set to get OnPropertyChanged to fire
+            //Otherwise could be directly in the getter
+            TimeSpan timeSpan = DateTime.Now - LastRxTime;
+            IsConnected = timeSpan.TotalMilliseconds < 500;
         }
 
         public override void Clear()
@@ -169,17 +379,17 @@ namespace CanDevices.Keypad.BlinkMarine
             // Define a HashSet for quick lookup
             var validIds = new HashSet<int>
             {
-                _baseId + Convert.ToInt16(MsgId.NMT),
+                //_baseId + Convert.ToInt16(MsgId.NMT),
                 _baseId + Convert.ToInt16(MsgId.ButtonState),
-                _baseId + Convert.ToInt16(MsgId.DialStateA),
-                _baseId + Convert.ToInt16(MsgId.SetLedBlink),
-                _baseId + Convert.ToInt16(MsgId.DialStateB),
-                _baseId + Convert.ToInt16(MsgId.LedBrightness),
-                _baseId + Convert.ToInt16(MsgId.AnalogInput),
-                _baseId + Convert.ToInt16(MsgId.Backlight),
-                _baseId + Convert.ToInt16(MsgId.SdoResponse),
-                _baseId + Convert.ToInt16(MsgId.SdoRequest),
-                _baseId + Convert.ToInt16(MsgId.Heartbeat)
+                //_baseId + Convert.ToInt16(MsgId.DialStateA),
+                //_baseId + Convert.ToInt16(MsgId.SetLedBlink),
+                //_baseId + Convert.ToInt16(MsgId.DialStateB),
+                //_baseId + Convert.ToInt16(MsgId.LedBrightness),
+                //_baseId + Convert.ToInt16(MsgId.AnalogInput),
+                //_baseId + Convert.ToInt16(MsgId.Backlight),
+                //_baseId + Convert.ToInt16(MsgId.SdoResponse),
+                //_baseId + Convert.ToInt16(MsgId.SdoRequest),
+                //_baseId + Convert.ToInt16(MsgId.Heartbeat)
             };
 
             // Check if the id exists in the set
@@ -200,6 +410,9 @@ namespace CanDevices.Keypad.BlinkMarine
             if (_messageHandlers.TryGetValue(msgOffset, out var handler))
             {
                 handler(data);
+
+                _lastRxTime = DateTime.Now;
+
                 return true;
             }
 
@@ -270,7 +483,7 @@ namespace CanDevices.Keypad.BlinkMarine
 
         }
 
-        public override List<CanDeviceResponse> RequestMsgs(int id)
+        public List<CanDeviceResponse> RequestMsgs(int id)
         {
             List<CanDeviceResponse> requests = new List<CanDeviceResponse>();
 
@@ -333,7 +546,7 @@ namespace CanDevices.Keypad.BlinkMarine
             return requests;
         }
 
-        public override List<CanDeviceResponse> WriteMsgs(int id)
+        public List<CanDeviceResponse> WriteMsgs(int id)
         {
             List<CanDeviceResponse> requests = new List<CanDeviceResponse>();
 
@@ -372,7 +585,7 @@ namespace CanDevices.Keypad.BlinkMarine
             return data;
         }
 
-        public override bool Receive(byte[] data)
+        public bool Receive(byte[] data)
         {
             if (data.Length != 5) return false;
 

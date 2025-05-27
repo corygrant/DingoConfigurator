@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using CanDevices.DingoPdm;
 
-namespace CanDevices.Keypad
+namespace CanDevices.DingoPdm
 {
     public class ButtonBase : NotifyPropertyChangedBase
     {

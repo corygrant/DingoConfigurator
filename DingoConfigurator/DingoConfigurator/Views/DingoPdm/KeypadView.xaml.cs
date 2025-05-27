@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace DingoConfigurator.Views
 {
     /// <summary>
-    /// Interaction logic for BlinkMarineView.xaml
+    /// Interaction logic for Keypad.xaml
     /// </summary>
-    public partial class BlinkMarineView : UserControl
+    public partial class KeypadView : UserControl
     {
-        public BlinkMarineView()
+        public KeypadView()
         {
             InitializeComponent();
         }

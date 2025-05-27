@@ -26,9 +26,6 @@ using System.Reflection;
 using DingoConfigurator.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 using CanDevices.DingoDash;
-using DingoConfigurator.ViewModels.Keypad;
-using CanDevices.Keypad;
-using CanDevices.Keypad.BlinkMarine;
 
 namespace DingoConfigurator
 {
@@ -201,6 +198,8 @@ namespace DingoConfigurator
 
         public ICanDevice SelectedCanDevice { get; set; }
 
+        public object SelectedItem { get; set; }
+
         #region TreeView
 
 
@@ -223,6 +222,7 @@ namespace DingoConfigurator
             if (newValueType == typeof(DingoPdmCan))
             {
                 var device = (DingoPdmCan)newValue;
+                SelectedItem = newValue;
                 SelectedCanDevice = device;
                 CurrentViewModel = _deviceViewModels[device]["Main"];
                 SelectedDeviceToAdd = Devices.dingoPDM;
@@ -231,6 +231,7 @@ namespace DingoConfigurator
             if (newValueType == typeof(dingoPdmMaxCan))
             {
                 var device = (dingoPdmMaxCan)newValue;
+                SelectedItem = newValue;
                 SelectedCanDevice = device;
                 CurrentViewModel = _deviceViewModels[device]["Main"];
                 SelectedDeviceToAdd = Devices.dingoPDMMax;
@@ -243,6 +244,7 @@ namespace DingoConfigurator
                 if ((sub.CanDevice.GetType() == typeof(DingoPdmCan)) && sub.Name.Equals("Settings"))
                 {
                     var device = (DingoPdmCan)sub.CanDevice;
+                    SelectedItem = newValue;
                     SelectedCanDevice = device;
                     CurrentViewModel = _deviceViewModels[device]["Settings"];
                     SelectedDeviceToAdd = Devices.dingoPDM;
@@ -251,6 +253,7 @@ namespace DingoConfigurator
                 if ((sub.CanDevice.GetType() == typeof(dingoPdmMaxCan)) && sub.Name.Equals("Settings"))
                 {
                     var device = (dingoPdmMaxCan)sub.CanDevice;
+                    SelectedItem = newValue;
                     SelectedCanDevice = device;
                     CurrentViewModel = _deviceViewModels[device]["Settings"];
                     SelectedDeviceToAdd = Devices.dingoPDMMax;
@@ -266,6 +269,7 @@ namespace DingoConfigurator
                     if (plot.CanDevice.GetType() == typeof(DingoPdmCan))
                     {
                         var device = (DingoPdmCan)plot.CanDevice;
+                        SelectedItem = newValue;
                         SelectedCanDevice = device;
                         CurrentViewModel = _deviceViewModels[device]["Plots"];
                         SelectedDeviceToAdd = Devices.dingoPDM;
@@ -274,6 +278,7 @@ namespace DingoConfigurator
                     if (plot.CanDevice.GetType() == typeof(dingoPdmMaxCan))
                     {
                         var device = (dingoPdmMaxCan)plot.CanDevice;
+                        SelectedItem = newValue;
                         SelectedCanDevice = device;
                         CurrentViewModel = _deviceViewModels[device]["Plots"];
                         SelectedDeviceToAdd = Devices.dingoPDMMax;
@@ -281,15 +286,16 @@ namespace DingoConfigurator
                 }
             }
 
-            if (newValueType == typeof(CanDevices.Keypad.BlinkMarine.Keypad))
+            if (newValueType == typeof(Keypad))
             {
-                var keypad = (CanDevices.Keypad.BlinkMarine.Keypad)newValue;
+                var keypad = (Keypad)newValue;
 
                 if (keypad.Name.Equals("Keypad1"))
                 {
                     if (keypad.CanDevice.GetType() == typeof(DingoPdmCan))
                     {
                         var device = (DingoPdmCan)keypad.CanDevice;
+                        SelectedItem = newValue;
                         SelectedCanDevice = device;
                         CurrentViewModel = _deviceViewModels[device]["Keypad1"];
                         SelectedDeviceToAdd = Devices.dingoPDM;
@@ -297,6 +303,7 @@ namespace DingoConfigurator
                     if (keypad.CanDevice.GetType() == typeof(dingoPdmMaxCan))
                     {
                         var device = (dingoPdmMaxCan)keypad.CanDevice;
+                        SelectedItem = newValue;
                         SelectedCanDevice = device;
                         CurrentViewModel = _deviceViewModels[device]["Keypad1"];
                         SelectedDeviceToAdd = Devices.dingoPDMMax;
@@ -308,6 +315,7 @@ namespace DingoConfigurator
                     if (keypad.CanDevice.GetType() == typeof(DingoPdmCan))
                     {
                         var device = (DingoPdmCan)keypad.CanDevice;
+                        SelectedItem = newValue;
                         SelectedCanDevice = device;
                         CurrentViewModel = _deviceViewModels[device]["Keypad2"];
                         SelectedDeviceToAdd = Devices.dingoPDM;
@@ -315,6 +323,7 @@ namespace DingoConfigurator
                     if (keypad.CanDevice.GetType() == typeof(dingoPdmMaxCan))
                     {
                         var device = (dingoPdmMaxCan)keypad.CanDevice;
+                        SelectedItem = newValue;
                         SelectedCanDevice = device;
                         CurrentViewModel = _deviceViewModels[device]["Keypad2"];
                         SelectedDeviceToAdd = Devices.dingoPDMMax;
@@ -325,6 +334,7 @@ namespace DingoConfigurator
             if (newValueType == typeof(CanBoardCan))
             {
                 var device = (CanBoardCan)newValue;
+                SelectedItem = newValue;
                 SelectedCanDevice = device;
                 CurrentViewModel = _deviceViewModels[device]["Main"];
                 SelectedDeviceToAdd = Devices.CANBoard;
@@ -333,6 +343,7 @@ namespace DingoConfigurator
             if (newValueType == typeof(CanMsgLog))
             {
                 var device = (CanMsgLog)newValue;
+                SelectedItem = newValue;
                 SelectedCanDevice = device;
                 CurrentViewModel = _deviceViewModels[device]["Main"];
                 SelectedDeviceToAdd = Devices.CanMsgLog;
@@ -341,6 +352,7 @@ namespace DingoConfigurator
             if (newValueType == typeof(SoftButtonBox))
             {
                 var device = (SoftButtonBox)newValue;
+                SelectedItem = newValue;
                 SelectedCanDevice = device;
                 CurrentViewModel = _deviceViewModels[device]["Main"];
                 SelectedDeviceToAdd = Devices.SoftButtonBox;
@@ -718,14 +730,15 @@ namespace DingoConfigurator
             if (devType == typeof(DingoPdmCan))
             {
                 var pdm = (DingoPdmCan)device;
+                SelectedItem = pdm;
                 SelectedCanDevice = pdm;
                 _deviceViewModels[pdm] = new Dictionary<string, ViewModelBase>
                 {
                     { "Main", new DingoPdmViewModel(this) },
                     { "Settings", new DingoPdmSettingsViewModel(this) },
                     { "Plots", new DingoPdmPlotsViewModel(this) },
-                    { "Keypad1", new BlinkMarineViewModel(this) },
-                    { "Keypad2", new BlinkMarineViewModel(this) }
+                    { "Keypad1", new KeypadViewModel(this) },
+                    { "Keypad2", new KeypadViewModel(this) }
                 };
 
             }
@@ -733,20 +746,22 @@ namespace DingoConfigurator
             if (devType == typeof(dingoPdmMaxCan))
             {
                 var pdmMax = (dingoPdmMaxCan)device;
+                SelectedItem = pdmMax;
                 SelectedCanDevice = pdmMax;
                 _deviceViewModels[pdmMax] = new Dictionary<string, ViewModelBase>
                 {
                     { "Main", new DingoPdmViewModel(this) },
                     { "Settings", new DingoPdmSettingsViewModel(this) },
                     { "Plots", new DingoPdmPlotsViewModel(this) },
-                    { "Keypad", new BlinkMarineViewModel(this) },
-                    { "Keypad2", new BlinkMarineViewModel(this) }
+                    { "Keypad1", new KeypadViewModel(this) },
+                    { "Keypad2", new KeypadViewModel(this) }
                 };
             }
 
             if (devType == typeof(CanBoardCan))
             {
                 var board = (CanBoardCan)device;
+                SelectedItem = board;
                 SelectedCanDevice = board;
                 _deviceViewModels[board] = new Dictionary<string, ViewModelBase>
                 {
@@ -757,6 +772,7 @@ namespace DingoConfigurator
             if (devType == typeof(CanMsgLog))
             {
                 var log = (CanMsgLog)device;
+                SelectedItem = log;
                 SelectedCanDevice = log;
                 _deviceViewModels[log] = new Dictionary<string, ViewModelBase>
                 {
@@ -767,6 +783,7 @@ namespace DingoConfigurator
             if (devType == typeof(SoftButtonBox))
             {
                 var sbb = (SoftButtonBox)device;
+                SelectedItem = sbb;
                 SelectedCanDevice = sbb;
                 _deviceViewModels[sbb] = new Dictionary<string, ViewModelBase>
                 {

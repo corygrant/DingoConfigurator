@@ -1,5 +1,4 @@
-﻿using CanDevices.Keypad;
-using CanInterfaces;
+﻿using CanInterfaces;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -379,9 +378,9 @@ namespace CanDevices.DingoPdm
 			}
 		}
 
-        protected ObservableCollection<KeypadBase> _keypads;
-        [JsonIgnore]
-        public ObservableCollection<KeypadBase> Keypads
+        protected ObservableCollection<Keypad> _keypads;
+        [JsonPropertyName("keypads")]
+        public ObservableCollection<Keypad> Keypads
         {
             get => _keypads;
             protected set
@@ -461,17 +460,19 @@ namespace CanDevices.DingoPdm
 				Conditions[i].Number = i + 1;
 			}
 
-            Keypads = new ObservableCollection<KeypadBase>();
+            Keypads = new ObservableCollection<Keypad>();
             for (int i = 0; i < _numKeypads; i++)
             {
-                Keypads.Add(KeypadBase.Create(KeypadModel.Blink12Key, $"Keypad{i + 1}", this));
+                Keypads.Add(new Keypad(KeypadModel.Blink12Key, $"Keypad{i + 1}", this));
                 Keypads[i].Number = i + 1;
             }
 
 			SubPages.Add(new CanDeviceSub("Settings", this));
             SubPages.Add(new DingoPdmPlot("Plots", this));
-            SubPages.Add(Keypads[0]);
-            SubPages.Add(Keypads[1]);
+            for(int i= 0; i < _numKeypads; i++)
+            {
+                SubPages.Add(Keypads[i]);
+            }
         }
 
         public void UpdateIsConnected()
@@ -480,6 +481,11 @@ namespace CanDevices.DingoPdm
             //Otherwise could be directly in the getter
             TimeSpan timeSpan = DateTime.Now - LastRxTime;
             IsConnected = timeSpan.TotalMilliseconds < 500;
+
+            foreach (var subPage in _subPages)
+            {
+                subPage.UpdateIsConnected();
+            }
         }
 
         public bool IsPriorityMsg(int id)

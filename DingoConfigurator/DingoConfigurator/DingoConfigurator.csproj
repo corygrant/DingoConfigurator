@@ -137,8 +137,7 @@
     <Compile Include="ViewModels\DingoPdm\Plots\BatteryPlot.cs" />
     <Compile Include="ViewModels\DingoPdm\Plots\CurrentOutputPlot.cs" />
     <Compile Include="ViewModels\DingoPdm\Plots\StatePlot.cs" />
-    <Compile Include="ViewModels\Keypad\BlinkMarineViewModel.cs" />
-    <Compile Include="ViewModels\Keypad\GrayhillViewModel.cs" />
+    <Compile Include="ViewModels\DingoPdm\KeypadViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="ViewModels\DingoDash\DingoDashViewModel.cs" />
@@ -191,6 +190,9 @@
     <Compile Include="Views\DingoPdm\InputsDataGrid.xaml.cs">
       <DependentUpon>InputsDataGrid.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DingoPdm\KeypadView.xaml.cs">
+      <DependentUpon>KeypadView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DingoPdm\OutputsDataGrid.xaml.cs">
       <DependentUpon>OutputsDataGrid.xaml</DependentUpon>
     </Compile>
@@ -211,12 +213,6 @@
     </Compile>
     <Compile Include="Views\DingoPdm\WipersSpeedMapDataGrid.xaml.cs">
       <DependentUpon>WipersSpeedMapDataGrid.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Keypad\BlinkMarineView.xaml.cs">
-      <DependentUpon>BlinkMarineView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Keypad\GrayhillView.xaml.cs">
-      <DependentUpon>GrayhillView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SoftButtonBoxView.xaml.cs">
       <DependentUpon>SoftButtonBoxView.xaml</DependentUpon>
@@ -293,6 +289,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\DingoPdm\KeypadView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DingoPdm\OutputsDataGrid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -318,14 +318,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DingoPdm\WipersSpeedMapDataGrid.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Keypad\BlinkMarineView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Keypad\GrayhillView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

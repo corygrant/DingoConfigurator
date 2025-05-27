@@ -44,7 +44,7 @@ namespace CanDevices
             }
         }
 
-        public DateTime LastRxTime => CanDevice.LastRxTime;
+        public virtual DateTime LastRxTime => CanDevice.LastRxTime;
 
         public CanDeviceSub(string name, ICanDevice canDevice)
         {

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using CanDevices.DingoPdm;
 using CanInterfaces;
 
-namespace CanDevices.Keypad.BlinkMarine
+namespace CanDevices.DingoPdm
 {
-    public class Button : CanDevices.Keypad.ButtonBase
+    public class Button : ButtonBase
     {
 
         private int _numValColors;
