@@ -164,11 +164,15 @@ namespace CommsHandler
                                 msg.DeviceBaseId = cd.BaseId;
                                 msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout, _msgTimeout);
                                 var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
-                                _queue.TryAdd(key, msg);
-                                _can.Write(msg.Data);
-                                ProcessMessage(msg.Data);//Catch with CanMsgLog
-                                
-                                Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
+                                if (_queue.TryAdd(key, msg))
+                                {
+                                    _can.Write(msg.Data);
+                                    ProcessMessage(msg.Data);//Catch with CanMsgLog
+
+                                    Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
+                                }
+                                else
+                                    Logger.Error($"Failed to add to queue: {msg.MsgDescription}");
                             }
                             msgs.Clear();
                         }
@@ -195,11 +199,19 @@ namespace CommsHandler
                                 msg.DeviceBaseId = cd.BaseId;
                                 msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout, _msgTimeout);
                                 var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
-                                _queue.TryAdd(key, msg);
-                                _can.Write(msg.Data);
-                                ProcessMessage(msg.Data);//Catch with CanMsgLog
+                                if (_queue.TryAdd(key, msg))
+                                {
+                                    if (!_can.Write(msg.Data))
+                                    {
+                                        Logger.Error("Failed to write to CAN");
+                                        Disconnect();
+                                    }
+                                    ProcessMessage(msg.Data);//Catch with CanMsgLog
 
-                                Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
+                                    Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
+                                }
+                                else
+                                    Logger.Error($"Failed to add to queue: {msg.MsgDescription}");
                             }
                             msgs.Clear();
                         }
@@ -227,15 +239,19 @@ namespace CommsHandler
                                     msg.DeviceBaseId = newId; //Set msg ID to new ID so response is processed properly
                                     msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout, _msgTimeout);
                                     var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
-                                    _queue.TryAdd(key, msg);
-                                    if (!_can.Write(msg.Data))
+                                    if (_queue.TryAdd(key, msg))
                                     {
-                                        Logger.Error("Failed to write to CAN");
-                                        Disconnect();
-                                    }
-                                    ProcessMessage(msg.Data);//Catch with CanMsgLog
+                                        if (!_can.Write(msg.Data))
+                                        {
+                                            Logger.Error("Failed to write to CAN");
+                                            Disconnect();
+                                        }
+                                        ProcessMessage(msg.Data);//Catch with CanMsgLog
 
-                                    Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
+                                        Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
+                                    }
+                                    else
+                                        Logger.Error($"Failed to add to queue: {msg.MsgDescription}");
                                 }
                                 msgs.Clear();
                             }
@@ -268,12 +284,21 @@ namespace CommsHandler
                             msg.DeviceBaseId = cd.BaseId;
                             msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout * 10, _msgTimeout * 10); //Check for burn slower
                             var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
-                            _queue.TryAdd(key, msg);
-                            _can.Write(msg.Data);
-                            ProcessMessage(msg.Data);//Catch with CanMsgLog
+                            if (_queue.TryAdd(key, msg))
+                            {
+                                if (!_can.Write(msg.Data))
+                                {
+                                    Logger.Error("Failed to write to CAN");
+                                    Disconnect();
+                                }
+                                ProcessMessage(msg.Data);//Catch with CanMsgLog
 
 
-                            Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
+                                Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
+                            }
+                            else
+                                Logger.Error($"Failed to add to queue: {msg.MsgDescription}");
+
                         }
                     }
                 }
@@ -296,11 +321,19 @@ namespace CommsHandler
                             msg.DeviceBaseId = cd.BaseId;
                             msg.TimeSentTimer = new Timer(SentTimeElapsed, msg, _msgTimeout, _msgTimeout);
                             var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
-                            _queue.TryAdd(key, msg);
-                            _can.Write(msg.Data);
-                            ProcessMessage(msg.Data);//Catch with CanMsgLog
+                            if (_queue.TryAdd(key, msg))
+                            {
+                                if (!_can.Write(msg.Data))
+                                {
+                                    Logger.Error("Failed to write to CAN");
+                                    Disconnect();
+                                }
+                                ProcessMessage(msg.Data);//Catch with CanMsgLog
 
-                            Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
+                                Thread.Sleep(_sleepTime); //Slow down, device can't respond fast enough
+                            }
+                            else
+                                Logger.Error($"Failed to add to queue: {msg.MsgDescription}");
                         }
                     }
                 }
@@ -426,7 +459,7 @@ namespace CommsHandler
             }
             else
             {
-                Logger.Error($"No response after {_maxReceiveAttempts} attempts {msg.MsgDescription}");
+                Logger.Error($"No response after {msg.ReceiveAttempts} attempts {msg.MsgDescription}");
                 msg.TimeSentTimer?.Dispose();
                 var key = (msg.DeviceBaseId, msg.Prefix, msg.Index);
                 _queue.TryRemove(key, out _);

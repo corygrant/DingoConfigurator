@@ -466,7 +466,9 @@ namespace CanDevices.DingoPdm
                 Keypads.Add(new Keypad(KeypadModel.Blink12Key, i + 1, $"Keypad{i + 1}", this));
             }
 
-			SubPages.Add(new CanDeviceSub("Settings", this));
+            Keypads[1].BaseId = 0x100;
+
+            SubPages.Add(new CanDeviceSub("Settings", this));
             SubPages.Add(new DingoPdmPlot("Plots", this));
             for(int i= 0; i < _numKeypads; i++)
             {
@@ -529,6 +531,9 @@ namespace CanDevices.DingoPdm
             if (id == BaseId + 13) ReadMessage13(data);
             if (id == BaseId + 14) ReadMessage14(data);
             if (id == BaseId + 15) ReadMessage15(data);
+            if (id == BaseId + 16) ReadMessage16(data);
+            if (id == BaseId + 17) ReadMessage17(data);
+            if (id == BaseId + 18) ReadMessage18(data);
 
             if (id == BaseId + 30)
             {
@@ -793,6 +798,67 @@ namespace CanDevices.DingoPdm
             Outputs[5].CurrentDutyCycle = data[5];
             Outputs[6].CurrentDutyCycle = data[6];
             Outputs[7].CurrentDutyCycle = data[7];
+        }
+
+        protected virtual void ReadMessage16(byte[] data)
+        {
+            Keypads[0].SetButtonState(0, Convert.ToBoolean(data[0] & 0x01));
+            Keypads[0].SetButtonState(1, Convert.ToBoolean((data[0] >> 1) & 0x01));
+            Keypads[0].SetButtonState(2, Convert.ToBoolean((data[0] >> 2) & 0x01));
+            Keypads[0].SetButtonState(3, Convert.ToBoolean((data[0] >> 3) & 0x01));
+            Keypads[0].SetButtonState(4, Convert.ToBoolean((data[0] >> 4) & 0x01));
+            Keypads[0].SetButtonState(5, Convert.ToBoolean((data[0] >> 5) & 0x01));
+            Keypads[0].SetButtonState(6, Convert.ToBoolean((data[0] >> 6) & 0x01));
+            Keypads[0].SetButtonState(7, Convert.ToBoolean((data[0] >> 7) & 0x01));
+            Keypads[0].SetButtonState(8, Convert.ToBoolean(data[1] & 0x01));
+            Keypads[0].SetButtonState(9, Convert.ToBoolean((data[1] >> 1) & 0x01));
+            Keypads[0].SetButtonState(10, Convert.ToBoolean((data[1] >> 2) & 0x01));
+            Keypads[0].SetButtonState(11, Convert.ToBoolean((data[1] >> 3) & 0x01));
+            Keypads[0].SetButtonState(12, Convert.ToBoolean((data[1] >> 4) & 0x01));
+            Keypads[0].SetButtonState(13, Convert.ToBoolean((data[1] >> 5) & 0x01));
+            Keypads[0].SetButtonState(14, Convert.ToBoolean((data[1] >> 6) & 0x01));
+            Keypads[0].SetButtonState(15, Convert.ToBoolean((data[1] >> 7) & 0x01));
+            Keypads[0].SetButtonState(16, Convert.ToBoolean(data[2] & 0x01));
+            Keypads[0].SetButtonState(17, Convert.ToBoolean((data[2] >> 1) & 0x01));
+            Keypads[0].SetButtonState(18, Convert.ToBoolean((data[2] >> 2) & 0x01));
+            Keypads[0].SetButtonState(19, Convert.ToBoolean((data[2] >> 3) & 0x01));
+
+            Keypads[1].SetButtonState(0, Convert.ToBoolean(data[3] & 0x01));
+            Keypads[1].SetButtonState(1, Convert.ToBoolean((data[3] >> 1) & 0x01));
+            Keypads[1].SetButtonState(2, Convert.ToBoolean((data[3] >> 2) & 0x01));
+            Keypads[1].SetButtonState(3, Convert.ToBoolean((data[3] >> 3) & 0x01));
+            Keypads[1].SetButtonState(4, Convert.ToBoolean((data[3] >> 4) & 0x01));
+            Keypads[1].SetButtonState(5, Convert.ToBoolean((data[3] >> 5) & 0x01));
+            Keypads[1].SetButtonState(6, Convert.ToBoolean((data[3] >> 6) & 0x01));
+            Keypads[1].SetButtonState(7, Convert.ToBoolean((data[3] >> 7) & 0x01));
+            Keypads[1].SetButtonState(8, Convert.ToBoolean(data[4] & 0x01));
+            Keypads[1].SetButtonState(9, Convert.ToBoolean((data[4] >> 1) & 0x01));
+            Keypads[1].SetButtonState(10, Convert.ToBoolean((data[4] >> 2) & 0x01));
+            Keypads[1].SetButtonState(11, Convert.ToBoolean((data[4] >> 3) & 0x01));
+            Keypads[1].SetButtonState(12, Convert.ToBoolean((data[4] >> 4) & 0x01));
+            Keypads[1].SetButtonState(13, Convert.ToBoolean((data[4] >> 5) & 0x01));
+            Keypads[1].SetButtonState(14, Convert.ToBoolean((data[4] >> 6) & 0x01));
+            Keypads[1].SetButtonState(15, Convert.ToBoolean((data[4] >> 7) & 0x01));
+            Keypads[1].SetButtonState(16, Convert.ToBoolean(data[5] & 0x01));
+            Keypads[1].SetButtonState(17, Convert.ToBoolean((data[5] >> 1) & 0x01));
+            Keypads[1].SetButtonState(18, Convert.ToBoolean((data[5] >> 2) & 0x01));
+            Keypads[1].SetButtonState(19, Convert.ToBoolean((data[5] >> 3) & 0x01));
+        }
+
+        protected virtual void ReadMessage17(byte[] data)
+        {
+            Keypads[0].SetDialTicks(0, data[0] + (data[1] << 8));
+            Keypads[0].SetDialTicks(1, data[2] + (data[3] << 8));
+            Keypads[0].SetDialTicks(2, data[4] + (data[5] << 8));
+            Keypads[0].SetDialTicks(3, data[6] + (data[7] << 8));
+        }
+
+        protected virtual void ReadMessage18(byte[] data)
+        {
+            Keypads[1].SetDialTicks(0, data[0] + (data[1] << 8));
+            Keypads[1].SetDialTicks(1, data[2] + (data[3] << 8));
+            Keypads[1].SetDialTicks(2, data[4] + (data[5] << 8));
+            Keypads[1].SetDialTicks(3, data[6] + (data[7] << 8));
         }
 
         protected void ReadSettingsResponse(byte[] data, ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)
@@ -1091,12 +1157,12 @@ namespace CanDevices.DingoPdm
 
                 case MessagePrefix.KeypadButton:
                     index = data[1] & 0x07;
-                    buttonIndex = (data[1] & 0xF8) >> 3;
+                    buttonIndex = data[1] >> 3;
                     if ((index >= 0 && index < _numKeypads) && (buttonIndex >= 0 && buttonIndex < Keypads[index].Buttons.Count))
                     {
                         if (Keypads[index].Buttons[buttonIndex].Receive(data))
                         {
-                            key = (BaseId, (int)MessagePrefix.KeypadButton, index);
+                            key = (BaseId, (int)MessagePrefix.KeypadButton, (index & 0x07) + (buttonIndex << 3));
                             if (queue.TryGetValue(key, out response))
                             {
                                 response.TimeSentTimer?.Dispose();
@@ -1109,12 +1175,12 @@ namespace CanDevices.DingoPdm
 
                 case MessagePrefix.KeypadButtonLed:
                     index = data[1] & 0x07;
-                    buttonIndex = (data[1] & 0xF8) >> 3;
+                    buttonIndex = data[1] >> 3;
                     if ((index >= 0 && index < _numKeypads) && (buttonIndex >= 0 && buttonIndex < Keypads[index].Buttons.Count))
                     {
                         if (Keypads[index].Buttons[buttonIndex].Receive(data))
                         {
-                            key = (BaseId, (int)MessagePrefix.KeypadButtonLed, index);
+                            key = (BaseId, (int)MessagePrefix.KeypadButtonLed, (index & 0x07) + (buttonIndex << 3));
                             if (queue.TryGetValue(key, out response))
                             {
                                 response.TimeSentTimer?.Dispose();
@@ -1127,7 +1193,7 @@ namespace CanDevices.DingoPdm
 
                 case MessagePrefix.KeypadDial:
                     index = data[1] & 0x07;
-                    buttonIndex = (data[1] & 0xF8) >> 3;
+                    buttonIndex = data[1] >> 3;
                     if ((index >= 0 && index < _numKeypads) && (buttonIndex >= 0 && buttonIndex < Keypads[index].Dials.Count))
                     {
                         if (Keypads[index].Buttons[buttonIndex].Receive(data))

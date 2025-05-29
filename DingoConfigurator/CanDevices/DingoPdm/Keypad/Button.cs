@@ -115,8 +115,8 @@ namespace CanDevices.DingoPdm
             {
                 new CanDeviceResponse
                 {
-                    Prefix = Convert.ToInt16(MessagePrefix.Keypad),
-                    Index = Number - 1,
+                    Prefix = Convert.ToInt16(MessagePrefix.KeypadButton),
+                    Index = ((KeypadNumber - 1) & 0x07) + ((Number - 1) << 3),
                     Data = new CanInterfaceData
                     {
                         Id = id,
@@ -127,8 +127,8 @@ namespace CanDevices.DingoPdm
                 },
                 new CanDeviceResponse
                 {
-                    Prefix = Convert.ToInt16(MessagePrefix.Keypad),
-                    Index = Number - 1,
+                    Prefix = Convert.ToInt16(MessagePrefix.KeypadButtonLed),
+                    Index = ((KeypadNumber - 1) & 0x07) + ((Number - 1) << 3),
                     Data = new CanInterfaceData
                     {
                         Id = id,
@@ -162,8 +162,8 @@ namespace CanDevices.DingoPdm
             {
                 new CanDeviceResponse
                 {
-                    Prefix = Convert.ToInt16(MessagePrefix.Keypad),
-                    Index = Number - 1,
+                    Prefix = Convert.ToInt16(MessagePrefix.KeypadButton),
+                    Index = ((KeypadNumber - 1) & 0x07) + ((Number - 1) << 3),
                     Data = new CanInterfaceData
                     {
                         Id = id,
@@ -174,8 +174,8 @@ namespace CanDevices.DingoPdm
                 },
                 new CanDeviceResponse
                 {
-                    Prefix = Convert.ToInt16(MessagePrefix.Keypad),
-                    Index = Number - 1,
+                    Prefix = Convert.ToInt16(MessagePrefix.KeypadButtonLed),
+                    Index = ((KeypadNumber - 1) & 0x07) + ((Number - 1) << 3),
                     Data = new CanInterfaceData
                     {
                         Id = id,
@@ -218,7 +218,7 @@ namespace CanDevices.DingoPdm
         {
             byte[] data = new byte[8];
             data[0] = Convert.ToByte(MessagePrefix.KeypadButton);
-            data[1] = Convert.ToByte(((KeypadNumber-1) & 0x07) + ((Number - 1) & 0xF8) >> 3);
+            data[1] = Convert.ToByte(((KeypadNumber-1) & 0x07) + ((Number - 1) << 3));
             data[2] = Convert.ToByte(   Convert.ToByte(Enabled) + 
                                         Convert.ToByte(HasDial) << 1 + 
                                         Convert.ToByte(Mode) << 2);
@@ -262,7 +262,7 @@ namespace CanDevices.DingoPdm
         {
             byte[] data = new byte[8];
             data[0] = Convert.ToByte(MessagePrefix.KeypadButtonLed);
-            data[1] = Convert.ToByte(((KeypadNumber - 1) & 0x07) + ((Number - 1) & 0xF8) >> 3);
+            data[1] = Convert.ToByte(((KeypadNumber - 1) & 0x07) + ((Number - 1) << 3));
             data[2] = Convert.ToByte((Convert.ToByte(ValColors[0]) & 0x0F) +
                                       (Convert.ToByte(ValColors[1]) << 4));
             data[3] = Convert.ToByte((Convert.ToByte(ValColors[2]) & 0x0F) +

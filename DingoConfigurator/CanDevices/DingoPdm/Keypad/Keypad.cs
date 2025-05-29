@@ -458,6 +458,20 @@ namespace CanDevices.DingoPdm
             return false;
         }
 
+        public void SetButtonState(int index, bool state)
+        {
+            if (index < 0 || index > (Buttons.Count - 1))
+                return;
+            Buttons[index].State = state;
+        }
+
+        public void SetDialTicks(int index, int ticks)
+        {
+            if (index < 0 || index > (Dials.Count - 1))
+                return;
+            Dials[index].Ticks = ticks;
+        }
+
         private void NMT(byte[] data)
         {
             if (data[0] == 1)
@@ -466,6 +480,9 @@ namespace CanDevices.DingoPdm
 
         private void ButtonState(byte[] data)
         {
+            /*
+             * Use CAN data from PDM, not from the keypad
+             * 
             Buttons[0].State = Convert.ToBoolean(data[0] & 0x01);
             Buttons[1].State = Convert.ToBoolean((data[0] & 0x02) >> 1);
             Buttons[2].State = Convert.ToBoolean((data[0] & 0x04) >> 2);
@@ -478,6 +495,7 @@ namespace CanDevices.DingoPdm
             Buttons[9].State = Convert.ToBoolean((data[1] & 0x02) >> 1);
             Buttons[10].State = Convert.ToBoolean((data[1] & 0x04) >> 2);
             Buttons[11].State = Convert.ToBoolean((data[1] & 0x08) >> 3);
+            */
         }
 
         private void SetLed(byte[] data)

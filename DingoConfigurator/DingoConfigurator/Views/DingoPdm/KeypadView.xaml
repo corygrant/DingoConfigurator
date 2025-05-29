@@ -3,19 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cd="clr-namespace:CanDevices.DingoPdm;assembly=CanDevices"
              xmlns:local="clr-namespace:DingoConfigurator.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TextBox Grid.Row="0"
-                 Grid.Column="0"
-                 Padding="5"
-                 Margin="5"
-                 MinWidth="50"
-                 MaxWidth="100"
-                 HorizontalAlignment="Left"
-                 HorizontalContentAlignment="Center"
-                 IsReadOnly="True"
-                 Text="{Binding Kp.BaseId, Mode=OneWay}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" MinHeight="100"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0">
+            
+        </Grid>
+        <GridSplitter Grid.Row="1" Grid.Column="0"/>
+        <local:KeypadButtonView Grid.Row="2" Grid.Column="0" DataContext="{Binding Kp}"/>
     </Grid>
 </UserControl>

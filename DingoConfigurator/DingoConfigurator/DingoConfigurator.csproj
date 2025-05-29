@@ -190,6 +190,9 @@
     <Compile Include="Views\DingoPdm\InputsDataGrid.xaml.cs">
       <DependentUpon>InputsDataGrid.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DingoPdm\KeypadButtonView.xaml.cs">
+      <DependentUpon>KeypadButtonView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DingoPdm\KeypadView.xaml.cs">
       <DependentUpon>KeypadView.xaml</DependentUpon>
     </Compile>
@@ -286,6 +289,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DingoPdm\InputsDataGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DingoPdm\KeypadButtonView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
