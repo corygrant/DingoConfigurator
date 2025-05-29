@@ -132,6 +132,7 @@ namespace CanDevices.DingoPdm
 
         public ButtonBase(int keypadNum, int buttonNum)
         {
+            _valVars = new VarMap[4];
             KeypadNumber = keypadNum;
             Number = buttonNum;
         }

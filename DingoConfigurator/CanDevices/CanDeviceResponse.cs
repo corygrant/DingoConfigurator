@@ -14,8 +14,6 @@ namespace CanDevices
         public int Prefix { get; set; }
         public int Index { get; set; } //If used, ex: output 1 , output 2, etc
         public CanInterfaceData Data { get; set; }
-        public bool Sent { get; set; }
-        public bool Received { get; set; }
         public Timer TimeSentTimer { get; set; }
         public int ReceiveAttempts { get; set; }
         public int DeviceBaseId { get; set; }

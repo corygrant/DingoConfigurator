@@ -11,6 +11,8 @@ using CanDevices.DingoPdm;
 using System.Text.Json.Serialization;
 using CanInterfaces;
 using System.Reflection;
+using System.Collections.Specialized;
+using System.Globalization;
 
 namespace CanDevices.DingoPdm
 {
@@ -260,10 +262,42 @@ namespace CanDevices.DingoPdm
             }
         }
 
+        private int _currentBrightness;
+        [JsonIgnore]
+        public int CurrentBrightness
+        {
+            get => _currentBrightness;
+            set
+            {
+                if (_currentBrightness != value)
+                {
+                    _currentBrightness = value;
+                    OnPropertyChanged(nameof(CurrentBrightness));
+                }
+            }
+        }
+
+        private BlinkMarineBacklightColor _currentBacklightColor;
+        [JsonIgnore]
+        public BlinkMarineBacklightColor CurrentBacklightColor
+        {
+            get => _currentBacklightColor;
+            set
+            {
+                if (_currentBacklightColor != value)
+                {
+                    _currentBacklightColor = value;
+                    OnPropertyChanged(nameof(CurrentBacklightColor));
+                }
+            }
+        }
+
         
-        public Keypad(KeypadModel model, string name, ICanDevice canDevice) : base(name, canDevice)
+        public Keypad(KeypadModel model, int num, string name, ICanDevice canDevice) : base(name, canDevice)
         {
             BaseId = 0x15;
+
+            Number = num;
 
             _buttons = new List<Button>();
             _dials = new List<Dial>();
@@ -353,7 +387,7 @@ namespace CanDevices.DingoPdm
             }
 
             for (int i = 0; i < btnCount; i++)
-                Buttons.Add(new Button(Number, i));
+                Buttons.Add(new Button(Number, i + 1));
 
             for (int i = 0; i < dialCount; i++)
                 Dials.Add(new Dial(Number, i + 1));
@@ -379,17 +413,17 @@ namespace CanDevices.DingoPdm
             // Define a HashSet for quick lookup
             var validIds = new HashSet<int>
             {
-                //_baseId + Convert.ToInt16(MsgId.NMT),
+                _baseId + Convert.ToInt16(MsgId.NMT),
                 _baseId + Convert.ToInt16(MsgId.ButtonState),
-                //_baseId + Convert.ToInt16(MsgId.DialStateA),
-                //_baseId + Convert.ToInt16(MsgId.SetLedBlink),
-                //_baseId + Convert.ToInt16(MsgId.DialStateB),
-                //_baseId + Convert.ToInt16(MsgId.LedBrightness),
-                //_baseId + Convert.ToInt16(MsgId.AnalogInput),
-                //_baseId + Convert.ToInt16(MsgId.Backlight),
-                //_baseId + Convert.ToInt16(MsgId.SdoResponse),
-                //_baseId + Convert.ToInt16(MsgId.SdoRequest),
-                //_baseId + Convert.ToInt16(MsgId.Heartbeat)
+                _baseId + Convert.ToInt16(MsgId.DialStateA),
+                _baseId + Convert.ToInt16(MsgId.SetLedBlink),
+                _baseId + Convert.ToInt16(MsgId.DialStateB),
+                _baseId + Convert.ToInt16(MsgId.LedBrightness),
+                _baseId + Convert.ToInt16(MsgId.AnalogInput),
+                _baseId + Convert.ToInt16(MsgId.Backlight),
+                _baseId + Convert.ToInt16(MsgId.SdoResponse),
+                _baseId + Convert.ToInt16(MsgId.SdoRequest),
+                _baseId + Convert.ToInt16(MsgId.Heartbeat)
             };
 
             // Check if the id exists in the set
@@ -411,7 +445,12 @@ namespace CanDevices.DingoPdm
             {
                 handler(data);
 
-                _lastRxTime = DateTime.Now;
+                //Only reset Rx timer if the msg comes from the keypad, not the PDM
+                if (FromKeypad.TryGetValue((MsgId)msgOffset, out bool fromKeypad))
+                {
+                    if (fromKeypad)
+                        _lastRxTime = DateTime.Now;
+                }
 
                 return true;
             }
@@ -443,44 +482,127 @@ namespace CanDevices.DingoPdm
 
         private void SetLed(byte[] data)
         {
+            Buttons[0].ActiveColor.Red = Convert.ToBoolean(data[0] & 0x01);
+            Buttons[1].ActiveColor.Red = Convert.ToBoolean((data[0] >> 1) & 0x01);
+            Buttons[2].ActiveColor.Red = Convert.ToBoolean((data[0] >> 2) & 0x01);
+            Buttons[3].ActiveColor.Red = Convert.ToBoolean((data[0] >> 3) & 0x01);
+            Buttons[4].ActiveColor.Red = Convert.ToBoolean((data[0] >> 4) & 0x01);
+            Buttons[5].ActiveColor.Red = Convert.ToBoolean((data[0] >> 5) & 0x01);
+            Buttons[6].ActiveColor.Red = Convert.ToBoolean((data[0] >> 6) & 0x01);
+            Buttons[7].ActiveColor.Red = Convert.ToBoolean((data[0] >> 7) & 0x01);
+            Buttons[8].ActiveColor.Red = Convert.ToBoolean(data[1] & 0x01);
+            Buttons[9].ActiveColor.Red = Convert.ToBoolean((data[1] >> 1) & 0x01);
+            Buttons[10].ActiveColor.Red = Convert.ToBoolean((data[1] >> 2) & 0x01);
+            Buttons[11].ActiveColor.Red = Convert.ToBoolean((data[1] >> 3) & 0x01);
 
+            Buttons[0].ActiveColor.Green = Convert.ToBoolean((data[1] >> 4) & 0x01);
+            Buttons[1].ActiveColor.Green = Convert.ToBoolean((data[1] >> 5) & 0x01);
+            Buttons[2].ActiveColor.Green = Convert.ToBoolean((data[1] >> 6) & 0x01);
+            Buttons[3].ActiveColor.Green = Convert.ToBoolean((data[1] >> 7) & 0x01);
+            Buttons[4].ActiveColor.Green = Convert.ToBoolean(data[2] & 0x01);
+            Buttons[5].ActiveColor.Green = Convert.ToBoolean((data[2] >> 1) & 0x01);
+            Buttons[6].ActiveColor.Green = Convert.ToBoolean((data[2] >> 2) & 0x01);
+            Buttons[7].ActiveColor.Green = Convert.ToBoolean((data[2] >> 3) & 0x01);
+            Buttons[8].ActiveColor.Green = Convert.ToBoolean((data[2] >> 4) & 0x01);
+            Buttons[9].ActiveColor.Green = Convert.ToBoolean((data[2] >> 5) & 0x01);
+            Buttons[10].ActiveColor.Green = Convert.ToBoolean((data[2] >> 6) & 0x01);
+            Buttons[11].ActiveColor.Green = Convert.ToBoolean((data[2] >> 7) & 0x01);
+
+            Buttons[0].ActiveColor.Blue = Convert.ToBoolean(data[3] & 0x01);
+            Buttons[1].ActiveColor.Blue = Convert.ToBoolean((data[3] >> 1) & 0x01);
+            Buttons[2].ActiveColor.Blue = Convert.ToBoolean((data[3] >> 2) & 0x01);
+            Buttons[3].ActiveColor.Blue = Convert.ToBoolean((data[3] >> 3) & 0x01);
+            Buttons[4].ActiveColor.Blue = Convert.ToBoolean((data[3] >> 4) & 0x01);
+            Buttons[5].ActiveColor.Blue = Convert.ToBoolean((data[3] >> 5) & 0x01);
+            Buttons[6].ActiveColor.Blue = Convert.ToBoolean((data[3] >> 6) & 0x01);
+            Buttons[7].ActiveColor.Blue = Convert.ToBoolean((data[3] >> 7) & 0x01);
+            Buttons[8].ActiveColor.Blue = Convert.ToBoolean(data[4] & 0x01);
+            Buttons[9].ActiveColor.Blue = Convert.ToBoolean((data[4] >> 1) & 0x01);
+            Buttons[10].ActiveColor.Blue = Convert.ToBoolean((data[4] >> 2) & 0x01);
+            Buttons[11].ActiveColor.Blue = Convert.ToBoolean((data[4] >> 3) & 0x01);
         }
 
         private void DialStateA(byte[] data)
         {
+            
         }
 
         private void SetLedBlink(byte[] data)
         {
+            Buttons[0].ActiveColor.RedFlash = Convert.ToBoolean(data[0] & 0x01);
+            Buttons[1].ActiveColor.RedFlash = Convert.ToBoolean((data[0] >> 1) & 0x01);
+            Buttons[2].ActiveColor.RedFlash = Convert.ToBoolean((data[0] >> 2) & 0x01);
+            Buttons[3].ActiveColor.RedFlash = Convert.ToBoolean((data[0] >> 3) & 0x01);
+            Buttons[4].ActiveColor.RedFlash = Convert.ToBoolean((data[0] >> 4) & 0x01);
+            Buttons[5].ActiveColor.RedFlash = Convert.ToBoolean((data[0] >> 5) & 0x01);
+            Buttons[6].ActiveColor.RedFlash = Convert.ToBoolean((data[0] >> 6) & 0x01);
+            Buttons[7].ActiveColor.RedFlash = Convert.ToBoolean((data[0] >> 7) & 0x01);
+            Buttons[8].ActiveColor.RedFlash = Convert.ToBoolean(data[1] & 0x01);
+            Buttons[9].ActiveColor.RedFlash = Convert.ToBoolean((data[1] >> 1) & 0x01);
+            Buttons[10].ActiveColor.RedFlash = Convert.ToBoolean((data[1] >> 2) & 0x01);
+            Buttons[11].ActiveColor.RedFlash = Convert.ToBoolean((data[1] >> 3) & 0x01);
+
+            Buttons[0].ActiveColor.GreenFlash = Convert.ToBoolean((data[1] >> 4) & 0x01);
+            Buttons[1].ActiveColor.GreenFlash = Convert.ToBoolean((data[1] >> 5) & 0x01);
+            Buttons[2].ActiveColor.GreenFlash = Convert.ToBoolean((data[1] >> 6) & 0x01);
+            Buttons[3].ActiveColor.GreenFlash = Convert.ToBoolean((data[1] >> 7) & 0x01);
+            Buttons[4].ActiveColor.GreenFlash = Convert.ToBoolean(data[2] & 0x01);
+            Buttons[5].ActiveColor.GreenFlash = Convert.ToBoolean((data[2] >> 1) & 0x01);
+            Buttons[6].ActiveColor.GreenFlash = Convert.ToBoolean((data[2] >> 2) & 0x01);
+            Buttons[7].ActiveColor.GreenFlash = Convert.ToBoolean((data[2] >> 3) & 0x01);
+            Buttons[8].ActiveColor.GreenFlash = Convert.ToBoolean((data[2] >> 4) & 0x01);
+            Buttons[9].ActiveColor.GreenFlash = Convert.ToBoolean((data[2] >> 5) & 0x01);
+            Buttons[10].ActiveColor.GreenFlash = Convert.ToBoolean((data[2] >> 6) & 0x01);
+            Buttons[11].ActiveColor.GreenFlash = Convert.ToBoolean((data[2] >> 7) & 0x01);
+
+            Buttons[0].ActiveColor.BlueFlash = Convert.ToBoolean(data[3] & 0x01);
+            Buttons[1].ActiveColor.BlueFlash = Convert.ToBoolean((data[3] >> 1) & 0x01);
+            Buttons[2].ActiveColor.BlueFlash = Convert.ToBoolean((data[3] >> 2) & 0x01);
+            Buttons[3].ActiveColor.BlueFlash = Convert.ToBoolean((data[3] >> 3) & 0x01);
+            Buttons[4].ActiveColor.BlueFlash = Convert.ToBoolean((data[3] >> 4) & 0x01);
+            Buttons[5].ActiveColor.BlueFlash = Convert.ToBoolean((data[3] >> 5) & 0x01);
+            Buttons[6].ActiveColor.BlueFlash = Convert.ToBoolean((data[3] >> 6) & 0x01);
+            Buttons[7].ActiveColor.BlueFlash = Convert.ToBoolean((data[3] >> 7) & 0x01);
+            Buttons[8].ActiveColor.BlueFlash = Convert.ToBoolean(data[4] & 0x01);
+            Buttons[9].ActiveColor.BlueFlash = Convert.ToBoolean((data[4] >> 1) & 0x01);
+            Buttons[10].ActiveColor.BlueFlash = Convert.ToBoolean((data[4] >> 2) & 0x01);
+            Buttons[11].ActiveColor.BlueFlash = Convert.ToBoolean((data[4] >> 3) & 0x01);
         }
 
         private void DialStateB(byte[] data)
         {
+            
         }
 
         private void LedBrightness(byte[] data)
         {
+            
         }
 
         private void AnalogInput(byte[] data)
         {
+            
         }
 
         private void Backlight(byte[] data)
         {
+            CurrentBrightness = data[0] / 0x3F;
+            CurrentBacklightColor = (BlinkMarineBacklightColor)data[1];
         }
 
         private void SdoResponse(byte[] data)
         {
+            
         }
 
         private void SdoRequest(byte[] data)
         {
+           
         }
 
         private void Heartbeat(byte[] data)
         {
-
+            
         }
 
         public List<CanDeviceResponse> RequestMsgs(int id)
@@ -489,8 +611,6 @@ namespace CanDevices.DingoPdm
 
             requests.Add(new CanDeviceResponse
             {
-                Sent = false,
-                Received = false,
                 Prefix = Convert.ToInt16(MessagePrefix.Keypad),
                 Index = Number - 1,
                 Data = new CanInterfaceData
@@ -504,8 +624,6 @@ namespace CanDevices.DingoPdm
 
             requests.Add(new CanDeviceResponse
             {
-                Sent = false,
-                Received = false,
                 Prefix = Convert.ToInt16(MessagePrefix.KeypadLed),
                 Index = Number - 1,
                 Data = new CanInterfaceData
@@ -529,8 +647,6 @@ namespace CanDevices.DingoPdm
             {
                 requests.Add(new CanDeviceResponse
                 {
-                    Sent = false,
-                    Received = false,
                     Prefix = Convert.ToInt16(MessagePrefix.KeypadLed),
                     Index = dial.Number - 1,
                     Data = new CanInterfaceData
@@ -559,7 +675,8 @@ namespace CanDevices.DingoPdm
                     Id = id,
                     Len = 6,
                     Payload = Write()
-                }
+                },
+                MsgDescription = $"Keypad{Number}"
             });
 
             requests.Add(new CanDeviceResponse
@@ -571,7 +688,8 @@ namespace CanDevices.DingoPdm
                     Id = id,
                     Len = 8,
                     Payload = WriteLed()
-                }
+                },
+                MsgDescription = $"KeypadLed{Number}"
             });
 
             return requests;
@@ -587,7 +705,7 @@ namespace CanDevices.DingoPdm
 
         public bool Receive(byte[] data)
         {
-            if (data.Length != 5) return false;
+            if (data.Length != 6) return false;
 
             Enabled = Convert.ToBoolean(data[2] & 0x01);
             BaseId = data[3] & 0x7F;
@@ -603,7 +721,7 @@ namespace CanDevices.DingoPdm
             data[0] = Convert.ToByte(MessagePrefix.Keypad);
             data[1] = Convert.ToByte(Number - 1);
             data[2] = Convert.ToByte(Enabled);
-            data[3] = Convert.ToByte((BaseId & 0x7F) + Convert.ToByte(TimeoutEnabled) << 7);
+            data[3] = Convert.ToByte((Convert.ToByte(BaseId) & 0x7F) + (Convert.ToByte(TimeoutEnabled) << 7));
             data[4] = Convert.ToByte(Timeout / 100);
             data[5] = Convert.ToByte(Model);
             return data;
@@ -646,7 +764,21 @@ namespace CanDevices.DingoPdm
             return data;
         }
 
-        
+        private static readonly IReadOnlyDictionary<MsgId, bool> FromKeypad = new Dictionary<MsgId, bool>
+        {
+            { MsgId.NMT, false },
+            { MsgId.ButtonState, true },
+            { MsgId.SetLed, false },
+            { MsgId.DialStateA, true },
+            { MsgId.SetLedBlink, false },
+            { MsgId.DialStateB, true },
+            { MsgId.LedBrightness, false },
+            { MsgId.AnalogInput, true },
+            { MsgId.Backlight, false },
+            { MsgId.SdoResponse, true },
+            { MsgId.SdoRequest, false },
+            { MsgId.Heartbeat, true }
+        };
 
         private enum MsgId
         {
@@ -664,6 +796,7 @@ namespace CanDevices.DingoPdm
             Heartbeat = 0x700
         }
     }
+
 
     
 }

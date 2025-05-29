@@ -27,7 +27,7 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        BlinkMarineButtonColor[] _valColors;
+        private BlinkMarineButtonColor[] _valColors;
         [JsonPropertyName("valColors")]
         public BlinkMarineButtonColor[] ValColors
         {
@@ -42,7 +42,7 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        BlinkMarineButtonColor _faultColor;
+        private BlinkMarineButtonColor _faultColor;
         [JsonPropertyName("faultColor")]
         public BlinkMarineButtonColor FaultColor
         {
@@ -57,7 +57,7 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        BlinkMarineButtonColor[] _blinkingColors;
+        private BlinkMarineButtonColor[] _blinkingColors;
         [JsonPropertyName("blinkingColors")]
         public BlinkMarineButtonColor[] BlinkingColors
         {
@@ -72,7 +72,7 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        BlinkMarineButtonColor _faultBlinkingColor;
+        private BlinkMarineButtonColor _faultBlinkingColor;
         [JsonPropertyName("faultBlinkingColor")]
         public BlinkMarineButtonColor FaultBlinkingColor
         {
@@ -83,6 +83,22 @@ namespace CanDevices.DingoPdm
                 {
                     _faultBlinkingColor = value;
                     OnPropertyChanged(nameof(FaultBlinkingColor));
+                }
+            }
+        }
+
+        private RgbBool _activeColor = new RgbBool();
+        [JsonIgnore]
+        public RgbBool ActiveColor
+        {
+            get => _activeColor;
+            set
+            {
+                if (_activeColor != value)
+                {
+                    _activeColor = value;
+                    OnPropertyChanged(nameof(ActiveColor));
+
                 }
             }
         }
@@ -99,8 +115,6 @@ namespace CanDevices.DingoPdm
             {
                 new CanDeviceResponse
                 {
-                    Sent = false,
-                    Received = false,
                     Prefix = Convert.ToInt16(MessagePrefix.Keypad),
                     Index = Number - 1,
                     Data = new CanInterfaceData
@@ -109,12 +123,10 @@ namespace CanDevices.DingoPdm
                         Len = 2,
                         Payload = Request()
                     },
-                    MsgDescription = $"Keypad{Number}"
+                    MsgDescription = $"Keypad{KeypadNumber} Button{Number}"
                 },
                 new CanDeviceResponse
                 {
-                    Sent = false,
-                    Received = false,
                     Prefix = Convert.ToInt16(MessagePrefix.Keypad),
                     Index = Number - 1,
                     Data = new CanInterfaceData
@@ -123,7 +135,7 @@ namespace CanDevices.DingoPdm
                         Len = 2,
                         Payload = RequestLed()
                     },
-                    MsgDescription = $"Keypad{Number}"
+                    MsgDescription = $"Keypad{KeypadNumber} ButtonLed{Number}"
                 }
             };
 
@@ -132,8 +144,8 @@ namespace CanDevices.DingoPdm
 
         public override bool Receive(byte[] data)
         {
-            MessagePrefix prefix = (MessagePrefix)data[0];
-            switch(prefix)
+            var prefix = (MessagePrefix)(data[0] - 128);
+            switch (prefix)
             {
                 case MessagePrefix.KeypadButton:
                     return ReceiveButton(data);
@@ -150,8 +162,6 @@ namespace CanDevices.DingoPdm
             {
                 new CanDeviceResponse
                 {
-                    Sent = false,
-                    Received = false,
                     Prefix = Convert.ToInt16(MessagePrefix.Keypad),
                     Index = Number - 1,
                     Data = new CanInterfaceData
@@ -160,12 +170,10 @@ namespace CanDevices.DingoPdm
                         Len = 2,
                         Payload = Write()
                     },
-                    MsgDescription = $"Keypad{Number}"
+                    MsgDescription = $"Keypad{KeypadNumber} Button{Number}"
                 },
                 new CanDeviceResponse
                 {
-                    Sent = false,
-                    Received = false,
                     Prefix = Convert.ToInt16(MessagePrefix.Keypad),
                     Index = Number - 1,
                     Data = new CanInterfaceData
@@ -174,7 +182,7 @@ namespace CanDevices.DingoPdm
                         Len = 2,
                         Payload = WriteLed()
                     },
-                    MsgDescription = $"Keypad{Number}"
+                    MsgDescription = $"Keypad{KeypadNumber} ButtonLed{Number}"
                 }
             };
 
@@ -185,7 +193,7 @@ namespace CanDevices.DingoPdm
         {
             byte[] data = new byte[8];
             data[0] = Convert.ToByte(MessagePrefix.KeypadButton);
-            data[1] = Convert.ToByte(((KeypadNumber - 1) & 0x07) + ((Number - 1) & 0xF8) >> 3);
+            data[1] = Convert.ToByte(((KeypadNumber - 1) & 0x07) + ((Number - 1) << 3));
             return data;
         }
 
@@ -227,7 +235,7 @@ namespace CanDevices.DingoPdm
         {
             byte[] data = new byte[8];
             data[0] = Convert.ToByte(MessagePrefix.KeypadButtonLed);
-            data[1] = Convert.ToByte(((KeypadNumber - 1) & 0x07) + ((Number - 1) & 0xF8) >> 3);
+            data[1] = Convert.ToByte(((KeypadNumber - 1) & 0x07) + ((Number - 1) << 3));
             return data;
         }
 
@@ -268,6 +276,94 @@ namespace CanDevices.DingoPdm
             data[7] = Convert.ToByte((Convert.ToByte(FaultBlinkingColor) & 0x0F));
 
             return data;
+        }
+    }
+
+
+    public class RgbBool : NotifyPropertyChangedBase
+    {
+        private bool _red;
+        public bool Red
+        {
+            get => _red;
+            set
+            {
+                if (_red != value)
+                {
+                    _red = value;
+                    OnPropertyChanged(nameof(Red));
+                }
+            }
+        }
+
+        private bool _redFlash;
+        public bool RedFlash
+        {
+            get => _redFlash;
+            set
+            {
+                if (_redFlash != value)
+                {
+                    _redFlash = value;
+                    OnPropertyChanged(nameof(RedFlash));
+                }
+            }
+        }
+
+        private bool _green;
+        public bool Green
+        {
+            get => _green;
+            set
+            {
+                if (_green != value)
+                {
+                    _green = value;
+                    OnPropertyChanged(nameof(Green));
+                }
+            }
+        }
+
+        private bool _greenFlash;
+        public bool GreenFlash
+        {
+            get => _greenFlash;
+            set
+            {
+                if (_greenFlash != value)
+                {
+                    _greenFlash = value;
+                    OnPropertyChanged(nameof(GreenFlash));
+                }
+            }
+        }
+
+        private bool _blue;
+        public bool Blue
+        {
+            get => _blue;
+            set
+            {
+                if (_blue != value)
+                {
+                    _blue = value;
+                    OnPropertyChanged(nameof(Blue));
+                }
+            }
+        }
+
+        private bool _blueFlash;
+        public bool BlueFlash
+        {
+            get => _blueFlash;
+            set
+            {
+                if (_blueFlash != value)
+                {
+                    _blueFlash = value;
+                    OnPropertyChanged(nameof(BlueFlash));
+                }
+            }
         }
     }
 }

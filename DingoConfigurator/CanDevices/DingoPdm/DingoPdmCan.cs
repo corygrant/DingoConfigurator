@@ -463,8 +463,7 @@ namespace CanDevices.DingoPdm
             Keypads = new ObservableCollection<Keypad>();
             for (int i = 0; i < _numKeypads; i++)
             {
-                Keypads.Add(new Keypad(KeypadModel.Blink12Key, $"Keypad{i + 1}", this));
-                Keypads[i].Number = i + 1;
+                Keypads.Add(new Keypad(KeypadModel.Blink12Key, i + 1, $"Keypad{i + 1}", this));
             }
 
 			SubPages.Add(new CanDeviceSub("Settings", this));
@@ -805,6 +804,7 @@ namespace CanDevices.DingoPdm
             var prefix = (MessagePrefix)(data[0] - 128);
 
             int index = 0;
+            int buttonIndex = 0;
 
             //Vars used below
             var key = (BaseId, (int)prefix, 0);
@@ -1055,7 +1055,95 @@ namespace CanDevices.DingoPdm
 
 					break;
 
-				case MessagePrefix.BurnSettings:
+                case MessagePrefix.Keypad:
+                    index = data[1];
+                    if (index >= 0 && index < _numKeypads)
+                    {
+                        if (Keypads[index].Receive(data))
+                        {
+                            key = (BaseId, (int)MessagePrefix.Keypad, index);
+                            if (queue.TryGetValue(key, out response))
+                            {
+                                response.TimeSentTimer?.Dispose();
+                                queue.TryRemove(key, out _);
+                            }
+                        }
+                    }
+
+                    break;
+
+                case MessagePrefix.KeypadLed:
+                    index = data[1];
+                    if (index >= 0 && index < _numKeypads)
+                    {
+                        if (Keypads[index].ReceiveLed(data))
+                        {
+                            key = (BaseId, (int)MessagePrefix.KeypadLed, index);
+                            if (queue.TryGetValue(key, out response))
+                            {
+                                response.TimeSentTimer?.Dispose();
+                                queue.TryRemove(key, out _);
+                            }
+                        }
+                    }
+
+                    break;
+
+                case MessagePrefix.KeypadButton:
+                    index = data[1] & 0x07;
+                    buttonIndex = (data[1] & 0xF8) >> 3;
+                    if ((index >= 0 && index < _numKeypads) && (buttonIndex >= 0 && buttonIndex < Keypads[index].Buttons.Count))
+                    {
+                        if (Keypads[index].Buttons[buttonIndex].Receive(data))
+                        {
+                            key = (BaseId, (int)MessagePrefix.KeypadButton, index);
+                            if (queue.TryGetValue(key, out response))
+                            {
+                                response.TimeSentTimer?.Dispose();
+                                queue.TryRemove(key, out _);
+                            }
+                        }
+                    }
+
+                    break;
+
+                case MessagePrefix.KeypadButtonLed:
+                    index = data[1] & 0x07;
+                    buttonIndex = (data[1] & 0xF8) >> 3;
+                    if ((index >= 0 && index < _numKeypads) && (buttonIndex >= 0 && buttonIndex < Keypads[index].Buttons.Count))
+                    {
+                        if (Keypads[index].Buttons[buttonIndex].Receive(data))
+                        {
+                            key = (BaseId, (int)MessagePrefix.KeypadButtonLed, index);
+                            if (queue.TryGetValue(key, out response))
+                            {
+                                response.TimeSentTimer?.Dispose();
+                                queue.TryRemove(key, out _);
+                            }
+                        }
+                    }
+
+                    break;
+
+                case MessagePrefix.KeypadDial:
+                    index = data[1] & 0x07;
+                    buttonIndex = (data[1] & 0xF8) >> 3;
+                    if ((index >= 0 && index < _numKeypads) && (buttonIndex >= 0 && buttonIndex < Keypads[index].Dials.Count))
+                    {
+                        if (Keypads[index].Buttons[buttonIndex].Receive(data))
+                        {
+                            key = (BaseId, (int)MessagePrefix.KeypadDial, index);
+                            if (queue.TryGetValue(key, out response))
+                            {
+                                response.TimeSentTimer?.Dispose();
+                                queue.TryRemove(key, out _);
+                            }
+                        }
+                    }
+
+                    break;
+
+                case MessagePrefix.BurnSettings:
                     if (data[1] == 1) //Successful burn
                     {
                         Logger.Info($"{Name} ID: {BaseId}, Burn Successful");
@@ -1129,8 +1217,6 @@ namespace CanDevices.DingoPdm
             //Version
             msgs.Add(new CanDeviceResponse
             {
-                Sent = false,
-                Received = false,
                 Prefix = (int)MessagePrefix.Version,
                 Index = 0,
                 Data = new CanInterfaceData
@@ -1145,8 +1231,6 @@ namespace CanDevices.DingoPdm
             //CAN settings
             msgs.Add(new CanDeviceResponse
             {
-                Sent = false,
-                Received = false,
                 Prefix = (int)MessagePrefix.Can,
                 Index = 0,
                 Data = new CanInterfaceData
@@ -1163,8 +1247,6 @@ namespace CanDevices.DingoPdm
             {
                 msgs.Add(new CanDeviceResponse
                 {
-                    Sent = false,
-                    Received = false,
                     Prefix = (int)MessagePrefix.Inputs,
                     Index = i,
                     Data = new CanInterfaceData
@@ -1182,8 +1264,6 @@ namespace CanDevices.DingoPdm
             {
                 msgs.Add(new CanDeviceResponse
                 {
-                    Sent = false,
-                    Received = false,
                     Prefix = (int)MessagePrefix.Outputs,
                     Index = i,
                     Data = new CanInterfaceData
@@ -1201,8 +1281,6 @@ namespace CanDevices.DingoPdm
             {
                 msgs.Add(new CanDeviceResponse
                 {
-                    Sent = false,
-                    Received = false,
                     Prefix = (int)MessagePrefix.OutputsPwm,
                     Index = i,
                     Data = new CanInterfaceData
@@ -1220,8 +1298,6 @@ namespace CanDevices.DingoPdm
             {
                 msgs.Add(new CanDeviceResponse
                 {
-                    Sent = false,
-                    Received = false,
                     Prefix = (int)MessagePrefix.VirtualInputs,
                     Index = i,
                     Data = new CanInterfaceData
@@ -1239,8 +1315,6 @@ namespace CanDevices.DingoPdm
             {
                 msgs.Add(new CanDeviceResponse
                 {
-                    Sent = false,
-                    Received = false,
                     Prefix = (int)MessagePrefix.Flashers,
                     Index = i,
                     Data = new CanInterfaceData
@@ -1258,8 +1332,6 @@ namespace CanDevices.DingoPdm
             {
                 msgs.Add(new CanDeviceResponse
                 {
-                    Sent = false,
-                    Received = false,
                     Prefix = (int)MessagePrefix.CanInputs,
                     Index = i,
                     Data = new CanInterfaceData
@@ -1277,8 +1349,6 @@ namespace CanDevices.DingoPdm
             {
                 msgs.Add(new CanDeviceResponse
                 {
-                    Sent = false,
-                    Received = false,
                     Prefix = (int)MessagePrefix.CanInputsId,
                     Index = i,
                     Data = new CanInterfaceData
@@ -1294,8 +1364,6 @@ namespace CanDevices.DingoPdm
             //Wiper
             msgs.Add(new CanDeviceResponse
             {
-                Sent = false,
-                Received = false,
                 Prefix = (int)MessagePrefix.Wiper,
                 Index = 0,
                 Data = new CanInterfaceData
@@ -1310,8 +1378,6 @@ namespace CanDevices.DingoPdm
             //Wiper speeds
             msgs.Add(new CanDeviceResponse
             {
-                Sent = false,
-                Received = false,
                 Prefix = (int)MessagePrefix.WiperSpeed,
                 Index = 0,
                 Data = new CanInterfaceData
@@ -1326,8 +1392,6 @@ namespace CanDevices.DingoPdm
             //Wiper delays
             msgs.Add(new CanDeviceResponse
             {
-                Sent = false,
-                Received = false,
                 Prefix = (int)MessagePrefix.WiperDelays,
                 Index = 0,
                 Data = new CanInterfaceData
@@ -1342,8 +1406,6 @@ namespace CanDevices.DingoPdm
             //Starter disable
             msgs.Add(new CanDeviceResponse
             {
-                Sent = false,
-                Received = false,
                 Prefix = (int)MessagePrefix.StarterDisable,
                 Index = 0,
                 Data = new CanInterfaceData
@@ -1360,8 +1422,6 @@ namespace CanDevices.DingoPdm
 			{
 				msgs.Add(new CanDeviceResponse
 				{
-					Sent = false,
-					Received = false,
 					Prefix = (int)MessagePrefix.Counter,
 					Index = i,
 					Data = new CanInterfaceData
@@ -1379,8 +1439,6 @@ namespace CanDevices.DingoPdm
 			{
 				msgs.Add(new CanDeviceResponse
 				{
-					Sent = false,
-					Received = false,
 					Prefix = (int)MessagePrefix.Conditions,
 					Index = i,
 					Data = new CanInterfaceData
@@ -1416,8 +1474,6 @@ namespace CanDevices.DingoPdm
             //CAN settings
             msgs.Add(new CanDeviceResponse
             {
-                Sent = false,
-                Received = false,
                 Prefix = (int)MessagePrefix.Can,
                 Index = 0,
                 Data = new CanInterfaceData
@@ -1441,8 +1497,6 @@ namespace CanDevices.DingoPdm
             {
                 msgs.Add(new CanDeviceResponse
                 {
-                    Sent = false,
-                    Received = false,
                     Prefix = (int)MessagePrefix.Inputs,
                     Index = input.Number - 1,
                     Data = new CanInterfaceData
@@ -1460,8 +1514,6 @@ namespace CanDevices.DingoPdm
             {
                 msgs.Add(new CanDeviceResponse
                 {
-                    Sent = false,
-                    Received = false,
                     Prefix = (int)MessagePrefix.Outputs,
                     Index = output.Number - 1,
                     Data = new CanInterfaceData
@@ -1479,8 +1531,6 @@ namespace CanDevices.DingoPdm
             {
                 msgs.Add(new CanDeviceResponse
                 {
-                    Sent = false,
-                    Received = false,
                     Prefix = (int)MessagePrefix.OutputsPwm,
                     Index = output.Number - 1,
                     Data = new CanInterfaceData
@@ -1498,8 +1548,6 @@ namespace CanDevices.DingoPdm
             {
                 msgs.Add(new CanDeviceResponse
                 {
-                    Sent = false,
-                    Received = false,
                     Prefix = (int)MessagePrefix.VirtualInputs,
                     Index = virtInput.Number - 1,
                     Data = new CanInterfaceData
@@ -1517,8 +1565,6 @@ namespace CanDevices.DingoPdm
             {
                 msgs.Add(new CanDeviceResponse
                 {
-                    Sent = false,
-                    Received = false,
                     Prefix = (int)MessagePrefix.Flashers,
                     Index = flash.Number - 1,
                     Data = new CanInterfaceData
@@ -1536,8 +1582,6 @@ namespace CanDevices.DingoPdm
             {
                 msgs.Add(new CanDeviceResponse
                 {
-                    Sent = false,
-                    Received = false,
                     Prefix = (int)MessagePrefix.CanInputs,
                     Index = canInput.Number - 1,
                     Data = new CanInterfaceData
@@ -1556,8 +1600,6 @@ namespace CanDevices.DingoPdm
             {
                 msgs.Add(new CanDeviceResponse
                 {
-                    Sent = false,
-                    Received = false,
                     Prefix = (int)MessagePrefix.CanInputsId,
                     Index = canInput.Number - 1,
                     Data = new CanInterfaceData
@@ -1574,8 +1616,6 @@ namespace CanDevices.DingoPdm
             //Wiper
             msgs.Add(new CanDeviceResponse
             {
-                Sent = false,
-                Received = false,
                 Prefix = (int)MessagePrefix.Wiper,
                 Index = 0,
                 Data = new CanInterfaceData
@@ -1590,8 +1630,6 @@ namespace CanDevices.DingoPdm
             //Wiper speeds
             msgs.Add(new CanDeviceResponse
             {
-                Sent = false,
-                Received = false,
                 Prefix = (int)MessagePrefix.WiperSpeed,
                 Index = 0,
                 Data = new CanInterfaceData
@@ -1606,8 +1644,6 @@ namespace CanDevices.DingoPdm
             //Wiper delays
             msgs.Add(new CanDeviceResponse
             {
-                Sent = false,
-                Received = false,
                 Prefix = (int)MessagePrefix.WiperDelays,
                 Index = 0,
                 Data = new CanInterfaceData
@@ -1622,8 +1658,6 @@ namespace CanDevices.DingoPdm
             //Starter disable
             msgs.Add(new CanDeviceResponse
             {
-                Sent = false,
-                Received = false,
                 Prefix = (int)MessagePrefix.StarterDisable,
                 Index = 0,
                 Data = new CanInterfaceData
@@ -1640,8 +1674,6 @@ namespace CanDevices.DingoPdm
 			{
 				msgs.Add(new CanDeviceResponse
 				{
-					Sent = false,
-					Received = false,
 					Prefix = (int)MessagePrefix.Counter,
 					Index = counter.Number - 1,
 					Data = new CanInterfaceData
@@ -1660,8 +1692,6 @@ namespace CanDevices.DingoPdm
 			{
 				msgs.Add(new CanDeviceResponse
 				{
-					Sent = false,
-					Received = false,
 					Prefix = (int)MessagePrefix.Conditions,
 					Index = condition.Number - 1,
 					Data = new CanInterfaceData
@@ -1675,6 +1705,7 @@ namespace CanDevices.DingoPdm
 				});
 			}
 
+            //Keypads
             foreach(var kp in Keypads)
             {
                 foreach (var msg in kp.WriteMsgs(id))
@@ -1694,8 +1725,6 @@ namespace CanDevices.DingoPdm
 
             msgs.Add(new CanDeviceResponse
             {
-                Sent = false,
-                Received = false,
                 Prefix = (int)MessagePrefix.Can,
                 Index = 0,
                 Data = new CanInterfaceData
@@ -1721,8 +1750,6 @@ namespace CanDevices.DingoPdm
         {
             return new CanDeviceResponse
             {
-                Sent = false,
-                Received = false,
                 Prefix = (int)MessagePrefix.BurnSettings,
                 Index = 0,
                 Data = new CanInterfaceData
@@ -1739,8 +1766,6 @@ namespace CanDevices.DingoPdm
         {
             return new CanDeviceResponse
             {
-                Sent = false,
-                Received = false,
                 Prefix = (int)MessagePrefix.Sleep,
                 Index = 0,
                 Data = new CanInterfaceData
@@ -1757,8 +1782,6 @@ namespace CanDevices.DingoPdm
         {
             return new CanDeviceResponse
             {
-                Sent = false,
-                Received = false,
                 Prefix = (int)MessagePrefix.Version,
                 Index = 0,
                 Data = new CanInterfaceData
