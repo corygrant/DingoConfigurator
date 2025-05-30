@@ -28,20 +28,20 @@
         <local:OutputsDataGrid Grid.Row="2" DataContext="{Binding}" />
 
         <GridSplitter     Grid.Row="3"
-                  HorizontalAlignment="Stretch"
-                  VerticalAlignment="Center"
-                  Background="White" 
-                  ShowsPreview="True"
-                  Height="3"/>
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      Background="White"
+                      ShowsPreview="True"
+                      Height="3"/>
 
         <local:OutputsPwmDataGrid Grid.Row="4" DataContext="{Binding}" />
 
         <GridSplitter     Grid.Row="5"
-          HorizontalAlignment="Stretch"
-          VerticalAlignment="Center"
-          Background="White" 
-          ShowsPreview="True"
-          Height="5"/>
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      Background="White"
+                      ShowsPreview="True"
+                      Height="5"/>
 
         <local:InputsDataGrid Grid.Row="6" DataContext="{Binding}" />
     </Grid>

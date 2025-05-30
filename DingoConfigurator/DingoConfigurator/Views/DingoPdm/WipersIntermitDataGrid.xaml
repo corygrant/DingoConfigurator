@@ -1,18 +1,18 @@
 ﻿<UserControl x:Class="DingoConfigurator.Views.WipersIntermitDataGrid"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:DingoConfigurator.Views"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:cd="clr-namespace:CanDevices.DingoPdm;assembly=CanDevices"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="1080">
     <DataGrid AutoGenerateColumns="False"
-          ItemsSource="{Binding Pdm.Wipers}"
-          CanUserAddRows="False"
-          CanUserDeleteRows="False"
-          CanUserSortColumns="False">
+              ItemsSource="{Binding Pdm.Wipers}"
+              CanUserAddRows="False"
+              CanUserDeleteRows="False"
+              CanUserSortColumns="False">
         <DataGrid.Columns>
             <DataGridTextColumn Header="Wiper Intermittent Time [s]" IsReadOnly="True" Width="210" MinWidth="210" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTextColumn.ElementStyle>

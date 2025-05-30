@@ -1,12 +1,12 @@
 ﻿<UserControl x:Class="DingoConfigurator.Views.DingoPdmSettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:cd="clr-namespace:CanDevices.DingoPdm;assembly=CanDevices"
              xmlns:local="clr-namespace:DingoConfigurator.Views"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="800" d:DesignWidth="400">
     <Grid>
         <Grid.RowDefinitions>
@@ -23,92 +23,92 @@
             <RowDefinition Height="Auto" MinHeight="50"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto" MinHeight="60"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto" MinHeight="60"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto" MinHeight="160"/>
-			<RowDefinition Height="Auto"/>
-		</Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" MinHeight="60"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" MinHeight="160"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
         <local:CanInputsDataGrid Grid.Row="0" DataContext="{Binding}"/>
 
         <GridSplitter     Grid.Row="1"
-                          HorizontalAlignment="Stretch"
-                          VerticalAlignment="Center"
-                          Background="White" 
-                          ShowsPreview="True"
-                          Height="3"/>
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      Background="White"
+                      ShowsPreview="True"
+                      Height="3"/>
 
         <local:VirtualInputsDataGrid Grid.Row="2" DataContext="{Binding}"/>
 
         <GridSplitter     Grid.Row="3"
-                          HorizontalAlignment="Stretch"
-                          VerticalAlignment="Center"
-                          Background="White" 
-                          ShowsPreview="True"
-                          Height="3"/>
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      Background="White"
+                      ShowsPreview="True"
+                      Height="3"/>
 
         <local:WipersDataGrid Grid.Row="4" DataContext="{Binding}"/>
-        
+
         <GridSplitter     Grid.Row="5"
-                          HorizontalAlignment="Stretch"
-                          VerticalAlignment="Center"
-                          Background="White" 
-                          ShowsPreview="True"
-                          Height="3"/>
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      Background="White"
+                      ShowsPreview="True"
+                      Height="3"/>
 
         <local:WipersSpeedMapDataGrid Grid.Row="6" DataContext="{Binding}"/>
 
         <GridSplitter     Grid.Row="7"
-                  HorizontalAlignment="Stretch"
-                  VerticalAlignment="Center"
-                  Background="White" 
-                  ShowsPreview="True"
-                  Height="3"/>
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      Background="White"
+                      ShowsPreview="True"
+                      Height="3"/>
 
         <local:WipersIntermitDataGrid Grid.Row="8" DataContext="{Binding}"/>
 
         <GridSplitter     Grid.Row="9"
-          HorizontalAlignment="Stretch"
-          VerticalAlignment="Center"
-          Background="White" 
-          ShowsPreview="True"
-          Height="3"/>
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      Background="White"
+                      ShowsPreview="True"
+                      Height="3"/>
 
         <local:FlashersDataGrid Grid.Row="10" DataContext="{Binding}"/>
 
         <GridSplitter     Grid.Row="11"
-                          HorizontalAlignment="Stretch"
-                          VerticalAlignment="Center"
-                          Background="White" 
-                          ShowsPreview="True"
-                          Height="3"/>
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      Background="White"
+                      ShowsPreview="True"
+                      Height="3"/>
 
         <local:StarterDisableDataGrid Grid.Row="12" DataContext="{Binding}"/>
-		
-		<GridSplitter     Grid.Row="13"
-                  HorizontalAlignment="Stretch"
-                  VerticalAlignment="Center"
-                  Background="White" 
-                  ShowsPreview="True"
-                  Height="3"/>
+
+        <GridSplitter     Grid.Row="13"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      Background="White"
+                      ShowsPreview="True"
+                      Height="3"/>
 
         <local:CountersDataGrid Grid.Row="14" DataContext="{Binding}"/>
 
         <GridSplitter     Grid.Row="15"
-          HorizontalAlignment="Stretch"
-          VerticalAlignment="Center"
-          Background="White" 
-          ShowsPreview="True"
-          Height="3"/>
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      Background="White"
+                      ShowsPreview="True"
+                      Height="3"/>
 
         <local:ConditionsDataGrid Grid.Row="16" DataContext="{Binding}"/>
 
         <GridSplitter Grid.Row="17"
                       HorizontalAlignment="Stretch"
                       VerticalAlignment="Center"
-                      Background="White" 
+                      Background="White"
                       ShowsPreview="True"
                       Height="3"/>
-	</Grid>
+    </Grid>
 </UserControl>

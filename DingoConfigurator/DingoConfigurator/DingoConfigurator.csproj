@@ -162,6 +162,9 @@
     <Compile Include="Views\DingoDash\DingoDashView.xaml.cs">
       <DependentUpon>DingoDashView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DingoPdm\BlinkMarineButtonView.xaml.cs">
+      <DependentUpon>BlinkMarineButtonView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DingoPdm\CanInputsDataGrid.xaml.cs">
       <DependentUpon>CanInputsDataGrid.xaml</DependentUpon>
     </Compile>
@@ -256,6 +259,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\DingoPdm\BlinkMarineButtonView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DingoPdm\CanInputsDataGrid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

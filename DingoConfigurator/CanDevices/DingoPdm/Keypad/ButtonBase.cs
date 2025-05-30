@@ -10,6 +10,22 @@ namespace CanDevices.DingoPdm
 {
     public class ButtonBase : NotifyPropertyChangedBase
     {
+
+        private string _name;
+        [JsonPropertyName("name")]
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if(_name != value)
+                {
+                    _name = value;
+                    OnPropertyChanged(nameof(Name));
+                }
+            }
+        }
+
         private bool _state;
         [JsonIgnore]
         public bool State
@@ -126,6 +142,21 @@ namespace CanDevices.DingoPdm
                 {
                     _faultVar = value;
                     OnPropertyChanged(nameof(FaultVar));
+                }
+            }
+        }
+
+        private bool _plot;
+        [JsonPropertyName("plot")]
+        public bool Plot
+        {
+            get => _plot;
+            set
+            {
+                if (_plot != value)
+                {
+                    _plot = value;
+                    OnPropertyChanged(nameof(Plot));
                 }
             }
         }

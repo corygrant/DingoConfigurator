@@ -1,21 +1,21 @@
 ﻿<UserControl x:Class="DingoConfigurator.Views.StarterDisableDataGrid"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:DingoConfigurator.Views"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:cd="clr-namespace:CanDevices.DingoPdm;assembly=CanDevices"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="1080">
     <UserControl.Resources>
         <local:VarMapFilterConverter x:Key="VarMapFilterConverter"/>
     </UserControl.Resources>
     <DataGrid AutoGenerateColumns="False"
-          ItemsSource="{Binding Pdm.StarterDisable}"
-          CanUserAddRows="False"
-          CanUserDeleteRows="False"
-          CanUserSortColumns="False">
+              ItemsSource="{Binding Pdm.StarterDisable}"
+              CanUserAddRows="False"
+              CanUserDeleteRows="False"
+              CanUserSortColumns="False">
         <DataGrid.Columns>
             <DataGridTextColumn Header="Starter Disable" IsReadOnly="True" Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTextColumn.ElementStyle>
@@ -35,12 +35,12 @@
                 </DataGridCheckBoxColumn.ElementStyle>
             </DataGridCheckBoxColumn>
             <DataGridTemplateColumn  Header="Input"
-                        Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                                    Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <ComboBox HorizontalContentAlignment="Center"
-                      SelectedValue="{Binding Input, UpdateSourceTrigger=PropertyChanged}"
-                      BorderThickness="0">
+                                  SelectedValue="{Binding Input, UpdateSourceTrigger=PropertyChanged}"
+                                  BorderThickness="0">
                             <ComboBox.ItemsSource>
                                 <MultiBinding Converter="{StaticResource VarMapFilterConverter}">
                                     <Binding Source="{StaticResource VarMapEnumDataSource}" />

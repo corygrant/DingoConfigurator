@@ -12,7 +12,7 @@
        CanUserSortColumns="False"
        ItemsSource="{Binding Buttons}">
         <DataGrid.Columns>
-            <DataGridTextColumn Header="Input"
+            <DataGridTextColumn Header="Button"
                          Binding="{Binding Number}"
                          IsReadOnly="True"
                          Width="70"
@@ -86,28 +86,28 @@
                     </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>
             </DataGridTemplateColumn>
-            <DataGridCheckBoxColumn Header="Invert Input"
-                             Binding="{Binding InvertInput, UpdateSourceTrigger=PropertyChanged}"
-                             Width="110"
-                             MinWidth="110"
-                             HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
-                <DataGridCheckBoxColumn.CellStyle>
-                    <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
-                </DataGridCheckBoxColumn.CellStyle>
-                <DataGridCheckBoxColumn.ElementStyle>
-                    <Style TargetType="CheckBox">
-                        <Setter Property="HorizontalAlignment"
-                         Value="Center" />
-                    </Style>
-                </DataGridCheckBoxColumn.ElementStyle>
-            </DataGridCheckBoxColumn>
             <DataGridTemplateColumn  Header="Mode" 
-                              Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                                    Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <ComboBox HorizontalContentAlignment="Center"
-                           ItemsSource="{Binding Source={StaticResource InputModeEnumDataSource}, Mode=OneWay}" 
-                           SelectedValue="{Binding Mode, UpdateSourceTrigger=PropertyChanged}"
+                                   ItemsSource="{Binding Source={StaticResource InputModeEnumDataSource}, Mode=OneWay}" 
+                                   SelectedValue="{Binding Mode, UpdateSourceTrigger=PropertyChanged}"
+                                   BorderThickness="0">
+                        </ComboBox>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn.CellStyle>
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+                </DataGridTemplateColumn.CellStyle>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn  Header="Var 0" 
+                                    Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <ComboBox HorizontalContentAlignment="Center"
+                           ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
+                           SelectedValue="{Binding ValVars[0], UpdateSourceTrigger=PropertyChanged}"
                            BorderThickness="0">
                         </ComboBox>
                     </DataTemplate>
@@ -116,34 +116,58 @@
                     <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
                 </DataGridTemplateColumn.CellStyle>
             </DataGridTemplateColumn>
-            <DataGridTextColumn Header="Debounce&#x0a;Time [ms]"
-                         Width="100"
-                         MinWidth="100"
-                         HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
-                <DataGridTextColumn.Binding>
-                    <Binding Path="DebounceTime" UpdateSourceTrigger="LostFocus" ValidatesOnDataErrors="True" ValidatesOnExceptions="True">
-                    </Binding>
-                </DataGridTextColumn.Binding>
-                <DataGridTextColumn.EditingElementStyle>
-                    <Style BasedOn="{StaticResource ValidationErrorTextBoxStyle}" TargetType="TextBox"/>
-                </DataGridTextColumn.EditingElementStyle>
-                <DataGridTextColumn.ElementStyle>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="HorizontalAlignment"
-                         Value="Center" />
-                    </Style>
-                </DataGridTextColumn.ElementStyle>
-                <DataGridTextColumn.CellStyle>
-                    <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
-                </DataGridTextColumn.CellStyle>
-            </DataGridTextColumn>
-            <DataGridTemplateColumn  Header="Pull" 
-                              Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+            <DataGridTemplateColumn  Header="Var 1" 
+                                    Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <ComboBox HorizontalContentAlignment="Center"
-                           ItemsSource="{Binding Source={StaticResource InputPullEnumDataSource}, Mode=OneWay}" 
-                           SelectedValue="{Binding Pull, UpdateSourceTrigger=PropertyChanged}"
+                           ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
+                           SelectedValue="{Binding ValVars[1], UpdateSourceTrigger=PropertyChanged}"
+                           BorderThickness="0">
+                        </ComboBox>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn.CellStyle>
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+                </DataGridTemplateColumn.CellStyle>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn  Header="Var 2" 
+                                    Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <ComboBox HorizontalContentAlignment="Center"
+                           ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
+                           SelectedValue="{Binding ValVars[2], UpdateSourceTrigger=PropertyChanged}"
+                           BorderThickness="0">
+                        </ComboBox>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn.CellStyle>
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+                </DataGridTemplateColumn.CellStyle>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn  Header="Var 3" 
+                                    Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <ComboBox HorizontalContentAlignment="Center"
+                           ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
+                           SelectedValue="{Binding ValVars[3], UpdateSourceTrigger=PropertyChanged}"
+                           BorderThickness="0">
+                        </ComboBox>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn.CellStyle>
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
+                </DataGridTemplateColumn.CellStyle>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn  Header="Fault" 
+                                    Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <ComboBox HorizontalContentAlignment="Center"
+                           ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}" 
+                           SelectedValue="{Binding FaultVar, UpdateSourceTrigger=PropertyChanged}"
                            BorderThickness="0">
                         </ComboBox>
                     </DataTemplate>
@@ -153,10 +177,10 @@
                 </DataGridTemplateColumn.CellStyle>
             </DataGridTemplateColumn>
             <DataGridCheckBoxColumn Header="Plot"
-                     Binding="{Binding Plot, UpdateSourceTrigger=PropertyChanged}"
-                     Width="70"
-                     MinWidth="70"
-                     HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                                     Binding="{Binding Plot, UpdateSourceTrigger=PropertyChanged}"
+                                     Width="70"
+                                     MinWidth="70"
+                                     HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridCheckBoxColumn.CellStyle>
                     <Style TargetType="DataGridCell" BasedOn="{StaticResource ValidationCellStyle}"/>
                 </DataGridCheckBoxColumn.CellStyle>

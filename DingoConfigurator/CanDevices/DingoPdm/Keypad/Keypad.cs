@@ -410,6 +410,9 @@ namespace CanDevices.DingoPdm
 
         public override bool InIdRange(int id)
         {
+            if (!Enabled)
+                return false;
+
             // Define a HashSet for quick lookup
             var validIds = new HashSet<int>
             {

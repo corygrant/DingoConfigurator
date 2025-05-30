@@ -36,7 +36,7 @@
                       Grid.Column="1"
                       Margin="5"
                       ItemsSource="{Binding Path=IdFormat}"
-                      SelectedItem="{Binding Path=SelectedIdFormat}" 
+                      SelectedItem="{Binding Path=SelectedIdFormat}"
                       ToolTip="Change the display format of the message ID"/>
             <TextBlock Grid.Row="0"
                        Grid.Column="2"
@@ -48,7 +48,7 @@
                       Grid.Column="3"
                       Margin="5"
                       ItemsSource="{Binding Path=PayloadFormat}"
-                      SelectedItem="{Binding Path=SelectedPayloadFormat}" 
+                      SelectedItem="{Binding Path=SelectedPayloadFormat}"
                       ToolTip="Change the display format of the message payload bytes"/>
             <Button Grid.Row="0"
                     Grid.Column="4"
@@ -57,12 +57,12 @@
                     Command="{Binding Path=ClearBtnCmd}"
                     ToolTip="Clear all messages &#x0a;NOTES ARE NOT SAVED"/>
             <GridSplitter     Grid.Row="0"
-                              Grid.Column="5"
-                              HorizontalAlignment="Center"
-                              VerticalAlignment="Stretch"
-                              Background="White" 
-                              ShowsPreview="True"
-                              Width="2"/>
+                          Grid.Column="5"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Stretch"
+                          Background="White"
+                          ShowsPreview="True"
+                          Width="2"/>
             <CheckBox Grid.Row="0"
                       Grid.Column="6"
                       Margin="5"

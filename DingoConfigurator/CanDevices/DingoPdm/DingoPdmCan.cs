@@ -466,6 +466,7 @@ namespace CanDevices.DingoPdm
                 Keypads.Add(new Keypad(KeypadModel.Blink12Key, i + 1, $"Keypad{i + 1}", this));
             }
 
+            //REMOVE
             Keypads[1].BaseId = 0x100;
 
             SubPages.Add(new CanDeviceSub("Settings", this));

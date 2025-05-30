@@ -3,73 +3,94 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib"
                     xmlns:cd="clr-namespace:CanDevices.DingoPdm;assembly=CanDevices">
     <ObjectDataProvider x:Key="VarMapEnumDataSource"
-                    ObjectType="{x:Type sys:Enum}"
-                    MethodName="GetValues">
+                        ObjectType="{x:Type sys:Enum}"
+                        MethodName="GetValues">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="cd:VarMap" />
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
     <ObjectDataProvider x:Key="InputModeEnumDataSource"
-                    ObjectType="{x:Type sys:Enum}"
-                    MethodName="GetValues">
+                        ObjectType="{x:Type sys:Enum}"
+                        MethodName="GetValues">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="cd:InputMode" />
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
     <ObjectDataProvider x:Key="InputPullEnumDataSource"
-                    ObjectType="{x:Type sys:Enum}"
-                    MethodName="GetValues">
+                        ObjectType="{x:Type sys:Enum}"
+                        MethodName="GetValues">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="cd:InputPull" />
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
     <ObjectDataProvider x:Key="ResetModeEnumDataSource"
-                    ObjectType="{x:Type sys:Enum}"
-                    MethodName="GetValues">
+                        ObjectType="{x:Type sys:Enum}"
+                        MethodName="GetValues">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="cd:ResetMode" />
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
     <ObjectDataProvider x:Key="ConditionalEnumDataSource"
-                            ObjectType="{x:Type sys:Enum}"
-                            MethodName="GetValues">
+                        ObjectType="{x:Type sys:Enum}"
+                        MethodName="GetValues">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="cd:Conditional" />
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
     <ObjectDataProvider x:Key="OperatorEnumDataSource"
-                            ObjectType="{x:Type sys:Enum}"
-                            MethodName="GetValues">
+                        ObjectType="{x:Type sys:Enum}"
+                        MethodName="GetValues">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="cd:Operator" />
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
     <ObjectDataProvider x:Key="WiperModeEnumDataSource"
-                            ObjectType="{x:Type sys:Enum}"
-                            MethodName="GetValues">
+                        ObjectType="{x:Type sys:Enum}"
+                        MethodName="GetValues">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="cd:WiperMode" />
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
     <ObjectDataProvider x:Key="WiperStateEnumDataSource"
-                            ObjectType="{x:Type sys:Enum}"
-                            MethodName="GetValues">
+                        ObjectType="{x:Type sys:Enum}"
+                        MethodName="GetValues">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="cd:WiperState" />
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
     <ObjectDataProvider x:Key="WiperSpeedEnumDataSource"
-                            ObjectType="{x:Type sys:Enum}"
-                            MethodName="GetValues">
+                        ObjectType="{x:Type sys:Enum}"
+                        MethodName="GetValues">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="cd:WiperSpeed" />
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
     <ObjectDataProvider x:Key="InputEdgeEnumDataSource"
-                    ObjectType="{x:Type sys:Enum}"
-                    MethodName="GetValues">
+                        ObjectType="{x:Type sys:Enum}"
+                        MethodName="GetValues">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="cd:InputEdge" />
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+    <ObjectDataProvider x:Key="KeypadModelEnumDataSource"
+                        ObjectType="{x:Type sys:Enum}"
+                        MethodName="GetValues">
+        <ObjectDataProvider.MethodParameters>
+            <x:Type TypeName="cd:KeypadModel" />
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+    <ObjectDataProvider x:Key="BlinkBacklightColorEnumDataSource"
+                        ObjectType="{x:Type sys:Enum}"
+                        MethodName="GetValues">
+        <ObjectDataProvider.MethodParameters>
+            <x:Type TypeName="cd:BlinkMarineBacklightColor" />
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+    <ObjectDataProvider x:Key="BlinkButtonColorEnumDataSource"
+                        ObjectType="{x:Type sys:Enum}"
+                        MethodName="GetValues">
+        <ObjectDataProvider.MethodParameters>
+            <x:Type TypeName="cd:BlinkMarineButtonColor" />
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
     <Style x:Key="CenterAlignedHeaderStyle" TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
