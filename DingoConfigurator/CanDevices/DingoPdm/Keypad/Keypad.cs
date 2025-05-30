@@ -13,27 +13,48 @@ using CanInterfaces;
 using System.Reflection;
 using System.Collections.Specialized;
 using System.Globalization;
+using System.Collections.ObjectModel;
 
 namespace CanDevices.DingoPdm
 {
     public class Keypad : CanDeviceSub
     {
-        private List<Button> _buttons;
-        public List<Button> Buttons
+        private ObservableCollection<Button> _allButtons;
+        public ObservableCollection<Button> AllButtons
         {
-            get => _buttons;
+            get => _allButtons;
             set
             {
-                if (_buttons != value)
+                if (_allButtons != value)
                 {
-                    _buttons = value;
+                    _allButtons = value;
+                    OnPropertyChanged(nameof(AllButtons));
                     OnPropertyChanged(nameof(Buttons));
                 }
             }
         }
 
-        private List<Dial> _dials;
-        public List<Dial> Dials
+        public IEnumerable<Button> Buttons =>
+            AllButtons?.Take(_numButtons) ?? Enumerable.Empty<Button>();
+
+        private int _numButtons;
+        [JsonIgnore]
+        public int NumButtons
+        {
+            get => _numButtons;
+            set
+            {
+                if (_numButtons != value)
+                {
+                    _numButtons = value;
+                    OnPropertyChanged(nameof(NumButtons));
+                    OnPropertyChanged(nameof(Buttons));
+                }
+            }
+        }
+
+        private ObservableCollection<Dial> _dials;
+        public ObservableCollection<Dial> Dials
         {
             get => _dials;
             set
@@ -42,6 +63,21 @@ namespace CanDevices.DingoPdm
                 {
                     _dials = value;
                     OnPropertyChanged(nameof(Dials));
+                }
+            }
+        }
+
+        private int _numDials;
+        [JsonIgnore]
+        public int NumDials
+        {
+            get => _numDials;
+            set
+            {
+                if (_numDials != value)
+                {
+                    _numDials = value;
+                    OnPropertyChanged(nameof(NumDials));
                 }
             }
         }
@@ -292,6 +328,21 @@ namespace CanDevices.DingoPdm
             }
         }
 
+        private bool _colorsEnabled;
+        [JsonIgnore]
+        public bool ColorsEnabled
+        {
+            get => _colorsEnabled;
+            set
+            {
+                if (_colorsEnabled != value)
+                {
+                    _colorsEnabled = value;
+                    OnPropertyChanged(nameof(ColorsEnabled));
+                }
+            }
+        }
+
         
         public Keypad(KeypadModel model, int num, string name, ICanDevice canDevice) : base(name, canDevice)
         {
@@ -299,8 +350,13 @@ namespace CanDevices.DingoPdm
 
             Number = num;
 
-            _buttons = new List<Button>();
-            _dials = new List<Dial>();
+            _allButtons = new ObservableCollection<Button>();
+            for(int i = 0; i < 20; i++)
+            {
+                _allButtons.Add(new Button(Number, i + 1));
+            }   
+
+            _dials = new ObservableCollection<Dial>();
 
             ModelUpdate(model);
 
@@ -323,74 +379,82 @@ namespace CanDevices.DingoPdm
 
         protected void ModelUpdate(KeypadModel model)
         {
-            Buttons.Clear();
-            Dials.Clear();
-
-            int btnCount = 0;
-            int dialCount = 0;
             switch (model)
             {
                 case KeypadModel.Blink2Key:
-                    btnCount = 2;
-                    dialCount = 0;
+                    NumButtons = 2;
+                    NumDials = 0;
+                    ColorsEnabled = true;
                     break;
                 case KeypadModel.Blink4Key:
-                    btnCount = 4;
-                    dialCount = 0;
+                    NumButtons = 4;
+                    NumDials = 0;
+                    ColorsEnabled = true;
+                    break;
+                case KeypadModel.Blink5Key:
+                    NumButtons = 5;
+                    NumDials = 0;
+                    ColorsEnabled = true;
                     break;
                 case KeypadModel.Blink6Key:
-                    btnCount = 6;
-                    dialCount = 0;
+                    NumButtons = 6;
+                    NumDials = 0;
+                    ColorsEnabled = true;
                     break;
                 case KeypadModel.Blink8Key:
-                    btnCount = 8;
-                    dialCount = 0;
+                    NumButtons = 8;
+                    NumDials = 0;
+                    ColorsEnabled = true;
                     break;
                 case KeypadModel.Blink10Key:
-                    btnCount = 10;
-                    dialCount = 0;
+                    NumButtons = 10;
+                    NumDials = 0;
+                    ColorsEnabled = true;
                     break;
                 case KeypadModel.Blink12Key:
-                    btnCount = 12;
-                    dialCount = 0;
+                    NumButtons = 12;
+                    NumDials = 0;
+                    ColorsEnabled = true;
                     break;
                 case KeypadModel.Blink15Key:
-                    btnCount = 15;
-                    dialCount = 0;
+                    NumButtons = 15;
+                    NumDials = 0;
+                    ColorsEnabled = true;
                     break; 
                 case KeypadModel.Blink13Key_2Dial:
-                    btnCount = 13;
-                    dialCount = 2;
+                    NumButtons = 13;
+                    NumDials = 2;
+                    ColorsEnabled = true;
                     break;
                 case KeypadModel.BlinkRacepad:
-                    btnCount = 12;
-                    dialCount = 4;
+                    NumButtons = 12;
+                    NumDials = 4;
+                    ColorsEnabled = true;
                     break;
                 case KeypadModel.Grayhill6Key:
-                    btnCount = 6;
-                    dialCount = 0;
+                    NumButtons = 6;
+                    NumDials = 0;
+                    ColorsEnabled = false;
                     break;
                 case KeypadModel.Grayhill8Key:
-                    btnCount = 8;
-                    dialCount = 0;
+                    NumButtons = 8;
+                    NumDials = 0;
+                    ColorsEnabled = false;
                     break;
                 case KeypadModel.Grayhill15Key:
-                    btnCount = 15;
-                    dialCount = 0;
+                    NumButtons = 15;
+                    NumDials = 0;
+                    ColorsEnabled = false;
                     break;
                 case KeypadModel.Grayhill20Key:
-                    btnCount = 20;
-                    dialCount = 0;
+                    NumButtons = 20;
+                    NumDials = 0;
+                    ColorsEnabled = false;
                     break;
                 default:
                     throw new NotImplementedException($"No keypad implementation for model {model}");
             }
 
-            for (int i = 0; i < btnCount; i++)
-                Buttons.Add(new Button(Number, i + 1));
-
-            for (int i = 0; i < dialCount; i++)
-                Dials.Add(new Dial(Number, i + 1));
         }
 
         public override void UpdateIsConnected()
@@ -403,8 +467,6 @@ namespace CanDevices.DingoPdm
 
         public override void Clear()
         {
-            _buttons.Clear();
-            _dials.Clear();
             _messageHandlers.Clear();
         }
 
@@ -463,9 +525,9 @@ namespace CanDevices.DingoPdm
 
         public void SetButtonState(int index, bool state)
         {
-            if (index < 0 || index > (Buttons.Count - 1))
+            if (index < 0 || index > (NumButtons - 1))
                 return;
-            Buttons[index].State = state;
+            AllButtons[index].State = state;
         }
 
         public void SetDialTicks(int index, int ticks)
@@ -503,6 +565,7 @@ namespace CanDevices.DingoPdm
 
         private void SetLed(byte[] data)
         {
+            /*
             Buttons[0].ActiveColor.Red = Convert.ToBoolean(data[0] & 0x01);
             Buttons[1].ActiveColor.Red = Convert.ToBoolean((data[0] >> 1) & 0x01);
             Buttons[2].ActiveColor.Red = Convert.ToBoolean((data[0] >> 2) & 0x01);
@@ -541,6 +604,7 @@ namespace CanDevices.DingoPdm
             Buttons[9].ActiveColor.Blue = Convert.ToBoolean((data[4] >> 1) & 0x01);
             Buttons[10].ActiveColor.Blue = Convert.ToBoolean((data[4] >> 2) & 0x01);
             Buttons[11].ActiveColor.Blue = Convert.ToBoolean((data[4] >> 3) & 0x01);
+            */
         }
 
         private void DialStateA(byte[] data)
@@ -550,6 +614,7 @@ namespace CanDevices.DingoPdm
 
         private void SetLedBlink(byte[] data)
         {
+            /*
             Buttons[0].ActiveColor.RedFlash = Convert.ToBoolean(data[0] & 0x01);
             Buttons[1].ActiveColor.RedFlash = Convert.ToBoolean((data[0] >> 1) & 0x01);
             Buttons[2].ActiveColor.RedFlash = Convert.ToBoolean((data[0] >> 2) & 0x01);
@@ -588,6 +653,7 @@ namespace CanDevices.DingoPdm
             Buttons[9].ActiveColor.BlueFlash = Convert.ToBoolean((data[4] >> 1) & 0x01);
             Buttons[10].ActiveColor.BlueFlash = Convert.ToBoolean((data[4] >> 2) & 0x01);
             Buttons[11].ActiveColor.BlueFlash = Convert.ToBoolean((data[4] >> 3) & 0x01);
+            */
         }
 
         private void DialStateB(byte[] data)

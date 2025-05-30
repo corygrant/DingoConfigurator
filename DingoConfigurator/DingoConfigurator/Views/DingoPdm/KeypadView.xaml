@@ -21,6 +21,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -36,144 +37,169 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0"
                        Grid.Column="0"
-                       Text="CAN Base ID"
+                       Text="Enabled"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
                        Padding="5" />
-            <TextBox Grid.Row="0"
-                     Grid.Column="1"
-                     Padding="5"
-                     Margin="5"
-                     MinWidth="50"
-                     MaxWidth="100"
-                     HorizontalAlignment="Left"
-                     HorizontalContentAlignment="Center"
-                     IsReadOnly="True"
-                     Text="{Binding Pdm.BaseId, Mode=OneWay}" />
-
-            <TextBlock Grid.Row="0"
-                       Grid.Column="2"
-                       Text="Total Current [A]"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Right"
-                       Padding="5" />
-            <TextBox Grid.Row="0"
-                     Grid.Column="3"
-                     Padding="5"
-                     Margin="5"
-                     MinWidth="50"
-                     MaxWidth="100"
-                     HorizontalAlignment="Left"
-                     HorizontalContentAlignment="Center"
-                     IsReadOnly="True"
-                     Text="{Binding Pdm.TotalCurrent, Mode=OneWay}" />
-
-            <TextBlock Grid.Row="1"
-                       Grid.Column="0"
-                       Text="Battery Voltage [V]"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Right"
-                       Padding="5" />
-            <TextBox Grid.Row="1"
-                     Grid.Column="1"
-                     Padding="5"
-                     Margin="5"
-                     MinWidth="50"
-                     MaxWidth="100"
-                     HorizontalAlignment="Left"
-                     HorizontalContentAlignment="Center"
-                     IsReadOnly="True"
-                     Text="{Binding Pdm.BatteryVoltage, Mode=OneWay}" />
-
-            <TextBlock Grid.Row="1"
-                       Grid.Column="2"
-                       Text="Board Temperature [°C]"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Right"
-                       Padding="5" />
-            <TextBox Grid.Row="1"
-                     Grid.Column="3"
-                     Padding="5"
-                     Margin="5"
-                     MinWidth="50"
-                     MaxWidth="100"
-                     HorizontalAlignment="Left"
-                     HorizontalContentAlignment="Center"
-                     IsReadOnly="True"
-                     Text="{Binding Pdm.BoardTempC, Mode=OneWay}" />
-            <TextBlock Grid.Row="0"
-                       Grid.Column="4"
-                       Text="FW Version"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Right"
-                       Padding="5" />
-            <TextBox Grid.Row="0"
-                     Grid.Column="5"
-                     Padding="5"
-                     Margin="5"
-                     MinWidth="100"
-                     MaxWidth="100"
-                     HorizontalAlignment="Left"
-                     HorizontalContentAlignment="Center"
-                     IsReadOnly="True"
-                     Text="{Binding Pdm.Version, Mode=OneWay}" />
-            <TextBlock Grid.Row="1"
-                       Grid.Column="4"
-                       Text="Device State"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Right"
-                       Padding="5" />
-            <TextBox Grid.Row="1"
-                     Grid.Column="5"
-                     Padding="5"
-                     Margin="5"
-                     MinWidth="100"
-                     MaxWidth="100"
-                     HorizontalAlignment="Left"
-                     HorizontalContentAlignment="Center"
-                     IsReadOnly="True"
-                     Text="{Binding Pdm.DeviceState, Mode=OneWay}" />
-            <TextBlock Grid.Row="0"
-                       Grid.Column="6"
-                       Text="Baud Rate"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Right"
-                       Padding="5" />
-            <ComboBox Grid.Row="0"
-                      Grid.Column="7"
-                      Margin="5 5 5 5"
-                      ItemsSource="{Binding Path=Pdm.BaudRates}"
-                      SelectedItem="{Binding Path=Pdm.BaudRate}"/>
-            <TextBlock Grid.Row="1"
-                       Grid.Column="6"
-                       Text="Sleep Enabled"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Right"
-                       Padding="5" />
-            <CheckBox Grid.Row="1"
-                      Grid.Column="7"
+            <CheckBox Grid.Row="0"
+                      Grid.Column="1"
                       Padding="5"
                       Margin="5"
                       MinWidth="40"
                       MaxWidth="40"
                       HorizontalAlignment="Left"
                       HorizontalContentAlignment="Center"
-                      IsChecked="{Binding Pdm.SleepEnabled, Mode=TwoWay}"/>
-            <TextBlock Grid.Row="1"
-                       Grid.Column="8"
-                       Text="CAN Filters Enabled"
+                      IsChecked="{Binding Kp.Enabled, Mode=TwoWay}"/>
+            <TextBlock Grid.Row="0"
+                       Grid.Column="2"
+                       Text="CANopen&#x0a;Node ID"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
                        Padding="5" />
-            <CheckBox Grid.Row="1"
+            <TextBox Grid.Row="0"
+                     Grid.Column="3"
+                     Padding="5"
+                     Margin="5"
+                     MinWidth="100"
+                     MaxWidth="100"
+                     HorizontalAlignment="Left"
+                     HorizontalContentAlignment="Center"
+                     Text="{Binding Kp.BaseId, Mode=TwoWay}" />
+            <TextBlock Grid.Row="0"
+                       Grid.Column="4"
+                       Text="Model"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       Padding="5" />
+            <ComboBox Grid.Row="0"
+                      Grid.Column="5"
+                      Margin="5 5 5 5"
+                      MinWidth="100"
+                      ItemsSource="{Binding Source={StaticResource KeypadModelEnumDataSource}}"
+                      SelectedItem="{Binding Path=Kp.Model}"/>
+            <TextBlock Grid.Row="0"
+                       Grid.Column="6"
+                       Text="Timeout (s)"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       Padding="5" />
+            <TextBox Grid.Row="0"
+                     Grid.Column="7"
+                     Padding="5"
+                     Margin="5"
+                     MinWidth="100"
+                     MaxWidth="100"
+                     HorizontalAlignment="Left"
+                     HorizontalContentAlignment="Center"
+                     Text="{Binding Kp.Timeout, Mode=TwoWay}" />
+            <TextBlock Grid.Row="0"
+                       Grid.Column="8"
+                       Text="Timeout Enabled"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       Padding="5" />
+            <CheckBox Grid.Row="0"
                       Grid.Column="9"
                       Padding="5"
                       Margin="5"
                       MinWidth="40"
                       MaxWidth="40"
-                      HorizontalAlignment="Center"
+                      HorizontalAlignment="Left"
                       HorizontalContentAlignment="Center"
-                      IsChecked="{Binding Pdm.CanFiltersEnabled, Mode=TwoWay}"/>
+                      IsChecked="{Binding Kp.TimeoutEnabled, Mode=TwoWay}"/>
+
+            <TextBlock Grid.Row="1"
+                       Grid.Column="0"
+                       Text="Backlight&#x0a;Brightness"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       TextAlignment="Right"
+                       Padding="5" />
+            <TextBox Grid.Row="1"
+                     Grid.Column="1"
+                     Padding="5"
+                     Margin="5"
+                     MinWidth="100"
+                     MaxWidth="100"
+                     HorizontalAlignment="Left"
+                     HorizontalContentAlignment="Center"
+                     Text="{Binding Kp.BacklightBrightness, Mode=TwoWay}" />
+            <TextBlock Grid.Row="1"
+                       Grid.Column="2"
+                       Text="Button&#x0a;Brightness"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       TextAlignment="Right"
+                       Padding="5" />
+            <TextBox Grid.Row="1"
+                     Grid.Column="3"
+                     Padding="5"
+                     Margin="5"
+                     MinWidth="100"
+                     MaxWidth="100"
+                     HorizontalAlignment="Left"
+                     HorizontalContentAlignment="Center"
+                     Text="{Binding Kp.ButtonBrightness, Mode=TwoWay}" />
+            <TextBlock Grid.Row="1"
+                       Grid.Column="4"
+                       Text="Dimming Var"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       Padding="5" />
+            <ComboBox Grid.Row="1"
+                      Grid.Column="5"
+                      Margin="5 5 5 5"
+                      MinWidth="100"
+                      ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}}"
+                      SelectedItem="{Binding Path=Kp.DimmingVar}"/>
+            <TextBlock Grid.Row="1"
+                       Grid.Column="6"
+                       Text="Dim Backlight&#x0a;Brightness"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       TextAlignment="Right"
+                       Padding="5" />
+            <TextBox Grid.Row="1"
+                     Grid.Column="7"
+                     Padding="5"
+                     Margin="5"
+                     MinWidth="100"
+                     MaxWidth="100"
+                     HorizontalAlignment="Left"
+                     HorizontalContentAlignment="Center"
+                     Text="{Binding Kp.DimBacklightBrightness, Mode=TwoWay}" />
+            <TextBlock Grid.Row="1"
+                       Grid.Column="8"
+                       Text="Dim Button&#x0a;Brightness"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       TextAlignment="Right"
+                       Padding="5" />
+            <TextBox Grid.Row="1"
+                     Grid.Column="9"
+                     Padding="5"
+                     Margin="5"
+                     MinWidth="100"
+                     MaxWidth="100"
+                     HorizontalAlignment="Left"
+                     HorizontalContentAlignment="Center"
+                     Text="{Binding Kp.DimButtonBrightness, Mode=TwoWay}" />
+
+            <TextBlock Grid.Row="2"
+                       Grid.Column="0"
+                       Text="Backlight&#x0a;Color"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       TextAlignment="Right"
+                       Padding="5" />
+            <ComboBox Grid.Row="2"
+                      Grid.Column="1"
+                      Margin="5 5 5 5"
+                      MinWidth="100"
+                      IsEnabled="{Binding Path=Kp.ColorsEnabled}"
+                      ItemsSource="{Binding Source={StaticResource BlinkBacklightColorEnumDataSource}}"
+                      SelectedItem="{Binding Path=Kp.BacklightColor}"/>
+
         </Grid>
         <GridSplitter Grid.Row="1" Grid.Column="0"
                       HorizontalAlignment="Stretch"
@@ -188,6 +214,6 @@
                       Background="White"
                       ShowsPreview="True"
                       Height="3"/>
-        <local:BlinkMarineButtonView Grid.Row="5" Grid.Column="0" DataContext="{Binding Kp}"/>
+        <local:BlinkMarineButtonView Grid.Row="5" Grid.Column="0" IsEnabled="{Binding Path=Kp.ColorsEnabled}" DataContext="{Binding Kp}"/>
     </Grid>
 </UserControl>

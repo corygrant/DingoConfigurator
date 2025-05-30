@@ -737,8 +737,8 @@ namespace DingoConfigurator
                     { "Main", new DingoPdmViewModel(this) },
                     { "Settings", new DingoPdmSettingsViewModel(this) },
                     { "Plots", new DingoPdmPlotsViewModel(this) },
-                    { "Keypad1", new KeypadViewModel(this) },
-                    { "Keypad2", new KeypadViewModel(this) }
+                    { "Keypad1", new KeypadViewModel(this, 0) },
+                    { "Keypad2", new KeypadViewModel(this, 1) }
                 };
 
             }
@@ -753,8 +753,8 @@ namespace DingoConfigurator
                     { "Main", new DingoPdmViewModel(this) },
                     { "Settings", new DingoPdmSettingsViewModel(this) },
                     { "Plots", new DingoPdmPlotsViewModel(this) },
-                    { "Keypad1", new KeypadViewModel(this) },
-                    { "Keypad2", new KeypadViewModel(this) }
+                    { "Keypad1", new KeypadViewModel(this, 0) },
+                    { "Keypad2", new KeypadViewModel(this, 1) }
                 };
             }
 

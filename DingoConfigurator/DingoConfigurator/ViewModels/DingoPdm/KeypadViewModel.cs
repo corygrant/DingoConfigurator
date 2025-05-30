@@ -13,7 +13,7 @@ namespace DingoConfigurator.ViewModels
         private Keypad _kp;
         public Keypad Kp {get { return _kp; }}
 
-        public KeypadViewModel(MainViewModel vm)
+        public KeypadViewModel(MainViewModel vm, int index)
         {
             _vm = vm;
 
@@ -28,7 +28,7 @@ namespace DingoConfigurator.ViewModels
             }
             else if (_vm.SelectedCanDevice.GetType() == typeof(DingoPdmCan))
             {
-                _kp = ((DingoPdmCan)_vm.SelectedCanDevice).Keypads.FirstOrDefault();
+                _kp = ((DingoPdmCan)_vm.SelectedCanDevice).Keypads[index];
             }
             else
             {

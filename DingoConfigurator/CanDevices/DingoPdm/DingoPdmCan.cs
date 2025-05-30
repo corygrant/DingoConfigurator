@@ -1159,9 +1159,9 @@ namespace CanDevices.DingoPdm
                 case MessagePrefix.KeypadButton:
                     index = data[1] & 0x07;
                     buttonIndex = data[1] >> 3;
-                    if ((index >= 0 && index < _numKeypads) && (buttonIndex >= 0 && buttonIndex < Keypads[index].Buttons.Count))
+                    if ((index >= 0 && index < _numKeypads) && (buttonIndex >= 0 && buttonIndex < Keypads[index].NumButtons))
                     {
-                        if (Keypads[index].Buttons[buttonIndex].Receive(data))
+                        if (Keypads[index].AllButtons[buttonIndex].Receive(data))
                         {
                             key = (BaseId, (int)MessagePrefix.KeypadButton, (index & 0x07) + (buttonIndex << 3));
                             if (queue.TryGetValue(key, out response))
@@ -1177,9 +1177,9 @@ namespace CanDevices.DingoPdm
                 case MessagePrefix.KeypadButtonLed:
                     index = data[1] & 0x07;
                     buttonIndex = data[1] >> 3;
-                    if ((index >= 0 && index < _numKeypads) && (buttonIndex >= 0 && buttonIndex < Keypads[index].Buttons.Count))
+                    if ((index >= 0 && index < _numKeypads) && (buttonIndex >= 0 && buttonIndex < Keypads[index].NumButtons))
                     {
-                        if (Keypads[index].Buttons[buttonIndex].Receive(data))
+                        if (Keypads[index].AllButtons[buttonIndex].Receive(data))
                         {
                             key = (BaseId, (int)MessagePrefix.KeypadButtonLed, (index & 0x07) + (buttonIndex << 3));
                             if (queue.TryGetValue(key, out response))
@@ -1197,7 +1197,7 @@ namespace CanDevices.DingoPdm
                     buttonIndex = data[1] >> 3;
                     if ((index >= 0 && index < _numKeypads) && (buttonIndex >= 0 && buttonIndex < Keypads[index].Dials.Count))
                     {
-                        if (Keypads[index].Buttons[buttonIndex].Receive(data))
+                        if (Keypads[index].AllButtons[buttonIndex].Receive(data))
                         {
                             key = (BaseId, (int)MessagePrefix.KeypadDial, index);
                             if (queue.TryGetValue(key, out response))

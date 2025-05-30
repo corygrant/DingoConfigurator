@@ -12,7 +12,7 @@
               CanUserSortColumns="False"
               ItemsSource="{Binding Buttons}">
         <DataGrid.Columns>
-            <DataGridTextColumn Header="Button"
+            <DataGridTextColumn Header="Button&#x0a;Colors"
                                 Binding="{Binding Number}"
                                 IsReadOnly="True"
                                 Width="70"
