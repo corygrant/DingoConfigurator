@@ -734,7 +734,7 @@ namespace CanDevices.DingoPdm
             {
                 requests.Add(new CanDeviceResponse
                 {
-                    Prefix = Convert.ToInt16(MessagePrefix.KeypadLed),
+                    Prefix = Convert.ToInt16(MessagePrefix.KeypadDial),
                     Index = dial.Number - 1,
                     Data = new CanInterfaceData
                     {
@@ -768,7 +768,7 @@ namespace CanDevices.DingoPdm
 
             requests.Add(new CanDeviceResponse
             {
-                Prefix = Convert.ToInt16(MessagePrefix.KeypadLed),
+                Prefix = Convert.ToInt16(MessagePrefix.KeypadDial),
                 Index = Number - 1,
                 Data = new CanInterfaceData
                 {
@@ -778,6 +778,30 @@ namespace CanDevices.DingoPdm
                 },
                 MsgDescription = $"KeypadLed{Number}"
             });
+
+            foreach (var button in Buttons)
+            {
+                foreach (var response in button.WriteMsgs(id))
+                {
+                    requests.Add(response);
+                }
+            }
+
+            foreach (var dial in Dials)
+            {
+                requests.Add(new CanDeviceResponse
+                {
+                    Prefix = Convert.ToInt16(MessagePrefix.KeypadDial),
+                    Index = dial.Number - 1,
+                    Data = new CanInterfaceData
+                    {
+                        Id = id,
+                        Len = 5,
+                        Payload = dial.Write(Number, dial.Number - 1)
+                    },
+                    MsgDescription = $"Dial{Number}"
+                });
+            }
 
             return requests;
         }

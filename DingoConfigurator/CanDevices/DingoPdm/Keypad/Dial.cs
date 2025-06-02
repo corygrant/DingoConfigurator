@@ -184,11 +184,11 @@ namespace CanDevices.DingoPdm
             return true;
         }
 
-        public byte[] Write()
+        public byte[] Write(int keypadIndex, int dialIndex)
         {
             byte[] data = new byte[8];
             data[0] = Convert.ToByte(MessagePrefix.KeypadDial);
-            data[1] = Convert.ToByte(((KeypadNumber - 1) & 0x07) + ((Number - 1) & 0xF8) >> 3);
+            data[1] = Convert.ToByte((keypadIndex & 0x07) + (dialIndex & 0xF8) >> 3);
             data[2] = Convert.ToByte(MinLed);
             data[3] = Convert.ToByte(MaxLed);
             data[4] = Convert.ToByte(LedOffset);

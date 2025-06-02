@@ -167,7 +167,7 @@ namespace CanDevices.DingoPdm
                     Data = new CanInterfaceData
                     {
                         Id = id,
-                        Len = 2,
+                        Len = 8,
                         Payload = Write()
                     },
                     MsgDescription = $"Keypad{KeypadNumber} Button{Number}"
@@ -179,7 +179,7 @@ namespace CanDevices.DingoPdm
                     Data = new CanInterfaceData
                     {
                         Id = id,
-                        Len = 2,
+                        Len = 8,
                         Payload = WriteLed()
                     },
                     MsgDescription = $"Keypad{KeypadNumber} ButtonLed{Number}"

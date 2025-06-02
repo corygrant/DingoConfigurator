@@ -76,7 +76,7 @@
                       Margin="5 5 5 5"
                       MinWidth="100"
                       ItemsSource="{Binding Source={StaticResource KeypadModelEnumDataSource}}"
-                      SelectedItem="{Binding Path=Kp.Model}"/>
+                      SelectedItem="{Binding Path=Kp.Model, Mode=TwoWay}"/>
             <TextBlock Grid.Row="0"
                        Grid.Column="6"
                        Text="Timeout (s)"
@@ -151,7 +151,7 @@
                       Margin="5 5 5 5"
                       MinWidth="100"
                       ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}}"
-                      SelectedItem="{Binding Path=Kp.DimmingVar}"/>
+                      SelectedItem="{Binding Path=Kp.DimmingVar, Mode=TwoWay}"/>
             <TextBlock Grid.Row="1"
                        Grid.Column="6"
                        Text="Dim Backlight&#x0a;Brightness"
@@ -198,7 +198,7 @@
                       MinWidth="100"
                       IsEnabled="{Binding Path=Kp.ColorsEnabled}"
                       ItemsSource="{Binding Source={StaticResource BlinkBacklightColorEnumDataSource}}"
-                      SelectedItem="{Binding Path=Kp.BacklightColor}"/>
+                      SelectedItem="{Binding Path=Kp.BacklightColor, Mode=TwoWay}"/>
 
         </Grid>
         <GridSplitter Grid.Row="1" Grid.Column="0"

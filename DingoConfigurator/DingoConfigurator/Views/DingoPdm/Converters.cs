@@ -35,8 +35,8 @@ namespace DingoConfigurator.Views
                     return enumValues
                         .Cast<VarMap>()
                         .Where(e => e != VarMap.Output5_On && e != VarMap.Output5_OC && e != VarMap.Output5_Fault &&
-                                    e != VarMap.Output6_On && e != VarMap.Output6_OC && e != VarMap.Output6_Fault && 
-                                    e != VarMap.Output7_On && e != VarMap.Output7_OC && e != VarMap.Output7_Fault && 
+                                    e != VarMap.Output6_On && e != VarMap.Output6_OC && e != VarMap.Output6_Fault &&
+                                    e != VarMap.Output7_On && e != VarMap.Output7_OC && e != VarMap.Output7_Fault &&
                                     e != VarMap.Output8_On && e != VarMap.Output8_OC && e != VarMap.Output8_Fault)
                         .ToList();
                 }
