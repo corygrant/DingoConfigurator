@@ -10,7 +10,7 @@
               CanUserAddRows="False"
               CanUserDeleteRows="False"
               CanUserSortColumns="False"
-              ItemsSource="{Binding Buttons}">
+              ItemsSource="{Binding AllButtons}">
         <DataGrid.Columns>
             <DataGridTextColumn Header="Button&#x0a;Colors"
                                 Binding="{Binding Number}"

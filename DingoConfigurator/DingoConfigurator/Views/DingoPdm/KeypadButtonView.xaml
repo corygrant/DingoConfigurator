@@ -12,7 +12,7 @@
               CanUserAddRows="False"
               CanUserDeleteRows="False"
               CanUserSortColumns="False"
-              ItemsSource="{Binding Buttons}">
+              ItemsSource="{Binding AllButtons}">
         <DataGrid.Columns>
             <DataGridTextColumn Header="Button"
                                 Binding="{Binding Number}"
@@ -110,7 +110,7 @@
                     <DataTemplate>
                         <ComboBox HorizontalContentAlignment="Center"
                                   ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}"
-                                  SelectedValue="{Binding ValVars[0], UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                  SelectedValue="{Binding ValVars[0], UpdateSourceTrigger=PropertyChanged}"
                                   BorderThickness="0">
                         </ComboBox>
                     </DataTemplate>
@@ -125,7 +125,7 @@
                     <DataTemplate>
                         <ComboBox HorizontalContentAlignment="Center"
                                   ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}"
-                                  SelectedValue="{Binding ValVars[1], UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                  SelectedValue="{Binding ValVars[1], UpdateSourceTrigger=PropertyChanged}"
                                   BorderThickness="0">
                         </ComboBox>
                     </DataTemplate>
@@ -140,7 +140,7 @@
                     <DataTemplate>
                         <ComboBox HorizontalContentAlignment="Center"
                                   ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}"
-                                  SelectedValue="{Binding ValVars[2], UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                  SelectedValue="{Binding ValVars[2], UpdateSourceTrigger=PropertyChanged}"
                                   BorderThickness="0">
                         </ComboBox>
                     </DataTemplate>
@@ -155,7 +155,7 @@
                     <DataTemplate>
                         <ComboBox HorizontalContentAlignment="Center"
                                   ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}"
-                                  SelectedValue="{Binding ValVars[3], UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                  SelectedValue="{Binding ValVars[3], UpdateSourceTrigger=PropertyChanged}"
                                   BorderThickness="0">
                         </ComboBox>
                     </DataTemplate>
@@ -170,7 +170,7 @@
                     <DataTemplate>
                         <ComboBox HorizontalContentAlignment="Center"
                                   ItemsSource="{Binding Source={StaticResource VarMapEnumDataSource}, Mode=OneWay}"
-                                  SelectedValue="{Binding FaultVar, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                  SelectedValue="{Binding FaultVar, UpdateSourceTrigger=PropertyChanged}"
                                   BorderThickness="0">
                         </ComboBox>
                     </DataTemplate>
@@ -180,7 +180,7 @@
                 </DataGridTemplateColumn.CellStyle>
             </DataGridTemplateColumn>
             <DataGridCheckBoxColumn Header="Plot"
-                                    Binding="{Binding Plot, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                    Binding="{Binding Plot, UpdateSourceTrigger=PropertyChanged}"
                                     Width="70"
                                     MinWidth="70"
                                     HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">

@@ -219,9 +219,9 @@ namespace CanDevices.DingoPdm
             byte[] data = new byte[8];
             data[0] = Convert.ToByte(MessagePrefix.KeypadButton);
             data[1] = Convert.ToByte(((KeypadNumber-1) & 0x07) + ((Number - 1) << 3));
-            data[2] = Convert.ToByte(   Convert.ToByte(Enabled) + 
-                                        Convert.ToByte(HasDial) << 1 + 
-                                        Convert.ToByte(Mode) << 2);
+            data[2] = Convert.ToByte(Convert.ToByte(Enabled) + 
+                                        (Convert.ToByte(HasDial) << 1) + 
+                                        (Convert.ToByte(Mode) << 2));
             data[3] = Convert.ToByte(ValVars[0]);
             data[4] = Convert.ToByte(ValVars[1]);
             data[5] = Convert.ToByte(ValVars[2]);

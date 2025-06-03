@@ -29,13 +29,25 @@ namespace CanDevices.DingoPdm
                 {
                     _allButtons = value;
                     OnPropertyChanged(nameof(AllButtons));
-                    OnPropertyChanged(nameof(Buttons));
+                    UpdateButtonsSubset();
                 }
             }
         }
 
-        public IEnumerable<Button> Buttons =>
-            AllButtons?.Take(_numButtons) ?? Enumerable.Empty<Button>();
+
+        private ObservableCollection<Button> _buttons;
+        public ObservableCollection<Button> Buttons
+        {
+            get => _buttons;
+            set
+            {
+                if (_buttons != value)
+                {
+                    _buttons = value;
+                    OnPropertyChanged(nameof(Buttons));
+                }
+            }
+        }
 
         private int _numButtons;
         [JsonIgnore]
@@ -48,7 +60,7 @@ namespace CanDevices.DingoPdm
                 {
                     _numButtons = value;
                     OnPropertyChanged(nameof(NumButtons));
-                    OnPropertyChanged(nameof(Buttons));
+                    UpdateButtonsSubset();
                 }
             }
         }
@@ -354,12 +366,16 @@ namespace CanDevices.DingoPdm
             for(int i = 0; i < 20; i++)
             {
                 _allButtons.Add(new Button(Number, i + 1));
-            }   
-
-            _dials = new ObservableCollection<Dial>();
+            }
 
             ModelUpdate(model);
 
+            var subset = AllButtons.Take(NumButtons).ToList();
+            Buttons = new ObservableCollection<Button>(subset);
+
+            _dials = new ObservableCollection<Dial>();
+
+           
             _messageHandlers = new Dictionary<int, Action<byte[]>>
             {
                 { Convert.ToInt16(MsgId.NMT), NMT },
@@ -455,6 +471,28 @@ namespace CanDevices.DingoPdm
                     throw new NotImplementedException($"No keypad implementation for model {model}");
             }
 
+        }
+
+        private void UpdateButtonsSubset()
+        {
+            if (AllButtons == null)
+            {
+                Buttons = new ObservableCollection<Button>();
+                return;
+            }
+
+            var subset = AllButtons.Take(NumButtons).ToList();
+
+            if (Buttons == null)
+            {
+                Buttons = new ObservableCollection<Button>(subset);
+            }
+            else
+            {
+                Buttons.Clear();
+                foreach (var btn in subset)
+                    Buttons.Add(btn);
+            }
         }
 
         public override void UpdateIsConnected()
