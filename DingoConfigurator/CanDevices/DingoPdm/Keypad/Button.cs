@@ -103,7 +103,13 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        public Button(int keypadNum, int buttonNum):base(keypadNum, buttonNum)
+        public Button()
+        {
+            _valColors = new BlinkMarineButtonColor[4];
+            _blinkingColors = new BlinkMarineButtonColor[4];
+        }
+
+        public Button(int keypadNumber, int number):base(keypadNumber, number)
         {
             _valColors = new BlinkMarineButtonColor[4];
             _blinkingColors = new BlinkMarineButtonColor[4];
@@ -260,6 +266,8 @@ namespace CanDevices.DingoPdm
 
         private byte[] WriteLed()
         {
+            NumValColors = 2;
+
             byte[] data = new byte[8];
             data[0] = Convert.ToByte(MessagePrefix.KeypadButtonLed);
             data[1] = Convert.ToByte(((KeypadNumber - 1) & 0x07) + ((Number - 1) << 3));

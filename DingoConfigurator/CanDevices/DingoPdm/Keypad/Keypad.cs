@@ -20,6 +20,7 @@ namespace CanDevices.DingoPdm
     public class Keypad : CanDeviceSub
     {
         private ObservableCollection<Button> _allButtons;
+        [JsonPropertyName("buttons")]
         public ObservableCollection<Button> AllButtons
         {
             get => _allButtons;
@@ -29,22 +30,6 @@ namespace CanDevices.DingoPdm
                 {
                     _allButtons = value;
                     OnPropertyChanged(nameof(AllButtons));
-                    UpdateButtonsSubset();
-                }
-            }
-        }
-
-
-        private ObservableCollection<Button> _buttons;
-        public ObservableCollection<Button> Buttons
-        {
-            get => _buttons;
-            set
-            {
-                if (_buttons != value)
-                {
-                    _buttons = value;
-                    OnPropertyChanged(nameof(Buttons));
                 }
             }
         }
@@ -60,12 +45,12 @@ namespace CanDevices.DingoPdm
                 {
                     _numButtons = value;
                     OnPropertyChanged(nameof(NumButtons));
-                    UpdateButtonsSubset();
                 }
             }
         }
 
         private ObservableCollection<Dial> _dials;
+        [JsonPropertyName("dials")]
         public ObservableCollection<Dial> Dials
         {
             get => _dials;
@@ -95,6 +80,7 @@ namespace CanDevices.DingoPdm
         }
 
         private bool _startReceived;
+        [JsonIgnore]
         public bool StartReceived
         {
             get => _startReceived;
@@ -108,7 +94,7 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private readonly Dictionary<int, Action<byte[]>> _messageHandlers;
+        
 
         private bool _enabled;
         [JsonPropertyName("enabled")]
@@ -136,6 +122,15 @@ namespace CanDevices.DingoPdm
                 {
                     _number = value;
                     OnPropertyChanged(nameof(Number));
+                    
+                    // Update button keypad numbers after deserialization
+                    if (_allButtons != null)
+                    {
+                        foreach (var button in _allButtons)
+                        {
+                            button.KeypadNumber = value;
+                        }
+                    }
                 }
             }
         }
@@ -261,9 +256,9 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        protected int _baseId;
+        private int _baseId;
         [JsonPropertyName("baseId")]
-        public override int BaseId
+        public int KeypadBaseId
         {
             get => _baseId;
             set
@@ -274,6 +269,13 @@ namespace CanDevices.DingoPdm
                     OnPropertyChanged(nameof(BaseId));
                 }
             }
+        }
+
+        [JsonIgnore]
+        public override int BaseId
+        {
+            get => _baseId;
+            set => _baseId = value;
         }
 
         protected bool _isConnected;
@@ -355,12 +357,62 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        
-        public Keypad(KeypadModel model, int num, string name, ICanDevice canDevice) : base(name, canDevice)
+        private string _keypadName;
+        [JsonPropertyName("name")]
+        public string KeypadName
         {
-            BaseId = 0x15;
+            get => _keypadName;
+            set
+            {
+                if (_keypadName != value)
+                {
+                    _keypadName = value;
+                    OnPropertyChanged(nameof(KeypadName));
+                }
+            }
+        }
 
-            Number = num;
+        [JsonIgnore]
+        public new string Name
+        {
+            get => _keypadName;
+            set => _keypadName = value;
+        }
+
+        private readonly Dictionary<int, Action<byte[]>> _messageHandlers;
+
+        public Keypad()
+        {
+            _allButtons = new ObservableCollection<Button>();
+            for(int i = 0; i < 20; i++)
+            {
+                _allButtons.Add(new Button(1, i + 1));
+            }
+
+            _dials = new ObservableCollection<Dial>();
+
+           
+            _messageHandlers = new Dictionary<int, Action<byte[]>>
+            {
+                { Convert.ToInt16(MsgId.NMT), NMT },
+                { Convert.ToInt16(MsgId.ButtonState), ButtonState },
+                { Convert.ToInt16(MsgId.SetLed), SetLed },
+                { Convert.ToInt16(MsgId.DialStateA), DialStateA },
+                { Convert.ToInt16(MsgId.SetLedBlink), SetLedBlink },
+                { Convert.ToInt16(MsgId.DialStateB), DialStateB },
+                { Convert.ToInt16(MsgId.LedBrightness), LedBrightness },
+                { Convert.ToInt16(MsgId.AnalogInput), AnalogInput },
+                { Convert.ToInt16(MsgId.Backlight), Backlight },
+                { Convert.ToInt16(MsgId.SdoResponse), SdoResponse },
+                { Convert.ToInt16(MsgId.SdoRequest), SdoRequest },
+                { Convert.ToInt16(MsgId.Heartbeat), Heartbeat }
+            };
+        }
+
+        public Keypad(int number, string name, ICanDevice canDevice) : base(name, canDevice)
+        {
+
+            Number = number;
 
             _allButtons = new ObservableCollection<Button>();
             for(int i = 0; i < 20; i++)
@@ -368,10 +420,6 @@ namespace CanDevices.DingoPdm
                 _allButtons.Add(new Button(Number, i + 1));
             }
 
-            ModelUpdate(model);
-
-            var subset = AllButtons.Take(NumButtons).ToList();
-            Buttons = new ObservableCollection<Button>(subset);
 
             _dials = new ObservableCollection<Dial>();
 
@@ -473,27 +521,7 @@ namespace CanDevices.DingoPdm
 
         }
 
-        private void UpdateButtonsSubset()
-        {
-            if (AllButtons == null)
-            {
-                Buttons = new ObservableCollection<Button>();
-                return;
-            }
 
-            var subset = AllButtons.Take(NumButtons).ToList();
-
-            if (Buttons == null)
-            {
-                Buttons = new ObservableCollection<Button>(subset);
-            }
-            else
-            {
-                Buttons.Clear();
-                foreach (var btn in subset)
-                    Buttons.Add(btn);
-            }
-        }
 
         public override void UpdateIsConnected()
         {
@@ -516,17 +544,17 @@ namespace CanDevices.DingoPdm
             // Define a HashSet for quick lookup
             var validIds = new HashSet<int>
             {
-                _baseId + Convert.ToInt16(MsgId.NMT),
-                _baseId + Convert.ToInt16(MsgId.ButtonState),
-                _baseId + Convert.ToInt16(MsgId.DialStateA),
-                _baseId + Convert.ToInt16(MsgId.SetLedBlink),
-                _baseId + Convert.ToInt16(MsgId.DialStateB),
-                _baseId + Convert.ToInt16(MsgId.LedBrightness),
-                _baseId + Convert.ToInt16(MsgId.AnalogInput),
-                _baseId + Convert.ToInt16(MsgId.Backlight),
-                _baseId + Convert.ToInt16(MsgId.SdoResponse),
-                _baseId + Convert.ToInt16(MsgId.SdoRequest),
-                _baseId + Convert.ToInt16(MsgId.Heartbeat)
+                BaseId + Convert.ToInt16(MsgId.NMT),
+                BaseId + Convert.ToInt16(MsgId.ButtonState),
+                BaseId + Convert.ToInt16(MsgId.DialStateA),
+                BaseId + Convert.ToInt16(MsgId.SetLedBlink),
+                BaseId + Convert.ToInt16(MsgId.DialStateB),
+                BaseId + Convert.ToInt16(MsgId.LedBrightness),
+                BaseId + Convert.ToInt16(MsgId.AnalogInput),
+                BaseId + Convert.ToInt16(MsgId.Backlight),
+                BaseId + Convert.ToInt16(MsgId.SdoResponse),
+                BaseId + Convert.ToInt16(MsgId.SdoRequest),
+                BaseId + Convert.ToInt16(MsgId.Heartbeat)
             };
 
             // Check if the id exists in the set
@@ -542,7 +570,7 @@ namespace CanDevices.DingoPdm
             }
 
             // Calculate the message offset from base ID
-            int msgOffset = id - _baseId;
+            int msgOffset = id - BaseId;
 
             if (_messageHandlers.TryGetValue(msgOffset, out var handler))
             {
@@ -760,7 +788,7 @@ namespace CanDevices.DingoPdm
                 MsgDescription = $"KeypadLed{Number}"
             });
 
-            foreach (var button in Buttons)
+            foreach (var button in AllButtons)
             {
                 foreach (var response in button.RequestMsgs(id))
                 {
@@ -806,7 +834,7 @@ namespace CanDevices.DingoPdm
 
             requests.Add(new CanDeviceResponse
             {
-                Prefix = Convert.ToInt16(MessagePrefix.KeypadDial),
+                Prefix = Convert.ToInt16(MessagePrefix.KeypadLed),
                 Index = Number - 1,
                 Data = new CanInterfaceData
                 {
@@ -817,7 +845,7 @@ namespace CanDevices.DingoPdm
                 MsgDescription = $"KeypadLed{Number}"
             });
 
-            foreach (var button in Buttons)
+            foreach (var button in AllButtons)
             {
                 foreach (var response in button.WriteMsgs(id))
                 {

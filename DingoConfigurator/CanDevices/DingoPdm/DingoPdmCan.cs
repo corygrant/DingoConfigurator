@@ -211,6 +211,7 @@ namespace CanDevices.DingoPdm
         }
 
         protected bool _sleepEnabled;
+        [JsonPropertyName("sleepEnabled")]
         public bool SleepEnabled
         {
             get => _sleepEnabled;
@@ -225,6 +226,7 @@ namespace CanDevices.DingoPdm
         }
 
         protected bool _canFiltersEnabled;
+        [JsonPropertyName("canFiltersEnabled")]
         public bool CanFiltersEnabled
         {
             get => _canFiltersEnabled;
@@ -239,6 +241,7 @@ namespace CanDevices.DingoPdm
         }
 
         protected CanSpeed _baudRate;
+        [JsonPropertyName("baudRate")]
         public CanSpeed BaudRate
         {
             get { return _baudRate; }
@@ -383,7 +386,7 @@ namespace CanDevices.DingoPdm
         public ObservableCollection<Keypad> Keypads
         {
             get => _keypads;
-            protected set
+            set
             {
                 if (_keypads != value)
                 {
@@ -463,17 +466,34 @@ namespace CanDevices.DingoPdm
             Keypads = new ObservableCollection<Keypad>();
             for (int i = 0; i < _numKeypads; i++)
             {
-                Keypads.Add(new Keypad(KeypadModel.Blink12Key, i + 1, $"Keypad{i + 1}", this));
+                Keypads.Add(new Keypad(i + 1, $"Keypad{i + 1}", this));
             }
-
-            //REMOVE
-            Keypads[1].BaseId = 0x100;
 
             SubPages.Add(new CanDeviceSub("Settings", this));
             SubPages.Add(new DingoPdmPlot("Plots", this));
+
             for(int i= 0; i < _numKeypads; i++)
             {
                 SubPages.Add(Keypads[i]);
+            }
+        }
+
+        public void InitializeAfterDeserialization()
+        {
+            // Set up parent references for keypads
+            foreach (var keypad in Keypads)
+            {
+                keypad.CanDevice = this;  // Assuming this property exists
+                keypad.Name = keypad.Name ?? $"Keypad{keypad.Number}";  // Set name if null
+            }
+
+            // Set up SubPages
+            SubPages.Clear();
+            SubPages.Add(new CanDeviceSub("Settings", this));
+            SubPages.Add(new DingoPdmPlot("Plots", this));
+            foreach (var keypad in Keypads)
+            {
+                SubPages.Add(keypad);
             }
         }
 

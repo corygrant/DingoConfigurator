@@ -74,6 +74,7 @@ namespace DingoConfigurator.Config
             ObservableCollection<ICanDevice> devices = new ObservableCollection<ICanDevice>();
             foreach (var pdm in config.pdm)
             {
+                pdm.InitializeAfterDeserialization();
                 devices.Add(pdm);
             }
             foreach (var pdmMax in config.pdmMax)
@@ -101,7 +102,11 @@ namespace DingoConfigurator.Config
 
         public static bool Save(string filename, DevicesConfig devices)
         {
-            var jsonString = JsonSerializer.Serialize(devices, new JsonSerializerOptions { WriteIndented = true });
+            var options = new JsonSerializerOptions 
+            { 
+                WriteIndented = true
+            };
+            var jsonString = JsonSerializer.Serialize(devices, options);
             File.WriteAllText(filename, jsonString);
 
             //Catch file exceptions
@@ -111,11 +116,26 @@ namespace DingoConfigurator.Config
         public static bool Open(string filename, out DevicesConfig devices)
         {
             var jsonString = File.ReadAllText(filename);
-            var options = new JsonSerializerOptions
+            devices = new DevicesConfig();
+            try
             {
-                PropertyNameCaseInsensitive = true
-            };
-            devices = JsonSerializer.Deserialize<DevicesConfig>(jsonString, options);
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+                devices = JsonSerializer.Deserialize<DevicesConfig>(jsonString, options);
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"Deserialization error: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                // This will give you more specific error details
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"General error: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+            }
 
             //Catch file exceptions
             return true;

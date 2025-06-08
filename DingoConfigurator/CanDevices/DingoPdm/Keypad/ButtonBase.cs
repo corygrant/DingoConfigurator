@@ -160,12 +160,16 @@ namespace CanDevices.DingoPdm
                 }
             }
         }
-
-        public ButtonBase(int keypadNum, int buttonNum)
+        public ButtonBase()
         {
             _valVars = new VarMap[4];
-            KeypadNumber = keypadNum;
-            Number = buttonNum;
+        }
+
+        public ButtonBase(int keypadNumber, int number)
+        {
+            _valVars = new VarMap[4];
+            KeypadNumber = keypadNumber;
+            Number = number;
         }
         public virtual List<CanDeviceResponse> RequestMsgs(int id)
         {
