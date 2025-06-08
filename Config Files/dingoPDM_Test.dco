@@ -25,9 +25,9 @@
           "plot": false
         }
       ],
-      "SleepEnabled": true,
-      "CanFiltersEnabled": true,
-      "BaudRate": 1,
+      "sleepEnabled": true,
+      "canFiltersEnabled": false,
+      "baudRate": 1,
       "outputs": [
         {
           "enabled": true,
@@ -81,7 +81,7 @@
           "resetTime": 3,
           "inrushCurrentLimit": 12,
           "inrushTime": 1,
-          "input": 91,
+          "input": 1,
           "pwmEnabled": false,
           "softStartEnabled": false,
           "variableDutyCycle": false,
@@ -102,7 +102,7 @@
           "resetTime": 3,
           "inrushCurrentLimit": 12,
           "inrushTime": 1,
-          "input": 92,
+          "input": 1,
           "pwmEnabled": false,
           "softStartEnabled": false,
           "variableDutyCycle": false,
@@ -1007,8 +1007,8 @@
             4,
             5,
             6,
-            8,
             7,
+            8,
             1,
             2
           ],
@@ -1433,6 +1433,1282 @@
           "arg": 0,
           "plot": false
         }
+      ],
+      "keypads": [
+        {
+          "buttons": [
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 1,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 2,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 3,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 4,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 5,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 6,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 7,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 8,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 9,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 10,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 11,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 12,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 13,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 14,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 15,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 16,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 17,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 18,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 19,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 1,
+              "number": 20,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            }
+          ],
+          "dials": [],
+          "enabled": true,
+          "number": 1,
+          "timeoutEnabled": false,
+          "timeout": 0,
+          "backlightBrightness": 0,
+          "buttonBrightness": 0,
+          "dimBacklightBrightness": 0,
+          "dimmingVar": 0,
+          "dimButtonBrightness": 0,
+          "model": 0,
+          "baseId": 21,
+          "backlightColor": 0
+        },
+        {
+          "buttons": [
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 1,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 2,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 3,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 4,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 5,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 6,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 7,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 8,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 9,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 10,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 11,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 12,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 13,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 14,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 15,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 16,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 17,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 18,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 19,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            },
+            {
+              "numValColors": 0,
+              "valColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultColor": 0,
+              "blinkingColors": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultBlinkingColor": 0,
+              "name": null,
+              "enabled": false,
+              "keypadNumber": 2,
+              "number": 20,
+              "hasDial": false,
+              "mode": 0,
+              "valVars": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "faultVar": 0,
+              "plot": false
+            }
+          ],
+          "dials": [],
+          "enabled": false,
+          "number": 2,
+          "timeoutEnabled": false,
+          "timeout": 0,
+          "backlightBrightness": 0,
+          "buttonBrightness": 0,
+          "dimBacklightBrightness": 0,
+          "dimmingVar": 0,
+          "dimButtonBrightness": 0,
+          "model": 0,
+          "baseId": 0,
+          "backlightColor": 0
+        }
       ]
     }
   ],
@@ -1521,10 +2797,10 @@
   "sbb": [],
   "log": [
     {
-      "Name": "CAN Message Log",
-      "BaseId": 9999,
-      "IdFormat": 1,
-      "PayloadFormat": 1
+      "name": "CAN Message Log",
+      "baseId": 9999,
+      "idFormat": 1,
+      "payloadFormat": 1
     }
   ]
 }

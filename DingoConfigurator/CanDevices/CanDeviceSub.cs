@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace CanDevices
@@ -11,6 +12,7 @@ namespace CanDevices
     public class CanDeviceSub : NotifyPropertyChangedBase, ICanDevice
     {
         private string _name;
+        [JsonIgnore]
         public string Name
         {
             get => _name;
@@ -18,19 +20,26 @@ namespace CanDevices
         }
 
         private ICanDevice _canDevice;
+        [JsonIgnore]
         public ICanDevice CanDevice
         {
             get => _canDevice;
             set => _canDevice = value;
         }
 
+        [JsonIgnore]
         public virtual int BaseId
         {
-            get => CanDevice.BaseId;
-            set => BaseId = value;
-        } 
+            get => CanDevice?.BaseId ?? 0;
+            set
+            {
+                if (CanDevice != null)
+                    CanDevice.BaseId = value;
+            }
+        }
 
         private bool _isConnected;
+        [JsonIgnore]
         public virtual bool IsConnected
         {
             get => CanDevice.IsConnected;
@@ -44,7 +53,14 @@ namespace CanDevices
             }
         }
 
+        [JsonIgnore]
         public virtual DateTime LastRxTime => CanDevice.LastRxTime;
+
+        public CanDeviceSub()
+        {
+            Name = "CanDeviceSub";
+            CanDevice = null;
+        }
 
         public CanDeviceSub(string name, ICanDevice canDevice)
         {

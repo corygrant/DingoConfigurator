@@ -64,7 +64,7 @@
                      MaxWidth="100"
                      HorizontalAlignment="Left"
                      HorizontalContentAlignment="Center"
-                     Text="{Binding Kp.BaseId, Mode=TwoWay}" />
+                     Text="{Binding Kp.BaseId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock Grid.Row="0"
                        Grid.Column="4"
                        Text="Model"
@@ -91,7 +91,7 @@
                      MaxWidth="100"
                      HorizontalAlignment="Left"
                      HorizontalContentAlignment="Center"
-                     Text="{Binding Kp.Timeout, Mode=TwoWay}" />
+                     Text="{Binding Kp.Timeout, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock Grid.Row="0"
                        Grid.Column="8"
                        Text="Timeout Enabled"
@@ -123,7 +123,7 @@
                      MaxWidth="100"
                      HorizontalAlignment="Left"
                      HorizontalContentAlignment="Center"
-                     Text="{Binding Kp.BacklightBrightness, Mode=TwoWay}" />
+                     Text="{Binding Kp.BacklightBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock Grid.Row="1"
                        Grid.Column="2"
                        Text="Button&#x0a;Brightness"
@@ -139,7 +139,7 @@
                      MaxWidth="100"
                      HorizontalAlignment="Left"
                      HorizontalContentAlignment="Center"
-                     Text="{Binding Kp.ButtonBrightness, Mode=TwoWay}" />
+                     Text="{Binding Kp.ButtonBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock Grid.Row="1"
                        Grid.Column="4"
                        Text="Dimming Var"
@@ -167,7 +167,7 @@
                      MaxWidth="100"
                      HorizontalAlignment="Left"
                      HorizontalContentAlignment="Center"
-                     Text="{Binding Kp.DimBacklightBrightness, Mode=TwoWay}" />
+                     Text="{Binding Kp.DimBacklightBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock Grid.Row="1"
                        Grid.Column="8"
                        Text="Dim Button&#x0a;Brightness"
@@ -183,7 +183,7 @@
                      MaxWidth="100"
                      HorizontalAlignment="Left"
                      HorizontalContentAlignment="Center"
-                     Text="{Binding Kp.DimButtonBrightness, Mode=TwoWay}" />
+                     Text="{Binding Kp.DimButtonBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
             <TextBlock Grid.Row="2"
                        Grid.Column="0"

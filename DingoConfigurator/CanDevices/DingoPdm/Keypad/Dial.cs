@@ -159,10 +159,12 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        public Dial(int keypadNum, int dialNum)
+        public Dial():this(1,1) {  }
+
+        public Dial(int keypadNumber, int number)
         {
-            KeypadNumber = keypadNum;
-            Number = dialNum;
+            KeypadNumber = keypadNumber;
+            Number = number;
         }
 
         public static byte[] Request(int keypadIndex, int dialIndex)

@@ -22,6 +22,7 @@ namespace CanDevices.CanMsgLog
         }
 
         private string _name;
+        [JsonPropertyName("name")]
         public string Name
         {
             get => _name;
@@ -36,6 +37,7 @@ namespace CanDevices.CanMsgLog
         } 
 
         private int _baseId;
+        [JsonPropertyName("baseId")]
         public int BaseId
         {
             get => _baseId;
@@ -62,6 +64,7 @@ namespace CanDevices.CanMsgLog
         }
 
         private NumberFormat _idFormat;
+        [JsonPropertyName("idFormat")]
         public NumberFormat IdFormat
         {
             get => _idFormat;
@@ -90,6 +93,7 @@ namespace CanDevices.CanMsgLog
         }
 
         private NumberFormat _payloadFormat;
+        [JsonPropertyName("payloadFormat")]
         public NumberFormat PayloadFormat
         {
             get => _payloadFormat;
