@@ -1086,16 +1086,16 @@
         {
           "name": null,
           "number": 1,
-          "enabled": false,
-          "incInput": 0,
-          "decInput": 0,
+          "enabled": true,
+          "incInput": 158,
+          "decInput": 164,
           "resetInput": 0,
           "minCount": 0,
-          "maxCount": 4,
+          "maxCount": 3,
           "incEdge": 0,
           "decEdge": 0,
           "resetEdge": 0,
-          "wrapAround": false,
+          "wrapAround": true,
           "plot": false
         },
         {
@@ -1148,8 +1148,8 @@
         {
           "name": null,
           "number": 1,
-          "enabled": false,
-          "input": 0,
+          "enabled": true,
+          "input": 117,
           "operator": 0,
           "arg": 0,
           "plot": false
@@ -1157,28 +1157,28 @@
         {
           "name": null,
           "number": 2,
-          "enabled": false,
-          "input": 0,
+          "enabled": true,
+          "input": 117,
           "operator": 0,
-          "arg": 0,
+          "arg": 1,
           "plot": false
         },
         {
           "name": null,
           "number": 3,
-          "enabled": false,
-          "input": 0,
+          "enabled": true,
+          "input": 117,
           "operator": 0,
-          "arg": 0,
+          "arg": 2,
           "plot": false
         },
         {
           "name": null,
           "number": 4,
-          "enabled": false,
-          "input": 0,
+          "enabled": true,
+          "input": 117,
           "operator": 0,
-          "arg": 0,
+          "arg": 3,
           "plot": false
         },
         {
@@ -1438,7 +1438,7 @@
         {
           "buttons": [
             {
-              "numValColors": 0,
+              "numValColors": 4,
               "valColors": [
                 0,
                 0,
@@ -1595,17 +1595,17 @@
             {
               "numValColors": 4,
               "valColors": [
-                0,
                 2,
-                5,
-                4
+                6,
+                3,
+                7
               ],
               "faultColor": 1,
               "blinkingColors": [
                 4,
-                5,
-                2,
-                7
+                0,
+                0,
+                0
               ],
               "faultBlinkingColor": 3,
               "name": null,
@@ -1615,10 +1615,10 @@
               "hasDial": false,
               "mode": 0,
               "valVars": [
-                117,
                 121,
-                117,
-                117
+                122,
+                123,
+                124
               ],
               "faultVar": 0,
               "plot": false
@@ -1815,14 +1815,14 @@
           "number": 1,
           "timeoutEnabled": false,
           "timeout": 0,
-          "backlightBrightness": 63,
+          "backlightBrightness": 32,
           "buttonBrightness": 63,
           "dimBacklightBrightness": 31,
-          "dimmingVar": 121,
+          "dimmingVar": 0,
           "dimButtonBrightness": 31,
-          "model": 0,
+          "model": 6,
           "baseId": 21,
-          "backlightColor": 7,
+          "backlightColor": 9,
           "name": "Keypad1"
         },
         {

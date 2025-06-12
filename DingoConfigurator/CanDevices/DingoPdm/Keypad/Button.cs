@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Data;
+using System.Windows.Media;
 using CanDevices.DingoPdm;
 using CanInterfaces;
 
@@ -87,18 +90,202 @@ namespace CanDevices.DingoPdm
             }
         }
 
-        private RgbBool _activeColor = new RgbBool();
+        private BlinkMarineButtonColor _activeColor;
+
+        private Brush _activeBrush;
         [JsonIgnore]
-        public RgbBool ActiveColor
+        public Brush ActiveBrush
         {
-            get => _activeColor;
+            get => _activeBrush;
             set
             {
-                if (_activeColor != value)
+                if (_activeBrush != value)
                 {
-                    _activeColor = value;
-                    OnPropertyChanged(nameof(ActiveColor));
+                    _activeBrush = value;
+                    OnPropertyChanged(nameof(ActiveBrush));
+                }
+            }
+        }
 
+
+        private BlinkMarineButtonColor _activeBlinkingColor;
+
+        private Brush _activeBlinkingBrush;
+        [JsonIgnore]
+        public Brush ActiveBlinkingBrush
+        {
+            get => _activeBlinkingBrush;
+            set
+            {
+                if (_activeBlinkingBrush != value)
+                {
+                    _activeBlinkingBrush = value;
+                    OnPropertyChanged(nameof(ActiveBlinkingBrush));
+                }
+            }
+        }
+
+        public void SetActiveColorRed(bool val)
+        {
+            if (val)
+                _activeColor = (BlinkMarineButtonColor)(((int)_activeColor) | (1 << 0)); // Set bit 0
+            else
+                _activeColor = (BlinkMarineButtonColor)(((int)_activeColor) & ~(1 << 0)); // Clear bit 0
+        }
+
+        public void SetActiveColorGreen(bool val)
+        {
+            if (val)
+                _activeColor = (BlinkMarineButtonColor)(((int)_activeColor) | (1 << 1)); // Set bit 1
+            else
+                _activeColor = (BlinkMarineButtonColor)(((int)_activeColor) & ~(1 << 1)); // Clear bit 1
+        }
+
+        public void SetActiveColorBlue(bool val)
+        {
+            if (val)
+                _activeColor = (BlinkMarineButtonColor)(((int)_activeColor) | (1 << 2)); // Set bit 2
+            else
+                _activeColor = (BlinkMarineButtonColor)(((int)_activeColor) & ~(1 << 2)); // Clear bit 2
+        }
+
+        public void UpdateActiveColor()
+        {
+            if (!Application.Current.Dispatcher.CheckAccess())
+            {
+                Application.Current.Dispatcher.Invoke(() => UpdateActiveColor());
+                return;
+            }
+
+            var brush = new LinearGradientBrush();
+            brush.StartPoint = new Point(0, 0.5);
+            brush.EndPoint = new Point(1, 0.5);
+
+            var color = Colors.Black;
+            if (_activeColor != BlinkMarineButtonColor.Off)
+                color = ButtonColorToColor(_activeColor);
+            else
+                color = BacklightColorToColor(BacklightColor);
+
+            var blinkColor = color;
+            if (_activeBlinkingColor != BlinkMarineButtonColor.Off)
+            {
+                blinkColor = ButtonColorToColor((BlinkMarineButtonColor)(Convert.ToByte(_activeColor) ^ Convert.ToByte(_activeBlinkingColor)));
+            }
+
+
+            brush.GradientStops.Add(new GradientStop(color, 0.5));
+            brush.GradientStops.Add(new GradientStop(blinkColor, 0.5));
+            ActiveBrush = brush;
+        }
+
+        protected Color ButtonColorToColor(BlinkMarineButtonColor color)
+        {
+            switch (color)
+            {
+                case BlinkMarineButtonColor.Off:
+                    return Colors.Gray;
+
+                case BlinkMarineButtonColor.Red:
+                    return Colors.Red;
+
+                case BlinkMarineButtonColor.Green:
+                    return Colors.Lime;
+
+                case BlinkMarineButtonColor.Blue:
+                    return Colors.Blue;
+
+                case BlinkMarineButtonColor.Orange:
+                    return Colors.Orange;
+
+                case BlinkMarineButtonColor.Violet:
+                    return Colors.DarkViolet;
+
+                case BlinkMarineButtonColor.Cyan:
+                    return Colors.Cyan;
+
+                case BlinkMarineButtonColor.White:
+                    return Colors.White;
+
+                default:
+                    return Colors.Black;
+            }
+        }
+
+        protected Color BacklightColorToColor(BlinkMarineBacklightColor color)
+        {
+            switch (color)
+            {
+                case BlinkMarineBacklightColor.Off:
+                    return Colors.Gray;
+
+                case BlinkMarineBacklightColor.Red:
+                    return Colors.Red;
+
+                case BlinkMarineBacklightColor.Green:
+                    return Colors.Lime;
+
+                case BlinkMarineBacklightColor.Blue:
+                    return Colors.Blue;
+
+                case BlinkMarineBacklightColor.Yellow:
+                    return Colors.Yellow;
+
+                case BlinkMarineBacklightColor.Cyan:
+                    return Colors.Cyan;
+
+                case BlinkMarineBacklightColor.Violet:
+                    return Colors.DarkViolet;
+
+                case BlinkMarineBacklightColor.White:
+                    return Colors.White;
+
+                case BlinkMarineBacklightColor.Amber:
+                    return Colors.Gold;
+
+                case BlinkMarineBacklightColor.YellowGreen:
+                    return Colors.GreenYellow;
+            }
+
+            return Colors.Black;
+        }
+
+        public void SetActiveBlinkingColorRed(bool val)
+        {
+            if (val)
+                _activeBlinkingColor = (BlinkMarineButtonColor)(((int)_activeBlinkingColor) | (1 << 0)); // Set bit 0
+            else
+                _activeBlinkingColor = (BlinkMarineButtonColor)(((int)_activeBlinkingColor) & ~(1 << 0)); // Clear bit 0
+        }
+
+        public void SetActiveBlinkingColorGreen(bool val)
+        {
+            if (val)
+                _activeBlinkingColor = (BlinkMarineButtonColor)(((int)_activeBlinkingColor) | (1 << 1)); // Set bit 1
+            else
+                _activeBlinkingColor = (BlinkMarineButtonColor)(((int)_activeBlinkingColor) & ~(1 << 1)); // Clear bit 1
+        }
+
+        public void SetActiveBlinkingColorBlue(bool val)
+        {
+            if (val)
+                _activeBlinkingColor = (BlinkMarineButtonColor)(((int)_activeBlinkingColor) | (1 << 2)); // Set bit 2
+            else
+                _activeBlinkingColor = (BlinkMarineButtonColor)(((int)_activeBlinkingColor) & ~(1 << 2)); // Clear bit 2
+        }
+
+
+        private BlinkMarineBacklightColor _backlightColor;
+        [JsonIgnore]
+        public BlinkMarineBacklightColor BacklightColor
+        {
+            get => _backlightColor;
+            set
+            {
+                if (_backlightColor != value)
+                {
+                    _backlightColor = value;
+                    OnPropertyChanged(nameof(BacklightColor));
                 }
             }
         }
@@ -109,7 +296,7 @@ namespace CanDevices.DingoPdm
             _blinkingColors = new BlinkMarineButtonColor[4];
         }
 
-        public Button(int keypadNumber, int number):base(keypadNumber, number)
+        public Button(int keypadNumber, int number) : base(keypadNumber, number)
         {
             _valColors = new BlinkMarineButtonColor[4];
             _blinkingColors = new BlinkMarineButtonColor[4];
@@ -224,9 +411,9 @@ namespace CanDevices.DingoPdm
         {
             byte[] data = new byte[8];
             data[0] = Convert.ToByte(MessagePrefix.KeypadButton);
-            data[1] = Convert.ToByte(((KeypadNumber-1) & 0x07) + ((Number - 1) << 3));
-            data[2] = Convert.ToByte(Convert.ToByte(Enabled) + 
-                                        (Convert.ToByte(HasDial) << 1) + 
+            data[1] = Convert.ToByte(((KeypadNumber - 1) & 0x07) + ((Number - 1) << 3));
+            data[2] = Convert.ToByte(Convert.ToByte(Enabled) +
+                                        (Convert.ToByte(HasDial) << 1) +
                                         (Convert.ToByte(Mode) << 2));
             data[3] = Convert.ToByte(ValVars[0]);
             data[4] = Convert.ToByte(ValVars[1]);
@@ -266,7 +453,7 @@ namespace CanDevices.DingoPdm
 
         private byte[] WriteLed()
         {
-            NumValColors = 2;
+            NumValColors = 4;
 
             byte[] data = new byte[8];
             data[0] = Convert.ToByte(MessagePrefix.KeypadButtonLed);
@@ -288,90 +475,4 @@ namespace CanDevices.DingoPdm
     }
 
 
-    public class RgbBool : NotifyPropertyChangedBase
-    {
-        private bool _red;
-        public bool Red
-        {
-            get => _red;
-            set
-            {
-                if (_red != value)
-                {
-                    _red = value;
-                    OnPropertyChanged(nameof(Red));
-                }
-            }
-        }
-
-        private bool _redFlash;
-        public bool RedFlash
-        {
-            get => _redFlash;
-            set
-            {
-                if (_redFlash != value)
-                {
-                    _redFlash = value;
-                    OnPropertyChanged(nameof(RedFlash));
-                }
-            }
-        }
-
-        private bool _green;
-        public bool Green
-        {
-            get => _green;
-            set
-            {
-                if (_green != value)
-                {
-                    _green = value;
-                    OnPropertyChanged(nameof(Green));
-                }
-            }
-        }
-
-        private bool _greenFlash;
-        public bool GreenFlash
-        {
-            get => _greenFlash;
-            set
-            {
-                if (_greenFlash != value)
-                {
-                    _greenFlash = value;
-                    OnPropertyChanged(nameof(GreenFlash));
-                }
-            }
-        }
-
-        private bool _blue;
-        public bool Blue
-        {
-            get => _blue;
-            set
-            {
-                if (_blue != value)
-                {
-                    _blue = value;
-                    OnPropertyChanged(nameof(Blue));
-                }
-            }
-        }
-
-        private bool _blueFlash;
-        public bool BlueFlash
-        {
-            get => _blueFlash;
-            set
-            {
-                if (_blueFlash != value)
-                {
-                    _blueFlash = value;
-                    OnPropertyChanged(nameof(BlueFlash));
-                }
-            }
-        }
-    }
 }

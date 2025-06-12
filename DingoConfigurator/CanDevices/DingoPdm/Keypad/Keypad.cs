@@ -546,6 +546,7 @@ namespace CanDevices.DingoPdm
             {
                 BaseId + Convert.ToInt16(MsgId.NMT),
                 BaseId + Convert.ToInt16(MsgId.ButtonState),
+                BaseId + Convert.ToInt16(MsgId.SetLed),
                 BaseId + Convert.ToInt16(MsgId.DialStateA),
                 BaseId + Convert.ToInt16(MsgId.SetLedBlink),
                 BaseId + Convert.ToInt16(MsgId.DialStateB),
@@ -631,46 +632,51 @@ namespace CanDevices.DingoPdm
 
         private void SetLed(byte[] data)
         {
-            /*
-            Buttons[0].ActiveColor.Red = Convert.ToBoolean(data[0] & 0x01);
-            Buttons[1].ActiveColor.Red = Convert.ToBoolean((data[0] >> 1) & 0x01);
-            Buttons[2].ActiveColor.Red = Convert.ToBoolean((data[0] >> 2) & 0x01);
-            Buttons[3].ActiveColor.Red = Convert.ToBoolean((data[0] >> 3) & 0x01);
-            Buttons[4].ActiveColor.Red = Convert.ToBoolean((data[0] >> 4) & 0x01);
-            Buttons[5].ActiveColor.Red = Convert.ToBoolean((data[0] >> 5) & 0x01);
-            Buttons[6].ActiveColor.Red = Convert.ToBoolean((data[0] >> 6) & 0x01);
-            Buttons[7].ActiveColor.Red = Convert.ToBoolean((data[0] >> 7) & 0x01);
-            Buttons[8].ActiveColor.Red = Convert.ToBoolean(data[1] & 0x01);
-            Buttons[9].ActiveColor.Red = Convert.ToBoolean((data[1] >> 1) & 0x01);
-            Buttons[10].ActiveColor.Red = Convert.ToBoolean((data[1] >> 2) & 0x01);
-            Buttons[11].ActiveColor.Red = Convert.ToBoolean((data[1] >> 3) & 0x01);
+            
+            AllButtons[0].SetActiveColorRed(Convert.ToBoolean(data[0] & 0x01));
+            AllButtons[1].SetActiveColorRed(Convert.ToBoolean((data[0] >> 1) & 0x01));
+            AllButtons[2].SetActiveColorRed(Convert.ToBoolean((data[0] >> 2) & 0x01));
+            AllButtons[3].SetActiveColorRed(Convert.ToBoolean((data[0] >> 3) & 0x01));
+            AllButtons[4].SetActiveColorRed(Convert.ToBoolean((data[0] >> 4) & 0x01));
+            AllButtons[5].SetActiveColorRed(Convert.ToBoolean((data[0] >> 5) & 0x01));
+            AllButtons[6].SetActiveColorRed(Convert.ToBoolean((data[0] >> 6) & 0x01));
+            AllButtons[7].SetActiveColorRed(Convert.ToBoolean((data[0] >> 7) & 0x01));
+            AllButtons[8].SetActiveColorRed(Convert.ToBoolean(data[1] & 0x01));
+            AllButtons[9].SetActiveColorRed(Convert.ToBoolean((data[1] >> 1) & 0x01));
+            AllButtons[10].SetActiveColorRed(Convert.ToBoolean((data[1] >> 2) & 0x01));
+            AllButtons[11].SetActiveColorRed(Convert.ToBoolean((data[1] >> 3) & 0x01));
 
-            Buttons[0].ActiveColor.Green = Convert.ToBoolean((data[1] >> 4) & 0x01);
-            Buttons[1].ActiveColor.Green = Convert.ToBoolean((data[1] >> 5) & 0x01);
-            Buttons[2].ActiveColor.Green = Convert.ToBoolean((data[1] >> 6) & 0x01);
-            Buttons[3].ActiveColor.Green = Convert.ToBoolean((data[1] >> 7) & 0x01);
-            Buttons[4].ActiveColor.Green = Convert.ToBoolean(data[2] & 0x01);
-            Buttons[5].ActiveColor.Green = Convert.ToBoolean((data[2] >> 1) & 0x01);
-            Buttons[6].ActiveColor.Green = Convert.ToBoolean((data[2] >> 2) & 0x01);
-            Buttons[7].ActiveColor.Green = Convert.ToBoolean((data[2] >> 3) & 0x01);
-            Buttons[8].ActiveColor.Green = Convert.ToBoolean((data[2] >> 4) & 0x01);
-            Buttons[9].ActiveColor.Green = Convert.ToBoolean((data[2] >> 5) & 0x01);
-            Buttons[10].ActiveColor.Green = Convert.ToBoolean((data[2] >> 6) & 0x01);
-            Buttons[11].ActiveColor.Green = Convert.ToBoolean((data[2] >> 7) & 0x01);
+            AllButtons[0].SetActiveColorGreen(Convert.ToBoolean((data[1] >> 4) & 0x01));
+            AllButtons[1].SetActiveColorGreen(Convert.ToBoolean((data[1] >> 5) & 0x01));
+            AllButtons[2].SetActiveColorGreen(Convert.ToBoolean((data[1] >> 6) & 0x01));
+            AllButtons[3].SetActiveColorGreen(Convert.ToBoolean((data[1] >> 7) & 0x01));
+            AllButtons[4].SetActiveColorGreen(Convert.ToBoolean(data[2] & 0x01));
+            AllButtons[5].SetActiveColorGreen(Convert.ToBoolean((data[2] >> 1) & 0x01));
+            AllButtons[6].SetActiveColorGreen(Convert.ToBoolean((data[2] >> 2) & 0x01));
+            AllButtons[7].SetActiveColorGreen(Convert.ToBoolean((data[2] >> 3) & 0x01));
+            AllButtons[8].SetActiveColorGreen(Convert.ToBoolean((data[2] >> 4) & 0x01));
+            AllButtons[9].SetActiveColorGreen(Convert.ToBoolean((data[2] >> 5) & 0x01));
+            AllButtons[10].SetActiveColorGreen(Convert.ToBoolean((data[2] >> 6) & 0x01));
+            AllButtons[11].SetActiveColorGreen(Convert.ToBoolean((data[2] >> 7) & 0x01));
 
-            Buttons[0].ActiveColor.Blue = Convert.ToBoolean(data[3] & 0x01);
-            Buttons[1].ActiveColor.Blue = Convert.ToBoolean((data[3] >> 1) & 0x01);
-            Buttons[2].ActiveColor.Blue = Convert.ToBoolean((data[3] >> 2) & 0x01);
-            Buttons[3].ActiveColor.Blue = Convert.ToBoolean((data[3] >> 3) & 0x01);
-            Buttons[4].ActiveColor.Blue = Convert.ToBoolean((data[3] >> 4) & 0x01);
-            Buttons[5].ActiveColor.Blue = Convert.ToBoolean((data[3] >> 5) & 0x01);
-            Buttons[6].ActiveColor.Blue = Convert.ToBoolean((data[3] >> 6) & 0x01);
-            Buttons[7].ActiveColor.Blue = Convert.ToBoolean((data[3] >> 7) & 0x01);
-            Buttons[8].ActiveColor.Blue = Convert.ToBoolean(data[4] & 0x01);
-            Buttons[9].ActiveColor.Blue = Convert.ToBoolean((data[4] >> 1) & 0x01);
-            Buttons[10].ActiveColor.Blue = Convert.ToBoolean((data[4] >> 2) & 0x01);
-            Buttons[11].ActiveColor.Blue = Convert.ToBoolean((data[4] >> 3) & 0x01);
-            */
+            AllButtons[0].SetActiveColorBlue(Convert.ToBoolean(data[3] & 0x01));
+            AllButtons[1].SetActiveColorBlue(Convert.ToBoolean((data[3] >> 1) & 0x01));
+            AllButtons[2].SetActiveColorBlue(Convert.ToBoolean((data[3] >> 2) & 0x01));
+            AllButtons[3].SetActiveColorBlue(Convert.ToBoolean((data[3] >> 3) & 0x01));
+            AllButtons[4].SetActiveColorBlue(Convert.ToBoolean((data[3] >> 4) & 0x01));
+            AllButtons[5].SetActiveColorBlue(Convert.ToBoolean((data[3] >> 5) & 0x01));
+            AllButtons[6].SetActiveColorBlue(Convert.ToBoolean((data[3] >> 6) & 0x01));
+            AllButtons[7].SetActiveColorBlue(Convert.ToBoolean((data[3] >> 7) & 0x01));
+            AllButtons[8].SetActiveColorBlue(Convert.ToBoolean(data[4] & 0x01));
+            AllButtons[9].SetActiveColorBlue(Convert.ToBoolean((data[4] >> 1) & 0x01));
+            AllButtons[10].SetActiveColorBlue(Convert.ToBoolean((data[4] >> 2) & 0x01));
+            AllButtons[11].SetActiveColorBlue(Convert.ToBoolean((data[4] >> 3) & 0x01));
+
+            foreach(var btn in AllButtons)
+            {
+                btn.UpdateActiveColor();
+            }
+            
         }
 
         private void DialStateA(byte[] data)
@@ -680,46 +686,46 @@ namespace CanDevices.DingoPdm
 
         private void SetLedBlink(byte[] data)
         {
-            /*
-            Buttons[0].ActiveColor.RedFlash = Convert.ToBoolean(data[0] & 0x01);
-            Buttons[1].ActiveColor.RedFlash = Convert.ToBoolean((data[0] >> 1) & 0x01);
-            Buttons[2].ActiveColor.RedFlash = Convert.ToBoolean((data[0] >> 2) & 0x01);
-            Buttons[3].ActiveColor.RedFlash = Convert.ToBoolean((data[0] >> 3) & 0x01);
-            Buttons[4].ActiveColor.RedFlash = Convert.ToBoolean((data[0] >> 4) & 0x01);
-            Buttons[5].ActiveColor.RedFlash = Convert.ToBoolean((data[0] >> 5) & 0x01);
-            Buttons[6].ActiveColor.RedFlash = Convert.ToBoolean((data[0] >> 6) & 0x01);
-            Buttons[7].ActiveColor.RedFlash = Convert.ToBoolean((data[0] >> 7) & 0x01);
-            Buttons[8].ActiveColor.RedFlash = Convert.ToBoolean(data[1] & 0x01);
-            Buttons[9].ActiveColor.RedFlash = Convert.ToBoolean((data[1] >> 1) & 0x01);
-            Buttons[10].ActiveColor.RedFlash = Convert.ToBoolean((data[1] >> 2) & 0x01);
-            Buttons[11].ActiveColor.RedFlash = Convert.ToBoolean((data[1] >> 3) & 0x01);
 
-            Buttons[0].ActiveColor.GreenFlash = Convert.ToBoolean((data[1] >> 4) & 0x01);
-            Buttons[1].ActiveColor.GreenFlash = Convert.ToBoolean((data[1] >> 5) & 0x01);
-            Buttons[2].ActiveColor.GreenFlash = Convert.ToBoolean((data[1] >> 6) & 0x01);
-            Buttons[3].ActiveColor.GreenFlash = Convert.ToBoolean((data[1] >> 7) & 0x01);
-            Buttons[4].ActiveColor.GreenFlash = Convert.ToBoolean(data[2] & 0x01);
-            Buttons[5].ActiveColor.GreenFlash = Convert.ToBoolean((data[2] >> 1) & 0x01);
-            Buttons[6].ActiveColor.GreenFlash = Convert.ToBoolean((data[2] >> 2) & 0x01);
-            Buttons[7].ActiveColor.GreenFlash = Convert.ToBoolean((data[2] >> 3) & 0x01);
-            Buttons[8].ActiveColor.GreenFlash = Convert.ToBoolean((data[2] >> 4) & 0x01);
-            Buttons[9].ActiveColor.GreenFlash = Convert.ToBoolean((data[2] >> 5) & 0x01);
-            Buttons[10].ActiveColor.GreenFlash = Convert.ToBoolean((data[2] >> 6) & 0x01);
-            Buttons[11].ActiveColor.GreenFlash = Convert.ToBoolean((data[2] >> 7) & 0x01);
+            AllButtons[0].SetActiveBlinkingColorRed(Convert.ToBoolean(data[0] & 0x01));
+            AllButtons[1].SetActiveBlinkingColorRed(Convert.ToBoolean((data[0] >> 1) & 0x01));
+            AllButtons[2].SetActiveBlinkingColorRed(Convert.ToBoolean((data[0] >> 2) & 0x01));
+            AllButtons[3].SetActiveBlinkingColorRed(Convert.ToBoolean((data[0] >> 3) & 0x01));
+            AllButtons[4].SetActiveBlinkingColorRed(Convert.ToBoolean((data[0] >> 4) & 0x01));
+            AllButtons[5].SetActiveBlinkingColorRed(Convert.ToBoolean((data[0] >> 5) & 0x01));
+            AllButtons[6].SetActiveBlinkingColorRed(Convert.ToBoolean((data[0] >> 6) & 0x01));
+            AllButtons[7].SetActiveBlinkingColorRed(Convert.ToBoolean((data[0] >> 7) & 0x01));
+            AllButtons[8].SetActiveBlinkingColorRed(Convert.ToBoolean(data[1] & 0x01));
+            AllButtons[9].SetActiveBlinkingColorRed(Convert.ToBoolean((data[1] >> 1) & 0x01));
+            AllButtons[10].SetActiveBlinkingColorRed(Convert.ToBoolean((data[1] >> 2) & 0x01));
+            AllButtons[11].SetActiveBlinkingColorRed(Convert.ToBoolean((data[1] >> 3) & 0x01));
 
-            Buttons[0].ActiveColor.BlueFlash = Convert.ToBoolean(data[3] & 0x01);
-            Buttons[1].ActiveColor.BlueFlash = Convert.ToBoolean((data[3] >> 1) & 0x01);
-            Buttons[2].ActiveColor.BlueFlash = Convert.ToBoolean((data[3] >> 2) & 0x01);
-            Buttons[3].ActiveColor.BlueFlash = Convert.ToBoolean((data[3] >> 3) & 0x01);
-            Buttons[4].ActiveColor.BlueFlash = Convert.ToBoolean((data[3] >> 4) & 0x01);
-            Buttons[5].ActiveColor.BlueFlash = Convert.ToBoolean((data[3] >> 5) & 0x01);
-            Buttons[6].ActiveColor.BlueFlash = Convert.ToBoolean((data[3] >> 6) & 0x01);
-            Buttons[7].ActiveColor.BlueFlash = Convert.ToBoolean((data[3] >> 7) & 0x01);
-            Buttons[8].ActiveColor.BlueFlash = Convert.ToBoolean(data[4] & 0x01);
-            Buttons[9].ActiveColor.BlueFlash = Convert.ToBoolean((data[4] >> 1) & 0x01);
-            Buttons[10].ActiveColor.BlueFlash = Convert.ToBoolean((data[4] >> 2) & 0x01);
-            Buttons[11].ActiveColor.BlueFlash = Convert.ToBoolean((data[4] >> 3) & 0x01);
-            */
+            AllButtons[0].SetActiveBlinkingColorGreen(Convert.ToBoolean((data[1] >> 4) & 0x01));
+            AllButtons[1].SetActiveBlinkingColorGreen(Convert.ToBoolean((data[1] >> 5) & 0x01));
+            AllButtons[2].SetActiveBlinkingColorGreen(Convert.ToBoolean((data[1] >> 6) & 0x01));
+            AllButtons[3].SetActiveBlinkingColorGreen(Convert.ToBoolean((data[1] >> 7) & 0x01));
+            AllButtons[4].SetActiveBlinkingColorGreen(Convert.ToBoolean(data[2] & 0x01));
+            AllButtons[5].SetActiveBlinkingColorGreen(Convert.ToBoolean((data[2] >> 1) & 0x01));
+            AllButtons[6].SetActiveBlinkingColorGreen(Convert.ToBoolean((data[2] >> 2) & 0x01));
+            AllButtons[7].SetActiveBlinkingColorGreen(Convert.ToBoolean((data[2] >> 3) & 0x01));
+            AllButtons[8].SetActiveBlinkingColorGreen(Convert.ToBoolean((data[2] >> 4) & 0x01));
+            AllButtons[9].SetActiveBlinkingColorGreen(Convert.ToBoolean((data[2] >> 5) & 0x01));
+            AllButtons[10].SetActiveBlinkingColorGreen(Convert.ToBoolean((data[2] >> 6) & 0x01));
+            AllButtons[11].SetActiveBlinkingColorGreen(Convert.ToBoolean((data[2] >> 7) & 0x01));
+
+            AllButtons[0].SetActiveBlinkingColorBlue(Convert.ToBoolean(data[3] & 0x01));
+            AllButtons[1].SetActiveBlinkingColorBlue(Convert.ToBoolean((data[3] >> 1) & 0x01));
+            AllButtons[2].SetActiveBlinkingColorBlue(Convert.ToBoolean((data[3] >> 2) & 0x01));
+            AllButtons[3].SetActiveBlinkingColorBlue(Convert.ToBoolean((data[3] >> 3) & 0x01));
+            AllButtons[4].SetActiveBlinkingColorBlue(Convert.ToBoolean((data[3] >> 4) & 0x01));
+            AllButtons[5].SetActiveBlinkingColorBlue(Convert.ToBoolean((data[3] >> 5) & 0x01));
+            AllButtons[6].SetActiveBlinkingColorBlue(Convert.ToBoolean((data[3] >> 6) & 0x01));
+            AllButtons[7].SetActiveBlinkingColorBlue(Convert.ToBoolean((data[3] >> 7) & 0x01));
+            AllButtons[8].SetActiveBlinkingColorBlue(Convert.ToBoolean(data[4] & 0x01));
+            AllButtons[9].SetActiveBlinkingColorBlue(Convert.ToBoolean((data[4] >> 1) & 0x01));
+            AllButtons[10].SetActiveBlinkingColorBlue(Convert.ToBoolean((data[4] >> 2) & 0x01));
+            AllButtons[11].SetActiveBlinkingColorBlue(Convert.ToBoolean((data[4] >> 3) & 0x01));
+
         }
 
         private void DialStateB(byte[] data)
@@ -741,6 +747,11 @@ namespace CanDevices.DingoPdm
         {
             CurrentBrightness = data[0] / 0x3F;
             CurrentBacklightColor = (BlinkMarineBacklightColor)data[1];
+
+            foreach(var btn in AllButtons)
+            {
+                btn.BacklightColor = CurrentBacklightColor;
+            }
         }
 
         private void SdoResponse(byte[] data)

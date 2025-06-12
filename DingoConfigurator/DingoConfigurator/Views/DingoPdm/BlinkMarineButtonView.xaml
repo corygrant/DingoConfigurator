@@ -25,6 +25,20 @@
                     </Style>
                 </DataGridTextColumn.ElementStyle>
             </DataGridTextColumn>
+            <DataGridTemplateColumn Header="Active&#x0a;Color(s)"
+                                    IsReadOnly="True"
+                                    Width="60"
+                                    MinWidth="60"
+                                    HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Ellipse Height="15"
+                                 Width="15"
+                                 Fill="{Binding ActiveBrush}"
+                                 Opacity="1.0"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
             <DataGridTemplateColumn  Header="Color 0"
                                     Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTemplateColumn.CellTemplate>

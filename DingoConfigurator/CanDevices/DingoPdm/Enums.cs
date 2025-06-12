@@ -402,13 +402,13 @@ namespace CanDevices.DingoPdm
     public enum BlinkMarineButtonColor
     {
         Off,
-        Red,
-        Green,
-        Orange,
-        Blue,
-        Violet,
-        Cyan,
-        White
+        Red, //1
+        Green, //2
+        Orange, //3
+        Blue, //4
+        Violet, //5 
+        Cyan, //6 
+        White //7
     }
 
     public enum BlinkMarineBacklightColor
