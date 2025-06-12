@@ -10,7 +10,8 @@
               CanUserAddRows="False"
               CanUserDeleteRows="False"
               CanUserSortColumns="False"
-              ItemsSource="{Binding AllButtons}">
+              IsEnabled="{Binding ColorsEnabled}"
+              ItemsSource="{Binding VisibleButtons}">
         <DataGrid.Columns>
             <DataGridTextColumn Header="Button&#x0a;Colors"
                                 Binding="{Binding Number}"
@@ -40,7 +41,7 @@
                 </DataGridTemplateColumn.CellTemplate>
             </DataGridTemplateColumn>
             <DataGridTemplateColumn  Header="Color 0"
-                                    Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                                    Width="100" MinWidth="100" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <ComboBox HorizontalContentAlignment="Center"
@@ -55,7 +56,7 @@
                 </DataGridTemplateColumn.CellStyle>
             </DataGridTemplateColumn>
             <DataGridTemplateColumn  Header="Blink 0"
-                                    Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                                    Width="100" MinWidth="100" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <ComboBox HorizontalContentAlignment="Center"
@@ -70,7 +71,7 @@
                 </DataGridTemplateColumn.CellStyle>
             </DataGridTemplateColumn>
             <DataGridTemplateColumn  Header="Color 1"
-                                    Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                                    Width="100" MinWidth="100" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <ComboBox HorizontalContentAlignment="Center"
@@ -85,7 +86,7 @@
                 </DataGridTemplateColumn.CellStyle>
             </DataGridTemplateColumn>
             <DataGridTemplateColumn  Header="Blink 1"
-                                    Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                                    Width="100" MinWidth="100" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <ComboBox HorizontalContentAlignment="Center"
@@ -100,7 +101,7 @@
                 </DataGridTemplateColumn.CellStyle>
             </DataGridTemplateColumn>
             <DataGridTemplateColumn  Header="Color 2"
-                                    Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                                    Width="100" MinWidth="100" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <ComboBox HorizontalContentAlignment="Center"
@@ -115,7 +116,7 @@
                 </DataGridTemplateColumn.CellStyle>
             </DataGridTemplateColumn>
             <DataGridTemplateColumn  Header="Blink 2"
-                                    Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                                    Width="100" MinWidth="100" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <ComboBox HorizontalContentAlignment="Center"
@@ -130,7 +131,7 @@
                 </DataGridTemplateColumn.CellStyle>
             </DataGridTemplateColumn>
             <DataGridTemplateColumn  Header="Color 3"
-                                    Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                                    Width="100" MinWidth="100" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <ComboBox HorizontalContentAlignment="Center"
@@ -145,7 +146,7 @@
                 </DataGridTemplateColumn.CellStyle>
             </DataGridTemplateColumn>
             <DataGridTemplateColumn  Header="Blink 3"
-                                    Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                                    Width="100" MinWidth="100" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <ComboBox HorizontalContentAlignment="Center"
@@ -160,7 +161,7 @@
                 </DataGridTemplateColumn.CellStyle>
             </DataGridTemplateColumn>
             <DataGridTemplateColumn  Header="Fault Color"
-                                    Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                                    Width="100" MinWidth="100" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <ComboBox HorizontalContentAlignment="Center"
@@ -175,7 +176,7 @@
                 </DataGridTemplateColumn.CellStyle>
             </DataGridTemplateColumn>
             <DataGridTemplateColumn  Header="Fault Blink"
-                                    Width="120" MinWidth="120" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
+                                    Width="100" MinWidth="100" HeaderStyle="{StaticResource CenterAlignedHeaderStyle}">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <ComboBox HorizontalContentAlignment="Center"

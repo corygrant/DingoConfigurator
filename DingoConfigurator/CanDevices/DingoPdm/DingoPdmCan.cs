@@ -480,11 +480,35 @@ namespace CanDevices.DingoPdm
 
         public void InitializeAfterDeserialization()
         {
-            // Set up parent references for keypads
+            // Set up parent references for keypads and ensure 20 buttons per keypad
             foreach (var keypad in Keypads)
             {
-                keypad.CanDevice = this;  // Assuming this property exists
-                keypad.Name = keypad.Name ?? $"Keypad{keypad.Number}";  // Set name if null
+                keypad.CanDevice = this;
+                keypad.Name = keypad.Name ?? $"Keypad{keypad.Number}";
+                
+                // Ensure each keypad has exactly 20 buttons
+                var existingButtons = keypad.AllButtons?.ToList() ?? new List<Button>();
+                keypad.AllButtons = new ObservableCollection<Button>();
+                
+                // Create exactly 20 buttons
+                for (int i = 0; i < 20; i++)
+                {
+                    Button button;
+                    if (i < existingButtons.Count)
+                    {
+                        // Use existing button from config if available
+                        button = existingButtons[i];
+                        // Ensure button properties are correct
+                        button.Number = i + 1;
+                        button.KeypadNumber = keypad.Number;
+                    }
+                    else
+                    {
+                        // Create new button for missing entries
+                        button = new Button(keypad.Number, i + 1);
+                    }
+                    keypad.AllButtons.Add(button);
+                }
             }
 
             // Set up SubPages

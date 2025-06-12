@@ -12,7 +12,7 @@
               CanUserAddRows="False"
               CanUserDeleteRows="False"
               CanUserSortColumns="False"
-              ItemsSource="{Binding AllButtons}">
+              ItemsSource="{Binding VisibleButtons}">
         <DataGrid.Columns>
             <DataGridTextColumn Header="Button"
                                 Binding="{Binding Number}"

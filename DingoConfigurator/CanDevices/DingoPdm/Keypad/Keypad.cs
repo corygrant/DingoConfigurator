@@ -30,6 +30,7 @@ namespace CanDevices.DingoPdm
                 {
                     _allButtons = value;
                     OnPropertyChanged(nameof(AllButtons));
+                    OnPropertyChanged(nameof(VisibleButtons));
                 }
             }
         }
@@ -45,7 +46,18 @@ namespace CanDevices.DingoPdm
                 {
                     _numButtons = value;
                     OnPropertyChanged(nameof(NumButtons));
+                    OnPropertyChanged(nameof(VisibleButtons));
                 }
+            }
+        }
+
+        [JsonIgnore]
+        public IEnumerable<Button> VisibleButtons
+        {
+            get
+            {
+                if (AllButtons == null) return new List<Button>();
+                return AllButtons.Take(NumButtons);
             }
         }
 
@@ -390,6 +402,7 @@ namespace CanDevices.DingoPdm
             }
 
             _dials = new ObservableCollection<Dial>();
+            NumButtons = 20; // Default to showing all buttons
 
            
             _messageHandlers = new Dictionary<int, Action<byte[]>>
@@ -422,6 +435,7 @@ namespace CanDevices.DingoPdm
 
 
             _dials = new ObservableCollection<Dial>();
+            NumButtons = 20; // Default to showing all buttons
 
            
             _messageHandlers = new Dictionary<int, Action<byte[]>>
@@ -645,6 +659,14 @@ namespace CanDevices.DingoPdm
             AllButtons[9].SetActiveColorRed(Convert.ToBoolean((data[1] >> 1) & 0x01));
             AllButtons[10].SetActiveColorRed(Convert.ToBoolean((data[1] >> 2) & 0x01));
             AllButtons[11].SetActiveColorRed(Convert.ToBoolean((data[1] >> 3) & 0x01));
+            AllButtons[12].SetActiveColorRed(false);
+            AllButtons[13].SetActiveColorRed(false);
+            AllButtons[14].SetActiveColorRed(false);
+            AllButtons[15].SetActiveColorRed(false);
+            AllButtons[16].SetActiveColorRed(false);
+            AllButtons[17].SetActiveColorRed(false);
+            AllButtons[18].SetActiveColorRed(false);
+            AllButtons[19].SetActiveColorRed(false);
 
             AllButtons[0].SetActiveColorGreen(Convert.ToBoolean((data[1] >> 4) & 0x01));
             AllButtons[1].SetActiveColorGreen(Convert.ToBoolean((data[1] >> 5) & 0x01));
@@ -658,6 +680,14 @@ namespace CanDevices.DingoPdm
             AllButtons[9].SetActiveColorGreen(Convert.ToBoolean((data[2] >> 5) & 0x01));
             AllButtons[10].SetActiveColorGreen(Convert.ToBoolean((data[2] >> 6) & 0x01));
             AllButtons[11].SetActiveColorGreen(Convert.ToBoolean((data[2] >> 7) & 0x01));
+            AllButtons[12].SetActiveColorGreen(false);
+            AllButtons[13].SetActiveColorGreen(false);
+            AllButtons[14].SetActiveColorGreen(false);
+            AllButtons[15].SetActiveColorGreen(false);
+            AllButtons[16].SetActiveColorGreen(false);
+            AllButtons[17].SetActiveColorGreen(false);
+            AllButtons[18].SetActiveColorGreen(false);
+            AllButtons[19].SetActiveColorGreen(false);
 
             AllButtons[0].SetActiveColorBlue(Convert.ToBoolean(data[3] & 0x01));
             AllButtons[1].SetActiveColorBlue(Convert.ToBoolean((data[3] >> 1) & 0x01));
@@ -671,8 +701,16 @@ namespace CanDevices.DingoPdm
             AllButtons[9].SetActiveColorBlue(Convert.ToBoolean((data[4] >> 1) & 0x01));
             AllButtons[10].SetActiveColorBlue(Convert.ToBoolean((data[4] >> 2) & 0x01));
             AllButtons[11].SetActiveColorBlue(Convert.ToBoolean((data[4] >> 3) & 0x01));
+            AllButtons[12].SetActiveColorBlue(false);
+            AllButtons[13].SetActiveColorBlue(false);
+            AllButtons[14].SetActiveColorBlue(false);
+            AllButtons[15].SetActiveColorBlue(false);
+            AllButtons[16].SetActiveColorBlue(false);
+            AllButtons[17].SetActiveColorBlue(false);
+            AllButtons[18].SetActiveColorBlue(false);
+            AllButtons[19].SetActiveColorBlue(false);
 
-            foreach(var btn in AllButtons)
+            foreach (var btn in AllButtons)
             {
                 btn.UpdateActiveColor();
             }
@@ -699,6 +737,14 @@ namespace CanDevices.DingoPdm
             AllButtons[9].SetActiveBlinkingColorRed(Convert.ToBoolean((data[1] >> 1) & 0x01));
             AllButtons[10].SetActiveBlinkingColorRed(Convert.ToBoolean((data[1] >> 2) & 0x01));
             AllButtons[11].SetActiveBlinkingColorRed(Convert.ToBoolean((data[1] >> 3) & 0x01));
+            AllButtons[12].SetActiveBlinkingColorRed(false);
+            AllButtons[13].SetActiveBlinkingColorRed(false);
+            AllButtons[14].SetActiveBlinkingColorRed(false);
+            AllButtons[15].SetActiveBlinkingColorRed(false);
+            AllButtons[16].SetActiveBlinkingColorRed(false);
+            AllButtons[17].SetActiveBlinkingColorRed(false);
+            AllButtons[18].SetActiveBlinkingColorRed(false);
+            AllButtons[19].SetActiveBlinkingColorRed(false);
 
             AllButtons[0].SetActiveBlinkingColorGreen(Convert.ToBoolean((data[1] >> 4) & 0x01));
             AllButtons[1].SetActiveBlinkingColorGreen(Convert.ToBoolean((data[1] >> 5) & 0x01));
@@ -712,6 +758,14 @@ namespace CanDevices.DingoPdm
             AllButtons[9].SetActiveBlinkingColorGreen(Convert.ToBoolean((data[2] >> 5) & 0x01));
             AllButtons[10].SetActiveBlinkingColorGreen(Convert.ToBoolean((data[2] >> 6) & 0x01));
             AllButtons[11].SetActiveBlinkingColorGreen(Convert.ToBoolean((data[2] >> 7) & 0x01));
+            AllButtons[12].SetActiveBlinkingColorGreen(false);
+            AllButtons[13].SetActiveBlinkingColorGreen(false);
+            AllButtons[14].SetActiveBlinkingColorGreen(false);
+            AllButtons[15].SetActiveBlinkingColorGreen(false);
+            AllButtons[16].SetActiveBlinkingColorGreen(false);
+            AllButtons[17].SetActiveBlinkingColorGreen(false);
+            AllButtons[18].SetActiveBlinkingColorGreen(false);
+            AllButtons[19].SetActiveBlinkingColorGreen(false);
 
             AllButtons[0].SetActiveBlinkingColorBlue(Convert.ToBoolean(data[3] & 0x01));
             AllButtons[1].SetActiveBlinkingColorBlue(Convert.ToBoolean((data[3] >> 1) & 0x01));
@@ -725,6 +779,14 @@ namespace CanDevices.DingoPdm
             AllButtons[9].SetActiveBlinkingColorBlue(Convert.ToBoolean((data[4] >> 1) & 0x01));
             AllButtons[10].SetActiveBlinkingColorBlue(Convert.ToBoolean((data[4] >> 2) & 0x01));
             AllButtons[11].SetActiveBlinkingColorBlue(Convert.ToBoolean((data[4] >> 3) & 0x01));
+            AllButtons[12].SetActiveBlinkingColorBlue(false);
+            AllButtons[13].SetActiveBlinkingColorBlue(false);
+            AllButtons[14].SetActiveBlinkingColorBlue(false);
+            AllButtons[15].SetActiveBlinkingColorBlue(false);
+            AllButtons[16].SetActiveBlinkingColorBlue(false);
+            AllButtons[17].SetActiveBlinkingColorBlue(false);
+            AllButtons[18].SetActiveBlinkingColorBlue(false);
+            AllButtons[19].SetActiveBlinkingColorBlue(false);
 
         }
 
@@ -799,7 +861,7 @@ namespace CanDevices.DingoPdm
                 MsgDescription = $"KeypadLed{Number}"
             });
 
-            foreach (var button in AllButtons)
+            foreach (var button in VisibleButtons)
             {
                 foreach (var response in button.RequestMsgs(id))
                 {
@@ -856,7 +918,7 @@ namespace CanDevices.DingoPdm
                 MsgDescription = $"KeypadLed{Number}"
             });
 
-            foreach (var button in AllButtons)
+            foreach (var button in VisibleButtons)
             {
                 foreach (var response in button.WriteMsgs(id))
                 {

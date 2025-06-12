@@ -72,6 +72,14 @@ namespace DingoConfigurator.ViewModels
             foreach (var flasher in _pdm.Flashers)
                 flasher.PropertyChanged += PlotVar_PropertyChanged;
 
+            foreach (var keypad in _pdm.Keypads)
+            {
+                foreach (var button in keypad.AllButtons)
+                    button.PropertyChanged += PlotVar_PropertyChanged;
+
+                foreach (var dial in keypad.Dials)
+                    dial.PropertyChanged += PlotVar_PropertyChanged;
+            }
         }
 
         private void PlotVar_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -82,7 +90,9 @@ namespace DingoConfigurator.ViewModels
                 (e.PropertyName == nameof(VirtualInput.Plot)) ||
                 (e.PropertyName == nameof(Condition.Plot)) ||
                 (e.PropertyName == nameof(Counter.Plot)) ||
-                (e.PropertyName == nameof(Flasher.Plot)))
+                (e.PropertyName == nameof(Flasher.Plot)) ||
+                (e.PropertyName == nameof(CanDevices.DingoPdm.Button.Plot)) ||
+                (e.PropertyName == nameof(Dial.Plot)))
             {
                 InitSeries();
             }
@@ -270,6 +280,29 @@ namespace DingoConfigurator.ViewModels
                 StatePlot.AddSeries($"FLS{flasher.Number}", $"FLS{flasher.Number}: {flasher.Name}");
             }
 
+            foreach (var keypad in _pdm.Keypads)
+            {
+                foreach (var button in keypad.AllButtons)
+                {
+                    if (!button.Plot)
+                    {
+                        StatePlot.RemoveSeries($"KB{keypad.Number}B{button.Number}");
+                        continue;
+                    }
+                    StatePlot.AddSeries($"KB{keypad.Number}B{button.Number}", $"KB{keypad.Number}B{button.Number}: {button.Name}");
+                }
+
+                foreach (var dial in keypad.Dials)
+                {
+                    if(!dial.Plot)
+                    {
+                        StatePlot.RemoveSeries($"KB{keypad.Number}D{dial.Number}");
+                        continue;
+                    }
+                    StatePlot.AddSeries($"KB{keypad.Number}D{dial.Number}", $"KB{keypad.Number}D{dial.Number}: {dial.Name}");
+                }
+            }
+
             BatteryPlot.AddSeries("Battery", "Battery Voltage");
         }
 
@@ -336,6 +369,21 @@ namespace DingoConfigurator.ViewModels
             {
                 if (!flasher.Plot) continue;
                 StatePlot.AddPoint($"FLS{flasher.Number}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? Convert.ToInt16(flasher.Value) : 0);
+            }
+
+            foreach (var keypad in _pdm.Keypads)
+            {
+                foreach (var button in keypad.AllButtons)
+                {
+                    if (!button.Plot) continue;
+                    StatePlot.AddPoint($"KB{keypad.Number}B{button.Number}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? Convert.ToInt16(button.State) : 0);
+                }
+
+                foreach (var dial in keypad.Dials)
+                {
+                    if (!dial.Plot) continue;
+                    StatePlot.AddPoint($"KB{keypad.Number}D{dial.Number}", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.IsConnected ? dial.Ticks : 0);
+                }
             }
 
             BatteryPlot.AddPoint("Battery", DateTimeAxis.ToDouble(DateTime.Now - _zeroTime), _pdm.BatteryVoltage);

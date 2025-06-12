@@ -159,6 +159,36 @@ namespace CanDevices.DingoPdm
             }
         }
 
+        private string _name;
+        [JsonPropertyName("name")]
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if (_name != value)
+                {
+                    _name = value;
+                    OnPropertyChanged(nameof(Name));
+                }
+            }
+        }
+
+        private bool _plot;
+        [JsonPropertyName("plot")]
+        public bool Plot
+        {
+            get => _plot;
+            set
+            {
+                if (_plot != value)
+                {
+                    _plot = value;
+                    OnPropertyChanged(nameof(Plot));
+                }
+            }
+        }
+
         public Dial():this(1,1) {  }
 
         public Dial(int keypadNumber, int number)

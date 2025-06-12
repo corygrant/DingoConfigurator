@@ -196,7 +196,7 @@
                       Grid.Column="1"
                       Margin="5 5 5 5"
                       MinWidth="100"
-                      IsEnabled="{Binding Path=Kp.ColorsEnabled}"
+                      IsEnabled="{Binding Kp.ColorsEnabled}"
                       ItemsSource="{Binding Source={StaticResource BlinkBacklightColorEnumDataSource}}"
                       SelectedItem="{Binding Path=Kp.BacklightColor, Mode=TwoWay}"/>
 
@@ -214,6 +214,6 @@
                       Background="White"
                       ShowsPreview="True"
                       Height="3"/>
-        <local:BlinkMarineButtonView Grid.Row="5" Grid.Column="0" IsEnabled="{Binding Path=Kp.ColorsEnabled}" DataContext="{Binding Kp}"/>
+        <local:BlinkMarineButtonView Grid.Row="5" Grid.Column="0" DataContext="{Binding Kp}"/>
     </Grid>
 </UserControl>
