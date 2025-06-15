@@ -2071,7 +2071,8 @@
           "model": 6,
           "baseId": 21,
           "backlightColor": 9,
-          "name": "Keypad1"
+          "name": "Keypad1",
+          "visible": true
         },
         {
           "buttons": [
@@ -2709,7 +2710,8 @@
           "model": 0,
           "baseId": 31,
           "backlightColor": 0,
-          "name": "Keypad2"
+          "name": "Keypad2",
+          "visible": false
         }
       ]
     }
@@ -2796,7 +2798,12 @@
     }
   ],
   "dash": [],
-  "sbb": [],
+  "sbb": [
+    {
+      "Name": "SoftKeypad",
+      "BaseId": 44
+    }
+  ],
   "log": [
     {
       "name": "CAN Message Log",

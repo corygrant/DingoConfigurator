@@ -384,6 +384,21 @@ namespace CanDevices.DingoPdm
             }
         }
 
+        private bool _visible = true;
+        [JsonPropertyName("visible")]
+        public bool Visible
+        {
+            get => _visible;
+            set
+            {
+                if (_visible != value)
+                {
+                    _visible = value;
+                    OnPropertyChanged(nameof(Visible));
+                }
+            }
+        }
+
         [JsonIgnore]
         public new string Name
         {
@@ -626,26 +641,13 @@ namespace CanDevices.DingoPdm
 
         private void ButtonState(byte[] data)
         {
-            /*
-             * Use CAN data from PDM, not from the keypad
-             * 
-            Buttons[0].State = Convert.ToBoolean(data[0] & 0x01);
-            Buttons[1].State = Convert.ToBoolean((data[0] & 0x02) >> 1);
-            Buttons[2].State = Convert.ToBoolean((data[0] & 0x04) >> 2);
-            Buttons[3].State = Convert.ToBoolean((data[0] & 0x08) >> 3);
-            Buttons[4].State = Convert.ToBoolean((data[0] & 0x10) >> 4);
-            Buttons[5].State = Convert.ToBoolean((data[0] & 0x20) >> 5);
-            Buttons[6].State = Convert.ToBoolean((data[0] & 0x40) >> 6);
-            Buttons[7].State = Convert.ToBoolean((data[0] & 0x80) >> 7);
-            Buttons[8].State = Convert.ToBoolean(data[1] & 0x01);
-            Buttons[9].State = Convert.ToBoolean((data[1] & 0x02) >> 1);
-            Buttons[10].State = Convert.ToBoolean((data[1] & 0x04) >> 2);
-            Buttons[11].State = Convert.ToBoolean((data[1] & 0x08) >> 3);
-            */
+            
         }
 
         private void SetLed(byte[] data)
         {
+
+            //TODO: Color has to be set based on BlinkMarine model
             
             AllButtons[0].SetActiveColorRed(Convert.ToBoolean(data[0] & 0x01));
             AllButtons[1].SetActiveColorRed(Convert.ToBoolean((data[0] >> 1) & 0x01));
@@ -724,6 +726,7 @@ namespace CanDevices.DingoPdm
 
         private void SetLedBlink(byte[] data)
         {
+            //TODO: Color has to be set based on BlinkMarine model
 
             AllButtons[0].SetActiveBlinkingColorRed(Convert.ToBoolean(data[0] & 0x01));
             AllButtons[1].SetActiveBlinkingColorRed(Convert.ToBoolean((data[0] >> 1) & 0x01));

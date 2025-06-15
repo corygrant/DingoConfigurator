@@ -178,6 +178,16 @@ namespace CanDevices.CanMsgLog
             return null;
         }
 
+        public int GetTimerIntervalMs()
+        {
+            return 0; // 0 = no timer messages
+        }
+
+        public List<CanDeviceResponse> GetTimerMessages()
+        {
+            return new List<CanDeviceResponse>();
+        }
+
         public bool InIdRange(int id)
         {
             return true;

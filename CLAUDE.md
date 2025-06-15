@@ -75,9 +75,34 @@ msbuild DingoConfigurator.sln /p:Configuration=Debug
 3. **Configuration**: Read/write device parameters through CAN protocol
 4. **Real-time Data**: Continuous monitoring and plotting of device telemetry
 
+## UI Features and Functionality
+
+### TreeView Navigation
+- Main application uses hierarchical TreeView for device navigation
+- Each device type shows sub-pages (Settings, Plots, Keypad1, Keypad2)
+- Right-click context menus provide device-specific actions
+
+### Keypad Visibility Management
+**Location**: DingoPDM device context menu in TreeView
+**Functionality**: Hide/show keypad sub-items in the tree structure
+- **Checkable menu items**: "Keypad1" and "Keypad2" with checkbox states reflecting visibility
+- **Bulk operations**: "Hide All Keypads" and "Show All Keypads" options
+- **Implementation**: 
+  - `Keypad.Visible` property (UI-only, marked with `[JsonIgnore]`)
+  - `DingoPdmCan.VisibleSubPages` property filters keypads based on visibility
+  - Two-way data binding between menu checkboxes and keypad visibility
+  - Automatic TreeView updates via PropertyChanged notifications
+
+### DataGrid Button Display
+**Issue Resolution**: Fixed DataGrid in KeypadView to show all 20 buttons instead of just 12
+- **Root Cause**: DataGrid was binding to `Buttons` property which only showed first 12 buttons
+- **Solution**: Updated binding to use `VisibleButtons` property that respects `NumButtons` setting
+- **Implementation**: `VisibleButtons` uses `AllButtons.Take(NumButtons)` to show correct number based on keypad model
+
 ## Important Notes
 
 - Device configurations are saved as `.dco` files in JSON format
 - CAN interfaces require specific drivers (PCAN, USB2CAN adapters)
 - Each device type has specific ID ranges and communication protocols
 - ViewModels are cached per device to maintain state when switching between devices
+- Keypad visibility settings are UI-only and reset when configurations are reloaded

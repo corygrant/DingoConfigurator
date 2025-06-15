@@ -76,7 +76,18 @@ namespace CanDevices.DingoPdm
                 {
                     _subPages = value;
                     OnPropertyChanged(nameof(SubPages));
+                    OnPropertyChanged(nameof(VisibleSubPages));
                 }
+            }
+        }
+
+        [JsonIgnore]
+        public IEnumerable<CanDeviceSub> VisibleSubPages
+        {
+            get
+            {
+                return _subPages?.Where(subPage => 
+                    !(subPage is Keypad keypad) || keypad.Visible) ?? new List<CanDeviceSub>();
             }
         }
 
@@ -466,7 +477,9 @@ namespace CanDevices.DingoPdm
             Keypads = new ObservableCollection<Keypad>();
             for (int i = 0; i < _numKeypads; i++)
             {
-                Keypads.Add(new Keypad(i + 1, $"Keypad{i + 1}", this));
+                var keypad = new Keypad(i + 1, $"Keypad{i + 1}", this);
+                keypad.PropertyChanged += Keypad_PropertyChanged;
+                Keypads.Add(keypad);
             }
 
             SubPages.Add(new CanDeviceSub("Settings", this));
@@ -485,6 +498,7 @@ namespace CanDevices.DingoPdm
             {
                 keypad.CanDevice = this;
                 keypad.Name = keypad.Name ?? $"Keypad{keypad.Number}";
+                keypad.PropertyChanged += Keypad_PropertyChanged;
                 
                 // Ensure each keypad has exactly 20 buttons
                 var existingButtons = keypad.AllButtons?.ToList() ?? new List<Button>();
@@ -1911,6 +1925,16 @@ namespace CanDevices.DingoPdm
             };
         }
 
+        public virtual int GetTimerIntervalMs()
+        {
+            return 0; // 0 = no timer messages
+        }
+
+        public virtual List<CanDeviceResponse> GetTimerMessages()
+        {
+            return new List<CanDeviceResponse>();
+        }
+
         protected bool CheckVersion(int major, int minor, int build)
         {
             if (major > _minMajorVersion)
@@ -1923,6 +1947,14 @@ namespace CanDevices.DingoPdm
                 return true;
             
             return false;
+        }
+
+        private void Keypad_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Keypad.Visible))
+            {
+                OnPropertyChanged(nameof(VisibleSubPages));
+            }
         }
 
         public void Clear()

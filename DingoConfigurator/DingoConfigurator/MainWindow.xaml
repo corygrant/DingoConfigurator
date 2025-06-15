@@ -306,7 +306,7 @@
                                 </HierarchicalDataTemplate.Triggers>
                             </HierarchicalDataTemplate>
                             <HierarchicalDataTemplate DataType="{x:Type pdm:DingoPdmCan}"
-                                                      ItemsSource="{Binding SubPages}">
+                                                      ItemsSource="{Binding VisibleSubPages}">
                                 <StackPanel Orientation="Horizontal">
                                     <Image  x:Name="TypeImage"
                                            Width="20"
@@ -317,7 +317,8 @@
                                     </TextBlock>
                                     <StackPanel.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem Header="Add Keypad"/>
+                                            <MenuItem Header="Keypad1" IsCheckable="True" IsChecked="{Binding Keypads[0].Visible, Mode=TwoWay}" Click="ToggleKeypad1_Click"/>
+                                            <MenuItem Header="Keypad2" IsCheckable="True" IsChecked="{Binding Keypads[1].Visible, Mode=TwoWay}" Click="ToggleKeypad2_Click"/>
                                         </ContextMenu>
                                     </StackPanel.ContextMenu>
                                 </StackPanel>

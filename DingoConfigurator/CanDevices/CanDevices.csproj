@@ -112,6 +112,11 @@
     <Compile Include="LoggingValidationResult.cs" />
     <Compile Include="NotifyPropertyChangedBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SoftButtonBox\BlinkKeypadEmulator.cs" />
+    <Compile Include="SoftButtonBox\GrayhillKeypadEmulator.cs" />
+    <Compile Include="SoftButtonBox\IKeypadEmulator.cs" />
+    <Compile Include="SoftButtonBox\KeypadEmulatorBase.cs" />
+    <Compile Include="SoftButtonBox\KeypadEmulatorFactory.cs" />
     <Compile Include="SoftButtonBox\SoftButtonBox.cs" />
   </ItemGroup>
   <ItemGroup>

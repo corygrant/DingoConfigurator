@@ -30,6 +30,8 @@ namespace CanDevices
         CanDeviceResponse GetBurnMessage();
         CanDeviceResponse GetSleepMessage();
         CanDeviceResponse GetVersionMessage();
+        int GetTimerIntervalMs();
+        List<CanDeviceResponse> GetTimerMessages();
 
     }
 }

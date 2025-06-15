@@ -49,5 +49,27 @@ namespace DingoConfigurator
         {
             _vm.Cans_SelectionChanged(sender, e);
         }
+
+        private void ToggleKeypad1_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.DataContext is CanDevices.DingoPdm.DingoPdmCan pdm)
+            {
+                if (pdm.Keypads.Count > 0)
+                {
+                    pdm.Keypads[0].Visible = menuItem.IsChecked;
+                }
+            }
+        }
+
+        private void ToggleKeypad2_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.DataContext is CanDevices.DingoPdm.DingoPdmCan pdm)
+            {
+                if (pdm.Keypads.Count > 1)
+                {
+                    pdm.Keypads[1].Visible = menuItem.IsChecked;
+                }
+            }
+        }
     }
 }

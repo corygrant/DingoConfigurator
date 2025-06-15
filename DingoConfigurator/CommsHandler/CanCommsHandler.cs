@@ -32,6 +32,8 @@ namespace CommsHandler
         private bool _isSerial = false;
 
         private System.Timers.Timer _checkConnectionTimer = new System.Timers.Timer(1000);
+        private Dictionary<ICanDevice, System.Timers.Timer> _deviceTimers = new Dictionary<ICanDevice, System.Timers.Timer>();
+        private readonly object _timerLock = new object();
 
         private int _sleepTime = 1;
         private int _msgTimeout = 10;
@@ -129,10 +131,12 @@ namespace CommsHandler
             _checkConnectionTimer.Start();
 
             _ = GetVersion(null);
+            StartDeviceTimers();
         }
 
         public void Disconnect()
         {
+            StopDeviceTimers();
             if (_can != null)
             {
                 _can.DataReceived -= CanDataReceived;
@@ -468,9 +472,70 @@ namespace CommsHandler
 
         public void ResetCanDevices()
         {
+            StopDeviceTimers();
             _canDevices?.Clear();
 
             _canDevices = new ObservableCollection<ICanDevice>();
+        }
+
+        private void StartDeviceTimers()
+        {
+            lock (_timerLock)
+            {
+                foreach (var device in _canDevices)
+                {
+                    if (device.IsConnected)
+                    {
+                        int intervalMs = device.GetTimerIntervalMs();
+                        if (intervalMs > 0)
+                        {
+                            var timer = new System.Timers.Timer(intervalMs);
+                            timer.Elapsed += (sender, e) => SendTimerMessages(device);
+                            timer.AutoReset = true;
+                            timer.Start();
+
+                            _deviceTimers[device] = timer;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void StopDeviceTimers()
+        {
+            lock (_timerLock)
+            {
+                foreach (var timer in _deviceTimers.Values)
+                {
+                    timer?.Stop();
+                    timer?.Dispose();
+                }
+                _deviceTimers.Clear();
+            }
+        }
+
+        private void SendTimerMessages(ICanDevice device)
+        {
+            if (!Connected || !device.IsConnected) return;
+
+            try
+            {
+                var messages = device.GetTimerMessages();
+                if (messages != null)
+                {
+                    foreach (var msg in messages)
+                    {
+                        msg.DeviceBaseId = device.BaseId;
+                        _can.Write(msg.Data);
+                        ProcessMessage(msg.Data);
+                        Thread.Sleep(1);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"Failed to send timer messages: {ex.Message}");
+            }
         }
 
         public ICanDevice AddCanDevice(Type type, string name, int baseId)
@@ -530,6 +595,15 @@ namespace CommsHandler
 
         public void RemoveCanDevice(ICanDevice canDevice)
         {
+            lock (_timerLock)
+            {
+                if (_deviceTimers.ContainsKey(canDevice))
+                {
+                    _deviceTimers[canDevice]?.Stop();
+                    _deviceTimers[canDevice]?.Dispose();
+                    _deviceTimers.Remove(canDevice);
+                }
+            }
             _canDevices.Remove(canDevice);
             OnPropertyChanged(nameof(CanDevices));
         }
@@ -559,6 +633,9 @@ namespace CommsHandler
                     // Stop the timer
                     _checkConnectionTimer.Stop();
                     _checkConnectionTimer.Dispose();
+
+                    // Stop device timers
+                    StopDeviceTimers();
 
                     // Ensure no other threads are using the COM objects
                     lock (_queue)
