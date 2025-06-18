@@ -24,6 +24,8 @@ namespace DingoConfigurator.ViewModels
 
             _sbb = (SoftButtonBox)_vm.SelectedCanDevice;
 
+            // Ensure clean subscription (remove any existing handlers first)
+            _sbb.PropertyChanged -= _sbb_PropertyChanged;
             _sbb.PropertyChanged += _sbb_PropertyChanged;
 
             ButtonPressCommand = new RelayCommand(OnButtonPress, CanExecuteButton);
@@ -31,6 +33,7 @@ namespace DingoConfigurator.ViewModels
             DialValueChangedCommand = new RelayCommand(OnDialValueChanged, CanExecuteCommand);
 
             UpdateButtonStates();
+            UpdateLedColors(); // Initialize LED colors with current state
         }
 
         private void _sbb_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -40,11 +43,17 @@ namespace DingoConfigurator.ViewModels
             if (e.PropertyName == nameof(SoftButtonBox.KeypadModel))
             {
                 UpdateButtonStates();
+                UpdateLedColors(); // Refresh LED colors when model changes
                 OnPropertyChanged(nameof(KeypadEmulator));
                 OnPropertyChanged(nameof(NumButtons));
                 OnPropertyChanged(nameof(NumDials));
                 OnPropertyChanged(nameof(HasDials));
                 OnPropertyChanged(nameof(ColorsEnabled));
+            }
+            else if (e.PropertyName == nameof(SoftButtonBox.LedStatesChanged))
+            {
+                // Update LED colors when LED control messages are received
+                UpdateLedColors();
             }
         }
 
@@ -184,9 +193,22 @@ namespace DingoConfigurator.ViewModels
             }
         }
 
+        private void UpdateLedColors()
+        {
+            for (int i = 0; i < _buttonStates.Count; i++)
+            {
+                string newColor = _sbb?.GetLedColorName(i) ?? "Off";
+                _buttonStates[i].LedColor = newColor;
+            }
+        }
+
+
         public override void Dispose()
         {
-            _sbb.PropertyChanged -= _sbb_PropertyChanged;
+            if (_sbb != null)
+            {
+                _sbb.PropertyChanged -= _sbb_PropertyChanged;
+            }
             base.Dispose();
         }
     }

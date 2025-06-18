@@ -144,7 +144,7 @@ namespace CanDevices.SoftButtonBox
 
             for (int i = 0; i < NumButtons; i++)
             {
-                if (((message >> bitIndex++) & 1) == 1)
+                //if (((message >> bitIndex++) & 1) == 1)
                     colors[i] = (BlinkMarineButtonColor)rawLed[i];
             }
 
@@ -352,6 +352,24 @@ namespace CanDevices.SoftButtonBox
         public byte GetBacklightColor()
         {
             return Convert.ToByte(_backlightColor);
+        }
+
+        public override bool IsLedMessage(int canId)
+        {
+            int messageOffset = canId - BaseCanId;
+            return messageOffset == SET_LED_OFFSET || 
+                   messageOffset == SET_LED_BLINK_OFFSET || 
+                   messageOffset == LED_BRIGHTNESS_OFFSET ||
+                   messageOffset == BACKLIGHT_OFFSET;
+        }
+
+        public override string GetLedColorName(int buttonIndex)
+        {
+            if (buttonIndex >= 0 && buttonIndex < NumButtons)
+            {
+                return _ledStates[buttonIndex].ToString();
+            }
+            return "Off";
         }
     }
 }

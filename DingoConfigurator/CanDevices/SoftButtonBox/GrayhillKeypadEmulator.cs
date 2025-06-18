@@ -104,5 +104,21 @@ namespace CanDevices.SoftButtonBox
         {
             return _brightness;
         }
+
+        public override bool IsLedMessage(int canId)
+        {
+            int messageOffset = canId - BaseCanId;
+            return messageOffset == SET_LED_OFFSET || 
+                   messageOffset == LED_BRIGHTNESS_OFFSET;
+        }
+
+        public override string GetLedColorName(int buttonIndex)
+        {
+            if (buttonIndex >= 0 && buttonIndex < NumButtons)
+            {
+                return _ledStates[buttonIndex] ? "White" : "Off";
+            }
+            return "Off";
+        }
     }
 }

@@ -157,7 +157,13 @@ namespace DingoConfigurator
             get => _currentViewModel;
             set
             {
-                _currentViewModel?.Dispose();
+                // Don't dispose cached ViewModels - they should stay alive to maintain state
+                // Only dispose if we're setting to null (app shutdown) or different instance
+                if (value == null && _currentViewModel != null)
+                {
+                    _currentViewModel.Dispose();
+                }
+                
                 _currentViewModel = value;
                 OnPropertyChanged(nameof(CurrentViewModel));
             }

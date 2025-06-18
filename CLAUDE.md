@@ -129,6 +129,22 @@ msbuild DingoConfigurator.sln /p:Configuration=Debug
   - Incoming message processing through `Read()` method and emulator `ProcessIncomingMessage()`
   - State management through `SetButtonState()`, `SetDialValue()`, and `Reset()` methods
 
+## ViewModel Lifecycle Management
+
+The application uses a **cached ViewModel architecture** to improve performance and maintain state when switching between devices:
+
+- **ViewModel Caching**: `MainViewModel._deviceViewModels` dictionary stores ViewModels per device and page type
+- **State Persistence**: ViewModels remain alive when navigating away, preserving plots, settings, and UI state
+- **Event Subscription Management**: ViewModels maintain PropertyChanged subscriptions across navigation
+- **Memory Management**: ViewModels are only disposed when devices are removed or application shuts down
+- **Performance Benefits**: No overhead of recreating ViewModels or re-subscribing to events on navigation
+
+### Important ViewModel Considerations
+- **Event Subscriptions**: Must be properly managed in constructor and Dispose() methods
+- **State Initialization**: Constructor should initialize current state (e.g., LED colors) since it may not be called again
+- **Navigation Behavior**: ViewModels persist across navigation, so temporary state should be handled carefully
+- **Memory Leaks**: Ensure proper cleanup in Dispose() method since ViewModels have longer lifecycle
+
 ## Important Notes
 
 - Device configurations are saved as `.dco` files in JSON format
@@ -138,3 +154,4 @@ msbuild DingoConfigurator.sln /p:Configuration=Debug
 - Keypad visibility settings are UI-only and reset when configurations are reloaded
 - SoftButtonBox emulator automatically adapts CAN message formats based on keypad model selection
 - Blink keypad LED encoding uses two different formats: "stacked" (Blink12Key) vs "padded" (other models)
+- ViewModel event subscriptions persist across navigation - avoid disposing ViewModels on navigation switches

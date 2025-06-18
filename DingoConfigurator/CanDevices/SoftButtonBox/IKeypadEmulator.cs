@@ -19,8 +19,10 @@ namespace CanDevices.SoftButtonBox
         List<CanDeviceResponse> GenerateHeartbeatMessage();
         bool InIdRange(int id);
         bool ProcessIncomingMessage(int canId, byte[] data);
+        bool IsLedMessage(int canId);
         void SetButtonState(int buttonIndex, bool pressed);
         void SetDialValue(int dialIndex, int value);
         void Reset();
+        string GetLedColorName(int buttonIndex);
     }
 }

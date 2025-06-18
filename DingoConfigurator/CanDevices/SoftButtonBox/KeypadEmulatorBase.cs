@@ -88,6 +88,11 @@ namespace CanDevices.SoftButtonBox
             return false;
         }
 
+        public virtual bool IsLedMessage(int canId)
+        {
+            return false; // Default implementation
+        }
+
         public virtual void SetButtonState(int buttonIndex, bool pressed)
         {
             if (buttonIndex >= 0 && buttonIndex < NumButtons)
@@ -114,6 +119,11 @@ namespace CanDevices.SoftButtonBox
             {
                 DialValues[i] = 0;
             }
+        }
+
+        public virtual string GetLedColorName(int buttonIndex)
+        {
+            return "Off"; // Default implementation for Grayhill
         }
 
         public abstract List<CanDeviceResponse> GenerateButtonStateMessages();

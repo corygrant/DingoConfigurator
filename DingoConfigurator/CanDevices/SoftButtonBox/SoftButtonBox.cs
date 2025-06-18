@@ -87,6 +87,10 @@ namespace CanDevices.SoftButtonBox
         [JsonIgnore]
         public IKeypadEmulator KeypadEmulator => _keypadEmulator;
 
+        private int _ledStatesChanged = 0;
+        [JsonIgnore]
+        public int LedStatesChanged => _ledStatesChanged;
+
         private int _timerIntervalMs = 100;
         [JsonPropertyName("timerIntervalMs")]
         public int TimerIntervalMs { 
@@ -180,7 +184,15 @@ namespace CanDevices.SoftButtonBox
 
             if (_keypadEmulator != null)
             {
+                bool wasLedMessage = _keypadEmulator.IsLedMessage(id);
                 _keypadEmulator.ProcessIncomingMessage(id, data);
+                
+                if (wasLedMessage)
+                {
+                    // Fire property change to notify UI of LED updates
+                    _ledStatesChanged++;
+                    OnPropertyChanged(nameof(LedStatesChanged));
+                }
             }
 
             _lastRxTime = DateTime.Now;
@@ -218,6 +230,11 @@ namespace CanDevices.SoftButtonBox
         public void SetDialValue(int dialIndex, int value)
         {
             _keypadEmulator?.SetDialValue(dialIndex, value);
+        }
+
+        public string GetLedColorName(int buttonIndex)
+        {
+            return _keypadEmulator?.GetLedColorName(buttonIndex) ?? "Off";
         }
     }
 }
