@@ -140,6 +140,9 @@ namespace CanDevices.CanMsgLog
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
+        [JsonIgnore]
+        public int TimerIntervalMs { get => 0; }
+
         public CanMsgLog(string name, int baseId)
         {
             _name = name;
@@ -178,11 +181,6 @@ namespace CanDevices.CanMsgLog
             return null;
         }
 
-        public int GetTimerIntervalMs()
-        {
-            return 0; // 0 = no timer messages
-        }
-
         public List<CanDeviceResponse> GetTimerMessages()
         {
             return new List<CanDeviceResponse>();
@@ -191,11 +189,6 @@ namespace CanDevices.CanMsgLog
         public bool InIdRange(int id)
         {
             return true;
-        }
-
-        public bool IsPriorityMsg(int id)
-        {
-            return false;
         }
 
         public bool Read(int id, byte[] data, ref ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)

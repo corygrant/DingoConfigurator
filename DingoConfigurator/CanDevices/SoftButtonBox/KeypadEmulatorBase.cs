@@ -64,7 +64,7 @@ namespace CanDevices.SoftButtonBox
             }
         }
 
-        protected virtual bool InIdRange(int id)
+        public virtual bool InIdRange(int id)
         {
             int messageOffset = id - BaseCanId;
             return MessageHandlers.ContainsKey(messageOffset);
@@ -86,6 +86,34 @@ namespace CanDevices.SoftButtonBox
                 return MessageHandlers[messageOffset](canId, data);
             }
             return false;
+        }
+
+        public virtual void SetButtonState(int buttonIndex, bool pressed)
+        {
+            if (buttonIndex >= 0 && buttonIndex < NumButtons)
+            {
+                ButtonStates[buttonIndex] = pressed;
+            }
+        }
+
+        public virtual void SetDialValue(int dialIndex, int value)
+        {
+            if (dialIndex >= 0 && dialIndex < NumDials)
+            {
+                DialValues[dialIndex] = value;
+            }
+        }
+
+        public virtual void Reset()
+        {
+            for (int i = 0; i < NumButtons; i++)
+            {
+                ButtonStates[i] = false;
+            }
+            for (int i = 0; i < NumDials; i++)
+            {
+                DialValues[i] = 0;
+            }
         }
 
         public abstract List<CanDeviceResponse> GenerateButtonStateMessages();

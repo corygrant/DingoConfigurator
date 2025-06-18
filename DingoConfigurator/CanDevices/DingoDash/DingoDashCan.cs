@@ -60,6 +60,9 @@ namespace CanDevices.DingoDash
             }
         }
 
+        [JsonIgnore]
+        public int TimerIntervalMs { get => 0; }
+
         public DingoDashCan(string name, int baseId)
         {
             Name = name;
@@ -74,10 +77,6 @@ namespace CanDevices.DingoDash
             IsConnected = timeSpan.TotalMilliseconds < 500;
         }
 
-        public bool IsPriorityMsg(int id)
-        {
-            return false;
-        }
         public bool InIdRange(int id)
         {
             return (id >= BaseId) && (id <= BaseId + 10);
@@ -134,11 +133,6 @@ namespace CanDevices.DingoDash
         public CanDeviceResponse GetVersionMessage()
         {
             return null;
-        }
-
-        public int GetTimerIntervalMs()
-        {
-            return 0; // 0 = no timer messages
         }
 
         public List<CanDeviceResponse> GetTimerMessages()

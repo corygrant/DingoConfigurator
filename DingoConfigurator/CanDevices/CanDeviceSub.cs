@@ -56,6 +56,8 @@ namespace CanDevices
         [JsonIgnore]
         public virtual DateTime LastRxTime => CanDevice.LastRxTime;
 
+        public int TimerIntervalMs { get => 0; }
+
         public CanDeviceSub()
         {
             Name = "CanDeviceSub";
@@ -72,10 +74,6 @@ namespace CanDevices
         {
         }
 
-        public virtual bool IsPriorityMsg(int id)
-        {
-            return false;
-        }
         public virtual bool InIdRange(int id)
         {
             return false;
@@ -129,5 +127,9 @@ namespace CanDevices
             return null;
         }
 
+        public List<CanDeviceResponse> GetTimerMessages()
+        {
+            return new List<CanDeviceResponse>();
+        }
     }
 }

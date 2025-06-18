@@ -14,6 +14,7 @@ namespace CanDevices.SoftButtonBox
     public class SoftButtonBox : NotifyPropertyChangedBase, ICanDevice
     {
         private string _name;
+        [JsonPropertyName("name")]
         public string Name
         {
             get => _name;
@@ -28,6 +29,7 @@ namespace CanDevices.SoftButtonBox
         }
 
         private int _baseId;
+        [JsonPropertyName("baseId")]
         public int BaseId
         {
             get => _baseId;
@@ -65,6 +67,7 @@ namespace CanDevices.SoftButtonBox
         }
 
         private KeypadModel _keypadModel = KeypadModel.Blink12Key;
+        [JsonPropertyName("keypadModel")]
         public KeypadModel KeypadModel
         {
             get => _keypadModel;
@@ -79,23 +82,24 @@ namespace CanDevices.SoftButtonBox
             }
         }
 
-        private bool _emulationEnabled = true;
-        public bool EmulationEnabled
-        {
-            get => _emulationEnabled;
-            set
-            {
-                if (_emulationEnabled != value)
-                {
-                    _emulationEnabled = value;
-                    OnPropertyChanged(nameof(EmulationEnabled));
-                }
-            }
-        }
 
         private IKeypadEmulator _keypadEmulator;
         [JsonIgnore]
         public IKeypadEmulator KeypadEmulator => _keypadEmulator;
+
+        private int _timerIntervalMs = 100;
+        [JsonPropertyName("timerIntervalMs")]
+        public int TimerIntervalMs { 
+            get => _timerIntervalMs; 
+            set
+            {
+                if (_timerIntervalMs != value)
+                {
+                    _timerIntervalMs = value;
+                    OnPropertyChanged(nameof(TimerIntervalMs));
+                }
+            }
+        }
 
         public SoftButtonBox(string name, int baseId)
         {
@@ -146,16 +150,11 @@ namespace CanDevices.SoftButtonBox
             return null;
         }
 
-        public int GetTimerIntervalMs()
-        {
-            return EmulationEnabled ? 100 : 0;
-        }
-
         public List<CanDeviceResponse> GetTimerMessages()
         {
             var messages = new List<CanDeviceResponse>();
             
-            if (EmulationEnabled && _keypadEmulator != null)
+            if (_keypadEmulator != null)
             {
                 messages.AddRange(_keypadEmulator.GenerateButtonStateMessages());
                 messages.AddRange(_keypadEmulator.GenerateDialStateMessages());
@@ -167,19 +166,19 @@ namespace CanDevices.SoftButtonBox
 
         public bool InIdRange(int id)
         {
-            return (id >= BaseId) && (id <= BaseId + 0x7FF);
+            if (_keypadEmulator == null)
+            {
+                return false;
+            }
+            return _keypadEmulator.InIdRange(id);
         }
 
-        public bool IsPriorityMsg(int id)
-        {
-            return false;
-        }
 
         public bool Read(int id, byte[] data, ref ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue)
         {
             if (!InIdRange(id)) return false;
 
-            if (EmulationEnabled && _keypadEmulator != null)
+            if (_keypadEmulator != null)
             {
                 _keypadEmulator.ProcessIncomingMessage(id, data);
             }
@@ -208,7 +207,17 @@ namespace CanDevices.SoftButtonBox
 
         public void Clear()
         {
-     
+            _keypadEmulator?.Reset();
+        }
+
+        public void SetButtonState(int buttonIndex, bool pressed)
+        {
+            _keypadEmulator?.SetButtonState(buttonIndex, pressed);
+        }
+
+        public void SetDialValue(int dialIndex, int value)
+        {
+            _keypadEmulator?.SetDialValue(dialIndex, value);
         }
     }
 }

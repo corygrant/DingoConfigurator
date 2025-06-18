@@ -220,7 +220,7 @@
     <Compile Include="Views\DingoPdm\WipersSpeedMapDataGrid.xaml.cs">
       <DependentUpon>WipersSpeedMapDataGrid.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SoftButtonBoxView.xaml.cs">
+    <Compile Include="Views\SoftButtonBox\SoftButtonBoxView.xaml.cs">
       <DependentUpon>SoftButtonBoxView.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\CanBoard\CanBoardView.xaml">
@@ -339,7 +339,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SoftButtonBoxView.xaml">
+    <Page Include="Views\SoftButtonBox\SoftButtonBoxView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -486,7 +486,7 @@ namespace CommsHandler
                 {
                     if (device.IsConnected)
                     {
-                        int intervalMs = device.GetTimerIntervalMs();
+                        int intervalMs = device.TimerIntervalMs;
                         if (intervalMs > 0)
                         {
                             var timer = new System.Timers.Timer(intervalMs);
@@ -516,7 +516,7 @@ namespace CommsHandler
 
         private void SendTimerMessages(ICanDevice device)
         {
-            if (!Connected || !device.IsConnected) return;
+            if (!Connected) return;
 
             try
             {

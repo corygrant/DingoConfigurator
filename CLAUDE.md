@@ -99,6 +99,36 @@ msbuild DingoConfigurator.sln /p:Configuration=Debug
 - **Solution**: Updated binding to use `VisibleButtons` property that respects `NumButtons` setting
 - **Implementation**: `VisibleButtons` uses `AllButtons.Take(NumButtons)` to show correct number based on keypad model
 
+### SoftButtonBox CAN Keypad Emulator
+**Location**: SoftButtonBox device with comprehensive UI in `SoftButtonBoxView.xaml`
+**Functionality**: Complete CAN keypad emulation supporting both Blink Marine and Grayhill keypads
+- **Architecture**: Polymorphic design with factory pattern
+  - `IKeypadEmulator` interface defining emulator contract
+  - `KeypadEmulatorBase` abstract class with common functionality
+  - `BlinkKeypadEmulator` for Blink Marine keypads (color LEDs, dials, complex encoding)
+  - `GrayhillKeypadEmulator` for Grayhill keypads (simple on/off LEDs)
+  - `KeypadEmulatorFactory` for creating appropriate emulator instances
+- **CAN Message Handling**: Proper protocol implementation
+  - **Button States**: BaseCanId + 0x180, packed bit format
+  - **LED Control**: BaseCanId + 0x200, vendor-specific encoding (stacked vs padded formats)
+  - **Dial States**: BaseCanId + 0x280/0x380, 16-bit rotary encoder values (Blink only)
+  - **Heartbeat**: BaseCanId + 0x700, periodic "alive" messages
+- **User Interface Features**:
+  - Dynamic keypad model selection (dropdown with all 14 models)
+  - Real-time button control with toggle behavior and visual feedback
+  - Dial sliders for rotary encoder simulation (Blink13Key_2Dial, BlinkRacepad)
+  - LED status display with color visualization for Blink keypads
+  - Connection status monitoring and automatic message transmission (100ms intervals)
+- **Model-Specific Behavior**:
+  - **Blink Models**: Support 2-20 buttons, RGB LEDs, brightness control, backlight, dial LEDs
+  - **Grayhill Models**: Support 6-20 buttons, simple on/off LEDs, no dials
+  - Automatic UI adaptation based on selected model capabilities
+- **Implementation Details**:
+  - Integrates with existing `SoftButtonBox` class implementing `ICanDevice`
+  - Timer-based message transmission via `GetTimerMessages()` and `GetTimerIntervalMs()`
+  - Incoming message processing through `Read()` method and emulator `ProcessIncomingMessage()`
+  - State management through `SetButtonState()`, `SetDialValue()`, and `Reset()` methods
+
 ## Important Notes
 
 - Device configurations are saved as `.dco` files in JSON format
@@ -106,3 +136,5 @@ msbuild DingoConfigurator.sln /p:Configuration=Debug
 - Each device type has specific ID ranges and communication protocols
 - ViewModels are cached per device to maintain state when switching between devices
 - Keypad visibility settings are UI-only and reset when configurations are reloaded
+- SoftButtonBox emulator automatically adapts CAN message formats based on keypad model selection
+- Blink keypad LED encoding uses two different formats: "stacked" (Blink12Key) vs "padded" (other models)

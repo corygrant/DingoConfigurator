@@ -407,6 +407,9 @@ namespace CanDevices.DingoPdm
             }
         }
 
+        [JsonIgnore]
+        public int TimerIntervalMs { get => 0; }
+
         public DingoPdmCan(string name, int baseId)
         {
             Name = name;
@@ -546,11 +549,6 @@ namespace CanDevices.DingoPdm
             {
                 subPage.UpdateIsConnected();
             }
-        }
-
-        public bool IsPriorityMsg(int id)
-        {
-            return ((id == BaseId + 30) || (id == BaseId + 31));
         }
 
         public bool InIdRange(int id)
@@ -1923,11 +1921,6 @@ namespace CanDevices.DingoPdm
                 },
                 MsgDescription = "Version"
             };
-        }
-
-        public virtual int GetTimerIntervalMs()
-        {
-            return 0; // 0 = no timer messages
         }
 
         public virtual List<CanDeviceResponse> GetTimerMessages()

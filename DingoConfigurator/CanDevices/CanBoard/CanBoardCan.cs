@@ -136,6 +136,8 @@ namespace CanDevices.CanBoard
             }
         }
 
+        [JsonIgnore]
+        public int TimerIntervalMs { get => 0; }
 
         public CanBoardCan(string name, int baseId)
         {
@@ -170,11 +172,6 @@ namespace CanDevices.CanBoard
             IsConnected = timeSpan.TotalMilliseconds < 500;
         }
 
-
-        public bool IsPriorityMsg(int id)
-        {
-            return false;
-        }
 
         public bool InIdRange(int id)
         {
@@ -298,11 +295,6 @@ namespace CanDevices.CanBoard
         public CanDeviceResponse GetVersionMessage()
         {
             return null;
-        }
-
-        public int GetTimerIntervalMs()
-        {
-            return 0; // 0 = no timer messages
         }
 
         public List<CanDeviceResponse> GetTimerMessages()

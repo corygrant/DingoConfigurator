@@ -19,10 +19,11 @@ namespace CanDevices
 
         [JsonIgnore]
         DateTime LastRxTime { get;}
+
+        int TimerIntervalMs { get; }
         void UpdateIsConnected();
         bool Read(int id, byte[] data, ref ConcurrentDictionary<(int BaseId, int Prefix, int Index), CanDeviceResponse> queue);
         void Clear();
-        bool IsPriorityMsg(int id);
         bool InIdRange(int id);
         List<CanDeviceResponse> GetUploadMessages();
         List<CanDeviceResponse> GetDownloadMessages();
@@ -30,7 +31,6 @@ namespace CanDevices
         CanDeviceResponse GetBurnMessage();
         CanDeviceResponse GetSleepMessage();
         CanDeviceResponse GetVersionMessage();
-        int GetTimerIntervalMs();
         List<CanDeviceResponse> GetTimerMessages();
 
     }

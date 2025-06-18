@@ -19,5 +19,8 @@ namespace CanDevices.SoftButtonBox
         List<CanDeviceResponse> GenerateHeartbeatMessage();
         bool InIdRange(int id);
         bool ProcessIncomingMessage(int canId, byte[] data);
+        void SetButtonState(int buttonIndex, bool pressed);
+        void SetDialValue(int dialIndex, int value);
+        void Reset();
     }
 }

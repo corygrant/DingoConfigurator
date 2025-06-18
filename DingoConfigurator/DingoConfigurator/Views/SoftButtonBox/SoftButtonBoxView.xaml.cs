@@ -15,14 +15,14 @@ using System.Windows.Shapes;
 
 namespace DingoConfigurator.Views
 {
-    /// <summary>
+/// <summary>
     /// Interaction logic for SoftButtonBoxView.xaml
-    /// </summary>
-    public partial class SoftButtonBoxView : UserControl
-    {
-        public SoftButtonBoxView()
-        {
-            InitializeComponent();
-        }
-    }
+/// </summary>
+public partial class SoftButtonBoxView : UserControl
+{
+public SoftButtonBoxView()
+{
+InitializeComponent();
+}
+}
 }
