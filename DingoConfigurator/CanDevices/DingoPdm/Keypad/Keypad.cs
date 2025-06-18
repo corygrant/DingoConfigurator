@@ -30,6 +30,7 @@ namespace CanDevices.DingoPdm
                 {
                     _allButtons = value;
                     OnPropertyChanged(nameof(AllButtons));
+                    UpdateVisibleButtons();
                     OnPropertyChanged(nameof(VisibleButtons));
                 }
             }
@@ -46,18 +47,36 @@ namespace CanDevices.DingoPdm
                 {
                     _numButtons = value;
                     OnPropertyChanged(nameof(NumButtons));
+                    UpdateVisibleButtons();
                     OnPropertyChanged(nameof(VisibleButtons));
                 }
             }
         }
 
+        private ObservableCollection<Button> _visibleButtons;
         [JsonIgnore]
-        public IEnumerable<Button> VisibleButtons
+        public ObservableCollection<Button> VisibleButtons
         {
             get
             {
-                if (AllButtons == null) return new List<Button>();
-                return AllButtons.Take(NumButtons);
+                if (_visibleButtons == null)
+                {
+                    _visibleButtons = new ObservableCollection<Button>();
+                    UpdateVisibleButtons();
+                }
+                return _visibleButtons;
+            }
+        }
+
+        private void UpdateVisibleButtons()
+        {
+            if (_visibleButtons == null || AllButtons == null) return;
+            
+            // Clear and repopulate the visible buttons collection
+            _visibleButtons.Clear();
+            for (int i = 0; i < Math.Min(NumButtons, AllButtons.Count); i++)
+            {
+                _visibleButtons.Add(AllButtons[i]);
             }
         }
 
@@ -418,6 +437,10 @@ namespace CanDevices.DingoPdm
 
             _dials = new ObservableCollection<Dial>();
             NumButtons = 20; // Default to showing all buttons
+            
+            // Initialize VisibleButtons collection
+            _visibleButtons = new ObservableCollection<Button>();
+            UpdateVisibleButtons();
 
            
             _messageHandlers = new Dictionary<int, Action<byte[]>>
@@ -451,6 +474,10 @@ namespace CanDevices.DingoPdm
 
             _dials = new ObservableCollection<Dial>();
             NumButtons = 20; // Default to showing all buttons
+            
+            // Initialize VisibleButtons collection
+            _visibleButtons = new ObservableCollection<Button>();
+            UpdateVisibleButtons();
 
            
             _messageHandlers = new Dictionary<int, Action<byte[]>>

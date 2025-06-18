@@ -24,8 +24,6 @@ namespace DingoConfigurator.ViewModels
 
             _sbb = (SoftButtonBox)_vm.SelectedCanDevice;
 
-            // Ensure clean subscription (remove any existing handlers first)
-            _sbb.PropertyChanged -= _sbb_PropertyChanged;
             _sbb.PropertyChanged += _sbb_PropertyChanged;
 
             ButtonPressCommand = new RelayCommand(OnButtonPress, CanExecuteButton);
