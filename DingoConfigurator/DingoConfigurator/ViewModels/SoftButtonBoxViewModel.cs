@@ -9,6 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CanDevices;
+using System.Text.Json.Serialization;
+using System.Windows.Media;
+using System.Net.Http.Headers;
 
 namespace DingoConfigurator.ViewModels
 {
@@ -40,13 +43,18 @@ namespace DingoConfigurator.ViewModels
             
             if (e.PropertyName == nameof(SoftButtonBox.KeypadModel))
             {
-                UpdateButtonStates();
-                UpdateLedColors(); // Refresh LED colors when model changes
-                OnPropertyChanged(nameof(KeypadEmulator));
-                OnPropertyChanged(nameof(NumButtons));
-                OnPropertyChanged(nameof(NumDials));
-                OnPropertyChanged(nameof(HasDials));
-                OnPropertyChanged(nameof(ColorsEnabled));
+                // Use Dispatcher to delay the update until after the emulator is initialized
+                System.Windows.Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+                {
+                    UpdateButtonStates();
+                    UpdateLedColors(); // Refresh LED colors when model changes
+                    OnPropertyChanged(nameof(KeypadEmulator));
+                    OnPropertyChanged(nameof(NumButtons));
+                    OnPropertyChanged(nameof(NumDials));
+                    OnPropertyChanged(nameof(HasDials));
+                    OnPropertyChanged(nameof(ColorsEnabled));
+                    OnPropertyChanged(nameof(ButtonColumns));
+                }));
             }
             else if (e.PropertyName == nameof(SoftButtonBox.LedStatesChanged))
             {
@@ -83,6 +91,22 @@ namespace DingoConfigurator.ViewModels
 
         private ObservableCollection<DialState> _dialStates = new ObservableCollection<DialState>();
         public ObservableCollection<DialState> DialStates => _dialStates;
+
+        public int ButtonColumns
+        {
+            get
+            {
+                if (NumButtons <= 6) return 6;
+                if (NumButtons == 8) return 4;
+                if (NumButtons == 10) return 5;
+                if (NumButtons == 12) return 6;
+                if (NumButtons == 13) return 6;
+                if (NumButtons == 15) return 5;
+                if (NumButtons == 20) return 5;
+
+                return 6;
+            }
+        }
 
         public ICommand ButtonPressCommand { get; }
         public ICommand ButtonReleaseCommand { get; }
@@ -196,7 +220,9 @@ namespace DingoConfigurator.ViewModels
             for (int i = 0; i < _buttonStates.Count; i++)
             {
                 string newColor = _sbb?.GetLedColorName(i) ?? "Off";
+                string newBlinkColor = _sbb?.GetLedBlinkColorName(i) ?? "Off";
                 _buttonStates[i].LedColor = newColor;
+                _buttonStates[i].LedBlinkColor = newBlinkColor;
             }
         }
 
@@ -226,6 +252,7 @@ namespace DingoConfigurator.ViewModels
                 {
                     _isPressed = value;
                     OnPropertyChanged(nameof(IsPressed));
+                    OnPropertyChanged(nameof(ButtonBorder));
                 }
             }
         }
@@ -240,7 +267,79 @@ namespace DingoConfigurator.ViewModels
                 {
                     _ledColor = value;
                     OnPropertyChanged(nameof(LedColor));
+                    OnPropertyChanged(nameof(ButtonBackground));
                 }
+            }
+        }
+        
+        private string _ledBlinkColor = "Off";
+        public string LedBlinkColor 
+        { 
+            get => _ledBlinkColor;
+            set
+            {
+                if (_ledBlinkColor != value)
+                {
+                    _ledBlinkColor = value;
+                    OnPropertyChanged(nameof(LedBlinkColor));
+                    OnPropertyChanged(nameof(ButtonBackground));
+                    OnPropertyChanged(nameof(HasBlinkColor));
+                }
+            }
+        }
+        
+        public bool HasBlinkColor => LedBlinkColor != "Off";
+
+        public System.Windows.Media.Brush ButtonBackground
+        {
+            get
+            {
+                var mainColor = ConvertColorNameToBrush(LedColor);
+                var blinkColor = ConvertColorNameToBrush(LedBlinkColor);
+                
+                // If no blink color, return main color
+                if (LedBlinkColor == "Off")
+                {
+                    return mainColor;
+                }
+                
+                // If there's a blink color, create a gradient brush with both colors
+                var gradientBrush = new System.Windows.Media.LinearGradientBrush();
+                gradientBrush.StartPoint = new System.Windows.Point(0, 0);
+                gradientBrush.EndPoint = new System.Windows.Point(1, 0);
+                gradientBrush.GradientStops.Add(new System.Windows.Media.GradientStop(
+                    ((System.Windows.Media.SolidColorBrush)mainColor).Color, 0.5));
+                gradientBrush.GradientStops.Add(new System.Windows.Media.GradientStop(
+                    ((System.Windows.Media.SolidColorBrush)blinkColor).Color, 0.5));
+                
+                return gradientBrush;
+            }
+        }
+
+        public System.Windows.Media.Brush ButtonBorder
+        {
+            get
+            {
+                if(IsPressed)
+                    return System.Windows.Media.Brushes.Lime;
+
+                return System.Windows.Media.Brushes.Gray;
+            }
+        }
+        
+        private System.Windows.Media.Brush ConvertColorNameToBrush(string colorName)
+        {
+            switch (colorName?.ToLower())
+            {
+                case "red": return System.Windows.Media.Brushes.Red;
+                case "green": return System.Windows.Media.Brushes.Lime;
+                case "blue": return System.Windows.Media.Brushes.Blue;
+                case "orange": return System.Windows.Media.Brushes.Orange;
+                case "violet": return System.Windows.Media.Brushes.DarkViolet;
+                case "cyan": return System.Windows.Media.Brushes.Cyan;
+                case "white": return System.Windows.Media.Brushes.White;
+                case "yellow": return System.Windows.Media.Brushes.Yellow;
+                default: return System.Windows.Media.Brushes.Gray;
             }
         }
     }

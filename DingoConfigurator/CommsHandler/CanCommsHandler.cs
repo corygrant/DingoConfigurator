@@ -484,18 +484,15 @@ namespace CommsHandler
             {
                 foreach (var device in _canDevices)
                 {
-                    if (device.IsConnected)
+                    int intervalMs = device.TimerIntervalMs;
+                    if (intervalMs > 0)
                     {
-                        int intervalMs = device.TimerIntervalMs;
-                        if (intervalMs > 0)
-                        {
-                            var timer = new System.Timers.Timer(intervalMs);
-                            timer.Elapsed += (sender, e) => SendTimerMessages(device);
-                            timer.AutoReset = true;
-                            timer.Start();
+                        var timer = new System.Timers.Timer(intervalMs);
+                        timer.Elapsed += (sender, e) => SendTimerMessages(device);
+                        timer.AutoReset = true;
+                        timer.Start();
 
-                            _deviceTimers[device] = timer;
-                        }
+                        _deviceTimers[device] = timer;
                     }
                 }
             }

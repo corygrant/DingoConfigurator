@@ -126,6 +126,11 @@ namespace CanDevices.SoftButtonBox
             return "Off"; // Default implementation for Grayhill
         }
 
+        public virtual string GetLedBlinkColorName(int buttonIndex)
+        {
+            return "Off"; // Default implementation for Grayhill
+        }
+
         public abstract List<CanDeviceResponse> GenerateButtonStateMessages();
         public abstract List<CanDeviceResponse> GenerateDialStateMessages();
         public abstract List<CanDeviceResponse> GenerateHeartbeatMessage();

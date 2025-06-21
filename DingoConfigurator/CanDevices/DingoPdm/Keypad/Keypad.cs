@@ -64,6 +64,21 @@ namespace CanDevices.DingoPdm
                     _visibleButtons = new ObservableCollection<Button>();
                     UpdateVisibleButtons();
                 }
+                else if (_visibleButtons.Count == 0 && NumButtons > 0 && AllButtons != null)
+                {
+                    // Trigger update if collection is empty but should have buttons and AllButtons exists
+                    UpdateVisibleButtons();
+                }
+                else if (AllButtons == null && NumButtons > 0)
+                {
+                    // Initialize AllButtons if it's null (should only happen in non-deserialization scenarios)
+                    _allButtons = new ObservableCollection<Button>();
+                    for(int i = 0; i < 20; i++)
+                    {
+                        _allButtons.Add(new Button(Number > 0 ? Number : 1, i + 1));
+                    }
+                    UpdateVisibleButtons();
+                }
                 return _visibleButtons;
             }
         }

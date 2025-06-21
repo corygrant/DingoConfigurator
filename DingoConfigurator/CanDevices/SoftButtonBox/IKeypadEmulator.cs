@@ -24,5 +24,6 @@ namespace CanDevices.SoftButtonBox
         void SetDialValue(int dialIndex, int value);
         void Reset();
         string GetLedColorName(int buttonIndex);
+        string GetLedBlinkColorName(int buttonIndex);
     }
 }

@@ -371,5 +371,19 @@ namespace CanDevices.SoftButtonBox
             }
             return "Off";
         }
+
+        public override string GetLedBlinkColorName(int buttonIndex)
+        {
+            if (buttonIndex >= 0 && buttonIndex < NumButtons)
+            {
+                var color = _ledBlinkStates[buttonIndex];
+
+                if (color != BlinkMarineButtonColor.Off)
+                    color = _ledStates[buttonIndex] ^ _ledBlinkStates[buttonIndex];
+
+                return color.ToString();
+            }
+            return "Off";
+        }
     }
 }

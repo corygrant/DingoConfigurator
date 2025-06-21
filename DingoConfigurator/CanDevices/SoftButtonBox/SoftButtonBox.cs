@@ -236,5 +236,10 @@ namespace CanDevices.SoftButtonBox
         {
             return _keypadEmulator?.GetLedColorName(buttonIndex) ?? "Off";
         }
+
+        public string GetLedBlinkColorName(int buttonIndex)
+        {
+            return _keypadEmulator?.GetLedBlinkColorName(buttonIndex) ?? "Off";
+        }
     }
 }
