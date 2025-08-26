@@ -13,7 +13,7 @@ namespace CanDevices
     {
         private string _name;
         [JsonIgnore]
-        public string Name
+        public virtual string Name
         {
             get => _name;
             set => _name = value;

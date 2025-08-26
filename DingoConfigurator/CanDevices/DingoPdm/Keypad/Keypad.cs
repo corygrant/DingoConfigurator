@@ -434,7 +434,7 @@ namespace CanDevices.DingoPdm
         }
 
         [JsonIgnore]
-        public new string Name
+        public override string Name
         {
             get => _keypadName;
             set => _keypadName = value;
