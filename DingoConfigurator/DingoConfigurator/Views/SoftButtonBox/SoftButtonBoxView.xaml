@@ -19,6 +19,7 @@
                     Margin="5"
                     Width="80"
                     Height="80"
+                    FontSize="20"
                     Background="{Binding ButtonBackground}"
                     BorderBrush="{Binding ButtonBorder}"
                     BorderThickness="4">
