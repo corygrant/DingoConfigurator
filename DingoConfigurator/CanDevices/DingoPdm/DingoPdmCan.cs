@@ -1834,12 +1834,9 @@ namespace CanDevices.DingoPdm
             //Keypads
             foreach(var kp in Keypads)
             {
-                if (kp.Enabled)
+                foreach (var msg in kp.WriteMsgs(id))
                 {
-                    foreach (var msg in kp.WriteMsgs(id))
-                    {
-                        msgs.Add(msg);
-                    }
+                    msgs.Add(msg);
                 }
             }
 

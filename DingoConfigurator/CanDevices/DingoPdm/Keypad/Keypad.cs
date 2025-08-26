@@ -1005,7 +1005,7 @@ namespace CanDevices.DingoPdm
             Enabled = Convert.ToBoolean(data[2] & 0x01);
             BaseId = data[3] & 0x7F;
             TimeoutEnabled = Convert.ToBoolean((data[3] & 0x80) >> 7);
-            Timeout = data[4] * 100;
+            Timeout = data[4] / 10;
             Model = (KeypadModel)data[5];
             return true;
         }
@@ -1017,7 +1017,7 @@ namespace CanDevices.DingoPdm
             data[1] = Convert.ToByte(Number - 1);
             data[2] = Convert.ToByte(Enabled);
             data[3] = Convert.ToByte((Convert.ToByte(BaseId) & 0x7F) + (Convert.ToByte(TimeoutEnabled) << 7));
-            data[4] = Convert.ToByte(Timeout / 100);
+            data[4] = Convert.ToByte(Convert.ToDouble(Timeout) * 10.0);
             data[5] = Convert.ToByte(Model);
             return data;
         }
