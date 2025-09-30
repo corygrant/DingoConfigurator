@@ -27,7 +27,7 @@ jobs:
           
           echo "VERSION=$full_version" >> $env:GITHUB_OUTPUT
           echo "COMMIT_SHORT=$commit_hash" >> $env:GITHUB_OUTPUT
-          echo "ARTIFACT_NAME=DingoConfigurator-$full_version-$commit_hash" >> $env:GITHUB_OUTPUT
+          echo "ARTIFACT_NAME=DingoConfigurator-$full_version" >> $env:GITHUB_OUTPUT
           Write-Host "Detected version: $full_version"
         } else {
           Write-Error "Could not extract version from AssemblyInfo.cs"
