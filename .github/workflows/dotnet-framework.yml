@@ -4,6 +4,7 @@ on:
     tags:
       - 'v*'  # Trigger on version tags
   pull_request:
+  workflow_dispatch:
 jobs:
   build:
     name: Build on Windows
