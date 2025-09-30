@@ -183,30 +183,33 @@ namespace CanInterfaces
 
             try
             {
-                byte[] data = new byte[21];
+                byte[] data = new byte[22];
                 data[0] = (byte)'t';
                 data[1] = (byte)((canData.Id & 0xF00) >> 8);
                 data[2] = (byte)((canData.Id & 0xF0) >> 4);
                 data[3] = (byte)(canData.Id & 0xF);
                 data[4] = (byte)canData.Len;
-                data[5] = Convert.ToByte((canData.Payload[0] & 0xF0) >> 4);
-                data[6] = Convert.ToByte(canData.Payload[0] & 0xF);
-                data[7] = Convert.ToByte((canData.Payload[1] & 0xF0) >> 4);
-                data[8] = Convert.ToByte(canData.Payload[1] & 0xF);
-                data[9] = Convert.ToByte((canData.Payload[2] & 0xF0) >> 4);
-                data[10] = Convert.ToByte(canData.Payload[2] & 0xF);
-                data[11] = Convert.ToByte((canData.Payload[3] & 0xF0) >> 4);
-                data[12] = Convert.ToByte(canData.Payload[3] & 0xF);
-                data[13] = Convert.ToByte((canData.Payload[4] & 0xF0) >> 4);
-                data[14] = Convert.ToByte(canData.Payload[4] & 0xF);
-                data[15] = Convert.ToByte((canData.Payload[5] & 0xF0) >> 4);
-                data[16] = Convert.ToByte(canData.Payload[5] & 0xF);
-                data[17] = Convert.ToByte((canData.Payload[6] & 0xF0) >> 4);
-                data[18] = Convert.ToByte(canData.Payload[6] & 0xF);
-                data[19] = Convert.ToByte((canData.Payload[7] & 0xF0) >> 4);
-                data[20] = Convert.ToByte(canData.Payload[7] & 0xF);
 
-                _serial.Write(data, 0, 21);
+                int lastByte = 0;
+
+                for (int i = 0; i < canData.Len; i++)
+                {
+                    data[5 + (i * 2)] = Convert.ToByte((canData.Payload[i] & 0xF0) >> 4);
+                    data[6 + (i * 2)] = Convert.ToByte(canData.Payload[i] & 0xF);
+                    lastByte = 6 + (i * 2);
+                }
+
+                data[lastByte + 1] = Convert.ToByte('\r');
+
+                for(int i = 1; i < lastByte + 1; i++)
+                {
+                    if (data[i] < 0xA)
+                        data[i] += 0x30;
+                    else
+                        data[i] += 0x37;
+                }
+
+                _serial.Write(data, 0, lastByte + 2);
             }
             catch (Exception e)
             {
