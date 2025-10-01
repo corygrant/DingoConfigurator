@@ -99,14 +99,14 @@ namespace CommsHandler
                     _can = new CanInterfaces.USB2CAN();
                     _isSerial = true;
                     _sleepTime = 1; //ms
-                    _msgTimeout = 10; //ms
+                    _msgTimeout = 30; //ms
                     break;
 
                 case "PCAN":
                     _can = new CanInterfaces.PCAN();
                     _isSerial = false;
                     _sleepTime = 5; //ms
-                    _msgTimeout = 10; //ms
+                    _msgTimeout = 30; //ms
                     break;
 
                 case "USB":
@@ -399,6 +399,14 @@ namespace CommsHandler
             {
                 if (cd.InIdRange(data.Id))
                 {
+                    //Trim payload - some interfaces always use 8 bytes no matter the Len
+                    if(data.Len != data.Payload.Length)
+                    {
+                        var trimmed = new byte[data.Len];
+                        Array.Copy(data.Payload, trimmed, data.Len);
+                        data.Payload = trimmed;
+                    }
+
                     cd.Read(data.Id, data.Payload, ref _queue);
                 }
             }
