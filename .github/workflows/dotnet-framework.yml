@@ -1,24 +1,21 @@
 name: Build .NET Framework Project
-
 on:
   push:
+    tags:
+      - 'v*'  # Trigger on version tags
   pull_request:
-
+  workflow_dispatch:
 jobs:
   build:
     name: Build on Windows
     runs-on: windows-latest
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v2
-
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v2
-
     - name: Extract version and commit hash
       id: version_info
       run: |
@@ -30,27 +27,37 @@ jobs:
           
           echo "VERSION=$full_version" >> $env:GITHUB_OUTPUT
           echo "COMMIT_SHORT=$commit_hash" >> $env:GITHUB_OUTPUT
-          echo "ARTIFACT_NAME=DingoConfigurator-$full_version-$commit_hash" >> $env:GITHUB_OUTPUT
+          echo "ARTIFACT_NAME=DingoConfigurator-$full_version" >> $env:GITHUB_OUTPUT
           Write-Host "Detected version: $full_version"
         } else {
           Write-Error "Could not extract version from AssemblyInfo.cs"
           exit 1
         }
-
     - name: Restore NuGet packages
       run: nuget restore DingoConfigurator\DingoConfigurator.sln
-
     - name: Build solution
       run: msbuild DingoConfigurator\DingoConfigurator.sln -t:rebuild -verbosity:diag -property:Configuration=Release
-
     - name: Create versioned artifact
       run: |
         $zipName = "${{ steps.version_info.outputs.ARTIFACT_NAME }}.zip"
         Compress-Archive -Path "./DingoConfigurator/DingoConfigurator/bin/Release/*" -DestinationPath "./$zipName"
         Write-Host "Created artifact: $zipName"
-
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: ${{ steps.version_info.outputs.ARTIFACT_NAME }}
         path: ./${{ steps.version_info.outputs.ARTIFACT_NAME }}.zip
+    - name: Create Release
+      if: github.event_name != 'pull_request'  # Skip only for PRs
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ steps.version_info.outputs.VERSION }}
+        files: ./${{ steps.version_info.outputs.ARTIFACT_NAME }}.zip
+        name: v${{ steps.version_info.outputs.VERSION }}
+        body: |
+          Release version ${{ steps.version_info.outputs.VERSION }}
+          Commit: ${{ steps.version_info.outputs.COMMIT_SHORT }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
